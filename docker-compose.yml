@@ -7,3 +7,13 @@ services:
     build: ./frontend
     ports:
       - '443:443'
+    volumes:
+      - front:/var/www/html
+
+volumes:
+  front:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o:    'bind'
+      device: /home/david/transend/frontend/src # change for local machine

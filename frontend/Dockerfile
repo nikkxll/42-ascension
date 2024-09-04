@@ -17,7 +17,5 @@ RUN adduser -D -H -s /sbin/nologin -g www-data -G www-data www-data
 RUN chown www-data /etc/nginx
 RUN chmod 755 /var/www
 
-COPY src/ /var/www/html
-
 
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
