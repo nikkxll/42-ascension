@@ -15,18 +15,23 @@ const material = new THREE.MeshBasicMaterial( { color: 0x00ff00} );
 const ballmaterial = new THREE.MeshBasicMaterial( { color: 0x0000ff} );
 
 const player1 = new THREE.Mesh( geometry, material );
+let edge = new THREE.EdgesGeometry(geometry);
+const player1outline = new THREE.LineSegments(edge, new THREE.LineBasicMaterial( { color: 0xffffff } ) );
+scene.add( player1outline );
 scene.add( player1 );
 
 const player2 = new THREE.Mesh( geometry, material );
+const player2outline = new THREE.LineSegments(edge, new THREE.LineBasicMaterial( { color: 0xffffff } ) );
+scene.add( player2outline );
 scene.add( player2 );
 
-camera.position.z = 15;
-player1.position.z -= 0.5
-player2.position.z -= 0.5
+camera.position.z = 18;
+
 
 const ballMesh = new THREE.BoxGeometry(0.5, 0.5, 0.5)
 const ball = new THREE.Mesh(ballMesh, ballmaterial);
 
+let outerboxes = [[],[],[]]
 
 scene.add(ball)
 
@@ -42,6 +47,57 @@ function setup()
 {
     player1.position.x = 20
     player2.position.x = -20
+    player1outline.position.x = 20
+    player2outline.position.x = -20
+
+    // player1.position.z -= 0.5
+    // player2.position.z -= 0.5
+
+    // player1outline.position.z -= 0.5
+    // player2outline.position.z -= 0.5
+
+    let row;
+
+    const outerboxgeometry = new THREE.BoxGeometry(0.95, 0.95, 1);
+    const outerboxmaterial = new THREE.MeshBasicMaterial({color: 0xf000f0, });
+    outerboxes.forEach((element, row) =>{
+            for (let i = 1; i < 44; i++)
+                {
+                    var cur = new THREE.Mesh(outerboxgeometry, outerboxmaterial);
+                    cur.position.x = -22 + i;
+                    cur.position.y = -11.25 - row;
+                    cur.position.z = 0;
+                    
+                    let edges = new THREE.EdgesGeometry( outerboxgeometry ); 
+                    let line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial( { color: 0xffffff } ) ); 
+                    
+                    line.position.x = -22 + i;
+                    line.position.y = -11.25 - row;
+                    line.position.z = 0;
+
+                    scene.add( line );
+                    scene.add(cur);
+
+                    element.push({box: cur, out: line});
+                    
+                    cur = new THREE.Mesh(outerboxgeometry, outerboxmaterial);
+                    cur.position.x = -22 + i;
+                    cur.position.y = 11.25 + row;
+                    cur.position.z = 0;
+                    
+                    edges = new THREE.EdgesGeometry( outerboxgeometry ); 
+                    line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial( { color: 0xffffff } ) ); 
+
+                    line.position.x = -22 + i;
+                    line.position.y = 11.25 + row;
+                    line.position.z = 0;
+
+                    scene.add( line );
+                    scene.add(cur);
+                    
+                    element.push({box: cur, out: line});
+                }
+    })
 }
 
 const playerSpeed = 12
@@ -86,17 +142,33 @@ function loop()
         // The draw or time dependent code are here
         player1.position.y += playe1Delta * delta
         player2.position.y += playe2Delta * delta
+
+        player1outline.position.y += playe1Delta * delta
+        player2outline.position.y += playe2Delta * delta
+
         if (player1.position.y < -8.5)
+        {
             player1.position.y = -8.5
+            player1outline.position.y = -8.5
+        }
 
         if (player1.position.y > 8.5)
+        {
             player1.position.y = 8.5
+            player1outline.position.y = 8.5
+        }
 
         if (player2.position.y < -8.5)
+        {
             player2.position.y = -8.5
+            player2outline.position.y = -8.5
+        }
 
         if (player2.position.y > 8.5)
+        {
             player2.position.y = 8.5
+            player2outline.position.y = 8.5
+        }
 
         if (ball.position.y < -10 )
         {
@@ -110,27 +182,37 @@ function loop()
         }
 
 
-        ball.position.x += ballvelocity.x * delta
-        ball.position.y += ballvelocity.y * delta
-
+        
         if (Math.abs(ball.position.x - player1.position.x) <= player1.scale.x / 2 + ball.scale.x / 2 &&
-            Math.abs(ball.position.y - player1.position.y) <= player1.scale.y / 2 + ball.scale.y / 2)
+        Math.abs(ball.position.y - player1.position.y) <= player1.scale.y / 2 + ball.scale.y / 2)
         {
-            ball.position.x = player1.position.x - player1.scale.x / 2 - ball.scale.x / 2
+            ball.position.x = player1.position.x - player1.scale.x / 2 - ball.scale.x / 2 - 0.01
             ballvelocity.x *= -1
         }
         if (Math.abs(ball.position.x - player2.position.x) <= player2.scale.x / 2 + ball.scale.x / 2 &&
-            Math.abs(ball.position.y - player2.position.y) <= player2.scale.y / 2 + ball.scale.y / 2)
+        Math.abs(ball.position.y - player2.position.y) <= player2.scale.y / 2 + ball.scale.y / 2)
         {
-            ball.position.x = player2.position.x + player2.scale.x / 2 + ball.scale.x / 2
+            ball.position.x = player2.position.x + player2.scale.x / 2 + ball.scale.x / 2 + 0.01
             ballvelocity.x *= -1
         }
 
-        if (ball.position.x > 20.5 || ball.position.x < -20.5 )
+        ball.position.x += ballvelocity.x * delta
+        ball.position.y += ballvelocity.y * delta
+        
+        if (ball.position.x > 21 || ball.position.x < -21 )
         {
             ball.position.x = 0
             ball.position.y = 0
         }
+
+        outerboxes.forEach((element, row) => {
+            element.forEach((box, index) => {
+                box.box.scale.z = (Math.sin(Date.now() / 700 + index / 2 + row) + 2) / 1.5
+                box.box.position.z = -1 + box.box.scale.z / 2
+                box.out.scale.z = (Math.sin(Date.now() / 700 + index / 2 + row) + 2) / 1.5
+                box.out.position.z = -1 + box.out.scale.z / 2
+            });
+        });
 
         render();
         delta = delta % interval;
