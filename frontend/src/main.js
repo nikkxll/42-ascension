@@ -7,7 +7,10 @@ const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.inner
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
-document.body.appendChild( renderer.domElement );
+
+let inGame = false
+if (inGame)
+    document.body.appendChild( renderer.domElement );
 
 const geometry = new THREE.BoxGeometry( 0.5, 4, 1 );
 const material = new THREE.MeshBasicMaterial( { color: 0x00ff00} );
@@ -149,7 +152,7 @@ function runAi()
         else
             playe1Delta = 0
     }
-    if (ai >= 2)
+    if (ai == 2)
     {
         if (Math.abs(player2.position.y - ball.position.y) > 1 && Math.abs(player2.position.x - ball.position.x) < 22)
             playe2Delta = (player2.position.y - ball.position.y) * -playerSpeed
