@@ -103,23 +103,29 @@ function setup()
 const playerSpeed = 12
 
 function movement (e) {
-    if (e.which == 38)
-        playe1Delta = playerSpeed
-    else if (e.which == 40)
-        playe1Delta = -playerSpeed
-    
-    if (e.which == 87)
-        playe2Delta = playerSpeed
-    else if (e.which == 83)
-        playe2Delta = -playerSpeed
+    if (ai == 0)
+    {
+        if (e.which == 38)
+            playe1Delta = playerSpeed
+        else if (e.which == 40)
+            playe1Delta = -playerSpeed
+    }
+    if (ai < 2)
+    {
+        if (e.which == 87)
+            playe2Delta = playerSpeed
+        else if (e.which == 83)
+            playe2Delta = -playerSpeed
+    }
 }
 
+let ai = 2
 function clear(e)
 {
     console.log(e.which)
-    if (e.which == 87 || e.which == 83 && playe2Delta != 0)
+    if (ai == 0 && (e.which == 87 || e.which == 83 && playe2Delta != 0))
         playe2Delta = 0
-    if (e.which == 40 || e.which == 38 && playe1Delta != 0)
+    if (ai < 2 && (e.which == 40 || e.which == 38 && playe1Delta != 0))
         playe1Delta = 0
 }
 
@@ -130,11 +136,32 @@ var render = function() {
 /* ----- loop setup ----- */
 let clock = new THREE.Clock();
 let delta = 0;
-// 30 fps
+// 75 max fps
 let interval = 1 / 75;
+
+
+function runAi()
+{
+    if (ai >= 1)
+    {
+        if (Math.abs(player1.position.y - ball.position.y) > 1 && Math.abs(player1.position.x - ball.position.x) < 22)
+            playe1Delta = (player1.position.y - ball.position.y) * -playerSpeed
+        else
+            playe1Delta = 0
+    }
+    if (ai >= 2)
+    {
+        if (Math.abs(player2.position.y - ball.position.y) > 1 && Math.abs(player2.position.x - ball.position.x) < 22)
+            playe2Delta = (player2.position.y - ball.position.y) * -playerSpeed
+        else
+            playe2Delta = 0
+    }
+}
 
 function loop()
 {
+    if (ai != 0)
+        runAi()
     requestAnimationFrame(loop);
     delta += clock.getDelta();
 
@@ -184,13 +211,13 @@ function loop()
 
         
         if (Math.abs(ball.position.x - player1.position.x) <= player1.scale.x / 2 + ball.scale.x / 2 &&
-        Math.abs(ball.position.y - player1.position.y) <= player1.scale.y / 2 + ball.scale.y / 2)
+        Math.abs(ball.position.y - player1.position.y) <= player1.scale.y / 2 + ball.scale.y)
         {
             ball.position.x = player1.position.x - player1.scale.x / 2 - ball.scale.x / 2 - 0.01
             ballvelocity.x *= -1
         }
         if (Math.abs(ball.position.x - player2.position.x) <= player2.scale.x / 2 + ball.scale.x / 2 &&
-        Math.abs(ball.position.y - player2.position.y) <= player2.scale.y / 2 + ball.scale.y / 2)
+        Math.abs(ball.position.y - player2.position.y) <= player2.scale.y / 2 + ball.scale.y)
         {
             ball.position.x = player2.position.x + player2.scale.x / 2 + ball.scale.x / 2 + 0.01
             ballvelocity.x *= -1
