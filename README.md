@@ -18,15 +18,27 @@ https://localhost/game.html - game with 2 ai with Threejs, will expand a bit thi
 
 ```
 fetch("http://localhost:8000/players/create-player/", {
-      "method": "POST",
-      "headers": {
+      method: "POST",
+      headers: {
             "Content-Type": "application/json; charset=utf-8"
       },
-      "body": "{\"username\":\"tony\",\"password\":\"123\",\"displayName\":\"Tony\"}"
+      body: JSON.stringify({
+            username: "tony",
+            password: "123",
+            displayName: "Tony"
+      })
 })
 .then((res) => res.text())
 .then(console.log.bind(console))
 .catch(console.error.bind(console));
+```
+
+For success:
+```
+HTTP/1.1 201 Created
+...
+
+{"id": 1, "username": "tony", "displayName": "Tony"}
 ```
 
 

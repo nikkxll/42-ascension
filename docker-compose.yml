@@ -22,10 +22,10 @@ services:
     networks:
       - transc_network
 
-  web:
+  backend:
     build: ./backend
-    image: transc_web
-    container_name: transc_web
+    image: transc_backend
+    container_name: transc_backend
     volumes:
       - ./backend:/code
     ports:
@@ -52,6 +52,7 @@ volumes:
       type: 'none'
       o:    'bind'
       device: ~/Documents/tutorials-training/hive/projects/ascension/src # change for local machine
+
   postgres_data:
     name: postgres_data
 
