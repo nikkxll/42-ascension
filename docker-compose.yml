@@ -24,7 +24,6 @@ services:
 
   backend:
     build: ./backend
-    image: transc_backend
     container_name: transc_backend
     volumes:
       - ./backend:/code
