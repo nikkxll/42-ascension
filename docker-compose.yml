@@ -1,4 +1,13 @@
 services:
+  frontend:
+    build: ./frontend
+    ports:
+      - '443:443'
+    volumes:
+      - front:/var/www/html
+    networks:
+      - transc_network
+
   db:
     image: postgres:16.4-bullseye
     container_name: transc_db
@@ -14,11 +23,11 @@ services:
       - transc_network
 
   web:
-    build: ./transc_api
+    build: ./backend
     image: transc_web
     container_name: transc_web
     volumes:
-      - ./transc_api:/code
+      - ./backend:/code
     ports:
       - "8000:8000"
     depends_on:
@@ -37,6 +46,12 @@ services:
       - transc_network
 
 volumes:
+  front:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o:    'bind'
+      device: ~/Documents/tutorials-training/hive/projects/ascension/src # change for local machine
   postgres_data:
     name: postgres_data
 
