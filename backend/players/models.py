@@ -2,13 +2,14 @@ from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils import timezone
 
 
 class Player(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE) # Registration information
     display_name = models.CharField(max_length=30, unique=True) # Name that would be displayed to other players
     avatar = models.ImageField(upload_to='avatars/', default='fallback.png', blank=True) # Profile picture
-    created_at = models.DateTimeField(auto_now_add=True) # Date of account creation
+    created_at = models.DateTimeField(default=timezone.now) # Date of account creation
     updated_at = models.DateTimeField(auto_now=True) # Date of last account update
 
     def __str__(self):
@@ -67,8 +68,8 @@ class Match(models.Model):
                                 on_delete=models.CASCADE,
                                 related_name='player2_matches') # Second player in the match
     round_of = models.IntegerField(null=True, blank=True) # Tournament round (round of 16 (1/8), 8 (1/4), 4 (1/2), 2 (final))
-    player1_score = models.IntegerField()
-    player2_score = models.IntegerField()
+    player1_score = models.IntegerField(null=True, blank=True) # Score of player 1
+    player2_score = models.IntegerField(null=True, blank=True) # Score of player 2
     winner = models.ForeignKey(Player,
                                on_delete=models.SET('Unknown'),
                                null=True,
