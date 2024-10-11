@@ -1,10 +1,14 @@
 from django.contrib.auth.models import User
 from django.http import JsonResponse
+from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.crypto import get_random_string
+from django.template import TemplateDoesNotExist
+from django.template.loader import get_template
+from django.shortcuts import render
 from urllib.parse import urlencode
 from .models import Player
 import json
@@ -103,16 +107,25 @@ def oauth_callback(request):
             return JsonResponse(user_data, status=400)
         try:
             # Create the user
-            user = User.objects.create_user(username=f'aaaabsdf{user_data['login']}')
+            user = User.objects.create_user(username=f'{user_data['login']}')
             # Create the player with the associated user
             player = Player.objects.create(
-                user=user, display_name=f'aaaabsdf{user_data['displayname']}')
+                user=user, display_name=f'{user_data['displayname']}')
 
             # Return success response
-            return HttpResponseRedirect('http:://localhost/callback.html')
+            # return HttpResponseRedirect('http:://localhost/callback.html')
+            template = get_template('callback.html')  # or 'your_app/callback.html'
+            return HttpResponse(template.render({}, request))
 
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
+        except TemplateDoesNotExist:
+        # If template is not found, return error with helpful debugging info
+            return HttpResponse(f"""
+            Template not found. Debug info:
+            - App directory: {__file__}
+            - Available templates: {[t.name for t in get_template().engine.get_template_sources('callback.html')]}
+        """)
 
 
 def fetch_42_user_data(access_token):
