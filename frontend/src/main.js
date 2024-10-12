@@ -43,7 +43,7 @@ let outerboxes = [[],[],[]]
 const ballPower = 6
 let ballvelocity = {x: ballPower, y: ballPower}
 const playerSpeed = 12
-let ai = 2
+let ai = 1
 
 // the per frame change that is influenced by keyboard presses
 let playe1Delta = 0 
@@ -129,9 +129,9 @@ function movement (e) {
 // registered as keyup listener, cleares the movement of the players
 function clear(e)
 {
-    //let code = e.which;
-    let code = e.key || e.which;
-    console.log(code)
+    let code = e.which;
+    //let code = e.key || e.which;
+    //console.log(code)
     //if (ai == 1 || ai == 0 && (code == 87 || code == 83 && playe2Delta != 0))
     if ((code == 87 || code == 83 && playe2Delta != 0))
         playe2Delta = 0
@@ -160,7 +160,7 @@ let h = 20;// hight  = hegith of the game area - height of the player
 let yPredictionRaw = [0, 0];
 let yPrediction = 0;
 let hightOut = 0;
-let epsilon = 0.01;
+let epsilon = 0.1;
 let movingAiFlag = false;
 playe1Delta = 0;
 
@@ -168,7 +168,7 @@ playe1Delta = 0;
 // this function is used to simulate key presses. 
 // Only for ArrowUp and ArrowDown
 function simulateArrowKey(keyUpDown, key) {
-    console.log(keyUpDown, key)
+    //console.log(keyUpDown, key)
     let numCode = 40
     if (key == 'ArrowUp')
         numCode = 38
@@ -193,6 +193,7 @@ function runAi()
 {
     deltaTimeAi += clockAi.getDelta();
     if (deltaTimeAi > timeIntervalAi){
+       // console.log("ai")
         // r1 = {x: player1.position.x, y: player1.position.y};
         // r2 = {x: player2.position.x, y: player2.position.y};
         r0 = {x: ball.position.x, y: ball.position.y};
@@ -236,6 +237,7 @@ function runAi()
         else {
             if (playe1Delta < 0)
                 simulateArrowKey('keyup','ArrowDown');
+                //playe1Delta = 0
             if (playe1Delta > 0)
                 simulateArrowKey('keyup','ArrowUp');
             //movingAiFlag = false;
