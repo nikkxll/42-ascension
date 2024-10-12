@@ -106,18 +106,22 @@ function setup()
 
 // function registered as an event listener to keydown events
 function movement (e) {
-    if (ai == 0)
+    let code = e.which;
+    //let code = e.key;
+    //if (ai == 0)
+    if (ai <= 2)
     {
-        if (e.which == 38)
+        if (code == 38)
             playe1Delta = playerSpeed
-        else if (e.which == 40)
+        else if (code == 40)
             playe1Delta = -playerSpeed
     }
-    if (ai < 2)
+    //if (ai < 2 || ai == 2)
+    if (ai <= 2)
     {
-        if (e.which == 87)
+        if (code == 87)
             playe2Delta = playerSpeed
-        else if (e.which == 83)
+        else if (code == 83)
             playe2Delta = -playerSpeed
     }
 }
@@ -125,10 +129,14 @@ function movement (e) {
 // registered as keyup listener, cleares the movement of the players
 function clear(e)
 {
-    console.log(e.which)
-    if (ai == 1 || ai == 0 && (e.which == 87 || e.which == 83 && playe2Delta != 0))
+    //let code = e.which;
+    let code = e.key || e.which;
+    console.log(code)
+    //if (ai == 1 || ai == 0 && (code == 87 || code == 83 && playe2Delta != 0))
+    if ((code == 87 || code == 83 && playe2Delta != 0))
         playe2Delta = 0
-    if (ai == 0 && (e.which == 40 || e.which == 38 && playe1Delta != 0))
+    //if (ai == 0 && (code == 40 || code == 38) && playe1Delta != 0)
+    if ((code == 40 || code == 38) && playe1Delta != 0)
         playe1Delta = 0
 }
 
@@ -140,7 +148,7 @@ var render = function() {
 
 // AI Algo part
 // settging for the AI
-let timeIntervalAi = 1;  // mast to be 1 according to the subject
+let timeIntervalAi = 1;  // must to be 1 according to the subject
 let clockAi = new THREE.Clock();
 let deltaTimeAi = 0;
 let r0 = {x: ball.position.x, y: ball.position.y};
@@ -152,12 +160,41 @@ let h = 20;// hight  = hegith of the game area - height of the player
 let yPredictionRaw = [0, 0];
 let yPrediction = 0;
 let hightOut = 0;
+let epsilon = 0.01;
+let movingAiFlag = false;
+playe1Delta = 0;
+
+
+// this function is used to simulate key presses. 
+// Only for ArrowUp and ArrowDown
+function simulateArrowKey(keyUpDown, key) {
+    console.log(keyUpDown, key)
+    let numCode = 40
+    if (key == 'ArrowUp')
+        numCode = 38
+    else if (key == 'ArrowDown')
+        numCode = 40
+    const event = new KeyboardEvent(keyUpDown, {
+        key: key,
+        code: key, // Adjust based on the key
+        keyCode: numCode, 
+        bubbles: true, // Ensure the event bubbles up
+        cancelable: true // Make the event cancelable
+    });
+    document.dispatchEvent(event);
+}
+
+// function triggerCustomEvent(key) {
+//     const myEvent = new CustomEvent('moveAi', {detail: {param},});
+//     document.dispatchEvent(myEvent);
+//   }
+
 function runAi()
 {
     deltaTimeAi += clockAi.getDelta();
     if (deltaTimeAi > timeIntervalAi){
-        //r1 = {x: player1.position.x, y: player1.position.y};
-        //r2 = {x: player2.position.x, y: player2.position.y};
+        // r1 = {x: player1.position.x, y: player1.position.y};
+        // r2 = {x: player2.position.x, y: player2.position.y};
         r0 = {x: ball.position.x, y: ball.position.y};
         v0 = {x: ballvelocity.x, y: ballvelocity.y};
         v0 = v0.x == 0 ? {x: 0.0001, y: v0.y} : v0;
@@ -165,9 +202,9 @@ function runAi()
             r0.y + (-w/2 - r0.x) * v0.y / v0.x, 
             r0.y + ( w/2 - r0.x) * v0.y / v0.x
         ];
-        hightOut = Math.abs(v0.x >0 ? yPredictionRaw[1] : yPredictionRaw[0]) - h / 2;
+        hightOut = Math.abs(yPredictionRaw[v0.x > 0 ? 1 : 0]) - h / 2;
         if (hightOut < 0)
-            yPrediction = v0.x > 0 ? yPredictionRaw[1] : yPredictionRaw[0];
+            yPrediction = yPredictionRaw[v0.x > 0 ? 1 : 0];
         else
             yPrediction = (h/2 - hightOut % h) * Math.sign(v0.y) * Math.pow(-1, Math.floor(hightOut / h) % 2);
         // skiping multiple frames if we have them
@@ -176,11 +213,35 @@ function runAi()
     if (ai >= 1)
     {
         r1 = {x: player1.position.x, y: player1.position.y};
-        //if (Math.abs(r1.y - r0.y) > 1) // && Math.abs(r1.x - r0.x) < 22)
-        if (v0.x > 0 && Math.abs(r1.y - yPrediction) > 0.1) // && Math.abs(r1.x - r0.x) < 22)
-            playe1Delta = -playerSpeed * Math.sign(r1.y - yPrediction)
-        else
-            playe1Delta = 0
+        // if (Math.abs(r1.y - r0.y) > 1) // && Math.abs(r1.x - r0.x) < 22)
+        if (v0.x > 0 && Math.abs(r1.y - yPrediction) > epsilon) { // && Math.abs(r1.x - r0.x) < 22)
+            if (r1.y - yPrediction > epsilon && playe1Delta >= 0){ // need to move down
+                if (playe1Delta > 0)
+                     simulateArrowKey('keyup','ArrowUp');
+                if (playe1Delta >= 0)
+                    simulateArrowKey('keydown','ArrowDown');
+                //playe1Delta = -playerSpeed
+            }
+            else if (r1.y - yPrediction < epsilon && playe1Delta <= 0){  // need to move up
+                if (playe1Delta < 0)
+                    simulateArrowKey('keyup','ArrowDown');
+                if (playe1Delta <= 0)
+                    simulateArrowKey('keydown','ArrowUp');
+                //playe1Delta = playerSpeed
+               //playe1Delta = -playerSpeed * Math.sign(r1.y - yPrediction)
+            }
+            //else 
+            //    v0.x = -1;
+        }
+        else {
+            if (playe1Delta < 0)
+                simulateArrowKey('keyup','ArrowDown');
+            if (playe1Delta > 0)
+                simulateArrowKey('keyup','ArrowUp');
+            //movingAiFlag = false;
+            //simulateArrowKey('keyup','ArrowUp');
+            //playe1Delta = 0
+        }
     }
     // this is test AI that just follows the ball without any prediction
     if (ai == 2)
@@ -194,7 +255,6 @@ function runAi()
             playe2Delta = 0
     }
 }
-
 
 /* ----- loop setup ----- */
 // start a clock
@@ -265,8 +325,8 @@ function loop()
         {
             ball.position.x = player1.position.x - player1.scale.x / 2 - ball.scale.x / 2 - 0.01
             if (Math.pow(ballvelocity.x,2) + Math.pow(ballvelocity.y,2) < 1000){
-                ballvelocity.x *= -1.5
-                ballvelocity.y *= 1.5
+                ballvelocity.x *= -1.2
+                ballvelocity.y *= 1.2
             }
             else
                 ballvelocity.x *= -1
@@ -277,8 +337,8 @@ function loop()
             ball.position.x = player2.position.x + player2.scale.x / 2 + ball.scale.x / 2 + 0.01
             //ballvelocity.x *= -1
             if (Math.pow(ballvelocity.x,2) + Math.pow(ballvelocity.y,2) < 1000){
-                ballvelocity.x *= -1.5
-                ballvelocity.y *= 1.5
+                ballvelocity.x *= -1.2
+                ballvelocity.y *= 1.2
             }
             else {
                 ballvelocity.x *= -1
