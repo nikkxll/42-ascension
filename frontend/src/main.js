@@ -30,7 +30,7 @@ scene.add( player2outline );
 scene.add( player2 );
 
 // create separate material and geometry for the ball and register it
-const ballmaterial = new THREE.MeshBasicMaterial( { color: 0x0000ff} );
+const ballmaterial = new THREE.MeshBasicMaterial( { color: 0xff00ff} );
 const ballMesh = new THREE.BoxGeometry(0.5, 0.5, 0.5)
 const ball = new THREE.Mesh(ballMesh, ballmaterial);
 scene.add(ball)
@@ -137,6 +137,65 @@ var render = function() {
     renderer.render(scene, camera);
 };
 
+
+// AI Algo part
+// settging for the AI
+let timeIntervalAi = 1;  // mast to be 1 according to the subject
+let clockAi = new THREE.Clock();
+let deltaTimeAi = 0;
+let r0 = {x: ball.position.x, y: ball.position.y};
+let r1 = {x: player1.position.x, y: player1.position.y};
+let r2 = {x: player2.position.x, y: player2.position.y};
+let v0 = {x: ballvelocity.x, y: ballvelocity.y};
+let w = 40; // width of the game area
+let h = 20;// hight  = hegith of the game area - height of the player
+let yPredictionRaw = [0, 0];
+let yPrediction = 0;
+let hightOut = 0;
+function runAi()
+{
+    deltaTimeAi += clockAi.getDelta();
+    if (deltaTimeAi > timeIntervalAi){
+        //r1 = {x: player1.position.x, y: player1.position.y};
+        //r2 = {x: player2.position.x, y: player2.position.y};
+        r0 = {x: ball.position.x, y: ball.position.y};
+        v0 = {x: ballvelocity.x, y: ballvelocity.y};
+        v0 = v0.x == 0 ? {x: 0.0001, y: v0.y} : v0;
+        yPredictionRaw = [
+            r0.y + (-w/2 - r0.x) * v0.y / v0.x, 
+            r0.y + ( w/2 - r0.x) * v0.y / v0.x
+        ];
+        hightOut = Math.abs(v0.x >0 ? yPredictionRaw[1] : yPredictionRaw[0]) - h / 2;
+        if (hightOut < 0)
+            yPrediction = v0.x > 0 ? yPredictionRaw[1] : yPredictionRaw[0];
+        else
+            yPrediction = (h/2 - hightOut % h) * Math.sign(v0.y) * Math.pow(-1, Math.floor(hightOut / h) % 2);
+        // skiping multiple frames if we have them
+        deltaTimeAi %= timeIntervalAi;
+    }        
+    if (ai >= 1)
+    {
+        r1 = {x: player1.position.x, y: player1.position.y};
+        //if (Math.abs(r1.y - r0.y) > 1) // && Math.abs(r1.x - r0.x) < 22)
+        if (v0.x > 0 && Math.abs(r1.y - yPrediction) > 0.1) // && Math.abs(r1.x - r0.x) < 22)
+            playe1Delta = -playerSpeed * Math.sign(r1.y - yPrediction)
+        else
+            playe1Delta = 0
+    }
+    // this is test AI that just follows the ball without any prediction
+    if (ai == 2)
+    {
+        //r0 = {x: ball.position.x, y: ball.position.y};
+        r2 = {x: player2.position.x, y: player2.position.y};
+        //if (Math.abs(r2.y - r0.y) > 1) // && Math.abs(r2.x - r0.x) < 22)
+        if (v0.x < 0 && Math.abs(r2.y - yPrediction) > 0.1)
+            playe2Delta = -playerSpeed * Math.sign(r2.y - yPrediction)
+        else
+            playe2Delta = 0
+    }
+}
+
+
 /* ----- loop setup ----- */
 // start a clock
 let clock = new THREE.Clock();
@@ -144,25 +203,6 @@ let clock = new THREE.Clock();
 let delta = 0;
 // 75 max fps
 let interval = 1 / 75;
-
-// subject to change by Alex
-function runAi()
-{
-    if (ai >= 1)
-    {
-        if (Math.abs(player1.position.y - ball.position.y) > 1 && Math.abs(player1.position.x - ball.position.x) < 22)
-            playe1Delta = (player1.position.y - ball.position.y) * -playerSpeed
-        else
-            playe1Delta = 0
-    }
-    if (ai == 2)
-    {
-        if (Math.abs(player2.position.y - ball.position.y) > 1 && Math.abs(player2.position.x - ball.position.x) < 22)
-            playe2Delta = (player2.position.y - ball.position.y) * -playerSpeed
-        else
-            playe2Delta = 0
-    }
-}
 
 function loop()
 {
@@ -224,13 +264,25 @@ function loop()
         Math.abs(ball.position.y - player1.position.y) <= player1.scale.y / 2 + ball.scale.y)
         {
             ball.position.x = player1.position.x - player1.scale.x / 2 - ball.scale.x / 2 - 0.01
-            ballvelocity.x *= -1
+            if (Math.pow(ballvelocity.x,2) + Math.pow(ballvelocity.y,2) < 1000){
+                ballvelocity.x *= -1.5
+                ballvelocity.y *= 1.5
+            }
+            else
+                ballvelocity.x *= -1
         }
         if (Math.abs(ball.position.x - player2.position.x) <= player2.scale.x / 2 + ball.scale.x / 2 &&
         Math.abs(ball.position.y - player2.position.y) <= player2.scale.y / 2 + ball.scale.y)
         {
             ball.position.x = player2.position.x + player2.scale.x / 2 + ball.scale.x / 2 + 0.01
-            ballvelocity.x *= -1
+            //ballvelocity.x *= -1
+            if (Math.pow(ballvelocity.x,2) + Math.pow(ballvelocity.y,2) < 1000){
+                ballvelocity.x *= -1.5
+                ballvelocity.y *= 1.5
+            }
+            else {
+                ballvelocity.x *= -1
+            }
         }
 
         // move the ball the appropriate amount
@@ -242,6 +294,8 @@ function loop()
         {
             ball.position.x = 0
             ball.position.y = 0
+            ballvelocity = {x: Math.sign(ballvelocity.x) * ballPower, y: Math.sign(ballvelocity.y) * ballPower}
+            deltaTimeAi = 2;
         }
 
         // update each outer box height based on sin to create a wave effect
