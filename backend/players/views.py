@@ -107,10 +107,10 @@ def oauth_callback(request):
             return JsonResponse(user_data, status=400)
         try:
             # Create the user
-            user = User.objects.create_user(username=f'{user_data['login']}')
+            user = User.objects.create_user(username=user_data['login'])
             # Create the player with the associated user
             player = Player.objects.create(
-                user=user, display_name=f'{user_data['displayname']}')
+                user=user, display_name=user_data['displayname'])
 
             # Return success response
             # return HttpResponseRedirect('http:://localhost/callback.html')
@@ -153,4 +153,4 @@ def exchange_code_for_token(code):
         response.raise_for_status()
         return response.json()
  except requests.exceptions.RequestException as e:
-        return {'error': 'Token exchange failed: {str(e)}'}
+        return {'error': f'Token exchange failed: {str(e)}'}
