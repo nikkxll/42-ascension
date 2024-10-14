@@ -6,8 +6,6 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.crypto import get_random_string
-from django.template import TemplateDoesNotExist
-from django.template.loader import get_template
 from django.shortcuts import render
 from urllib.parse import urlencode
 from .models import Player
@@ -95,7 +93,7 @@ def oauth_redirect(request):
 def oauth_callback(request):
 
     if request.method == 'GET':
-        # state = request.GET.get('state')
+        #state = request.GET.get('state')
         code = request.GET.get('code')
         if not code:
              return JsonResponse({'error': 'No code provided'}, status=400)
@@ -113,20 +111,12 @@ def oauth_callback(request):
                 user=user, display_name=user_data['displayname'])
 
             # Return success response
-            # return HttpResponseRedirect('http:://localhost/callback.html')
-            template = get_template('callback.html')  # or 'your_app/callback.html'
-            return HttpResponse(template.render({}, request))
-
+            file_path = os.path.join(os.path.dirname(__file__), 'callback.html')
+            file = open(file_path, 'r')
+            html_content = file.read()
+            return HttpResponse(html_content)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
-        except TemplateDoesNotExist:
-        # If template is not found, return error with helpful debugging info
-            return HttpResponse(f"""
-            Template not found. Debug info:
-            - App directory: {__file__}
-            - Available templates: {[t.name for t in get_template().engine.get_template_sources('callback.html')]}
-        """)
-
 
 def fetch_42_user_data(access_token):
     api_url = 'https://api.intra.42.fr/v2/me'
