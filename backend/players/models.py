@@ -6,11 +6,12 @@ from django.db import models
 
 class Player(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    display_name = models.CharField(max_length=30, unique=True)
+    display_name = models.CharField(max_length=30, unique=True, blank=True, null=True)
     avatar = models.ImageField(upload_to='avatars/', default='fallback.png', blank=True)
 
     def __str__(self):
-        return self.display_name
+        return self.display_name if self.display_name else self.user.username
+
 
 # Use signal to remove corresponding user on player deletion
 @receiver(post_delete, sender=Player)

@@ -123,13 +123,14 @@ def create_player(request):
             return JsonResponse({"error": "User name is required"}, status=400)
         if not password:
             return JsonResponse({"error": "Password is required"}, status=400)
-        if not display_name:
-            return JsonResponse({"error": "Display name is required"}, status=400)
+        # if not display_name:
+        #     return JsonResponse({"error": "Display name is required"}, status=400)
 
         try:
             # Create the user
             user = User.objects.create_user(username=username, password=password)
             # Create the player with the associated user
+            # player = Player.objects.create(user=user, display_name=display_name)
             player = Player.objects.create(user=user, display_name=display_name)
 
             # Return success response
