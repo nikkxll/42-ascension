@@ -52,6 +52,31 @@ def create_player(request):
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
 @csrf_exempt
+@session_authenticated()
+def set_display_name(request, username):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        display_name = data.get("displayName")
+        if not display_name:
+            return JsonResponse({"error": "Display name is required"}, status=400)
+
+        try:
+            user = User.objects.get(username=username)
+            player = Player.objects.get(user=user)
+        except User.DoesNotExist:
+            return JsonResponse({"error": "User not found"}, status=404)
+        except Player.DoesNotExist:
+            return JsonResponse({"error": "Player not found"}, status=404)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+        player.display_name = display_name
+        player.save()
+        return JsonResponse({"message": f"Changed name to {display_name} for {username}"})
+
+    return JsonResponse({"error": "Invalid request method"}, status=405)
+
+@csrf_exempt
 def custom_login(request):
     if request.method == "POST":
         data = json.loads(request.body)
