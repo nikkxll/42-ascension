@@ -1,172 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Ascension</title>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+		<style>
+			body { color:white; margin: 0; width: 100vw; height: 100vh; overflow: hidden;}
+			.box {
+				/* From https://css.glass */
+				background: rgba(255, 255, 255, 0.2);
+				border-radius: 16px;
+				box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+				backdrop-filter: blur(5px);
+				-webkit-backdrop-filter: blur(5px);
+				border: 1px solid rgba(255, 255, 255, 0.3);
+				position: absolute; 
+				text-align: center;
+				vertical-align: middle;
+				padding: 1%;
+				box-sizing: border-box;
+				margin: 1% 1%;
+			}
+			#enviroment {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100vw;
+				height: 100vh;
+				padding: 0;
+			}
+			#userInfo {
+			}
+			#gameSetup {
+				top: 10%;
+				right: 0;
+				width: 25vw;
+				height: 45vh;
+			}
+			#aboutProject {
+				bottom: 10%;
+				right: 0;
+				width: 25vw;
+				height: 30vh;
+				overflow-y: scroll;
+			}
+			#signin {
+				width: 30vw;
+				height: 50vh;
+				position: absolute;
+				top: 25%;
+				left: 35%;
+				background-color: rgba(83, 83, 83, 0.5);
+				display: none;
+			}
 
-<head>
-	<meta charset="utf-8">
-	<title>Ascension</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
-		integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-	<style>
-		body {
-			color: white;
-			margin: 0;
-			width: 100vw;
-			height: 100vh;
-			overflow: hidden;
-		}
+			.fold {
+				width: 30vw;
+				height: 100vh;
+				background-color: rgba(255, 255, 255, 0.8);
+				position: absolute;
+				top:0;
+				left: 0;
+			}
+			#openside {
+				position: absolute;
+				top: 50%;
+				left: 30vw;
+				font-size: large;
+			}
 
-		.box {
-			/* From https://css.glass */
-			background: rgba(255, 255, 255, 0.2);
-			border-radius: 16px;
-			box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-			backdrop-filter: blur(5px);
-			-webkit-backdrop-filter: blur(5px);
-			border: 1px solid rgba(255, 255, 255, 0.3);
-			position: absolute;
-			text-align: center;
-			vertical-align: middle;
-			padding: 1%;
-			box-sizing: border-box;
-			margin: 1% 1%;
-		}
-
-		#enviroment {
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100vw;
-			height: 100vh;
-			padding: 0;
-		}
-
-		#userInfo {}
-
-		#gameSetup {
-			top: 10%;
-			right: 0;
-			width: 25vw;
-			height: 45vh;
-		}
-
-		#aboutProject {
-			bottom: 10%;
-			right: 0;
-			width: 25vw;
-			height: 30vh;
-			overflow-y: scroll;
-		}
-
-		#signin {
-			width: 30vw;
-			height: 50vh;
-			position: absolute;
-			top: 25%;
-			left: 35%;
-			background-color: rgba(83, 83, 83, 0.5);
-			display: none;
-		}
-
-		.fold {
-			width: 30vw;
-			height: 100vh;
-			background-color: rgba(255, 255, 255, 0.8);
-			position: absolute;
-			top: 0;
-			left: 0;
-		}
-
-		#openside {
-			position: absolute;
-			top: 50%;
-			left: 30vw;
-			font-size: large;
-		}
-
-		#gameWindow {
-			width: 96vw;
-			height: 96vh;
-			position: absolute;
-			top: 2vh;
-			left: 2vw;
-			display: none;
-			background: #ffffff;
-			border: 2px solid white;
-			box-sizing: content-box;
-		}
-	</style>
-</head>
-
-<body>
-	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-		integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
-		crossorigin="anonymous"></script> -->
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
-		integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
-		crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-		crossorigin="anonymous"></script>
-	<div id="enviroment">
-	</div>
-	<div class="fold" id="userInfo">
-		userinfo with selectable dashboard that folds out for signin
-		<p>Username</p>
-		<div style="display: inline-block; width: 40%; background-color: blue; height: 30%; color: white; margin: 3px">
-			dashboard 1</div>
-		<div style="display: inline-block; width: 40%; background-color: blue; height: 30%; color: white; margin: 3px">
-			dashboard 2</div>
-		<div style="display: inline-block; width: 40%; background-color: blue; height: 30%; color: white; margin: 3px">
-			dashboard 3</div>
-		<div style="display: inline-block; width: 40%; background-color: blue; height: 30%; color: white; margin: 3px">
-			dashboard 4</div>
-		<br>
-		<button type="button" class="btn btn-dark">Add Player + </button>
-	</div>
-	<button id="openside" class="btn btn-dark" onclick="toggleSide()">
-		<< /button>
-			<div class="box" id="gameSetup">
-				big settings page with color, tournaments and other misc settings. you can select the users to play here
-				<button class="btn btn-light" id="gameStartButton" onclick="startOff()">
-					Start Game!
-				</button>
+			#gameWindow {
+				width: 96vw;
+				height: 96vh;
+				position: absolute;
+				top: 2vh;
+				left: 2vw;
+				display: none;
+				background: #ffffff;
+				border: 2px solid white;
+				box-sizing: content-box;
+			}
+			</style>
+	</head>
+	<body>
+		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script> -->
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+		<div id="enviroment">
+		</div>
+		<div class="fold" id="userInfo">
+			userinfo with selectable dashboard that folds out for signin
+			<p>Username</p>
+			<div style="display: inline-block; width: 40%; background-color: blue; height: 30%; color: white; margin: 3px">dashboard 1</div>
+			<div style="display: inline-block; width: 40%; background-color: blue; height: 30%; color: white; margin: 3px">dashboard 2</div>
+			<div style="display: inline-block; width: 40%; background-color: blue; height: 30%; color: white; margin: 3px">dashboard 3</div>
+			<div style="display: inline-block; width: 40%; background-color: blue; height: 30%; color: white; margin: 3px">dashboard 4</div>
+			<br>
+			<button type="button" class="btn btn-dark">Add Player + </button>
+		</div>
+		<button id="openside" class="btn btn-dark" onclick="toggleSide()"><</button>
+		<div class="box" id="gameSetup">
+			big settings page with color, tournaments and other misc settings. you can select the users to play here
+			<button class="btn btn-light" id="gameStartButton" onclick="startOff()">
+				Start Game!
+			</button>
+		</div>
+		<div class="box" id="aboutProject">
+			<div>
+				<h2>modules</h2>
+				<ul>
+					<li>backend</li>
+					<li>database</li>
+					<li>frontend</li>
+					<li>3d game</li>
+					<li>42 auth</li>
+					<li>user management</li>
+					<li>user history</li>
+				</ul>
 			</div>
-			<div class="box" id="aboutProject">
-				<div>
-					<h2>modules</h2>
-					<ul>
-						<li>backend</li>
-						<li>database</li>
-						<li>frontend</li>
-						<li>3d game</li>
-						<li>42 auth</li>
-						<li>user management</li>
-						<li>user history</li>
-					</ul>
-				</div>
-				<div>
-					<h2>team:</h2>
-					<ul>
-						<li>person 1</li>
-						<li>person 2</li>
-						<li>person 3</li>
-					</ul>
-				</div>
+			<div>
+				<h2>team:</h2>
+				<ul>
+					<li>person 1</li>
+					<li>person 2</li>
+					<li>person 3</li>
+				</ul>
 			</div>
+		</div>
 
-			<div id="signin">
-				<h2>sign in</h2>
-				<form action="POST">
-					<input type="text" placeholder="email">
-					<input type="password" placeholder="password">
-				</form>
-				<button>42 redirect that will maybe work</button>
-				<button>register to the page</button>
-			</div>
+		<div id="signin">
+			<h2>sign in</h2>
+			<form action="POST">
+				<input type="text" placeholder="email">
+				<input type="password" placeholder="password">
+			</form>
+			<button>42 redirect that will maybe work</button>
+			<button>register to the page</button>
+		</div>
 
-			<div id="gameWindow"></div>
+		<div id="gameWindow"></div>
 
-			<script type="importmap">
+        <script type="importmap">
             {
                 "imports": {
                 "three": "https://cdn.jsdelivr.net/npm/three@v0.149.0/build/three.module.js",
@@ -174,36 +148,37 @@
                 }
             }
         </script>
-			<script type="module" src="/base.js"></script>
-			<script type="module" src="/main.js"></script>
-			<script>
-				let isOpen = true
-				let openable = document.getElementById("userInfo")
-				let opener = document.getElementById("openside")
-				let toggleSide = () => {
-					console.log("here")
-					isOpen = !isOpen
-					if (isOpen) {
-						opener.innerText = "<"
-						opener.style.left = window.innerWidth * 0.3 + "px"
-						openable.style.width = window.innerWidth * 0.3 + "px"
-						openable.style.display = 'block'
-					}
-					else {
-						opener.innerText = ">"
-						opener.style.left = 0
-						openable.style.width = 0
-						openable.style.display = 'none'
-					}
+		<script type="module" src="/base.js"></script>
+		<script type="module" src="/main.js"></script>
+		<script>
+			let isOpen = true
+			let openable = document.getElementById("userInfo")
+			let opener = document.getElementById("openside")
+			let toggleSide = () => {
+				console.log("here")
+				isOpen = !isOpen
+				if (isOpen)
+				{
+					opener.innerText = "<"
+					opener.style.left = window.innerWidth * 0.3 + "px"
+					openable.style.width = window.innerWidth * 0.3 + "px"
+					openable.style.display = 'block'
 				}
-			</script>
-			<script>
-				let gameWindow = document.getElementById("gameWindow")
-				function startOff() {
-					gameWindow.style.display = "block"
-					startGame()
+				else
+				{
+					opener.innerText = ">"
+					opener.style.left = 0
+					openable.style.width = 0
+					openable.style.display = 'none'
 				}
-			</script>
-</body>
-
+			}
+		</script>
+		<script>
+			let gameWindow = document.getElementById("gameWindow")
+			function startOff()  {
+				gameWindow.style.display = "block"
+				startGame()
+			}
+		</script>
+	</body>
 </html>
