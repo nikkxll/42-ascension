@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-8qdt-&h8tvrci*#zuu72_+mqr&=u(5hl6qj=e%w8sayd_i*-2u
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', '1') == '1'  # Default to '1' if not set
-# DEBUG = True
+DEBUG = True
 
 ALLOWED_HOSTS = [
     'localhost',
@@ -135,6 +135,9 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')  # Adjust as needed
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

@@ -5,6 +5,7 @@ services:
       - '443:443'
     volumes:
       - front:/var/www/html
+      - ./backend/media:/media
     networks:
       - transc_network
 
@@ -50,7 +51,7 @@ volumes:
     driver_opts:
       type: 'none'
       o:    'bind'
-      device: ~/Documents/tutorials-training/hive/projects/ascension/src # change for local machine
+      device: ~/Documents/tutorials-training/hive/projects/ascension/frontend/src # change for local machine
 
   postgres_data:
     name: postgres_data
