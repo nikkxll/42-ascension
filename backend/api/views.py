@@ -2,10 +2,11 @@ import os
 import json
 from django.contrib.auth.models import User
 from django.db import IntegrityError
-from .models import Player
+from .models import Player, Friend
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate
-from .decorators import session_authenticated
+from .decorators import session_authenticated_logged_in, session_authenticated_id
+
 from .sessions import create_encrypted_session_value
 from django.core.files.base import ContentFile
 from django.core.exceptions import ObjectDoesNotExist
@@ -19,7 +20,7 @@ from urllib.parse import urlencode
 
 
 @csrf_exempt
-def create_player(request):
+def manage_players(request):
     if request.method == "POST":
         data = json.loads(request.body)
 
@@ -123,7 +124,7 @@ def custom_login(request):
 
 
 @csrf_exempt
-@session_authenticated()
+@session_authenticated_id
 def custom_logout(request, id):
     if request.method == "POST":
         session_key = f"session_{id}"
@@ -152,8 +153,8 @@ def custom_logout(request, id):
 
 
 @csrf_exempt
-@session_authenticated()
-def update(request, id):
+@session_authenticated_id
+def update_player(request, id):
     if request.method == "PATCH":
         message = "New data was set: "
         data = json.loads(request.body)
@@ -180,7 +181,11 @@ def update(request, id):
             if new_display_name:
                 player.display_name = new_display_name
             message += ", ".join(
-                [f"{key}: {value}" for key, value in data.items() if value and key != "password"]
+                [
+                    f"{key}: {value}"
+                    for key, value in data.items()
+                    if value and key != "password"
+                ]
             )
             player.save()
         except User.DoesNotExist:
@@ -217,7 +222,7 @@ def update(request, id):
 
 
 @csrf_exempt
-@session_authenticated()
+@session_authenticated_id
 def upload_avatar(request, id):
     if request.method == "POST":
         # Access the raw binary data
@@ -255,6 +260,57 @@ def upload_avatar(request, id):
     return JsonResponse(
         {"ok": False, "error": "Invalid request method", "statusCode": 405}, status=405
     )
+
+
+@csrf_exempt
+@session_authenticated_id
+def manage_friends(request, id):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        friend_id = data.get("friendUserId")
+
+        if not friend_id:
+            return JsonResponse(
+                {"ok": False, "error": "No friend id provided", "statusCode": 400},
+                status=400,
+            )
+
+        try:
+            user = User.objects.get(id=id)
+            player = user.player
+            friendUser = User.objects.get(id=friend_id)  # Find the friend by ID
+            
+            # Check if the friendship already exists
+            if Friend.objects.filter(player=player, friend=friendUser.player).exists():
+                return JsonResponse(
+                    {"ok": False, "error": "Friendship already exists", "statusCode": 400},
+                    status=400,
+                )
+            # Create new friendship
+            new_friendship = Friend.objects.create(player=player, friend=friendUser.player)
+        except ObjectDoesNotExist:
+            return JsonResponse(
+                {"ok": False, "error": "Player or Friend not found", "statusCode": 404},
+                status=404,
+            )
+
+        return JsonResponse(
+            {
+                "ok": True,
+                "message": "Friend added successfully!",
+                "data": {
+                    "friend_id": new_friendship.friend.id,
+                    "friend_display_name": new_friendship.friend.display_name,
+                },
+                "statusCode": 201,
+            },
+            status=201,
+        )
+
+    return JsonResponse(
+        {"ok": False, "error": "Invalid request method", "statusCode": 405}, status=405
+    )
+
 
 
 ##################################

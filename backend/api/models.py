@@ -19,7 +19,6 @@ class Player(models.Model):
 
     def __str__(self):
         return self.display_name if self.display_name else self.user.username
-        # return f"Player: {self.display_name}"
 
 # Use signal to remove corresponding user on player deletion
 @receiver(post_delete, sender=Player)
@@ -115,4 +114,4 @@ class Friend(models.Model):
     ]
 
     def __str__(self):
-        return f"{self.player.display_name} is friends with {self.friend.display_name}"
+        return f"{self.player.display_name if self.player.display_name else self.player.user.username} is friends with {self.friend.display_name}"

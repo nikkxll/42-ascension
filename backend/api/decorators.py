@@ -4,7 +4,8 @@ from .sessions import decrypt_session_value
 
 
 # Decorator factory which return a decorator for different role authorization
-def session_authenticated(required_role=None):
+# strict=True authentication will also check if corresponding session_id has correct user id
+def session_authenticated(strict=False):
     def decorator(func):
         @wraps(func)
         def wrapper(request, *args, **kwargs):
@@ -21,11 +22,8 @@ def session_authenticated(required_role=None):
                 if (
                     session_data
                     and session_data.get("is_authenticated")
-                    and session_data.get("id") == id
+                    and (strict==False or session_data.get("id") == id)
                 ):
-                    # if required_role and session_data.get("role") != required_role:
-                    #     return JsonResponse({"error": "Permission denied"}, status=403)
-
                     return func(request, *args, **kwargs)
 
             return JsonResponse(
@@ -40,3 +38,9 @@ def session_authenticated(required_role=None):
         return wrapper
 
     return decorator
+
+def session_authenticated_logged_in(func):
+    return session_authenticated()(func)
+
+def session_authenticated_id(func):
+    return session_authenticated(strict=True)(func)
