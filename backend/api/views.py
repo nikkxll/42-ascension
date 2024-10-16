@@ -23,7 +23,7 @@ from urllib.parse import urlencode
 def manage_players(request):
     if request.method == "GET":
         try:
-            return get_players()
+            return get_players(request)
         except Exception as e:
             return JsonResponse(
                 {"ok": False, "error": str(e), "statusCode": 500}, status=500
@@ -46,8 +46,8 @@ def manage_players(request):
         {"ok": False, "error": "Invalid request method", "statusCode": 405}, status=405
     )
 
-
-def get_players():
+@session_authenticated_logged_in
+def get_players(request):
     players = Player.objects.all()
     players_data = [
         {
@@ -177,8 +177,9 @@ def custom_logout(request, id):
 
 
 @csrf_exempt
-@session_authenticated_id
 def manage_player(request, id):
+    if request.method == "GET":
+        return get_player(request, id)
     if request.method == "PATCH":
         try:
             return update_player(request, id)
@@ -207,7 +208,27 @@ def manage_player(request, id):
 
     return JsonResponse({"ok": False, "error": "Invalid request method"}, status=405)
 
+@session_authenticated_logged_in
+def get_player(request, id):
+    try:
+        user = User.objects.get(id=id)
+        player = user.player
+        player_data = {
+            "username": user.username,
+            "displayName": player.display_name
+        }
+        return JsonResponse(
+            {"ok": True, "data": player_data, "statusCode": 200},
+            status=200,
+        )
+    except ObjectDoesNotExist:
+        return JsonResponse(
+            {"ok": False, "error": "Player not found", "statusCode": 404},
+            status=404,
+        )
 
+
+@session_authenticated_id
 def update_player(request, id):
     message = "New data was set: "
     data = json.loads(request.body)
@@ -295,7 +316,6 @@ def upload_avatar(request, id):
 
 
 @csrf_exempt
-@session_authenticated_id
 def manage_friends(request, id):
     if request.method == "GET":
         try:
@@ -321,7 +341,7 @@ def manage_friends(request, id):
         {"ok": False, "error": "Invalid request method", "statusCode": 405}, status=405
     )
 
-
+@session_authenticated_logged_in
 def get_friends(id):
     user = User.objects.get(id=id)
     friends = user.player.friends.all()
@@ -340,7 +360,7 @@ def get_friends(id):
         status=200,
     )
 
-
+@session_authenticated_id
 def create_friend(request, id):
     data = json.loads(request.body)
     friend_id = data.get("friendUserId")
