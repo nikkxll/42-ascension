@@ -146,21 +146,35 @@ def custom_logout(request, id):
 
 @csrf_exempt
 @session_authenticated()
-def set_display_name(request, id):
+def update(request, id):
     if request.method == "PATCH":
+        message = "New data was set: "
         data = json.loads(request.body)
-        display_name = data.get("displayName")
-        if not display_name:
+        new_username = data.get("username")
+        new_password = data.get("password")
+        new_display_name = data.get("displayName")
+        if not new_username and not new_password and not new_display_name:
             return JsonResponse(
-                {"ok": False, "error": "Display name is required", "statusCode": 400},
+                {
+                    "ok": False,
+                    "error": "You need to provide at least one field",
+                    "statusCode": 400,
+                },
                 status=400,
             )
 
         try:
             user = User.objects.get(id=id)
             player = Player.objects.get(user=user)
-            old_display_name = player.display_name
-            player.display_name = display_name
+            if new_username:
+                user.username = new_username
+            if new_password:
+                user.password = new_password
+            if new_display_name:
+                player.display_name = new_display_name
+            message += ", ".join(
+                [f"{key}: {value}" for key, value in data.items() if value and key != "password"]
+            )
             player.save()
         except User.DoesNotExist:
             return JsonResponse(
@@ -187,51 +201,12 @@ def set_display_name(request, id):
         return JsonResponse(
             {
                 "ok": True,
-                "message": f"Display name for id:{id} changed from {old_display_name} to {display_name} ",
+                "message": message,
                 "statusCode": 200,
             }
         )
 
     return JsonResponse({"ok": False, "error": "Invalid request method"}, status=405)
-
-
-@csrf_exempt
-@session_authenticated()
-def set_username(request, id):
-    if request.method == "PATCH":
-        data = json.loads(request.body)
-        new_username = data.get("username")
-        if not new_username:
-            return JsonResponse(
-                {"ok": False, "error": "New username is required", "statusCode": 400},
-                status=400,
-            )
-        try:
-            user = User.objects.get(id=id)
-            old_username = user.username
-            user.username = new_username
-            user.save()
-        except ObjectDoesNotExist:
-            return JsonResponse(
-                {"ok": False, "error": "User not found", "statusCode": 404},
-                status=404,
-            )
-        except Exception as e:
-            return JsonResponse(
-                {"ok": False, "error": str(e), "statusCode": 500}, status=500
-            )
-        return JsonResponse(
-            {
-                "ok": True,
-                "message": f"Username updated sucessfully from {old_username} to {new_username}",
-                "statusCode": 200,
-            },
-            status=200,
-        )
-
-    return JsonResponse(
-        {"ok": False, "error": "Invalid request method", "statusCode": 405}, status=405
-    )
 
 
 @csrf_exempt
