@@ -14,6 +14,8 @@ https://localhost/game.html - game with 2 ai with Threejs, will expand a bit thi
 
 ## Backend endpoints
 
+When we refer to id, it is always built-in user id.
+
 ### Create a new user
 
 ```

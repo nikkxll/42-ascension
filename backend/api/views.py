@@ -21,52 +21,27 @@ from urllib.parse import urlencode
 
 @csrf_exempt
 def manage_players(request):
-    if request.method == "POST":
-        data = json.loads(request.body)
-
-        # Extract required fields from the request body
-        username = data.get("username")
-        password = data.get("password")
-        display_name = data.get("displayName")
-
-        if not username:
-            return JsonResponse(
-                {"ok": False, "error": "User name is required", "statusCode": 400},
-                status=400,
-            )
-        if not password:
-            return JsonResponse(
-                {"ok": False, "error": "Password is required", "statusCode": 400},
-                status=400,
-            )
-        # if not display_name:
-        #     return JsonResponse({"error": "Display name is required"}, status=400)
-
+    if request.method == "GET":
         try:
-            # Create the user
-            user = User.objects.create_user(username=username, password=password)
-            # Create the player with the associated user
-            player = Player.objects.create(user=user, display_name=display_name)
-
-            # Return success response
+            get_all_players()
+        except Exception as e:
             return JsonResponse(
                 {
-                    "ok": True,
-                    "data": {
-                        "id": player.user.id,
-                        "username": user.username,
-                        "displayName": player.display_name,
-                    },
-                    "statusCode": 201,
+                    "ok": False,
+                    "error": str(e),
+                    "statusCode": 500,
                 },
-                status=201,
+                status=500,
             )
+
+    if request.method == "POST":
+        try:
+            create_player()
         except IntegrityError:
             return JsonResponse(
                 {"ok": False, "error": "User already exists", "statusCode": 400},
                 status=400,
             )
-
         except Exception as e:
             return JsonResponse(
                 {"ok": False, "error": str(e), "statusCode": 500}, status=500
@@ -74,6 +49,60 @@ def manage_players(request):
 
     return JsonResponse(
         {"ok": False, "error": "Invalid request method", "statusCode": 405}, status=405
+    )
+
+
+def get_all_players():
+    players = Player.objects.all()
+    players_data = [
+        {
+            "id": player.user.id,
+            "username": player.user.username,
+            "displayName": player.display_name,
+            "createdAt": player.created_at.isoformat(),  # Format datetime if needed
+        }
+        for player in players
+    ]
+    return JsonResponse(
+        {"ok": True, "data": {"players": players_data}, "statusCode": 200},
+        status=200,
+    )
+
+
+def create_player():
+    data = json.loads(request.body)
+    # Extract required fields from the request body
+    username = data.get("username")
+    password = data.get("password")
+    display_name = data.get("displayName")
+
+    if not username:
+        return JsonResponse(
+            {"ok": False, "error": "User name is required", "statusCode": 400},
+            status=400,
+        )
+    if not password:
+        return JsonResponse(
+            {"ok": False, "error": "Password is required", "statusCode": 400},
+            status=400,
+        )
+    # Create the user
+    user = User.objects.create_user(username=username, password=password)
+    # Create the player with the associated user
+    player = Player.objects.create(user=user, display_name=display_name)
+
+    # Return success response
+    return JsonResponse(
+        {
+            "ok": True,
+            "data": {
+                "id": player.user.id,
+                "username": user.username,
+                "displayName": player.display_name,
+            },
+            "statusCode": 201,
+        },
+        status=201,
     )
 
 
@@ -279,15 +308,21 @@ def manage_friends(request, id):
             user = User.objects.get(id=id)
             player = user.player
             friendUser = User.objects.get(id=friend_id)  # Find the friend by ID
-            
+
             # Check if the friendship already exists
             if Friend.objects.filter(player=player, friend=friendUser.player).exists():
                 return JsonResponse(
-                    {"ok": False, "error": "Friendship already exists", "statusCode": 400},
+                    {
+                        "ok": False,
+                        "error": "Friendship already exists",
+                        "statusCode": 400,
+                    },
                     status=400,
                 )
             # Create new friendship
-            new_friendship = Friend.objects.create(player=player, friend=friendUser.player)
+            new_friendship = Friend.objects.create(
+                player=player, friend=friendUser.player
+            )
         except ObjectDoesNotExist:
             return JsonResponse(
                 {"ok": False, "error": "Player or Friend not found", "statusCode": 404},
@@ -312,78 +347,81 @@ def manage_friends(request, id):
     )
 
 
-
 ##################################
 # 42 Auth
 ##################################
 
+
 def oauth_redirect(request):
     # Get OAuth parameters from environment variables
-    client_id = os.environ.get('OAUTH_CLIENT_ID')
-    redirect_uri = os.environ.get('OAUTH_REDIRECT')
+    client_id = os.environ.get("OAUTH_CLIENT_ID")
+    redirect_uri = os.environ.get("OAUTH_REDIRECT")
     state = get_random_string(32)
-    request.session['oauth_state'] = state
-    base_url = 'https://api.intra.42.fr/oauth/authorize'
+    request.session["oauth_state"] = state
+    base_url = "https://api.intra.42.fr/oauth/authorize"
     params = {
-        'client_id': client_id,
-        'redirect_uri': redirect_uri,
-        'response_type': 'code',
-        'state': state
+        "client_id": client_id,
+        "redirect_uri": redirect_uri,
+        "response_type": "code",
+        "state": state,
     }
     auth_url = f"{base_url}?{urlencode(params)}"
     return HttpResponseRedirect(auth_url)
 
+
 def oauth_callback(request):
 
-    if request.method == 'GET':
-        #state = request.GET.get('state')
-        code = request.GET.get('code')
+    if request.method == "GET":
+        # state = request.GET.get('state')
+        code = request.GET.get("code")
         if not code:
-             return JsonResponse({'error': 'No code provided'}, status=400)
+            return JsonResponse({"error": "No code provided"}, status=400)
         token_response = exchange_code_for_token(code)
-        if 'error' in token_response:
+        if "error" in token_response:
             return JsonResponse(token_response, status=400)
-        user_data = fetch_42_user_data(token_response['access_token'])
-        if 'error' in user_data:
+        user_data = fetch_42_user_data(token_response["access_token"])
+        if "error" in user_data:
             return JsonResponse(user_data, status=400)
         try:
             # Create the user
-            user = User.objects.create_user(username=user_data['login'])
+            user = User.objects.create_user(username=user_data["login"])
             # Create the player with the associated user
             player = Player.objects.create(
-                user=user, display_name=user_data['displayname'])
+                user=user, display_name=user_data["displayname"]
+            )
 
             # Return success response
-            file_path = os.path.join(os.path.dirname(__file__), 'callback.html')
-            file = open(file_path, 'r')
+            file_path = os.path.join(os.path.dirname(__file__), "callback.html")
+            file = open(file_path, "r")
             html_content = file.read()
             return HttpResponse(html_content)
         except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
+            return JsonResponse({"error": str(e)}, status=500)
+
 
 def fetch_42_user_data(access_token):
-    api_url = 'https://api.intra.42.fr/v2/me'
-    headers = {'Authorization': f'Bearer {access_token}'}
+    api_url = "https://api.intra.42.fr/v2/me"
+    headers = {"Authorization": f"Bearer {access_token}"}
     try:
         response = requests.get(api_url, headers=headers)
         response.raise_for_status()
         return response.json()
     except requests.exceptions.RequestException as e:
-        return {'error': f'Failed to fetch user data: {str(e)}'}
+        return {"error": f"Failed to fetch user data: {str(e)}"}
 
 
 def exchange_code_for_token(code):
- token_url = 'https://api.intra.42.fr/oauth/token'
- data = {
-       'grant_type': 'authorization_code',
-        'client_id': os.environ.get('OAUTH_CLIENT_ID'),
-        'client_secret': os.environ.get('OAUTH_CLIENT_SECRET'),
-        'code': code,
-        'redirect_uri': os.environ.get('OAUTH_REDIRECT'),
-       }
- try:
+    token_url = "https://api.intra.42.fr/oauth/token"
+    data = {
+        "grant_type": "authorization_code",
+        "client_id": os.environ.get("OAUTH_CLIENT_ID"),
+        "client_secret": os.environ.get("OAUTH_CLIENT_SECRET"),
+        "code": code,
+        "redirect_uri": os.environ.get("OAUTH_REDIRECT"),
+    }
+    try:
         response = requests.post(token_url, data=data)
         response.raise_for_status()
         return response.json()
- except requests.exceptions.RequestException as e:
-        return {'error': f'Token exchange failed: {str(e)}'}
+    except requests.exceptions.RequestException as e:
+        return {"error": f"Token exchange failed: {str(e)}"}
