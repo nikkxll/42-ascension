@@ -14,6 +14,9 @@ class Player(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     display_name = models.CharField(max_length=30, unique=True, blank=True, null=True)
     avatar = models.ImageField(upload_to='avatars/', default='avatars/fallback.png', blank=True)
+    status = models.CharField(max_length=20,
+                              choices=FRIEND_ACTIVITY_STATUS_CHOICES,
+                              default='offline') # Status of the friend
     created_at = models.DateTimeField(default=timezone.now) # Date of account creation
     updated_at = models.DateTimeField(auto_now=True) # Date of last account update
 
@@ -104,9 +107,6 @@ class Friend(models.Model):
                                on_delete=models.CASCADE,
                                related_name='friend_of') # Player who is the friend
     created_at = models.DateTimeField(auto_now_add=True) # Date of friendship creation
-    status = models.CharField(max_length=20,
-                              choices=FRIEND_ACTIVITY_STATUS_CHOICES,
-                              default='offline') # Status of the friend
 
     class Meta:
         constraints = [

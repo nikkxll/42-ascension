@@ -23,20 +23,15 @@ from urllib.parse import urlencode
 def manage_players(request):
     if request.method == "GET":
         try:
-            get_all_players()
+            return get_players()
         except Exception as e:
             return JsonResponse(
-                {
-                    "ok": False,
-                    "error": str(e),
-                    "statusCode": 500,
-                },
-                status=500,
+                {"ok": False, "error": str(e), "statusCode": 500}, status=500
             )
 
     if request.method == "POST":
         try:
-            create_player()
+            return create_player(request)
         except IntegrityError:
             return JsonResponse(
                 {"ok": False, "error": "User already exists", "statusCode": 400},
@@ -52,7 +47,7 @@ def manage_players(request):
     )
 
 
-def get_all_players():
+def get_players():
     players = Player.objects.all()
     players_data = [
         {
@@ -69,7 +64,7 @@ def get_all_players():
     )
 
 
-def create_player():
+def create_player(request):
     data = json.loads(request.body)
     # Extract required fields from the request body
     username = data.get("username")
@@ -183,40 +178,10 @@ def custom_logout(request, id):
 
 @csrf_exempt
 @session_authenticated_id
-def update_player(request, id):
+def manage_player(request, id):
     if request.method == "PATCH":
-        message = "New data was set: "
-        data = json.loads(request.body)
-        new_username = data.get("username")
-        new_password = data.get("password")
-        new_display_name = data.get("displayName")
-        if not new_username and not new_password and not new_display_name:
-            return JsonResponse(
-                {
-                    "ok": False,
-                    "error": "You need to provide at least one field",
-                    "statusCode": 400,
-                },
-                status=400,
-            )
-
         try:
-            user = User.objects.get(id=id)
-            player = Player.objects.get(user=user)
-            if new_username:
-                user.username = new_username
-            if new_password:
-                user.password = new_password
-            if new_display_name:
-                player.display_name = new_display_name
-            message += ", ".join(
-                [
-                    f"{key}: {value}"
-                    for key, value in data.items()
-                    if value and key != "password"
-                ]
-            )
-            player.save()
+            return update_player(request, id)
         except User.DoesNotExist:
             return JsonResponse(
                 {"ok": False, "error": "User not found", "statusCode": 404}, status=404
@@ -239,15 +204,49 @@ def update_player(request, id):
             return JsonResponse(
                 {"ok": False, "error": str(e), "statusCode": 500}, status=500
             )
-        return JsonResponse(
-            {
-                "ok": True,
-                "message": message,
-                "statusCode": 200,
-            }
-        )
 
     return JsonResponse({"ok": False, "error": "Invalid request method"}, status=405)
+
+
+def update_player(request, id):
+    message = "New data was set: "
+    data = json.loads(request.body)
+    new_username = data.get("username")
+    new_password = data.get("password")
+    new_display_name = data.get("displayName")
+    if not new_username and not new_password and not new_display_name:
+        return JsonResponse(
+            {
+                "ok": False,
+                "error": "You need to provide at least one field",
+                "statusCode": 400,
+            },
+            status=400,
+        )
+
+    user = User.objects.get(id=id)
+    player = Player.objects.get(user=user)
+    if new_username:
+        user.username = new_username
+    if new_password:
+        user.password = new_password
+    if new_display_name:
+        player.display_name = new_display_name
+    message += ", ".join(
+        [
+            f"{key}: {value}"
+            for key, value in data.items()
+            if value and key != "password"
+        ]
+    )
+    player.save()
+    return JsonResponse(
+        {
+            "ok": True,
+            "message": message,
+            "statusCode": 200,
+        }
+    )
 
 
 @csrf_exempt
@@ -270,6 +269,10 @@ def upload_avatar(request, id):
             return JsonResponse(
                 {"ok": False, "error": "Player not found", "statusCode": 404},
                 status=404,
+            )
+        except Exception as e:
+            return JsonResponse(
+                {"ok": False, "error": str(e), "statusCode": 500}, status=500
             )
 
         player.avatar.save(f"{id}_avatar.png", ContentFile(avatar), save=True)
@@ -294,56 +297,86 @@ def upload_avatar(request, id):
 @csrf_exempt
 @session_authenticated_id
 def manage_friends(request, id):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        friend_id = data.get("friendUserId")
-
-        if not friend_id:
-            return JsonResponse(
-                {"ok": False, "error": "No friend id provided", "statusCode": 400},
-                status=400,
-            )
-
+    if request.method == "GET":
         try:
-            user = User.objects.get(id=id)
-            player = user.player
-            friendUser = User.objects.get(id=friend_id)  # Find the friend by ID
-
-            # Check if the friendship already exists
-            if Friend.objects.filter(player=player, friend=friendUser.player).exists():
-                return JsonResponse(
-                    {
-                        "ok": False,
-                        "error": "Friendship already exists",
-                        "statusCode": 400,
-                    },
-                    status=400,
-                )
-            # Create new friendship
-            new_friendship = Friend.objects.create(
-                player=player, friend=friendUser.player
+            return get_friends(id)
+        except Exception as e:
+            return JsonResponse(
+                {"ok": False, "error": str(e), "statusCode": 500}, status=500
             )
+    if request.method == "POST":
+        try:
+            return create_friend(request, id)
         except ObjectDoesNotExist:
             return JsonResponse(
                 {"ok": False, "error": "Player or Friend not found", "statusCode": 404},
                 status=404,
             )
-
-        return JsonResponse(
-            {
-                "ok": True,
-                "message": "Friend added successfully!",
-                "data": {
-                    "friend_id": new_friendship.friend.id,
-                    "friend_display_name": new_friendship.friend.display_name,
-                },
-                "statusCode": 201,
-            },
-            status=201,
-        )
+        except Exception as e:
+            return JsonResponse(
+                {"ok": False, "error": str(e), "statusCode": 500}, status=500
+            )
 
     return JsonResponse(
         {"ok": False, "error": "Invalid request method", "statusCode": 405}, status=405
+    )
+
+
+def get_friends(id):
+    user = User.objects.get(id=id)
+    friends = user.player.friends.all()
+    friends_data = [
+        {
+            "id": friend.player.user.id,
+            "username": friend.player.user.username,
+            "displayName": friend.player.display_name,
+            "status": friend.player.status,
+            "createdAt": friend.player.created_at.isoformat(),  # Format datetime if needed
+        }
+        for friend in friends
+    ]
+    return JsonResponse(
+        {"ok": True, "data": {"friends": friends_data}, "statusCode": 200},
+        status=200,
+    )
+
+
+def create_friend(request, id):
+    data = json.loads(request.body)
+    friend_id = data.get("friendUserId")
+
+    if not friend_id:
+        return JsonResponse(
+            {"ok": False, "error": "No friend id provided", "statusCode": 400},
+            status=400,
+        )
+    user = User.objects.get(id=id)
+    player = user.player
+    friend_user = User.objects.get(id=friend_id)  # Find the friend by ID
+
+    # Check if the friendship already exists
+    if Friend.objects.filter(player=player, friend=friend_user.player).exists():
+        return JsonResponse(
+            {
+                "ok": False,
+                "error": "Friendship already exists",
+                "statusCode": 400,
+            },
+            status=400,
+        )
+    # Create new friendship
+    new_friendship = Friend.objects.create(player=player, friend=friend_user.player)
+    return JsonResponse(
+        {
+            "ok": True,
+            "message": "Friend added successfully!",
+            "data": {
+                "friend_id": new_friendship.friend.id,
+                "friend_display_name": new_friendship.friend.display_name,
+            },
+            "statusCode": 201,
+        },
+        status=201,
     )
 
 
