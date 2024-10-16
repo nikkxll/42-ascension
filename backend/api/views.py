@@ -1,3 +1,4 @@
+import os
 import json
 from django.contrib.auth.models import User
 from django.db import IntegrityError
@@ -9,6 +10,12 @@ from .sessions import create_encrypted_session_value
 from django.core.files.base import ContentFile
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
+from django.http import HttpResponseRedirect, HttpResponse
+
+
+import requests
+from django.utils.crypto import get_random_string
+from urllib.parse import urlencode
 
 
 @csrf_exempt
@@ -248,3 +255,79 @@ def upload_avatar(request, id):
     return JsonResponse(
         {"ok": False, "error": "Invalid request method", "statusCode": 405}, status=405
     )
+
+
+##################################
+# 42 Auth
+##################################
+
+def oauth_redirect(request):
+    # Get OAuth parameters from environment variables
+    client_id = os.environ.get('OAUTH_CLIENT_ID')
+    redirect_uri = os.environ.get('OAUTH_REDIRECT')
+    state = get_random_string(32)
+    request.session['oauth_state'] = state
+    base_url = 'https://api.intra.42.fr/oauth/authorize'
+    params = {
+        'client_id': client_id,
+        'redirect_uri': redirect_uri,
+        'response_type': 'code',
+        'state': state
+    }
+    auth_url = f"{base_url}?{urlencode(params)}"
+    return HttpResponseRedirect(auth_url)
+
+def oauth_callback(request):
+
+    if request.method == 'GET':
+        #state = request.GET.get('state')
+        code = request.GET.get('code')
+        if not code:
+             return JsonResponse({'error': 'No code provided'}, status=400)
+        token_response = exchange_code_for_token(code)
+        if 'error' in token_response:
+            return JsonResponse(token_response, status=400)
+        user_data = fetch_42_user_data(token_response['access_token'])
+        if 'error' in user_data:
+            return JsonResponse(user_data, status=400)
+        try:
+            # Create the user
+            user = User.objects.create_user(username=user_data['login'])
+            # Create the player with the associated user
+            player = Player.objects.create(
+                user=user, display_name=user_data['displayname'])
+
+            # Return success response
+            file_path = os.path.join(os.path.dirname(__file__), 'callback.html')
+            file = open(file_path, 'r')
+            html_content = file.read()
+            return HttpResponse(html_content)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+def fetch_42_user_data(access_token):
+    api_url = 'https://api.intra.42.fr/v2/me'
+    headers = {'Authorization': f'Bearer {access_token}'}
+    try:
+        response = requests.get(api_url, headers=headers)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        return {'error': f'Failed to fetch user data: {str(e)}'}
+
+
+def exchange_code_for_token(code):
+ token_url = 'https://api.intra.42.fr/oauth/token'
+ data = {
+       'grant_type': 'authorization_code',
+        'client_id': os.environ.get('OAUTH_CLIENT_ID'),
+        'client_secret': os.environ.get('OAUTH_CLIENT_SECRET'),
+        'code': code,
+        'redirect_uri': os.environ.get('OAUTH_REDIRECT'),
+       }
+ try:
+        response = requests.post(token_url, data=data)
+        response.raise_for_status()
+        return response.json()
+ except requests.exceptions.RequestException as e:
+        return {'error': f'Token exchange failed: {str(e)}'}

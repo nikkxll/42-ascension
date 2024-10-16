@@ -9,4 +9,6 @@ urlpatterns = [
     path('players/<int:id>/avatar/', views.upload_avatar, name='upload_avatar'),
     path('auth/login/', views.custom_login, name='login'),
     path('auth/logout/<int:id>/', views.custom_logout, name='logout'),
+    path('oauth/redirect/', views.oauth_redirect, name='oauth_redirect'),
+    path('oauth/callback/', views.oauth_callback, name='oauth_callback')
 ]
