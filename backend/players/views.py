@@ -22,9 +22,15 @@ def create_player(request):
         display_name = data.get("displayName")
 
         if not username:
-            return JsonResponse({"error": "User name is required"}, status=400)
+            return JsonResponse(
+                {"ok": False, "error": "User name is required", "statusCode": 400},
+                status=400,
+            )
         if not password:
-            return JsonResponse({"error": "Password is required"}, status=400)
+            return JsonResponse(
+                {"ok": False, "error": "Password is required", "statusCode": 400},
+                status=400,
+            )
         # if not display_name:
         #     return JsonResponse({"error": "Display name is required"}, status=400)
 
@@ -37,44 +43,31 @@ def create_player(request):
             # Return success response
             return JsonResponse(
                 {
-                    "id": player.id,
-                    "username": user.username,
-                    "displayName": player.display_name,
+                    "ok": True,
+                    "data": {
+                        "id": player.user.id,
+                        "username": user.username,
+                        "displayName": player.display_name,
+                    },
+                    "statusCode": 201,
                 },
                 status=201,
             )
         except IntegrityError:
-            return JsonResponse({"error": "User already exists"}, status=400)
+            return JsonResponse(
+                {"ok": False, "error": "User already exists", "statusCode": 400},
+                status=400,
+            )
 
         except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
+            return JsonResponse(
+                {"ok": False, "error": str(e), "statusCode": 500}, status=500
+            )
 
-    return JsonResponse({"error": "Invalid request method"}, status=405)
+    return JsonResponse(
+        {"ok": False, "error": "Invalid request method", "statusCode": 405}, status=405
+    )
 
-@csrf_exempt
-@session_authenticated()
-def set_display_name(request, username):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        display_name = data.get("displayName")
-        if not display_name:
-            return JsonResponse({"error": "Display name is required"}, status=400)
-
-        try:
-            user = User.objects.get(username=username)
-            player = Player.objects.get(user=user)
-        except User.DoesNotExist:
-            return JsonResponse({"error": "User not found"}, status=404)
-        except Player.DoesNotExist:
-            return JsonResponse({"error": "Player not found"}, status=404)
-        except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
-
-        player.display_name = display_name
-        player.save()
-        return JsonResponse({"message": f"Changed name to {display_name} for {username}"})
-
-    return JsonResponse({"error": "Invalid request method"}, status=405)
 
 @csrf_exempt
 def custom_login(request):
@@ -87,73 +80,196 @@ def custom_login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             # Create a unique session key
-            session_key = f"session_{username}"
+            session_key = f"session_{user.id}"
 
             # Encrypt user session data
             session_value = create_encrypted_session_value(
                 {
+                    "id": user.id,
                     "username": user.username,
                     "is_authenticated": True,
                 }
             )
 
             # Set the session in the cookies
-            response = JsonResponse({"message": f"Login successful for {username}"})
+            response = JsonResponse(
+                {
+                    "ok": True,
+                    "message": f"Login successful for {username}",
+                    "data": {"id": user.id, "username": username},
+                    "statusCode": 200,
+                },
+                status=200,
+            )
             # response.set_cookie(session_key, session_value, httponly=True, secure=True) // secure will work with HTTPS only
             response.set_cookie(session_key, session_value, httponly=True)
 
             return response
         else:
-            return JsonResponse({"error": "Invalid credentials"}, status=401)
-    return JsonResponse({"error": "Method not allowed"}, status=405)
+            return JsonResponse(
+                {"ok": False, "error": "Invalid credentials", "statusCode": 401},
+                status=401,
+            )
+    return JsonResponse(
+        {"ok": False, "error": "Method not allowed", "statusCode": 405}, status=405
+    )
 
 
 @csrf_exempt
 @session_authenticated()
-def custom_logout(request, username):
+def custom_logout(request, id):
     if request.method == "POST":
-        # data = json.loads(request.body)
-        # username = data.get("username")
-        session_key = f"session_{username}"
+        session_key = f"session_{id}"
 
         # Check if the session exists for the given user
         if session_key in request.COOKIES:
             # Create a response object
-            response = JsonResponse({"message": f"Logged out {username}"})
+            response = JsonResponse(
+                {"ok": True, "message": f"Logged out id:{id}", "statusCode": 200}
+            )
             # Delete the session cookie by setting it to an empty value and an expired date
             response.delete_cookie(session_key)
             return response
         else:
             return JsonResponse(
-                {"error": f"No active session for {username}"}, status=404
+                {
+                    "ok": False,
+                    "error": f"No active session for id:{id}",
+                    "statusCode": 404,
+                },
+                status=404,
             )
-    return JsonResponse({"error": "Method not allowed"}, status=405)
+    return JsonResponse(
+        {"ok": False, "error": "Method not allowed", "statusCode": 405}, status=405
+    )
 
 
 @csrf_exempt
 @session_authenticated()
-def upload_avatar(request, username):
-    if request.method == 'POST':
+def set_display_name(request, id):
+    if request.method == "PATCH":
+        data = json.loads(request.body)
+        display_name = data.get("displayName")
+        if not display_name:
+            return JsonResponse(
+                {"ok": False, "error": "Display name is required", "statusCode": 400},
+                status=400,
+            )
+
+        try:
+            user = User.objects.get(id=id)
+            player = Player.objects.get(user=user)
+            old_display_name = player.display_name
+            player.display_name = display_name
+            player.save()
+        except User.DoesNotExist:
+            return JsonResponse(
+                {"ok": False, "error": "User not found", "statusCode": 404}, status=404
+            )
+        except Player.DoesNotExist:
+            return JsonResponse(
+                {"ok": False, "error": "Player not found", "statusCode": 404},
+                status=404,
+            )
+        except IntegrityError as e:
+            return JsonResponse(
+                {
+                    "ok": False,
+                    "error": "Integrity error occurred: " + str(e),
+                    "statusCode": 400,
+                },
+                status=400,
+            )
+        except Exception as e:
+            return JsonResponse(
+                {"ok": False, "error": str(e), "statusCode": 500}, status=500
+            )
+        return JsonResponse(
+            {
+                "ok": True,
+                "message": f"Display name for id:{id} changed from {old_display_name} to {display_name} ",
+                "statusCode": 200,
+            }
+        )
+
+    return JsonResponse({"ok": False, "error": "Invalid request method"}, status=405)
+
+
+@csrf_exempt
+@session_authenticated()
+def set_username(request, id):
+    if request.method == "PATCH":
+        data = json.loads(request.body)
+        new_username = data.get("username")
+        if not new_username:
+            return JsonResponse(
+                {"ok": False, "error": "New username is required", "statusCode": 400},
+                status=400,
+            )
+        try:
+            user = User.objects.get(id=id)
+            old_username = user.username
+            user.username = new_username
+            user.save()
+        except ObjectDoesNotExist:
+            return JsonResponse(
+                {"ok": False, "error": "User not found", "statusCode": 404},
+                status=404,
+            )
+        except Exception as e:
+            return JsonResponse(
+                {"ok": False, "error": str(e), "statusCode": 500}, status=500
+            )
+        return JsonResponse(
+            {
+                "ok": True,
+                "message": f"Username updated sucessfully from {old_username} to {new_username}",
+                "statusCode": 200,
+            },
+            status=200,
+        )
+
+    return JsonResponse(
+        {"ok": False, "error": "Invalid request method", "statusCode": 405}, status=405
+    )
+
+
+@csrf_exempt
+@session_authenticated()
+def upload_avatar(request, id):
+    if request.method == "POST":
         # Access the raw binary data
         avatar = request.body  # This will contain the binary data of the file
 
         if not avatar:
-            return JsonResponse({'error': 'No file uploaded'}, status=400)
+            return JsonResponse(
+                {"ok": False, "error": "No file uploaded", "statusCode": 400},
+                status=400,
+            )
 
         try:
-            user = User.objects.get(username=username)
-            # Then access the related Player object
-            player = user.player  # Assuming a OneToOne relationship with Player model
+            user = User.objects.get(id=id)
+            player = user.player
         except ObjectDoesNotExist:
+            return JsonResponse(
+                {"ok": False, "error": "Player not found", "statusCode": 404},
+                status=404,
+            )
 
-            return JsonResponse({'error': 'Player not found'}, status=404)
+        player.avatar.save(f"{id}_avatar.png", ContentFile(avatar), save=True)
 
-        # # Assuming player.avatar is a FileField or ImageField
-        player.avatar.save(f'{username}_avatar.png', ContentFile(avatar), save=True)
+        return JsonResponse(
+            {
+                "ok": True,
+                "message": "Avatar uploaded successfully!",
+                "data": {
+                    "avatar_url": player.avatar.url,
+                },
+                "statusCode": 200,
+            },
+            status=200,
+        )
 
-        return JsonResponse({
-            'message': 'Avatar uploaded successfully!',
-            'avatar_url': player.avatar.url
-        }, status=200)
-
-    return JsonResponse({'error': 'Invalid request method'}, status=405)
+    return JsonResponse(
+        {"ok": False, "error": "Invalid request method", "statusCode": 405}, status=405
+    )

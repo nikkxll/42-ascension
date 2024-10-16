@@ -8,8 +8,9 @@ def session_authenticated(required_role=None):
     def decorator(func):
         @wraps(func)
         def wrapper(request, *args, **kwargs):
-            username = kwargs.get("username")
-            session_key = f"session_{username}"
+            id = kwargs.get("id")
+            print(id)
+            session_key = f"session_{id}"
             session_value = request.COOKIES.get(session_key)
 
             # print("Trying to authenticate!!!")
@@ -17,14 +18,23 @@ def session_authenticated(required_role=None):
             if session_value:
                 session_data = decrypt_session_value(session_value)
                 print(session_data)
-                if session_data and session_data.get("is_authenticated"):
+                if (
+                    session_data
+                    and session_data.get("is_authenticated")
+                    and session_data.get("id") == id
+                ):
                     # if required_role and session_data.get("role") != required_role:
                     #     return JsonResponse({"error": "Permission denied"}, status=403)
 
                     return func(request, *args, **kwargs)
 
             return JsonResponse(
-                {"error": "Unauthorized or invalid session"}, status=401
+                {
+                    "ok": False,
+                    "error": "Unauthorized or invalid session",
+                    "statusCode": 401,
+                },
+                status=401,
             )
 
         return wrapper
