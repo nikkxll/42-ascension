@@ -3,20 +3,20 @@ services:
     build: ./frontend
     ports:
       - '443:443'
+      - '8443:8443'
     volumes:
-      - front:/var/www/html
+      - ./frontend/src:/var/www/html
     networks:
       - transc_network
+    depends_on:
+      - backend
 
   db:
     image: postgres:16.4-bullseye
     container_name: transc_db
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    env_file: ".env"
     expose:
       - 5432
     networks:
@@ -27,34 +27,15 @@ services:
     container_name: transc_backend
     volumes:
       - ./backend:/code
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
     depends_on:
       - db
-    environment:
-      DJANGO_HOST: ${DJANGO_HOST}
-      DEBUG: ${DEBUG}
-      POSTGRES_HOST: ${POSTGRES_HOST}
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      DJANGO_SUPERUSER_USERNAME: ${DJANGO_SUPERUSER_USERNAME}
-      DJANGO_SUPERUSER_PASSWORD: ${DJANGO_SUPERUSER_PASSWORD}
-      DJANGO_SUPERUSER_EMAIL: ${DJANGO_SUPERUSER_EMAIL}
-      OAUTH_CLIENT_ID: ${OAUTH_CLIENT_ID}
-      OAUTH_CLIENT_SECRET: ${OAUTH_CLIENT_SECRET}
-      OAUTH_REDIRECT: ${OAUTH_REDIRECT}
+    env_file: ".env"
     networks:
       - transc_network
 
 volumes:
-  front:
-    driver: local
-    driver_opts:
-      type: 'none'
-      o:    'bind'
-      device: ~/Documents/tutorials-training/hive/projects/ascension/src # change for local machine
-
   postgres_data:
     name: postgres_data
 
