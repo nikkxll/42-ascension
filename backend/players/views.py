@@ -79,7 +79,7 @@ def oauth_redirect(request):
     redirect_uri = os.environ.get('OAUTH_REDIRECT')
     state = get_random_string(32)
     request.session['oauth_state'] = state
-    base_url = 'https://api.intra.42.fr/oauth/authorize'
+    base_url = os.environ.get('OAUTH_AUTHORIZE_URL')
     params = {
         'client_id': client_id,
         'redirect_uri': redirect_uri,
@@ -119,7 +119,7 @@ def oauth_callback(request):
             return JsonResponse({'error': str(e)}, status=500)
 
 def fetch_42_user_data(access_token):
-    api_url = 'https://api.intra.42.fr/v2/me'
+    api_url = os.environ.get('OAUTH_API_URL')
     headers = {'Authorization': f'Bearer {access_token}'}
     try:
         response = requests.get(api_url, headers=headers)
@@ -130,7 +130,7 @@ def fetch_42_user_data(access_token):
 
 
 def exchange_code_for_token(code):
- token_url = 'https://api.intra.42.fr/oauth/token'
+ token_url = os.environ.get('OAUTH_TOKEN_URL')
  data = {
        'grant_type': 'authorization_code',
         'client_id': os.environ.get('OAUTH_CLIENT_ID'),

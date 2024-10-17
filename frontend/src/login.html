@@ -15,34 +15,11 @@
             
             // Open popup to your Django redirect view
             const popup = window.open(
-                'http://localhost:8000/players/oauth/redirect',  // This should match your Django URL pattern
+                'https://localhost:8443/players/oauth/redirect',
                 '42 Authorization',
                 `width=${width},height=${height},top=${top},left=${left}`
             );
-            
-            // Listen for the redirect back to your site
-            // window.addEventListener('message', function(event) {
-            //     if (event.origin !== window.location.origin) return;
-                
-                // if (event.data.type === '42oauth' && event.data.code) {
-                //     console.log('Received code:', event.data.code);
-                //     sendCodeToBackend(event.data.code);
-                // }
-            // });
         }
-
-        // function sendCodeToBackend(code) {
-        //     fetch('/oauth/callback?code=' + code)
-        //         .then(response => response.json())
-        //         .then(data => {
-        //             console.log('Login successful:', data);
-        //             // Handle successful login
-        //         })
-        //         .catch(error => {
-        //             console.error('Login failed:', error);
-        //             // Handle error
-        //         });
-        // }
     </script>
 </body>
 </html>
