@@ -16,12 +16,12 @@ def session_authenticated(strict=False):
 
             # Check passed id (usually passed form the API endpoint URL, e.g. /players/2/)
             print("id: ", id)
-            if (id):
+            if id and strict == True:
                 session_key = f"session_{id}"
                 print("session_key: ", session_key)
                 session_value = request.COOKIES.get(session_key)
             # No ID in URL, then trying to authenticate with any available session
-            elif (strict == False):
+            elif strict == False:
                 for cookie_key, session in request.COOKIES.items():
                     if cookie_key.startswith("session_"):
                         session_value = session

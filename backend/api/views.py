@@ -2,13 +2,14 @@ import os
 import json
 from django.contrib.auth.models import User
 from django.db import IntegrityError
-from .models import Player, Friend
+from .models import Player, Friendship
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate
 from .decorators import session_authenticated_logged_in, session_authenticated_id
 
 from .sessions import create_encrypted_session_value
+from django.contrib.auth.hashers import make_password
 from django.core.files.base import ContentFile
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
@@ -77,7 +78,12 @@ def get_players(request):
         for player in players
     ]
     return JsonResponse(
-        {"ok": True, "data": {"players": players_data}, "statusCode": 200},
+        {
+            "ok": True,
+            "message": "Players successfully listed!",
+            "data": {"players": players_data},
+            "statusCode": 200,
+        },
         status=200,
     )
 
@@ -108,6 +114,7 @@ def create_player(request):
     return JsonResponse(
         {
             "ok": True,
+            "message": "Player successfully created!",
             "data": {
                 "id": player.user.id,
                 "username": user.username,
@@ -227,10 +234,15 @@ def get_player(request, id):
         player_data = {
             "username": user.username,
             "displayName": player.display_name,
-            "status": checkStatus(player)
+            "status": checkStatus(player),
         }
         return JsonResponse(
-            {"ok": True, "data": player_data, "statusCode": 200},
+            {
+                "ok": True,
+                "message": "Player information sucessfully served!",
+                "data": player_data,
+                "statusCode": 200,
+            },
             status=200,
         )
     except ObjectDoesNotExist:
@@ -263,7 +275,7 @@ def update_player(request, id):
         if new_username:
             user.username = new_username
         if new_password:
-            user.password = new_password
+            user.password = make_password(new_password)
         if new_display_name:
             player.display_name = new_display_name
         message += ", ".join(
@@ -274,6 +286,7 @@ def update_player(request, id):
             ]
         )
         player.save()
+        user.save()
         return JsonResponse(
             {
                 "ok": True,
@@ -346,7 +359,7 @@ def upload_avatar(request, id):
 
 
 ##################################
-# Friends
+# Friendship
 ##################################
 
 
@@ -372,7 +385,7 @@ def manage_friends(request, id):
 def get_friends(request, id):
     user = User.objects.get(id=id)
     player = user.player
-    friends = Friend.objects.filter(Q(player1=player) | Q(player2=player))
+    friends = Friendship.objects.filter(Q(player1=player) | Q(player2=player))
 
     friends_list = []
 
@@ -386,12 +399,17 @@ def get_friends(request, id):
                 "id": friend.user.id,
                 "username": friend.user.username,
                 "displayName": friend.display_name,
-                "status": friend.status,
+                "status": checkStatus(friend),
                 "createdAt": friend.created_at.isoformat(),
             }
         )
     return JsonResponse(
-        {"ok": True, "data": {"friends": friends_list}, "statusCode": 200},
+        {
+            "ok": True,
+            "message": "Friends successfully listed!",
+            "data": {"friends": friends_list},
+            "statusCode": 200,
+        },
         status=200,
     )
 
@@ -400,7 +418,7 @@ def get_friends(request, id):
 def request_friend(request, id):
     try:
         data = json.loads(request.body)
-        friend_id = data.get("friendUserId")
+        friend_id = int(data.get("friendUserId"))
 
         if not friend_id:
             return JsonResponse(
@@ -414,12 +432,12 @@ def request_friend(request, id):
         player1 = player
         player2 = friend_user.player
         status = "pending_first_second"
-        if id > int(friend_id):
+        if id > friend_id:
             player1, player2 = player2, player1
             status = "pending_second_first"
 
         # Check if the friendship already exists
-        if Friend.objects.filter(player1=player1, player2=player2).exists():
+        if Friendship.objects.filter(player1=player1, player2=player2).exists():
             return JsonResponse(
                 {
                     "ok": False,
@@ -429,13 +447,13 @@ def request_friend(request, id):
                 status=400,
             )
         # Create new friendship
-        new_friendship = Friend.objects.create(
+        new_friendship = Friendship.objects.create(
             player1=player1, player2=player2, status=status
         )
         return JsonResponse(
             {
                 "ok": True,
-                "message": "Friend request sent successfully!",
+                "message": "Friendship request sent successfully!",
                 "data": {
                     "status": new_friendship.status,
                     "friend_display_name": friend_user.player.display_name,
@@ -446,7 +464,7 @@ def request_friend(request, id):
         )
     except ObjectDoesNotExist:
         return JsonResponse(
-            {"ok": False, "error": "Player or Friend not found", "statusCode": 404},
+            {"ok": False, "error": "Player or Friendship not found", "statusCode": 404},
             status=404,
         )
 
@@ -457,8 +475,10 @@ def manage_friend_request(request, id):
     try:
         if request.method == "POST":
             data = json.loads(request.body)
-            friend_id = data.get("friendUserId")
+            friend_id = int(data.get("friendUserId"))
+            print("friend_id: ", friend_id)
             action = data.get("action")
+            print("action: ", action)
             if not friend_id:
                 return JsonResponse(
                     {"ok": False, "error": "No friend id provided", "statusCode": 400},
@@ -467,31 +487,57 @@ def manage_friend_request(request, id):
             player1 = User.objects.get(id=id).player
             player2 = User.objects.get(id=friend_id).player
 
-            if id > int(friend_id):
+            if id > friend_id:
                 player1, player2 = player2, player1
 
             # Check if the friendship already exists
-            friendship = Friend.objects.filter(player1=player1, player2=player2).get()
-            if not friendship or friendship.status == "friends":
+            friendship = Friendship.objects.filter(
+                player1=player1, player2=player2
+            ).get()
+            if not friendship:
                 return JsonResponse(
                     {
                         "ok": False,
-                        "error": "Friendship does not exist or users are already friends",
+                        "error": "Friendship does not exist",
                         "statusCode": 400,
                     },
                     status=400,
                 )
 
-            if action == "approve":
+            # Check if the user is allowed to approve the friendship request
+            is_pending_second_first = (
+                id < friend_id and friendship.status == "pending_second_first"
+            )
+            is_pending_first_second = (
+                id > friend_id and friendship.status == "pending_first_second"
+            )
+            # print("id: ", id, "friend_id: ", friend_id, "friendship.status: ", friendship.status )
+            # print (is_pending_second_first, is_pending_first_second)
+            # print (action == "approve" and (is_pending_second_first or is_pending_first_second))
+            message = ""
+            if action == "approve" and (
+                is_pending_second_first or is_pending_first_second
+            ):
+                message = "Friendship approved!"
                 friendship.status = "friends"
                 friendship.save()
-            if action == "reject":
+            elif action == "reject":
+                message = "Friendship rejected!"
                 friendship.delete()
+            else:
+                return JsonResponse(
+                    {
+                        "ok": False,
+                        "error": "This frindship action is not allowed",
+                        "statusCode": 400,
+                    },
+                    status=400,
+                )
 
             return JsonResponse(
                 {
                     "ok": True,
-                    "message": "Request success!",
+                    "message": message,
                     "data": {
                         "status": action,
                     },
@@ -499,6 +545,11 @@ def manage_friend_request(request, id):
                 },
                 status=200,
             )
+    except Friendship.DoesNotExist:
+        return JsonResponse(
+            {"ok": False, "error": "Friendship does not exist.", "statusCode": 404},
+            status=404,
+        )
     except User.DoesNotExist:
         return JsonResponse(
             {"ok": False, "error": "User not found", "statusCode": 404}, status=404
@@ -520,70 +571,74 @@ def manage_friend_request(request, id):
 
 def oauth_redirect(request):
     # Get OAuth parameters from environment variables
-    client_id = os.environ.get('OAUTH_CLIENT_ID')
-    redirect_uri = os.environ.get('OAUTH_REDIRECT')
+    client_id = os.environ.get("OAUTH_CLIENT_ID")
+    redirect_uri = os.environ.get("OAUTH_REDIRECT")
     state = get_random_string(32)
-    request.session['oauth_state'] = state
-    base_url = os.environ.get('OAUTH_AUTHORIZE_URL')
+    request.session["oauth_state"] = state
+    base_url = os.environ.get("OAUTH_AUTHORIZE_URL")
     params = {
-        'client_id': client_id,
-        'redirect_uri': redirect_uri,
-        'response_type': 'code',
-        'state': state
+        "client_id": client_id,
+        "redirect_uri": redirect_uri,
+        "response_type": "code",
+        "state": state,
     }
     auth_url = f"{base_url}?{urlencode(params)}"
     return HttpResponseRedirect(auth_url)
 
+
 def oauth_callback(request):
 
-    if request.method == 'GET':
-        #state = request.GET.get('state')
-        code = request.GET.get('code')
+    if request.method == "GET":
+        # state = request.GET.get('state')
+        code = request.GET.get("code")
         if not code:
-             return JsonResponse({'error': 'No code provided'}, status=400)
+            return JsonResponse({"error": "No code provided"}, status=400)
         token_response = exchange_code_for_token(code)
-        if 'error' in token_response:
+        if "error" in token_response:
             return JsonResponse(token_response, status=400)
-        user_data = fetch_42_user_data(token_response['access_token'])
-        if 'error' in user_data:
+        user_data = fetch_42_user_data(token_response["access_token"])
+        if "error" in user_data:
             return JsonResponse(user_data, status=400)
         try:
             # Create the user
-            user = User.objects.create_user(username=user_data['login'])
+            user = User.objects.create_user(username=user_data["login"])
             # Create the player with the associated user
             player = Player.objects.create(
-                user=user, display_name=user_data['displayname'])
+                user=user, display_name=user_data["displayname"]
+            )
 
             # Return success response
-            file_path = os.path.join(os.path.dirname(__file__), 'callback.html')
-            file = open(file_path, 'r')
+            file_path = os.path.join(os.path.dirname(__file__), "callback.html")
+            file = open(file_path, "r")
             html_content = file.read()
             return HttpResponse(html_content)
         except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
+            return JsonResponse({"error": str(e)}, status=500)
+
 
 def fetch_42_user_data(access_token):
-    api_url = os.environ.get('OAUTH_API_URL')
-    headers = {'Authorization': f'Bearer {access_token}'}
+    api_url = os.environ.get("OAUTH_API_URL")
+    headers = {"Authorization": f"Bearer {access_token}"}
     try:
         response = requests.get(api_url, headers=headers)
         response.raise_for_status()
         return response.json()
     except requests.exceptions.RequestException as e:
-        return {'error': f'Failed to fetch user data: {str(e)}'}
+        return {"error": f"Failed to fetch user data: {str(e)}"}
+
 
 def exchange_code_for_token(code):
- token_url = os.environ.get('OAUTH_TOKEN_URL')
- data = {
-       'grant_type': 'authorization_code',
-        'client_id': os.environ.get('OAUTH_CLIENT_ID'),
-        'client_secret': os.environ.get('OAUTH_CLIENT_SECRET'),
-        'code': code,
-        'redirect_uri': os.environ.get('OAUTH_REDIRECT'),
-       }
- try:
+    token_url = os.environ.get("OAUTH_TOKEN_URL")
+    data = {
+        "grant_type": "authorization_code",
+        "client_id": os.environ.get("OAUTH_CLIENT_ID"),
+        "client_secret": os.environ.get("OAUTH_CLIENT_SECRET"),
+        "code": code,
+        "redirect_uri": os.environ.get("OAUTH_REDIRECT"),
+    }
+    try:
         response = requests.post(token_url, data=data)
         response.raise_for_status()
         return response.json()
- except requests.exceptions.RequestException as e:
-        return {'error': f'Token exchange failed: {str(e)}'}
+    except requests.exceptions.RequestException as e:
+        return {"error": f"Token exchange failed: {str(e)}"}

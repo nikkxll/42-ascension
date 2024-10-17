@@ -15,9 +15,6 @@ class Player(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     display_name = models.CharField(max_length=30, unique=True, blank=True, null=True)
     avatar = models.ImageField(upload_to='avatars/', default='avatars/fallback.png', blank=True)
-    status = models.CharField(max_length=20,
-                              choices=ACTIVITY_STATUS_CHOICES,
-                              default='offline')
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
     last_active_at = models.DateTimeField(null=True, blank=True)
@@ -103,7 +100,7 @@ class Match(models.Model):
         return f"Match: {self.player1} vs {self.player2} - Status: {self.status}"
 
 
-class Friend(models.Model):
+class Friendship(models.Model):
     player1 = models.ForeignKey(Player,
                                on_delete=models.CASCADE,
                                related_name='friends_as_player1')
