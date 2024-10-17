@@ -1,14 +1,51 @@
 services:
-  back:
-    build: ./tmpbackend
-    ports:
-      - '8000:8000'
   frontend:
     build: ./frontend
     ports:
       - '443:443'
     volumes:
       - front:/var/www/html
+    networks:
+      - transc_network
+
+  db:
+    image: postgres:16.4-bullseye
+    container_name: transc_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    expose:
+      - 5432
+    networks:
+      - transc_network
+
+  backend:
+    build: ./backend
+    container_name: transc_backend
+    volumes:
+      - ./backend:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      DJANGO_HOST: ${DJANGO_HOST}
+      DEBUG: ${DEBUG}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      DJANGO_SUPERUSER_USERNAME: ${DJANGO_SUPERUSER_USERNAME}
+      DJANGO_SUPERUSER_PASSWORD: ${DJANGO_SUPERUSER_PASSWORD}
+      DJANGO_SUPERUSER_EMAIL: ${DJANGO_SUPERUSER_EMAIL}
+      OAUTH_CLIENT_ID: ${OAUTH_CLIENT_ID}
+      OAUTH_CLIENT_SECRET: ${OAUTH_CLIENT_SECRET}
+      OAUTH_REDIRECT: ${OAUTH_REDIRECT}
+    networks:
+      - transc_network
 
 volumes:
   front:
@@ -16,4 +53,12 @@ volumes:
     driver_opts:
       type: 'none'
       o:    'bind'
-      device: ./frontend/src # change for local machine
+      device: ./frontend/src
+
+  postgres_data:
+    name: postgres_data
+
+networks:
+  transc_network:
+    name: transc_network
+    driver: bridge
