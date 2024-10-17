@@ -58,7 +58,7 @@ def manage_players(request):
 
 def checkStatus(player):
     five_minutes_ago = timezone.now() - timedelta(minutes=5)
-    if player.last_active_at < five_minutes_ago:
+    if not player.last_active_at or player.last_active_at < five_minutes_ago:
         return "Offline"
     return "Online"
 

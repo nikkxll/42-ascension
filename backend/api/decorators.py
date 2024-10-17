@@ -37,6 +37,7 @@ def session_authenticated(strict=False):
                     and session_data.get("is_authenticated")
                     and (strict==False or session_data.get("id") == id)
                 ):
+                    print("Authenticated!")
                     return func(request, *args, **kwargs)
 
             return JsonResponse(

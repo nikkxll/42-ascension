@@ -12,10 +12,10 @@ class LastActiveMiddleware:
         for cookie_key, session_value in request.COOKIES.items():
             # Check if the cookie key starts with 'session_'
             if cookie_key.startswith("session_"):
-                print("Middleware found session!")
-                print(cookie_key, session_value)
+                # print("Middleware found session!")
+                # print(cookie_key, session_value)
                 session_data = decrypt_session_value(session_value)
-                print(session_data)
+                # print(session_data)
                 try:
                     user = User.objects.get(id=session_data["id"])
                     player = user.player
