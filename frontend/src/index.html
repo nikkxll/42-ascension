@@ -175,9 +175,17 @@
 		</script>
 		<script>
 			let gameWindow = document.getElementById("gameWindow")
-			function startOff()  {
+			//async function  startOff() {
+			function  startOff() {
 				gameWindow.style.display = "block"
-				startGame()
+				//let result = await startGame()
+				let result = startGame()
+				console.log("resutl=", result)
+				//gameWindow.style.display = "none"
+				// startGame().then(result => {
+     			//  	console.log("result =", result);  // Log the result
+      			//  	gameWindow.style.display = "none";  // Hide the game window after the game finishes
+    			// }	
 			}
 		</script>
 	</body>

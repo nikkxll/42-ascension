@@ -44,7 +44,7 @@ window.startGame = () => {
     const ballPower = 6
     let ballvelocity = { x: ballPower, y: ballPower }
     const playerSpeed = 12
-    let ai = 2
+    let ai = 1
 
     // the per frame change that is influenced by keyboard presses
     let playe1Delta = 0
@@ -223,6 +223,7 @@ window.startGame = () => {
     }
  
     /* ----- loop setup ----- */
+    let animationId = null;
     // start a clock
     let clock = new THREE.Clock();
     // keep track of deltatime since last frame
@@ -230,10 +231,11 @@ window.startGame = () => {
     // 75 max fps
     let interval = 1 / 75;
 
+
     function loop() {
         if (ai != 0)
             runAi()
-        requestAnimationFrame(loop);
+        animationId = requestAnimationFrame(loop);
         // keep track of time since last loop call
         delta += clock.getDelta();
 
@@ -283,8 +285,8 @@ window.startGame = () => {
             {
                 ball.position.x = player1.position.x - player1.scale.x / 2 - ball.scale.x / 2 - 0.01
                 if (Math.pow(ballvelocity.x,2) + Math.pow(ballvelocity.y,2) < 1000){
-                    ballvelocity.x *= -1.2
-                    ballvelocity.y *= 1.2
+                    ballvelocity.x *= -1.5
+                    ballvelocity.y *= 1.5
                 }
                 else
                     ballvelocity.x *= -1
@@ -295,8 +297,8 @@ window.startGame = () => {
                 ball.position.x = player2.position.x + player2.scale.x / 2 + ball.scale.x / 2 + 0.01
                 //ballvelocity.x *= -1
                 if (Math.pow(ballvelocity.x,2) + Math.pow(ballvelocity.y,2) < 1000){
-                    ballvelocity.x *= -1.2
-                    ballvelocity.y *= 1.2
+                    ballvelocity.x *= -1.5
+                    ballvelocity.y *= 1.5
                 }
                 else {
                     ballvelocity.x *= -1
@@ -314,6 +316,16 @@ window.startGame = () => {
                 ball.position.y = 0
                 ballvelocity = {x: Math.sign(ballvelocity.x) * ballPower, y: Math.sign(ballvelocity.y) * ballPower}
                 deltaTimeAi = 2;
+                //if (count = 11)
+                //  return data
+                cancelAnimationFrame(animationId);
+                //return 1; 
+                // data to return
+                // player 1 score1
+                // player 2 score2
+                // game_time time
+                // ??? mean max speed of the ball
+
             }
 
             // update each outer box height based on sin to create a wave effect
@@ -341,5 +353,19 @@ window.startGame = () => {
 
     setup()
     loop()
+
+    return 1;
+    // return new Promise((resolve, reject) => {
+    //     // Simulate the game logic with a timeout, or call the game logic here
+    //     setTimeout(() => {
+    //         let result = "Game finished successfully"; // Example result
+    //         resolve(result); // Resolve the promise with the result
+    //     }, 3000); // Simulating a 3-second delay for the game
+    // });
+                // data to return
+                // player 1 score1
+                // player 2 score2
+                // game_time time
+                // ??? mean max speed of the ball
 
 }
