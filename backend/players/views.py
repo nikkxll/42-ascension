@@ -72,7 +72,6 @@ def create_player(request):
 
 #     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
-
 def oauth_redirect(request):
     # Get OAuth parameters from environment variables
     client_id = os.environ.get('OAUTH_CLIENT_ID')
@@ -88,7 +87,6 @@ def oauth_redirect(request):
     }
     auth_url = f"{base_url}?{urlencode(params)}"
     return HttpResponseRedirect(auth_url)
-
 
 def oauth_callback(request):
 
@@ -127,7 +125,6 @@ def fetch_42_user_data(access_token):
         return response.json()
     except requests.exceptions.RequestException as e:
         return {'error': f'Failed to fetch user data: {str(e)}'}
-
 
 def exchange_code_for_token(code):
  token_url = os.environ.get('OAUTH_TOKEN_URL')
