@@ -55,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'api.middleware.LastActiveMiddleware', # custom middleware to update last_active of player
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -90,11 +91,6 @@ DATABASES = {
         'HOST': os.environ.get('POSTGRES_HOST'),
         'PORT': '5432'
     }
-
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
 }
 
 

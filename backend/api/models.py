@@ -7,7 +7,8 @@ from .constants import (
     TOURNAMENT_STATUS_CHOICES,
     ROUND_CHOICES,
     MATCH_STATUS_CHOICES,
-    FRIEND_ACTIVITY_STATUS_CHOICES
+    ACTIVITY_STATUS_CHOICES,
+    FRIENDSHIP_STATUS_CHOICES
 )
 
 class Player(models.Model):
@@ -15,10 +16,11 @@ class Player(models.Model):
     display_name = models.CharField(max_length=30, unique=True, blank=True, null=True)
     avatar = models.ImageField(upload_to='avatars/', default='avatars/fallback.png', blank=True)
     status = models.CharField(max_length=20,
-                              choices=FRIEND_ACTIVITY_STATUS_CHOICES,
-                              default='offline') # Status of the friend
-    created_at = models.DateTimeField(default=timezone.now) # Date of account creation
-    updated_at = models.DateTimeField(auto_now=True) # Date of last account update
+                              choices=ACTIVITY_STATUS_CHOICES,
+                              default='offline')
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+    last_active_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.display_name if self.display_name else self.user.username
@@ -42,6 +44,7 @@ class Tournament(models.Model):
                                blank=True,
                                related_name='won_tournaments') # Winner of the tournament
     created_at = models.DateTimeField(auto_now_add=True) # Date of tournament creation
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"Tournament: {self.name} - Status: {self.status}"
@@ -72,46 +75,54 @@ class Match(models.Model):
     player1 = models.ForeignKey(Player,
                                 on_delete=models.SET_NULL,
                                 null=True,
-                                related_name='player1_matches') # First player in the match
+                                related_name='player1_matches')
     player2 = models.ForeignKey(Player,
                                 on_delete=models.SET_NULL,
                                 null=True,
-                                related_name='player2_matches') # Second player in the match
+                                related_name='player2_matches')
     round_stage = models.CharField(max_length=2, choices=ROUND_CHOICES, null=True, blank=True)
-    player1_score = models.IntegerField(null=True, blank=True) # Score of player 1
-    player2_score = models.IntegerField(null=True, blank=True) # Score of player 2
+    player1_score = models.IntegerField(null=True, blank=True)
+    player2_score = models.IntegerField(null=True, blank=True)
     winner = models.ForeignKey(Player,
                                on_delete=models.SET_NULL,
                                null=True,
                                blank=True,
-                               related_name='won_matches') # Winner of the match
+                               related_name='won_matches')
     loser = models.ForeignKey(Player,
                               on_delete=models.SET_NULL,
                               null=True,
                               blank=True,
-                              related_name='lost_matches') # Loser of the match
+                              related_name='lost_matches')
     status = models.CharField(max_length=20,
                               choices=MATCH_STATUS_CHOICES,
-                              default='scheduled') # Status of the match
-    created_at = models.DateTimeField(auto_now_add=True) # Date of match creation
+                              default='scheduled')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"Match: {self.player1} vs {self.player2} - Status: {self.status}"
 
 
 class Friend(models.Model):
-    player = models.ForeignKey(Player,
+    player1 = models.ForeignKey(Player,
                                on_delete=models.CASCADE,
-                               related_name='friends') # Player who has the friend
-    friend = models.ForeignKey(Player,
+                               related_name='friends_as_player1')
+    player2 = models.ForeignKey(Player,
                                on_delete=models.CASCADE,
-                               related_name='friend_of') # Player who is the friend
-    created_at = models.DateTimeField(auto_now_add=True) # Date of friendship creation
+                               related_name='friends_as_player2')
+    status = models.CharField(
+        max_length=20,
+        choices=FRIENDSHIP_STATUS_CHOICES,
+        default='pending_first_second'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['player', 'friend'], name='unique_friend_for_player')
+            models.UniqueConstraint(fields=['player1', 'player2'], name='unique_friend_for_player'),
+            models.CheckConstraint(check=models.Q(player1__lt=models.F('player2')), name='player1_lt_player2')
     ]
 
     def __str__(self):
-        return f"{self.player.display_name if self.player.display_name else self.player.user.username} is friends with {self.friend.display_name}"
+        return f"{self.player1.display_name if self.player1.display_name else self.player1.user.username} is friends with {self.player2.display_name if self.player2.display_name else self.player2.user.username}"
