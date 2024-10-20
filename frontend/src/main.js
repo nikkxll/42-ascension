@@ -3,11 +3,12 @@ import * as THREE from 'three';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
-window.startGame = () => {
+window.startGame = (ai) => {
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 28; // 18
-    camera.rotation.x += 10 * Math.PI / 180;
+    camera.position.z = 22 // 28; // 18
+    camera.position.y = 0// -10; // 18
+    camera.rotation.x += 0 //10 * Math.PI / 180;
 
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth * 0.96, window.innerHeight * 0.96);
@@ -15,6 +16,9 @@ window.startGame = () => {
     // needs to be a game screen that we overlay and make visible
     document.getElementById("gameWindow").appendChild(renderer.domElement);
 
+    // Add lights to the scene
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Softer global illumination
+    scene.add(ambientLight)
     // players geometry and material is shared so we create it once
     const playergeometry = new THREE.BoxGeometry(0.5, 4, 1);
     const playermaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
@@ -47,7 +51,7 @@ window.startGame = () => {
     const ballPower = 6
     let ballVelocity = { x: ballPower, y: ballPower }
     const playerSpeed = 12
-    let ai = 2
+    //let ai = 2
 
     // the per frame change that is influenced by keyboard presses
     let playe1Delta = 0
@@ -57,31 +61,35 @@ window.startGame = () => {
     const fontLoader = new FontLoader();
     fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (loadedFont) {
         font = loadedFont;
-        createText("Frame: 0"); // Initial text
+        createText("0 : 0"); // Initial text
     });
 
     // Function to create text geometry
     let textMesh, font, frame = 0
+    //let textMeshRotationY = 0
     function createText(text) {
         if (textMesh) {
+      //      textMeshRotationY  = textMesh.rotation.y;
             scene.remove(textMesh); // Remove the old text
             textMesh.geometry.dispose(); // Clean up memory
         }
 
         const textGeometry = new TextGeometry(text, {
             font: font,
-            size: 1,
+            size: 5, //1,
             height: 0.2,
             curveSegments: 12,
             bevelEnabled: true,
-            bevelThickness: 0.1,
+            bevelThickness: 1, //0.1,
             bevelSize: 0.05,
             bevelSegments: 5
         });
 
-        const textMaterial = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
+        const textMaterial = new THREE.MeshPhongMaterial({ color: 0x0000ff });
         textMesh = new THREE.Mesh(textGeometry, textMaterial);
+        textMesh.position.set(-5, 0, -2); 
         scene.add(textMesh);
+        //textMesh.rotation.y += textMeshRotationY;
     }
 
     function setup() {
@@ -388,6 +396,7 @@ window.startGame = () => {
                     gameCount[1] += 1
                 else
                     gameCount[0] += 1
+                createText(gameCount[1] + " : " + gameCount[0]);
                 console.log("Game count", gameCount)
                 console.log("New ball")
                 ball.position.x = 0
@@ -409,12 +418,14 @@ window.startGame = () => {
                 // ??? mean max speed of the ball
 
             }
-            if (deltaTimeText > 1) {
-                frame++;
-                createText("Frame: " + frame);
-                console.log("Frame: " + frame);
-                deltaTimeText = 0;
-            }
+            // if (deltaTimeText > 1) {
+            //     frame++;
+            //     createText("Frame: " + frame);
+            //     console.log("Frame: " + frame);
+            //     deltaTimeText = 0;
+            // }
+            // //textMesh.rotation.y += 0.01; // Rotate the text - BAD idea -> Lags
+
 
             // update each outer box height based on sin to create a wave effect
             outerboxes.forEach((element, row) => {
