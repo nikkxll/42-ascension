@@ -3,12 +3,31 @@ import * as THREE from 'three';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
+function getRandom(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+// ai = 2 two AIs: AI vs god level AI
+// ai = 1 one AI vs human
+// ai = 0 two humans
+// (to be implemented) ai = -4 four humans
 window.startGame = (ai) => {
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 22 // 28; // 18
-    camera.position.y = 0// -10; // 18
-    camera.rotation.x += 0 //10 * Math.PI / 180;
+
+    function setCameraTop() {
+        camera.position.z = 22
+        camera.position.y = 0
+        camera.rotation.x = 0
+    }
+    function setCameraAside() {
+        camera.rotation.x = 50 * Math.PI / 180;
+        camera.position.z = 16; 
+        camera.position.y =  - camera.position.z * Math.tan(camera.rotation.x);
+    }
+
+    //setCameraTop()
+    setCameraAside()
 
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth * 0.96, window.innerHeight * 0.96);
@@ -16,7 +35,7 @@ window.startGame = (ai) => {
     // needs to be a game screen that we overlay and make visible
     document.getElementById("gameWindow").appendChild(renderer.domElement);
 
-    // Add lights to the scene
+    // Add lights to the scene for score visibility
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Softer global illumination
     scene.add(ambientLight)
     // players geometry and material is shared so we create it once
@@ -27,15 +46,29 @@ window.startGame = (ai) => {
     const player1 = new THREE.Mesh(playergeometry, playermaterial);
     // adds a border based on the geometry
     let edge = new THREE.EdgesGeometry(playergeometry);
-    const player1outline = new THREE.LineSegments(edge, new THREE.LineBasicMaterial({ color: 0xffffff }));
+    const player1outline = new THREE.LineSegments(edge, new THREE.LineBasicMaterial({color: 0xffffff}));
     // registers to be rendered
     scene.add(player1outline);
     scene.add(player1);
     // same as the other player
     const player2 = new THREE.Mesh(playergeometry, playermaterial);
-    const player2outline = new THREE.LineSegments(edge, new THREE.LineBasicMaterial({ color: 0xffffff }));
+    const player2outline = new THREE.LineSegments(edge, new THREE.LineBasicMaterial({color: 0xffffff}));
     scene.add(player2outline);
     scene.add(player2);
+
+    // if we have 4 players we create the other two
+    if (ai == -4){
+        const playergeometry2 = new THREE.BoxGeometry(4, 0.5, 1);
+        const playermaterial2 = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const player3 = new THREE.Mesh(playergeometry, playermaterial);
+        const player4 = new THREE.Mesh(playergeometry, playermaterial);
+        const player3outline = new THREE.LineSegments(edge, new THREE.LineBasicMaterial({color: 0xffffff}));
+        const player4outline = new THREE.LineSegments(edge, new THREE.LineBasicMaterial({color: 0xffffff}));
+        scene.add(player3outline);
+        scene.add(player4outline);
+        scene.add(player3);
+        scene.add(player4);
+    }
 
     // create separate material and geometry for the ball and register it
     const ballmaterial = new THREE.MeshBasicMaterial({ color: 0x0000ff });
@@ -49,35 +82,27 @@ window.startGame = (ai) => {
     /* ----- Local game logic and setup ----- */
     // initial speed of the ball
     const ballPower = 6
-    let ballVelocity = { x: ballPower, y: ballPower }
+    let startAngle = getRandom(-1, 1); 
+    let ballVelocity = {x: Math.cos(startAngle) * ballPower, y: Math.sin(startAngle) * ballPower}
+    //let ballVelocity = { x: ballPower, y: ballPower }
     const playerSpeed = 12
-    //let ai = 2
 
     // the per frame change that is influenced by keyboard presses
     let playe1Delta = 0
     let playe2Delta = 0
 
-    // Load the font and create initial text
-    const fontLoader = new FontLoader();
-    fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (loadedFont) {
-        font = loadedFont;
-        createText("0 : 0"); // Initial text
-    });
-
     // Function to create text geometry
     let textMesh, font, frame = 0
-    //let textMeshRotationY = 0
     function createText(text) {
         if (textMesh) {
-      //      textMeshRotationY  = textMesh.rotation.y;
             scene.remove(textMesh); // Remove the old text
             textMesh.geometry.dispose(); // Clean up memory
         }
 
         const textGeometry = new TextGeometry(text, {
             font: font,
-            size: 5, //1,
-            height: 0.2,
+            size: 2, //1,
+            height: 0.01,
             curveSegments: 12,
             bevelEnabled: true,
             bevelThickness: 1, //0.1,
@@ -85,11 +110,11 @@ window.startGame = (ai) => {
             bevelSegments: 5
         });
 
-        const textMaterial = new THREE.MeshPhongMaterial({ color: 0x0000ff });
+        const textMaterial = new THREE.MeshPhongMaterial({ color: 0x0000ff});
         textMesh = new THREE.Mesh(textGeometry, textMaterial);
-        textMesh.position.set(-5, 0, -2); 
+        textMesh.position.set(-4, 7, -2); 
         scene.add(textMesh);
-        //textMesh.rotation.y += textMeshRotationY;
+        textMesh.rotation.x = camera.rotation.x;
     }
 
     function setup() {
@@ -98,6 +123,13 @@ window.startGame = (ai) => {
         player2.position.x = -20
         player1outline.position.x = 20
         player2outline.position.x = -20
+
+        // Load the font and create initial text
+        const fontLoader = new FontLoader();
+        fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (loadedFont) {
+            font = loadedFont;
+            createText("0 : 0"); // Initial text
+        });
 
         // use the same geometry for all outer boxes
         const outerboxgeometry = new THREE.BoxGeometry(0.95, 0.95, 1);
@@ -276,10 +308,6 @@ window.startGame = (ai) => {
     // 75 max fps
     let interval = 1 / 75;
 
-    function getRandom(min, max) {
-        return Math.random() * (max - min) + min;
-    }
-    let startAngle = 0;
     let hitRacketFlag = 0;
     let deltaAngle = 0;
     let ballDirectionAngle = 0;
@@ -363,28 +391,18 @@ window.startGame = (ai) => {
                 }
                 else
                     ballVelocity.x *= -1
-                //console.log("ballVelocity", ballVelocity)
                 ballDirectionAngle = Math.atan2(ballVelocity.y, ballVelocity.x) + deltaAngle
-                //console.log("ballDirectionAngle=", ballDirectionAngle)
                 ballVelocity.x = ballSpeed * Math.cos(ballDirectionAngle)
                 ballVelocity.y = ballSpeed * Math.sin(ballDirectionAngle)
-                // if  the ball's v_x  is too low or wrong direction
+                // if the ball's v_x  is too low or wrong direction
                 if (Math.sign(ball.position.x) * ballVelocity.x > -5){
                     ballVelocity.x = - Math.sign(ball.position.x) * ballPower
-                    //console.log("X velosity corrected")
                 }
-
-                //  console.log("ballVelocity", ballVelocity)
-                //cancelAnimationFrame(animationId);
             }
 
             // move the ball the appropriate amount
             ball.position.x += ballVelocity.x * delta
             ball.position.y += ballVelocity.y * delta
-            //console.log("ball.position=", ball.position)
-            //console.log("ball.velocity=", ballVelocity)
-            // if (hitRacketFlag == 1)
-            //     cancelAnimationFrame(animationId);
             if (gameCount[0] == 11 || gameCount[1] == 11){
                 console.log("Game ended", gameCount)
                 cancelAnimationFrame(animationId);
@@ -401,11 +419,8 @@ window.startGame = (ai) => {
                 console.log("New ball")
                 ball.position.x = 0
                 ball.position.y = 0
-                //ballSpeed = 1
                 startAngle = getRandom(-1, 1); 
-                //console.log(startAngle)         
                 ballVelocity = {x: Math.cos(startAngle) * Math.sign(ballVelocity.x) * ballPower, y: Math.sin(startAngle) * Math.sign(ballVelocity.y) * ballPower}
-                //ballVelocity = {x: Math.sign(ballVelocity.x) * ballPower, y: Math.sign(ballVelocity.y) * ballPower}
                 deltaTimeAi = 2;
                 //if (count = 11)
                 //  return data
@@ -418,15 +433,6 @@ window.startGame = (ai) => {
                 // ??? mean max speed of the ball
 
             }
-            // if (deltaTimeText > 1) {
-            //     frame++;
-            //     createText("Frame: " + frame);
-            //     console.log("Frame: " + frame);
-            //     deltaTimeText = 0;
-            // }
-            // //textMesh.rotation.y += 0.01; // Rotate the text - BAD idea -> Lags
-
-
             // update each outer box height based on sin to create a wave effect
             outerboxes.forEach((element, row) => {
                 element.forEach((box, index) => {
