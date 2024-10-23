@@ -7,11 +7,17 @@ function getRandom(min, max) {
     return Math.random() * (max - min) + min;
 }
 
+// function sleep(ms) {
+//     return new Promise(resolve => setTimeout(resolve, ms));
+// }
+
 // ai = 2 two AIs: AI vs god level AI
 // ai = 1 one AI vs human
 // ai = 0 two humans
 // (to be implemented) ai = -2 four humans
 window.startGame = (ai) => {
+    let gameResult = "Game is not finished yet"
+    let maxScore = 11
     let hight = 20;
     let width = 40;
     const scene = new THREE.Scene();
@@ -24,7 +30,7 @@ window.startGame = (ai) => {
     }
     function setCameraAside() {
         camera.rotation.x = 50 * Math.PI / 180;
-        camera.position.z = 16; 
+        camera.position.z = 20; 
         camera.position.y =  - camera.position.z * Math.tan(camera.rotation.x);
     }
 
@@ -118,11 +124,14 @@ window.startGame = (ai) => {
 
     /* ----- Local game logic and setup ----- */
     // initial speed of the ball1
-    const ball1Power = 6
-    let startAngle = getRandom(-1, 1);
-    let ball1Velocity = {x: Math.cos(startAngle) * ball1Power, y: Math.sin(startAngle) * ball1Power}
-    //let ball1Velocity = { x: ball1Power, y: ball1Power }
+    const ballPower = 6
+    const ballAcselerationCoef = 1.5
+    const ballSpeedLimit = 1000
     const playerSpeed = 12
+    let startAngle = getRandom(-1, 1);
+    let ball1Velocity = {x: Math.cos(startAngle) * ballPower, y: Math.sin(startAngle) * ballPower}
+    //let ball1Velocity = { x: ballPower, y: ballPower }
+    
 
 
     // the per frame change that is influenced by keyboard presses
@@ -178,15 +187,15 @@ window.startGame = (ai) => {
             for (let i = 1; i < 44; i++) {
                 // create box and move to the correct position in its row
                 var cur = new THREE.Mesh(outerboxgeometry, outerboxmaterial);
-                cur.position.x = -22 + i;
-                cur.position.y = -11.25 - row;
+                cur.position.x = -width/2 - 2 + i;
+                cur.position.y = -hight/2 - 1.25 - row;
                 cur.position.z = 0;
 
                 // create an edge and line for all boxes and move to the same position
                 let edges = new THREE.EdgesGeometry(outerboxgeometry);
                 let line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0xffffff }));
-                line.position.x = -22 + i;
-                line.position.y = -11.25 - row;
+                line.position.x = -width/2 - 2 + i;
+                line.position.y = -hight/2 - 1.25 - row;
                 line.position.z = 0;
 
                 scene.add(line);
@@ -197,14 +206,14 @@ window.startGame = (ai) => {
 
                 // add the same thing on the other side
                 cur = new THREE.Mesh(outerboxgeometry, outerboxmaterial);
-                cur.position.x = -22 + i;
-                cur.position.y = 11.25 + row;
+                cur.position.x = -width/2 - 2 + i;
+                cur.position.y = hight/2 + 1.25 + row;
                 cur.position.z = 0;
                 edges = new THREE.EdgesGeometry(outerboxgeometry);
                 line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0xffffff }));
 
-                line.position.x = -22 + i;
-                line.position.y = 11.25 + row;
+                line.position.x = -width/2 - 2 + i;
+                line.position.y = hight/2 + 1.25 + row;
                 line.position.z = 0;
 
                 scene.add(line);
@@ -227,6 +236,15 @@ window.startGame = (ai) => {
             playe2Delta = playerSpeed
         else if (code == 83)
             playe2Delta = -playerSpeed
+        else if (code == 32){ // space
+            //setCameraAside()
+            gameResult = "Game stoped by user. space pressed"
+            console.log("Enter is pressed, gameResult = ", gameResult)
+            cancelAnimationFrame(animationId);
+            return gameResult;
+        }
+        //else if (code == 13) // enter 
+        //    setCameraTop()
     }
     
     // registered as keyup listener, cleares the movement of the players
@@ -355,8 +373,9 @@ window.startGame = (ai) => {
 
     let ball1TouchPositionY = hight / 2 - 1.5
     let gameCount = [0, 0]
+    let gameOverFlag = 0
     
-
+    console.log("player1 scale=", player1.scale.y, "ball scale=", ball1.scale.y)
     function loop() {
         if (ai != 0)
             runAi()
@@ -410,6 +429,7 @@ window.startGame = (ai) => {
             if (Math.abs(ball1.position.x - player1.position.x) <= player1.scale.x / 2 + ball1.scale.x / 2 &&
                 Math.abs(ball1.position.y - player1.position.y) <= player1.scale.y / 2 + ball1.scale.y)
             {
+                //console.log("Hit racket", Math.abs(ball1.position.y - player1.position.y) , " vs ", player1.scale.y / 2 + ball1.scale.y)
                 ball1.position.x = player1.position.x - player1.scale.x / 2 - ball1.scale.x / 2 - 0.01
                 deltaAngle = -(ball1.position.y - player1.position.y) / player1.scale.y
                 //gameCount[1] += 1
@@ -425,10 +445,10 @@ window.startGame = (ai) => {
             }
             ball1Speed = Math.sqrt(ball1Velocity.y * ball1Velocity.y + ball1Velocity.x * ball1Velocity.x)
             if (hitRacketFlag == 1){
-                if (ball1Speed < 1000){
-                    ball1Velocity.x *= -1.5
-                    ball1Velocity.y *= 1.5
-                    ball1Speed *= 1.5
+                if (ball1Speed < ballSpeedLimit){
+                    ball1Velocity.x *= -ballAcselerationCoef
+                    ball1Velocity.y *= ballAcselerationCoef
+                    ball1Speed *= ballAcselerationCoef
                 }
                 else
                     ball1Velocity.x *= -1
@@ -437,16 +457,20 @@ window.startGame = (ai) => {
                 ball1Velocity.y = ball1Speed * Math.sin(ball1DirectionAngle)
                 // if the ball1's v_x  is too low or wrong direction
                 if (Math.sign(ball1.position.x) * ball1Velocity.x > -5){
-                    ball1Velocity.x = - Math.sign(ball1.position.x) * ball1Power
+                    ball1Velocity.x = - Math.sign(ball1.position.x) * ballPower
                 }
             }
 
             // move the ball1 the appropriate amount
             ball1.position.x += ball1Velocity.x * delta
             ball1.position.y += ball1Velocity.y * delta
-            if (gameCount[0] == 11 || gameCount[1] == 11){
+            if (gameCount[0] == maxScore || gameCount[1] == maxScore){
                 console.log("Game ended", gameCount)
+                gameResult = "Game ended";
+                gameOverFlag = 1
                 cancelAnimationFrame(animationId);
+                return gameResult; 
+
             }
             // check for goals and just reset position: subject to change
             if (hitRacketFlag == 0 && (ball1.position.x > width / 2  || ball1.position.x < - width / 2))
@@ -461,7 +485,7 @@ window.startGame = (ai) => {
                 ball1.position.x = 0
                 ball1.position.y = 0
                 startAngle = getRandom(-1, 1); 
-                ball1Velocity = {x: Math.cos(startAngle) * Math.sign(ball1Velocity.x) * ball1Power, y: Math.sin(startAngle) * Math.sign(ball1Velocity.y) * ball1Power}
+                ball1Velocity = {x: Math.cos(startAngle) * Math.sign(ball1Velocity.x) * ballPower, y: Math.sin(startAngle) * Math.sign(ball1Velocity.y) * ballPower}
                 deltaTimeAi = 2;
                 //if (count = 11)
                 //  return data
@@ -500,7 +524,7 @@ window.startGame = (ai) => {
     setup()
     loop()
 
-    return 1;
+    return gameResult;
     // return new Promise((resolve, reject) => {
     //     // Simulate the game logic with a timeout, or call the game logic here
     //     setTimeout(() => {

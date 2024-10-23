@@ -179,8 +179,13 @@
 			function  startOff() {
 				gameWindow.style.display = "block"
 				//let result = await startGame()
-				let result = startGame(-2)
-				console.log("resutl=", result)
+				// startGame(ai)
+				// ai = 2 two AIs: AI vs god level AI
+				// ai = 1 one AI vs human
+				// ai = 0 two humans
+				// (to be implemented) ai = -2 four humans
+				let result = startGame(1)
+				console.log("index.html result from startGame=", result)
 				//gameWindow.style.display = "none"
 				// startGame().then(result => {
      			//  	console.log("result =", result);  // Log the result
