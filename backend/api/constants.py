@@ -13,13 +13,7 @@ ROUND_CHOICES = [
 
 MATCH_STATUS_CHOICES = [
     ('scheduled', 'Scheduled'),
-    ('in_progress', 'In Progress'),
     ('completed', 'Completed')
-]
-
-ACTIVITY_STATUS_CHOICES = [
-    ('online', 'Online'),
-    ('offline', 'Offline')
 ]
 
 FRIENDSHIP_STATUS_CHOICES = [

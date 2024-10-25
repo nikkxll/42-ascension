@@ -7,7 +7,6 @@ from .constants import (
     TOURNAMENT_STATUS_CHOICES,
     ROUND_CHOICES,
     MATCH_STATUS_CHOICES,
-    ACTIVITY_STATUS_CHOICES,
     FRIENDSHIP_STATUS_CHOICES
 )
 
@@ -93,6 +92,7 @@ class Match(models.Model):
     status = models.CharField(max_length=20,
                               choices=MATCH_STATUS_CHOICES,
                               default='scheduled')
+    match_time = models.TimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
