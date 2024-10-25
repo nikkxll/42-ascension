@@ -7,6 +7,24 @@ function getRandom(min, max) {
     return Math.random() * (max - min) + min;
 }
 
+function checkPlayerPositionY(player, minY, maxY){
+    if (player.position.y < minY)
+        player.position.y = minY
+    else if (player.position.y > maxY)
+        player.position.y = maxY
+}
+
+function checkBallPositionY(ball, minY, maxY){
+    if (ball.position.y < minY){
+        ball.position.y = minY
+        ball.velocity.y *= -1
+    }
+    else if (ball.position.y > maxY){
+        ball.position.y = maxY
+        ball.velocity.y *= -1
+    }
+}
+
 // function sleep(ms) {
 //     return new Promise(resolve => setTimeout(resolve, ms));
 // }
@@ -66,57 +84,55 @@ window.startGame = (ai) => {
 
     
     // create separate material and geometry for the ball1 and register it
-    const ball1material = new THREE.MeshBasicMaterial({ color: 0x0000ff });
+    const ball1material = new THREE.MeshBasicMaterial({ color: 0xff00ff });
     const ball1Mesh = new THREE.BoxGeometry(0.5, 0.5, 0.5)
     const ball1 = new THREE.Mesh(ball1Mesh, ball1material);
     scene.add(ball1)
 
 
     // (work in progress) if we have 4 players we create the other two
+    const playergeometry2 = new THREE.BoxGeometry(0.5, 4, 1);
+    let player2Edge = new THREE.EdgesGeometry(playergeometry2);
+    const playermaterial2 = new THREE.MeshBasicMaterial({ color: 0x00ffff });
+    const player3mesh = new THREE.Mesh(playergeometry2, playermaterial2);
+    const player4mesh = new THREE.Mesh(playergeometry2, playermaterial2);
+    const player3outline = new THREE.LineSegments(player2Edge, new THREE.LineBasicMaterial({color: 0x000000}));
+    const player4outline = new THREE.LineSegments(player2Edge, new THREE.LineBasicMaterial({color: 0x000000}));
+
+    const player3 = new THREE.Group();
+    const player4 = new THREE.Group();
+    player3.add(player3mesh);
+    player4.add(player4mesh);
+    player3.add(player3outline);
+    player4.add(player4outline);
+
+    // const ballmaterial2 = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    // const ballMesh2 = new THREE.BoxGeometry(0.5, 0.5, 0.5)
+    // const ball2 = new THREE.Mesh(ballMesh2, ballmaterial2);
+    // scene.add(ball2)
+    const pyramidGeometry = new THREE.ConeGeometry(1, 1.8, 4); // Radius, Height, RadialSegments
+    let ball2EdgesGeometry = new THREE.EdgesGeometry(pyramidGeometry);
+    const pyramidMaterial = new THREE.MeshBasicMaterial({ color: 0xffa500, wireframe: false }); // Orange color
+    const ball2mesh = new THREE.Mesh(pyramidGeometry, pyramidMaterial);
+    const ball2Edges = new THREE.LineSegments(ball2EdgesGeometry, new THREE.LineBasicMaterial({color: 0x000000}));
+    const ball2 = new THREE.Group();
+    ball2.add(ball2mesh)
+    ball2.add(ball2Edges)
+
     if (ai == -2){
-        const playergeometry2 = new THREE.BoxGeometry(4, 0.5, 1);
-        let player2Edge = new THREE.EdgesGeometry(playergeometry2);
-        const playermaterial2 = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-        const player3 = new THREE.Mesh(playergeometry2, playermaterial2);
-        const player4 = new THREE.Mesh(playergeometry2, playermaterial2);
-        const player3outline = new THREE.LineSegments(player2Edge, new THREE.LineBasicMaterial({color: 0x000000}));
-        const player4outline = new THREE.LineSegments(player2Edge, new THREE.LineBasicMaterial({color: 0x000000}));
-        //scene.add(player3outline);
-        // scene.add(player4outline);
-        // scene.add(player3);
-        // scene.add(player4);
-        const player3Group = new THREE.Group();
-        const player4Group = new THREE.Group();
-        player3Group.add(player3);
-        player4Group.add(player4);
-        player3Group.add(player3outline);
-        player4Group.add(player4outline);
-
         // Add the groups to the scene
-        scene.add(player3Group);
-        scene.add(player4Group);
+        scene.add(player3);
+        scene.add(player4);
+        scene.add(ball2);
+    
+        ball2.position.x = 5;
+        ball2.position.y = 5;
+        ball2.velocity =  new THREE.Vector3(0, 0, 0);
 
-        // const ballmaterial2 = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-        // const ballMesh2 = new THREE.BoxGeometry(0.5, 0.5, 0.5)
-        // const ball2 = new THREE.Mesh(ballMesh2, ballmaterial2);
-        // scene.add(ball2)
-        const pyramidGeometry = new THREE.ConeGeometry(1, 1.8, 4); // Radius, Height, RadialSegments
-        let ball2EdgesGeometry = new THREE.EdgesGeometry(pyramidGeometry);
-        const pyramidMaterial = new THREE.MeshBasicMaterial({ color: 0xffa500, wireframe: false }); // Orange color
-        const ball2 = new THREE.Mesh(pyramidGeometry, pyramidMaterial);
-        const ball2Edges = new THREE.LineSegments(ball2EdgesGeometry, new THREE.LineBasicMaterial({color: 0x000000}));
-        const ball2Group = new THREE.Group();
-        ball2Group.add(ball2)
-        ball2Group.add(ball2Edges)
-        scene.add(ball2Group);
-
-        ball2Group.position.x = 5;
-        ball2Group.position.y = 5;
-        player3Group.position.x = -5
-        player3Group.position.y = hight / 2 
-        player4Group.position.x = -5
-        player4Group.position.y = -hight / 2 
-
+        player3.position.x = -width / 2
+        player3.position.y = hight / 4
+        player4.position.x = width / 2
+        player4.position.y = hight / 4 
     }
 
     // double array for the outer boxes
@@ -125,18 +141,23 @@ window.startGame = (ai) => {
     /* ----- Local game logic and setup ----- */
     // initial speed of the ball1
     const ballPower = 6
-    const ballAcselerationCoef = 1.5
+    const ballAccelerationCoef = 1.5
     const ballSpeedLimit = 1000
     const playerSpeed = 12
     let startAngle = getRandom(-1, 1);
     let ball1Velocity = {x: Math.cos(startAngle) * ballPower, y: Math.sin(startAngle) * ballPower}
-    //let ball1Velocity = { x: ballPower, y: ballPower }
-    
+    if (ai == -2){
+        startAngle = getRandom(-1, 1)
+        ball2.velocity = {x: Math.cos(startAngle) * ballPower, y: Math.sin(startAngle) * ballPower, z: 0}
+        //let ball2Velocity = {x: Math.cos(startAngle) * ballPower, y: Math.sin(startAngle) * ballPower}
+    }
 
-
-    // the per frame change that is influenced by keyboard presses
-    let playe1Delta = 0
-    let playe2Delta = 0
+    // the per frame shift that is influenced by keyboard presses  = player1Velocity * (time duration since last frame)
+    let player1Velocity = 0
+    let player2Velocity = 0
+    //player3.velocity =  new THREE.Vector3(0, 0, 0);
+    let player3Velocity = 0
+    let player4Velocity = 0
 
     // Function to create text geometry
     let textMesh, font, frame = 0
@@ -150,14 +171,14 @@ window.startGame = (ai) => {
             font: font,
             size: 2, //1,
             height: 0.01,
-            curveSegments: 12,
-            bevelEnabled: true,
-            bevelThickness: 1, //0.1,
-            bevelSize: 0.05,
-            bevelSegments: 5
+            // curveSegments: 12,
+            // bevelEnabled: true,
+            // bevelThickness: 1, //0.1,
+            // bevelSize: 0.05,
+            //    bevelSegments: 5
         });
 
-        const textMaterial = new THREE.MeshPhongMaterial({ color: 0x0000ff});
+        const textMaterial = new THREE.MeshPhongMaterial({ color: 0xff00ff});
         textMesh = new THREE.Mesh(textGeometry, textMaterial);
         textMesh.position.set(-4, 7, -2); 
         scene.add(textMesh);
@@ -229,13 +250,22 @@ window.startGame = (ai) => {
     function movement (e) {
         let code = e.which;
         if (code == 38)
-            playe1Delta = playerSpeed
+            player1Velocity = playerSpeed
         else if (code == 40)
-            playe1Delta = -playerSpeed
-        else if (code == 87)
-            playe2Delta = playerSpeed
-        else if (code == 83)
-            playe2Delta = -playerSpeed
+            player1Velocity = -playerSpeed
+        //else if (code == 87)
+        else if ('W'.charCodeAt(0) == code)
+            player2Velocity = playerSpeed
+        else if ('S'.charCodeAt(0) == code)
+            player2Velocity = -playerSpeed
+        else if ('R'.charCodeAt(0) == code)
+            player3Velocity = playerSpeed
+        else if ('F'.charCodeAt(0) == code)
+            player3Velocity = -playerSpeed
+        else if ('O'.charCodeAt(0) == code)
+            player4Velocity = playerSpeed
+        else if ('L'.charCodeAt(0) == code)
+            player4Velocity = -playerSpeed
         else if (code == 32){ // space
             //setCameraAside()
             gameResult = "Game stoped by user. space pressed"
@@ -252,16 +282,21 @@ window.startGame = (ai) => {
     function clear(e)
     {
         let code = e.which;
-        if ((code == 87 || code == 83 && playe2Delta != 0))
-            playe2Delta = 0
-        if ((code == 40 || code == 38) && playe1Delta != 0)
-            playe1Delta = 0
+        if ((code == 40 || code == 38) && player1Velocity != 0)
+            player1Velocity = 0
+        else if ((code == 'W'.charCodeAt(0) || code == 'S'.charCodeAt(0) && player2Velocity != 0))
+            player2Velocity = 0
+        else if ((code == 'R'.charCodeAt(0) || code == 'F'.charCodeAt(0)) && player3Velocity != 0)
+            player3Velocity = 0
+        else if ((code == 'O'.charCodeAt(0) || code == 'L'.charCodeAt(0)) && player4Velocity != 0)
+            player4Velocity = 0
     }
     
     // util function
     var render = function() {
         renderer.render(scene, camera);
     };
+
     // AI Algo part
     // settging for the AI
     let timeIntervalAi = 1;  // must to be 1 according to the subject
@@ -277,7 +312,7 @@ window.startGame = (ai) => {
     let yPrediction = 0;
     let hightFromBorders = 0;
     let epsilon = 1;
-    playe1Delta = 0;
+    player1Velocity = 0;
 
 
     // this function is used to simulate key presses. 
@@ -323,23 +358,23 @@ window.startGame = (ai) => {
         {
             r1 = {x: player1.position.x, y: player1.position.y};
             if (v0.x > 0 && Math.abs(r1.y - yPrediction) > epsilon) {
-                if (r1.y - yPrediction > epsilon && playe1Delta >= 0){ // need to move down
-                    if (playe1Delta > 0)
+                if (r1.y - yPrediction > epsilon && player1Velocity >= 0){ // need to move down
+                    if (player1Velocity > 0)
                         simulateArrowKey('keyup','ArrowUp');
-                    if (playe1Delta >= 0)
+                    if (player1Velocity >= 0)
                         simulateArrowKey('keydown','ArrowDown');
                 }
-                else if (r1.y - yPrediction < epsilon && playe1Delta <= 0){  // need to move up
-                    if (playe1Delta < 0)
+                else if (r1.y - yPrediction < epsilon && player1Velocity <= 0){  // need to move up
+                    if (player1Velocity < 0)
                         simulateArrowKey('keyup','ArrowDown');
-                    if (playe1Delta <= 0)
+                    if (player1Velocity <= 0)
                         simulateArrowKey('keydown','ArrowUp');
                 }
             }
             else {
-                if (playe1Delta < 0)
+                if (player1Velocity < 0)
                     simulateArrowKey('keyup','ArrowDown');
-                if (playe1Delta > 0)
+                if (player1Velocity > 0)
                     simulateArrowKey('keyup','ArrowUp');
             }
         }
@@ -347,7 +382,7 @@ window.startGame = (ai) => {
         // it is simplest solution that always wins the AI opponent
         if (ai == 2)
         {
-            playe2Delta = 0;
+            player2Velocity = 0;
             player2.position.y = ball1.position.y
             player2outline.position.y = ball1.position.y
         }
@@ -359,9 +394,6 @@ window.startGame = (ai) => {
     let clock = new THREE.Clock();
     // keep track of deltatime since last frame
     let delta = 0;
-    // text clock and delta
-    let clockText = new THREE.Clock();
-    let deltaTimeText = 0;
     // 75 max fps
     let interval = 1 / 75;
 
@@ -371,9 +403,10 @@ window.startGame = (ai) => {
     let ball1Speed = 0;
 
 
-    let ball1TouchPositionY = hight / 2 - 1.5
+    let playerMaxY = hight / 2 - 1.5
     let gameCount = [0, 0]
-    let gameOverFlag = 0
+
+    
     
     console.log("player1 scale=", player1.scale.y, "ball scale=", ball1.scale.y)
     function loop() {
@@ -382,32 +415,35 @@ window.startGame = (ai) => {
         animationId = requestAnimationFrame(loop);
         // keep track of time since last loop call
         delta += clock.getDelta();
-        deltaTimeText += clockText.getDelta();
 
         // if its time to draw a new frame
         if (delta > interval) {
             // move the players with deltatime
-            player1.position.y += playe1Delta * delta
-            player2.position.y += playe2Delta * delta
-            player1outline.position.y += playe1Delta * delta
-            player2outline.position.y += playe2Delta * delta
+            player1.position.y += player1Velocity * delta
+            player2.position.y += player2Velocity * delta
+            player1outline.position.y += player1Velocity * delta
+            player2outline.position.y += player2Velocity * delta
+            if (ai == -2){
+                player3.position.y += player3Velocity * delta
+                player4.position.y += player4Velocity * delta
+            }
 
             // check for boundaries of the game area
-            if (player1.position.y < -ball1TouchPositionY) {
-                player1.position.y = -ball1TouchPositionY
-                player1outline.position.y = -ball1TouchPositionY
+            if (player1.position.y < -playerMaxY) {
+                player1.position.y = -playerMaxY
+                player1outline.position.y = -playerMaxY
             }
-            if (player1.position.y > ball1TouchPositionY) {
-                player1.position.y = ball1TouchPositionY
-                player1outline.position.y = ball1TouchPositionY
+            if (player1.position.y > playerMaxY) {
+                player1.position.y = playerMaxY
+                player1outline.position.y = playerMaxY
             }
-            if (player2.position.y < -ball1TouchPositionY) {
-                player2.position.y = -ball1TouchPositionY
-                player2outline.position.y = -ball1TouchPositionY
+            if (player2.position.y < -playerMaxY) {
+                player2.position.y = -playerMaxY
+                player2outline.position.y = -playerMaxY
             }
-            if (player2.position.y > ball1TouchPositionY) {
-                player2.position.y = ball1TouchPositionY
-                player2outline.position.y = ball1TouchPositionY
+            if (player2.position.y > playerMaxY) {
+                player2.position.y = playerMaxY
+                player2outline.position.y = playerMaxY
             }
             // checks if the ball1 should bounce
             if (ball1.position.y < -hight / 2) {
@@ -417,6 +453,11 @@ window.startGame = (ai) => {
             else if (ball1.position.y > hight / 2 ) {
                 ball1.position.y = hight / 2
                 ball1Velocity.y *= -1
+            }
+            if (ai == -2){
+                checkPlayerPositionY(player3, -playerMaxY, playerMaxY)
+                checkPlayerPositionY(player4, -playerMaxY, playerMaxY)
+                checkBallPositionY(ball2, -hight/2, hight/2)
             }
 
             // check if player can interact with the ball1
@@ -446,9 +487,9 @@ window.startGame = (ai) => {
             ball1Speed = Math.sqrt(ball1Velocity.y * ball1Velocity.y + ball1Velocity.x * ball1Velocity.x)
             if (hitRacketFlag == 1){
                 if (ball1Speed < ballSpeedLimit){
-                    ball1Velocity.x *= -ballAcselerationCoef
-                    ball1Velocity.y *= ballAcselerationCoef
-                    ball1Speed *= ballAcselerationCoef
+                    ball1Velocity.x *= -ballAccelerationCoef
+                    ball1Velocity.y *= ballAccelerationCoef
+                    ball1Speed *= ballAccelerationCoef
                 }
                 else
                     ball1Velocity.x *= -1
@@ -467,7 +508,6 @@ window.startGame = (ai) => {
             if (gameCount[0] == maxScore || gameCount[1] == maxScore){
                 console.log("Game ended", gameCount)
                 gameResult = "Game ended";
-                gameOverFlag = 1
                 cancelAnimationFrame(animationId);
                 return gameResult; 
 
