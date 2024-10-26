@@ -131,28 +131,23 @@
 
 /* Small component to sign-in/sign-out player, check profile or log out */
 
-.player-brief-info-container {
-  display: flex;
-  max-width: 287px;
-  max-height: 325px;
-  flex-direction: column;
-  color: #fff;
-  font: 400 28px Acme, sans-serif;
-}
-
 .player-brief-info-panel {
   border-radius: 45px;
   background-color: #121010;
   display: flex;
   max-width: 287px;
   max-height: 325px;
+  height: 100%;
   flex-direction: column;
   border: 1px solid #a7a7a7;
+  color: #fff;
+  font: 400 28px Acme, sans-serif;
 }
 
 .auth-title {
   align-self: center;
   font: 40px "Keania One", sans-serif;
+  margin-bottom: 45px;
 }
 
 .auth-button {
@@ -212,4 +207,20 @@
   padding: 5px 62px 5px;
   margin: 18px auto 39px;
   width: 75%;
+}
+
+/* Creation of any kind of game */
+
+.create-action {
+  border-radius: 45px;
+  max-width: 578px;
+  max-height: 59px;
+  background-color: #121010;
+  width: 100%;
+  cursor: pointer;
+  padding: 6px 70px 6px;
+  border: 1px solid #a7a7a7;
+  font-family: "Keania One";
+  font-size: 32px;
+  color: #fff;
 }
