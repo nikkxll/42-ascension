@@ -1,0 +1,128 @@
+.register-container {
+  max-width: 583px;
+  max-height: 700px;
+  display: flex;
+}
+.register-form-wrapper {
+  border-radius: 45px;
+  background-color: rgba(18, 16, 16, 1);
+  width: 100%;
+  padding: 0px 52px 22px;
+  border: 1px solid rgba(167, 167, 167, 1);
+}
+.header-container {
+  display: flex;
+  width: 317px;
+  max-width: 100%;
+  gap: 20px;
+  justify-content: space-between;
+}
+.logo {
+  aspect-ratio: 1.43;
+  object-fit: contain;
+  width: 38px;
+  align-self: center;
+  margin: -1px 0 0 -5px;
+}
+.title {
+  color: #fff;
+  font-family: "Keania One";
+  font-size: 52px;
+}
+.form-input {
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  background-color: rgba(34, 34, 34, 1);
+  width: 458px;
+  max-width: 100%;
+  color: #fff;
+  margin: 18px 0 0 10px;
+  padding: 2px 25px;
+  font-family: "Acme";
+  font-size: 22;
+}
+.first-input {
+  margin-top: 4px;
+}
+.remember-me-container {
+  display: flex;
+  gap: 8px;
+  margin: 24px 0 0 30px;
+}
+.checkbox-inner {
+  background-color: rgba(0, 8, 255, 0.5);
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+}
+.remember-text {
+  color: rgba(89, 89, 89, 1);
+  font: 400 22px Acme, sans-serif;
+  margin-top: -2px;
+}
+.submit-button {
+  border-radius: 20px;
+  background-color: rgba(50, 73, 94, 1);
+  color: #fff;
+  padding: 6px 188px;
+  font: 400 28px Acme, sans-serif;
+  border: none;
+  cursor: pointer;
+}
+.button-wrapper {
+  display: flex;
+  margin: 26px auto 0;
+  max-width: 100%;
+  gap: 20px;
+  justify-content: center;
+  font: 400 20px Acme, sans-serif;
+}
+.prompt {
+  display: flex;
+  margin: 26px auto 0;
+  width: 317px;
+  max-width: 100%;
+  gap: 20px;
+  justify-content: center;
+  font: 400 20px Acme, sans-serif;
+}
+.prompt-oauth {
+  display: flex;
+  margin: 26px auto 0;
+  width: 317px;
+  max-width: 100%;
+  gap: 20px;
+  justify-content: center;
+  font: 400 28px Acme, sans-serif;
+}
+.prompt-text {
+  color: rgba(255, 255, 255, 0.5);
+}
+.reg-link {
+  color: rgba(0, 186, 186, 1);
+  text-decoration: none;
+}
+.divider {
+  justify-content: center;
+  max-width: 100%;
+  height: 0px;
+  margin: 29px 0 0;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+.oauth-logo {
+  aspect-ratio: 3.06;
+  object-fit: contain;
+  width: 98px;
+  margin: 15px auto 0;
+  display: block;
+}
+.prompt-not-a-member {
+    display: flex;
+    margin: 18px auto 130px;
+    width: 317px;
+    max-width: 100%;
+    gap: 20px;
+    justify-content: center;
+    font: 400 20px Acme, sans-serif;
+  }
