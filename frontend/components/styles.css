@@ -1,3 +1,5 @@
+/* Sign in and Sign up forms */
+
 .register-container {
   max-width: 583px;
   max-height: 700px;
@@ -8,7 +10,7 @@
   background-color: rgba(18, 16, 16, 1);
   width: 100%;
   padding: 0px 52px 22px;
-  border: 1px solid rgba(167, 167, 167, 1);
+  border: 1px solid #a7a7a7;
 }
 .header-container {
   display: flex;
@@ -118,11 +120,96 @@
   display: block;
 }
 .prompt-not-a-member {
-    display: flex;
-    margin: 18px auto 130px;
-    width: 317px;
-    max-width: 100%;
-    gap: 20px;
-    justify-content: center;
-    font: 400 20px Acme, sans-serif;
-  }
+  display: flex;
+  margin: 18px auto 130px;
+  width: 317px;
+  max-width: 100%;
+  gap: 20px;
+  justify-content: center;
+  font: 400 20px Acme, sans-serif;
+}
+
+/* Small component to sign-in/sign-out player, check profile or log out */
+
+.player-brief-info-container {
+  display: flex;
+  max-width: 287px;
+  max-height: 325px;
+  flex-direction: column;
+  color: #fff;
+  font: 400 28px Acme, sans-serif;
+}
+
+.player-brief-info-panel {
+  border-radius: 45px;
+  background-color: #121010;
+  display: flex;
+  max-width: 287px;
+  max-height: 325px;
+  flex-direction: column;
+  border: 1px solid #a7a7a7;
+}
+
+.auth-title {
+  align-self: center;
+  font: 40px "Keania One", sans-serif;
+}
+
+.auth-button {
+  border-radius: 20px;
+  background-color: #32495e;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  padding: 5px 62px 5px;
+  margin: 21px auto 0;
+  width: 75%;
+}
+
+.auth-button:first-of-type {
+  margin-top: 51px;
+}
+
+.auth-button:last-of-type {
+  margin-bottom: 51px;
+}
+
+.profile-avatar {
+  aspect-ratio: 0.85;
+  object-fit: contain;
+  object-position: center;
+  width: 100px;
+  align-self: center;
+  max-width: 100%;
+}
+
+.username {
+  align-self: center;
+  margin-top: 0px;
+  font: 400 28px Acme, sans-serif;
+}
+
+.profile-button {
+  border-radius: 20px;
+  background-color: #32495e;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  padding: 5px 62px 5px;
+  margin: 0 auto 0;
+  width: 75%;
+}
+
+.logout-button {
+  border-radius: 20px;
+  background-color: rgba(255, 0, 0, 0.3);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  padding: 5px 62px 5px;
+  margin: 18px auto 39px;
+  width: 75%;
+}
