@@ -367,3 +367,96 @@
 .tournament-link {
   color: #fff;
 }
+
+/* Match statistics container */
+
+.match-stats-title {
+  font-family: "Keania One";
+  font-size: 40px;
+  color: #fff;
+  margin: 25px auto 25px;
+}
+
+.match-stats {
+  display: flex;
+  flex-direction: column;
+  max-width: 716px;
+  max-height: 692px;
+  border-radius: 45px;
+  background-color: rgba(18, 16, 16, 1);
+  width: 100%;
+  border: 1px solid #a7a7a7;
+}
+
+.match-stats-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 0 0 50px;
+}
+
+.match-stats-header-wrapper {
+  display: flex;
+  width: 581px;
+  max-width: 100%;
+  justify-content: space-between;
+}
+
+.match-stats-result {
+  margin: 0 70px 0;
+}
+
+.match-stats-text-format {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  color: #fff;
+  font-family: "Acme", sans-serif;
+  font-size: 34px;
+  margin-top: 8px;
+}
+
+.match-stats-result.time-info {
+  margin-top: 20px;
+}
+
+.match-stats-header-no-arrow {
+  display: flex;
+  justify-content: center;
+  margin-bottom: -10px;
+}
+
+.match-stats-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0 auto 12px;
+}
+
+.match-stats-scroll-container {
+  height: 200px;
+  overflow-y: auto;
+  padding: 0 25px 0;
+  margin: 0 45px 0;
+  scrollbar-width: thin;
+}
+
+.match-stats-scroll-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.match-stats-scroll-container::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+}
+
+.match-stats-player-name {
+  position: relative;
+  flex-grow: 1;
+  width: 33%;
+  text-align: left;
+}
+
+.match-stats-match-score {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-40%);
+}
