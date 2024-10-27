@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        body {
+            background-color: black;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            margin: 0;
+            color:white ;
+        }
+
+        .half {
+            width: 50%;
+            height: 90%;
+        }
+
+        .box {
+            background-color: rgba(1,1,1, 0.3);
+            border: 1px solid red;
+        }
+        .homeLeft {
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: grid;
+            gap: 4%;
+            grid-template-columns: 48% 48%;
+            grid-template-rows: 48% 48%;
+            height: 100%;
+            /* display: none; */
+        }
+        section {
+            height: 100%;
+        }
+        .homeRight {
+            position: absolute;
+            right: 0;
+            top: 0;
+            display: grid;
+            column-gap: 4%;
+            grid-template-columns: 48% 48%;
+            grid-template-rows: 75% 25%;
+        }
+        .buttonContainer {
+            grid-column-start: 1;
+            grid-column-end: 3;
+        }
+        .fullWidthButton{
+            width: 100%;
+        }
+        .signup {
+            position: absolute;
+            left: 0;
+            top: 12%;
+            width: 50%;
+            display: none;
+            height: 75%;
+        }
+        .signupInput {
+            width: 80%;
+            margin: 2% 10%;
+        }
+
+        .signin {
+            position: absolute;
+            left: 0;
+            top: 12%;
+            width: 50%;
+            display: none;
+            height: 75%;
+
+        }
+        .signinInput {
+            width: 80%;
+            margin: 2% 10%;
+        }
+
+        .matchView {
+            position: absolute;
+            right: 0;
+            top: 0;
+            display: none;
+        }
+
+        .gameStartView{
+            width: 100%;
+            height: 90%;
+            display: grid;
+            gap: 2%;
+            grid-template-columns: 21% 21% 8% 21% 21%;
+            grid-template-rows: 49% 49%;
+        }
+        .vsImage {
+            grid-row-start: 1;
+            grid-row-end: 3;
+            grid-column-start: 3;
+            grid-column-end: 4;
+        }
+        .gameButtonContainer
+        {
+            height: 10%;
+            width: 100%;
+            display: grid;
+            padding-top: 2%;
+            column-gap: 20%;
+            grid-template-columns: 20% 20% 20%;
+            grid-template-rows: 30%;
+        }
+        .tournamentLeft {
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: grid;
+            gap: 4%;
+            grid-template-columns: 48% 48%;
+            grid-template-rows: 12% 40% 40%;
+            height: 100%;
+        }
+
+        .tournamentName {
+            grid-column-start: 1;
+            grid-column-end: 3;
+        }
+
+        .tournamentRight {
+            position: absolute;
+            right: 0;
+            top: 0;
+            display: grid;
+            column-gap: 4%;
+            grid-template-columns: 100%;
+            grid-template-rows: 31% 31% 31%;
+        }
+        .profile {
+            width: 99%;
+            height: 99%;
+        }
+    </style>
+    <section id="lobby">
+        <div class="homeLeft half">
+            <div class="box lobbyPlayer">
+                <h2 class="lobbyPlayerName" onclick="goToProfile()">Player0</h2>
+                <button onclick="goToSignup()" class="lobbyPlayerButton smallButton">Sign up</button>
+                <button onclick="goToSignin()" class="lobbyPlayerButton smallButton">Sign in</button>
+            </div>
+            <div class="box lobbyPlayer">
+                <h2 class="lobbyPlayerName" onclick="goToProfile()">Player1</h2>
+                <button onclick="goToSignup()" class="lobbyPlayerButton smallButton">Sign up</button>
+                <button onclick="goToSignin()" class="lobbyPlayerButton smallButton">Sign in</button>
+            </div>
+            <div class="box lobbyPlayer">
+                <h2 class="lobbyPlayerName" onclick="goToProfile()">Player2</h2>
+                <button onclick="goToSignup()" class="lobbyPlayerButton smallButton">Sign up</button>
+                <button onclick="goToSignin()" class="lobbyPlayerButton smallButton">Sign in</button>
+            </div>
+            <div class="box lobbyPlayer">
+                <h2 class="lobbyPlayerName" onclick="goToProfile()">Player3</h2>
+                <button onclick="goToSignup()" class="lobbyPlayerButton smallButton">Sign up</button>
+                <button onclick="goToSignin()" class="lobbyPlayerButton smallButton">Sign in</button>
+            </div>
+        </div>
+        <div class="homeRight half">
+            <div class="box recentMatches">
+                <h4 class="title">
+                    <div id="recentMatchesList">
+                        <p onclick="goToMatchView()">Vladimir beat Max [11:0]</p>
+                    </div>
+                </h4>
+            </div>
+
+            <div class="box tournaments">
+                <h4 class="title">
+                    <div id="tournamentsView">
+                        <p>Transendence cup 2024</p>
+                    </div>
+                </h4>
+            </div>
+            <div class="buttonContainer">
+                <button onclick="goToGameStart()" class="fullWidthButton">Create Single Game</button>
+                <button onclick="goToTournament()" class="fullWidthButton">Create Tournament</button>
+                <button onclick="" class="fullWidthButton">Create 4 pong game</button>
+            </div>
+        </div>
+        <div class="signup  box">
+            <button onclick="goToLobby()">go back</button>
+            <h2 class="title">Sign Up</h2>
+            <form action="POST">
+                <input class="signupInput" type="text" name="" id="">
+                <input class="signupInput" type="email" name="" id="">
+                <input class="signupInput" type="password" name="" id="">
+                <input class="signupInput" type="checkbox" name="" id="">
+                <input class="signupInput" type="submit" value="">
+            </form>
+            <hr>
+            <p>42 account signups</p>
+        </div>
+        <div class="signin box">
+            <button onclick="goToLobby()">go back</button>
+            <h2 class="title">Sign In</h2>
+            <form action="POST">
+                <input class="signinInput" type="email" name="" id="">
+                <input class="signinInput" type="password" name="" id="">
+                <input class="signinInput" type="checkbox" name="" id="">
+                <input class="signinInput" type="submit" value="">
+            </form>
+            <hr>
+            <p>42 account signups</p>
+        </div>
+        <div class="matchView box half">
+            <h2 class="title">Match View</h2>
+            <button onclick="goToHomeRight()">go back</button>
+        </div>
+    </section>
+    
+    <section style="display: none;" id="gameStart">
+        <div class="gameStartView">
+            <div class="gameStartPlayer box"></div>
+            <div class="gameStartPlayer box"></div>
+            <div class="gameStartPlayer box"></div>
+            <div class="gameStartPlayer box"></div>
+            <img class="vsImage">
+            <div class="gameStartPlayer box"></div>
+            <div class="gameStartPlayer box"></div>
+            <div class="gameStartPlayer box"></div>
+            <div class="gameStartPlayer box"></div>
+        </div>
+        <div class="gameButtonContainer">
+            <button onclick="goToHome()">Go back</button>
+            <button>Randomize</button>
+            <button onclick="">Start game</button>
+        </div>
+    </section>
+
+    <section style="display: none;" id="tournament">
+        <div class="tournamentLeft half">
+            <div class="tournamentName">42 national tornament</div>  
+            <div class="box tournamentPlayer">
+                <h2 class="tournamentPlayerName"></h2>
+            </div>
+            <div class="box tournamentPlayer">
+                <h2 class="tournamentPlayerName"></h2>
+            </div>
+            <div class="box tournamentPlayer">
+                <h2 class="tournamentPlayerName"></h2>
+            </div>
+            <div class="box tournamentPlayer">
+                <h2 class="tournamentPlayerName"></h2>
+            </div>
+        </div>
+        <div class="tournamentRight half">
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <button onclick="goToHome()">Back to Menu</button>
+            <button onclick="">Start the games</button>
+        </div>
+    </section>
+
+    <section style="display: none;" id="profile">
+        <div class="profile box">
+            profile
+            <button onclick="goToHome()">go back</button>
+        </div>
+    </section>
+    <script>
+        /* Collection of all the buttons that transition the views */
+        /* home screen transitions */
+        const homeLeft = document.getElementsByClassName("homeLeft")[0]
+        const homeRight = document.getElementsByClassName("homeRight")[0]
+
+        const signup = document.getElementsByClassName("signup")[0]
+        const signin = document.getElementsByClassName("signin")[0]
+
+        const matchView = document.getElementsByClassName("matchView")[0]
+
+        function goToSignup()
+        {
+            homeLeft.style.display = "none"
+            signin.style.display = "none"
+            signup.style.display = "block"
+        }
+
+        function goToSignin()
+        {
+            homeLeft.style.display = "none"
+            signin.style.display = "block"
+            signup.style.display = "none"
+        }
+
+        function goToLobby()
+        {
+            homeLeft.style.display = "grid"
+            signin.style.display = "none"
+            signup.style.display = "none"
+        }
+
+        function goToMatchView()
+        {
+            matchView.style.display = "block"
+            homeRight.style.display = "none"
+        }
+
+        function goToHomeRight()
+        {
+            matchView.style.display = "none"
+            homeRight.style.display = "grid"
+        }
+
+        /* section transitions */
+        const lobby = document.getElementById("lobby")
+        const gameStart = document.getElementById("gameStart")
+        const tournament = document.getElementById("tournament")
+        const profile = document.getElementById("profile")
+        
+        function goToHome()
+        {
+            lobby.style.display="block"
+            gameStart.style.display="none"
+            tournament.style.display="none"
+            profile.style.display="none"
+        }
+        
+        function goToGameStart()
+        {
+            lobby.style.display="none"
+            gameStart.style.display="block"
+            tournament.style.display="none"
+            profile.style.display="none"
+        }
+
+        function goToTournament()
+        {
+            lobby.style.display="none"
+            gameStart.style.display="none"
+            tournament.style.display="block"
+            profile.style.display="none"
+        }
+
+        function goToProfile()
+        {
+            lobby.style.display="none"
+            gameStart.style.display="none"
+            tournament.style.display="none"
+            profile.style.display="block"
+        }
+    </script>
+</body>
+</html>
