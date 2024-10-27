@@ -428,15 +428,16 @@
 .match-stats-list {
   list-style-type: none;
   padding: 0;
-  margin: 0 auto 12px;
+  margin: 0 auto 6px;
 }
 
 .match-stats-scroll-container {
   height: 200px;
   overflow-y: auto;
   padding: 0 25px 0;
-  margin: 0 45px 0;
+  margin: 0 45px 15px;
   scrollbar-width: thin;
+  scrollbar-color: #595959 #121010;
 }
 
 .match-stats-scroll-container::-webkit-scrollbar {

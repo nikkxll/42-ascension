@@ -321,9 +321,9 @@
         <div class="register-container">
           <form class="register-form-wrapper" action="POST">
             <header class="header-container">
-              <a onclick="goToLobby()" class="logo">
+              <p onclick="goToLobby()" class="logo">
                 <img src="../assets/back_arrow.svg" alt="" />
-              </a>
+              </p>
               <h1 class="title">Sign in</h1>
             </header>
 
@@ -374,9 +374,9 @@
         <div class="register-container">
           <form class="register-form-wrapper">
             <header class="header-container">
-              <a onclick="goToLobby()" class="logo">
+              <p onclick="goToLobby()" class="logo">
                 <img src="../assets/back_arrow.svg" alt="" />
-              </a>
+              </p>
               <h1 class="title">Sign up</h1>
             </header>
 
@@ -439,8 +439,78 @@
         </div>
       </div>
       <div class="matchView box half">
-        <h2 class="title">Match View</h2>
-        <button onclick="goToHomeRight()">go back</button>
+        <div class="match-stats">
+          <div class="match-stats-header">
+            <header class="match-stats-header-wrapper">
+              <p onclick="goToHomeRight()" class="logo">
+                <img src="../assets/back_arrow.svg" alt="" />
+              </p>
+              <h1 class="match-stats-title">Match statistics</h1>
+            </header>
+          </div>
+          <div class="match-stats-result">
+            <div class="match-stats-text-format">
+              <span>Vladimir</span>
+              <span>11</span>
+            </div>
+            <div class="match-stats-text-format">
+              <span>Max</span>
+              <span>0</span>
+            </div>
+          </div>
+          <div class="match-stats-result match-stats-time-info">
+            <div class="match-stats-text-format">
+              <span>Match time:</span>
+              <span>05m 26sec</span>
+            </div>
+            <div class="match-stats-text-format">
+              <span>Date:</span>
+              <span>10/05/2024</span>
+            </div>
+          </div>
+          <div class="match-stats-header-no-arrow">
+            <h1 class="match-stats-title">H2H</h1>
+          </div>
+          <div class="match-stats-result">
+            <div class="match-stats-text-format">
+              <span>Vladimir</span>
+              <span class="match-stats-match-score">7:4</span>
+              <span>Max</span>
+            </div>
+          </div>
+          <div class="match-stats-header-no-arrow">
+            <h1 class="match-stats-title">H2H matches</h1>
+          </div>
+          <div class="match-stats-scroll-container">
+            <ul class="match-stats-list">
+              <li class="match-stats-text-format">
+                <span>Vladimir</span>
+                <span class="match-stats-match-score">11:2</span>
+                <span>Max</span>
+              </li>
+              <li class="match-stats-text-format">
+                <span>Max</span>
+                <span class="match-stats-match-score">9:11</span>
+                <span>Vladimir</span>
+              </li>
+              <li class="match-stats-text-format">
+                <span>Vladimir</span>
+                <span class="match-stats-match-score">4:11</span>
+                <span>Max</span>
+              </li>
+              <li class="match-stats-text-format">
+                <span>Vladimir</span>
+                <span class="match-stats-match-score">13:11</span>
+                <span>Max</span>
+              </li>
+              <li class="match-stats-text-format">
+                <span>Max</span>
+                <span class="match-stats-match-score">10:12</span>
+                <span>Vladimir</span>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </section>
 
