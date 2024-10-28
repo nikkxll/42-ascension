@@ -554,3 +554,71 @@
 .add-ai-tooltip:hover .add-ai-tooltiptext {
   visibility: visible;
 }
+
+/* Single-game user profile */
+
+.game-player-card {
+  display: flex;
+  max-width: 273px;
+  max-height: 318px;
+  flex-direction: column;
+  color: #fff;
+  font: 400 28px Acme, sans-serif;
+}
+
+.game-player-card-inner {
+  border-radius: 45px;
+  background-color: #262424;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #a7a7a7;
+}
+
+.game-player-number {
+  font: 36px "Keania One", sans-serif;
+  margin-top: 10px;
+  margin-bottom: 14px;
+}
+
+.game-player-avatar {
+  aspect-ratio: 0.98;
+  object-fit: contain;
+  object-position: center;
+  width: 67px;
+}
+
+.game-player-name {
+  font-size: 34px;
+  margin-top: 6px;
+  margin-bottom: 10px;
+}
+
+.game-player-stats-container {
+  width: 80%;
+  display: flex;
+}
+
+.game-player-statistics-param {
+  flex-grow: 1;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.game-player-statistics-param-number {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.game-player-statistics-param-number.last {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.game-player-win-rate-container {
+  width: 80%;
+  align-self: center;
+  display: flex;
+  justify-content: space-between;
+}
