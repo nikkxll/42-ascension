@@ -622,3 +622,89 @@
   display: flex;
   justify-content: space-between;
 }
+
+/* Single game lobby container */
+
+.single-game-lobby {
+  max-width: 95%;
+  max-height: 95%;
+  display: flex;
+  flex-direction: column;
+  font-family: "Acme", sans-serif;
+  color: #fff;
+  background-color: #121010;
+  border-radius: 45px;
+}
+
+.single-game-top {
+  display: flex;
+  flex-direction: row;
+}
+
+.single-game-bottom {
+  display: flex;
+  flex-direction: row;
+}
+
+.single-game-vs-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.single-game-vs-logo-props {
+  width: 150px;
+  height: 150px;
+}
+
+.single-game-grid-left {
+  display: grid;
+  grid-template-columns: 52% 52%;
+  gap: 20px;
+  width: 100%;
+  margin: 3%;
+  margin-left: 5%;
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
+
+.single-game-grid-right {
+  display: grid;
+  grid-template-columns: 52% 52%;
+  gap: 20px;
+  width: 100%;
+  margin: 3%;
+  margin-right: 5%;
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
+
+.single-game-buttons {
+  border-radius: 20px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font: 400 32px Acme, sans-serif;
+  padding: 8px 84px 8px;
+  margin: 0px auto 32px;
+}
+
+.single-game-buttons.back {
+  background-color: rgba(255, 0, 0, 0.25);
+}
+
+.single-game-buttons.randomize {
+  background-color: #32495e;
+}
+
+.single-game-buttons.start {
+  background-color: rgba(0, 255, 55, 0.25);
+}
+
+.game-player-card-inner.selected {
+  border: 1px solid green;
+}
+
+.game-player-card-inner.shaded {
+  opacity: 0.5;
+}
