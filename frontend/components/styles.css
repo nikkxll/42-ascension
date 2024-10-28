@@ -1,6 +1,5 @@
 /* General styles */
 
-
 /* Sign in and Sign up forms */
 
 .register-container {
@@ -460,4 +459,98 @@
   position: absolute;
   left: 50%;
   transform: translateX(-40%);
+}
+
+/* Add ai container */
+
+.add-ai-main-container {
+  display: flex;
+  flex-direction: column;
+  background-color: #121010;
+  border: 1px solid #a7a7a7;
+  border-radius: 45px;
+  max-width: 629px;
+  max-height: 151px;
+  color: #fff;
+}
+.add-ai-top-part {
+  display: flex;
+  align-items: center;
+  padding: 0 50px 0;
+  margin-bottom: 0px;
+  position: relative;
+}
+
+.add-ai-checkbox {
+  display: flex;
+  flex-direction: row;
+  margin: 26px auto 0px;
+}
+
+.add-ai-checkbox input[type="checkbox"] {
+  transform: scale(1.5);
+  margin-right: 6px;
+}
+
+.add-ai-checkbox-space {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.add-ai-header {
+  font: 400 32px Acme, sans-serif;
+  margin-bottom: 0px;
+}
+
+.settings-icon {
+  margin-top: 26px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+.add-ai-buttons {
+  display: flex;
+  flex-direction: row;
+  padding-top: 0px;
+}
+.add-ai-button {
+  border-radius: 20px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font: 400 24px Acme, sans-serif;
+  padding: 6px 62px 6px;
+  margin: 24px auto 32px;
+}
+.add-ai-button.back {
+  background-color: rgba(255, 0, 0, 0.25);
+}
+
+.add-ai-button.continue {
+  background-color: #32495e;
+}
+
+.add-ai-tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+  font: 400 18px Acme, sans-serif;
+}
+
+.add-ai-tooltip .add-ai-tooltiptext {
+  visibility: hidden;
+  width: 300px;
+  background-color: rgba(89, 89, 89, 0.5);
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  margin-left: 20px;
+  margin-top: 21px;
+  position: absolute;
+  z-index: 1;
+}
+
+.add-ai-tooltip:hover .add-ai-tooltiptext {
+  visibility: visible;
 }
