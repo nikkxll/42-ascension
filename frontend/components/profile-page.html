@@ -97,6 +97,91 @@
     border: 1px solid #a7a7a7;
     color: #fff;
   }
+
+  /* Friends list */
+
+  .profile-friend-list {
+    display: flex;
+    flex-direction: column;
+    max-width: 629px;
+    height: 435px;
+    border-radius: 45px;
+    background-color: rgba(18, 16, 16, 1);
+    border: 1px solid #a7a7a7;
+  }
+  .profile-friend-list-top {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    width: 90%;
+    margin-left: 5%;
+  }
+  .profile-friend-list-title {
+    font-family: "Keania One", sans-serif;
+    font-size: 40px;
+    color: #fff;
+  }
+  .profile-friend-list-search {
+    display: flex;
+    margin-left: 10%;
+    align-items: center;
+  }
+  .profile-friend-list-input {
+    border-radius: 15px;
+    background-color: #121010;
+    display: flex;
+    width: 100%;
+    padding: 7px 14px;
+    border: 1px solid #a7a7a7;
+    font-family: "Acme", sans-serif;
+    font-size: 22px;
+    color: #fff;
+  }
+  .profile-friends-ul {
+    margin: 4%;
+    margin-top: 0;
+    padding: 0;
+    font-size: 28px;
+  }
+  .profile-friends-list {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    color: #fff;
+    font-family: "Acme", sans-serif;
+    margin-top: 8px;
+    font-size: 28px;
+  }
+  .profile-friend-status {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-40%);
+  }
+  .profile-friend-actions {
+    position: absolute;
+    left: 69%;
+  }
+  .profile-friend-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    max-width: 200px;
+  }
+  .profile-scroll-container {
+    height: 300px;
+    overflow-y: auto;
+    margin: 0 5px 0;
+    scrollbar-width: thin;
+    scrollbar-color: #595959 #121010;
+  }
+  .profile-scroll-container::-webkit-scrollbar {
+    width: 8px;
+  }
+  .profile-scroll-container::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px;
+  }
 </style>
 
 <div class="profile-main">
@@ -129,7 +214,117 @@
           aria-label="Add new friend"
         />
       </div>
-      <div></div>
+      <div>
+        <div class="profile-friend-list">
+          <div class="profile-friend-list-top">
+            <div>
+              <h1 class="profile-friend-list-title">Friends</h1>
+            </div>
+            <div class="profile-friend-list-search">
+              <input
+                type="text"
+                class="profile-friend-list-input"
+                placeholder="Find friend"
+                aria-label="Find friend"
+              />
+            </div>
+          </div>
+          <div class="profile-scroll-container">
+            <ul class="profile-friends-ul">
+              <li class="profile-friends-list">
+                <div>
+                  <span class="profile-friend-name">TestUserName2</span>
+                </div>
+                <div>
+                  <span class="profile-friend-status">offline</span>
+                  <span class="profile-friend-actions">accept | decline</span>
+                </div>
+              </li>
+              <li class="profile-friends-list">
+                <div>
+                  <span class="profile-friend-name">Max</span>
+                </div>
+                <div>
+                  <span class="profile-friend-status">online</span>
+                  <span class="profile-friend-actions">profile | remove</span>
+                </div>
+              </li>
+              <li class="profile-friends-list">
+                <div>
+                  <span class="profile-friend-name">Alex</span>
+                </div>
+                <div>
+                  <span class="profile-friend-status">online</span>
+                  <span class="profile-friend-actions">profile | remove</span>
+                </div>
+              </li>
+              <li class="profile-friends-list">
+                <div>
+                  <span class="profile-friend-name">Robert</span>
+                </div>
+                <div>
+                  <span class="profile-friend-status">online</span>
+                  <span class="profile-friend-actions">pending...</span>
+                </div>
+              </li>
+              <li class="profile-friends-list">
+                <div>
+                  <span class="profile-friend-name">42Admin</span>
+                </div>
+                <div>
+                  <span class="profile-friend-status">offline</span>
+                  <span class="profile-friend-actions">profile | remove</span>
+                </div>
+              </li>
+              <li class="profile-friends-list">
+                <div>
+                  <span class="profile-friend-name">VeryLongNameToCheck</span>
+                </div>
+                <div>
+                  <span class="profile-friend-status">offline</span>
+                  <span class="profile-friend-actions">profile | remove</span>
+                </div>
+              </li>
+              <li class="profile-friends-list">
+                <div>
+                  <span class="profile-friend-name">Test1</span>
+                </div>
+                <div>
+                  <span class="profile-friend-status">offline</span>
+                  <span class="profile-friend-actions">profile | remove</span>
+                </div>
+              </li>
+              <li class="profile-friends-list">
+                <div>
+                  <span class="profile-friend-name">Test2</span>
+                </div>
+                <div>
+                  <span class="profile-friend-status">offline</span>
+                  <span class="profile-friend-actions">profile | remove</span>
+                </div>
+              </li>
+              <li class="profile-friends-list">
+                <div>
+                  <span class="profile-friend-name">Test99</span>
+                </div>
+                <div>
+                  <span class="profile-friend-status">offline</span>
+                  <span class="profile-friend-actions">profile | remove</span>
+                </div>
+              </li>
+              <li class="profile-friends-list">
+                <div>
+                  <span class="profile-friend-name">Test100</span>
+                </div>
+                <div>
+                  <span class="profile-friend-status">offline</span>
+                  <span class="profile-friend-actions">profile | remove</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
     <div></div>
     <div>
