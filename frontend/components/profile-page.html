@@ -1,0 +1,141 @@
+<link
+  href="https://fonts.googleapis.com/css?family=Keania One"
+  rel="stylesheet"
+/>
+<link
+  href="https://fonts.googleapis.com/css2?family=Acme&display=swap"
+  rel="stylesheet"
+/>
+<link href="./styles.css" rel="stylesheet" />
+
+<style>
+  .profile-main {
+    max-width: 95%;
+    max-height: 95%;
+    display: flex;
+    flex-direction: column;
+    color: #fff;
+    background-color: #121010;
+    border-radius: 45px;
+  }
+  .profile-top {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    width: 100%;
+  }
+  .profile-top-left {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .profile-player-avatar {
+    width: 150px;
+    height: 150px;
+  }
+  .profile-player-name {
+    font-family: "Acme", sans-serif;
+    font-size: 54px;
+    margin-left: 4%;
+  }
+  .profile-edit-image {
+    width: 30px;
+    height: 30px;
+  }
+  .profile-change-password-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-right: 3%;
+  }
+  .profile-change-password {
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    padding: 0px 16px 0px;
+    background-color: #32495e;
+  }
+  .profile-change-password-text {
+    color: #fff;
+    font: 400 32px Acme, sans-serif;
+    margin: 10px;
+  }
+  .profile-add-friend-container {
+    display: flex;
+    max-width: 629px;
+    flex-direction: column;
+    justify-items: center;
+    color: #fff;
+    font: 400 22px Acme, sans-serif;
+  }
+
+  .profile-add-friend-button {
+    border-radius: 15px;
+    background-color: #121010;
+    display: flex;
+    width: 100%;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 7px 14px;
+    border: 1px solid #a7a7a7;
+  }
+
+  .profile-add-friend-icon {
+    aspect-ratio: 1.09;
+    object-fit: contain;
+    object-position: center;
+    width: 24px;
+    align-self: start;
+  }
+  .profile-add-friend-input {
+    border-radius: 15px;
+    background-color: #121010;
+    display: flex;
+    width: 100%;
+    padding: 7px 14px;
+    border: 1px solid #a7a7a7;
+    color: #fff;
+  }
+</style>
+
+<div class="profile-main">
+  <div class="profile-top">
+    <div class="profile-top-left">
+      <img
+        loading="lazy"
+        src="../assets/default_avatar.png"
+        alt="Player avatar"
+        class="profile-player-avatar"
+      />
+      <h1 class="profile-player-name">TestUserName1</h1>
+    </div>
+    <div class="profile-change-password-container">
+      <button class="profile-change-password">
+        <div>
+          <h2 class="profile-change-password-text">Change password</h2>
+          <img src="" alt="" />
+        </div>
+      </button>
+    </div>
+  </div>
+  <div>
+    <div>
+      <div class="add-friend-container">
+        <input
+          type="text"
+          class="profile-add-friend-input"
+          placeholder="Add new friend"
+          aria-label="Add new friend"
+        />
+      </div>
+      <div></div>
+    </div>
+    <div></div>
+    <div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+  <div></div>
+</div>
