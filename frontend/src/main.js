@@ -79,7 +79,7 @@ function checkRacketHitBall(ball, player){
 window.startGame = (ai) => {
     let gameResult = "Game is not finished yet";
     let isPaused = false;
-    const maxScore = 11;
+    const maxScore = 5;
     const playerSpeed = 17;  //12
     
     // create a scene and camera
@@ -104,6 +104,7 @@ window.startGame = (ai) => {
     renderer.setSize(window.innerWidth * 0.96, window.innerHeight * 0.96);
 
     // needs to be a game screen that we overlay and make visible
+    // document.getElementById("gameWindow").innerHTML = "";
     document.getElementById("gameWindow").appendChild(renderer.domElement);
 
     // Add lights to the scene for score visibility
@@ -317,7 +318,7 @@ window.startGame = (ai) => {
     function movement(event) {
         let code = event.which;
         if (code == 32){ // space
-            event.preventDefault();
+            // event.preventDefault();
         }
         if (!pressedKeys.has(code)){
             pressedKeys.add(code);   
@@ -525,7 +526,8 @@ window.startGame = (ai) => {
                 console.log("Game ended", gameCount);
                 gameResult = "Game ended";
                 cancelAnimationFrame(animationId);
-                //gameWindow.style.display = "none";
+                gameWindow.style.display = "none";
+				document.getElementById("gameStartButton").disabled = false;
                 return;
             }
             // move the players with deltatime
