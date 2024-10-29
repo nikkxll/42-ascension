@@ -786,3 +786,80 @@
 .tournament-setup-buttons.continue {
   background-color: #32495e;
 }
+
+/* Tournament lobby */
+
+.tournament-main {
+  max-width: 95%;
+  max-height: 95%;
+  display: flex;
+  flex-direction: column;
+  font-family: "Acme", sans-serif;
+  color: #fff;
+  background-color: #121010;
+  border-radius: 45px;
+}
+.tournament-top {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+.tournament-top > div {
+  flex: 1;
+}
+.tournament-bottom {
+  display: flex;
+  flex-direction: row;
+}
+.tournament-top-right {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1.4%;
+}
+.tournament-round {
+  border-radius: 45px;
+  background-color: #262424;
+  width: 72%;
+  padding: 77px 77px 77px;
+  border: 1px solid #a7a7a7;
+}
+.tournament-round.h2 {
+  display: flex;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.25);
+  font-family: "Keania One";
+  font-size: 64px;
+  padding: 7.4%;
+  margin: 10px 0 10px 0;
+}
+.tournament-name {
+  display: flex;
+  justify-content: center;
+  font-size: 24px;
+}
+.tournament-name-text {
+  color: #bda611;
+}
+.tournament-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  margin: 0 12% 0;
+  gap: 4.4%;
+  place-items: center;
+}
+.tournament-grid > div {
+  width: 400px;
+}
+.tournament-setup-buttons.generate {
+  background-color: #32495e;
+  justify-content: center;
+  padding-top: 1%;
+  padding-bottom: 1%;
+}
+.tournament-setup-buttons.back-to-menu {
+  background-color: rgba(255, 0, 0, 0.25);
+  justify-content: center;
+  padding-top: 1%;
+  padding-bottom: 1%;
+}
