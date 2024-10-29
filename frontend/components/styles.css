@@ -863,3 +863,53 @@
   padding-top: 1%;
   padding-bottom: 1%;
 }
+
+/* Tournament match container */
+
+.tournament-match-container {
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  background-color: #121010;
+  border-radius: 45px;
+  max-width: 675px;
+  max-height: 202px;
+}
+
+.tournament-match-title {
+  display: flex;
+  justify-content: center;
+  font-family: "Keania One", sans-serif;
+  font-size: 40px;
+  margin-bottom: 6px;
+  margin-top: 16px;
+}
+
+.tournament-match-players {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.tournament-match-vs-logo {
+  width: 100px;
+  height: 100px;
+}
+
+.tournament-match-player-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tournament-match-avatar {
+  width: 70px;
+  height: 70px;
+}
+
+.game-player-name.tournament {
+  font-family: "Acme", sans-serif;
+  font-size: 34px;
+}
