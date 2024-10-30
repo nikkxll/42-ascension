@@ -8,182 +8,6 @@
 />
 <link href="./styles.css" rel="stylesheet" />
 
-<style>
-  .profile-main {
-    max-width: 95%;
-    max-height: 95%;
-    display: flex;
-    flex-direction: column;
-    color: #fff;
-    background-color: #121010;
-    border-radius: 45px;
-  }
-  .profile-top {
-    display: flex;
-    justify-content: space-between;
-    flex-direction: row;
-    width: 100%;
-  }
-  .profile-top-left {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  }
-  .profile-player-avatar {
-    width: 150px;
-    height: 150px;
-  }
-  .profile-player-name {
-    font-family: "Acme", sans-serif;
-    font-size: 54px;
-    margin-left: 4%;
-  }
-  .profile-edit-image {
-    width: 30px;
-    height: 30px;
-  }
-  .profile-change-password-container {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    margin-right: 3%;
-  }
-  .profile-change-password {
-    border-radius: 20px;
-    border: none;
-    cursor: pointer;
-    padding: 0px 16px 0px;
-    background-color: #32495e;
-  }
-  .profile-change-password-text {
-    color: #fff;
-    font: 400 32px Acme, sans-serif;
-    margin: 10px;
-  }
-  .profile-add-friend-container {
-    display: flex;
-    max-width: 629px;
-    flex-direction: column;
-    justify-items: center;
-    color: #fff;
-    font: 400 22px Acme, sans-serif;
-  }
-
-  .profile-add-friend-button {
-    border-radius: 15px;
-    background-color: #121010;
-    display: flex;
-    width: 100%;
-    gap: 20px;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    padding: 7px 14px;
-    border: 1px solid #a7a7a7;
-  }
-
-  .profile-add-friend-icon {
-    aspect-ratio: 1.09;
-    object-fit: contain;
-    object-position: center;
-    width: 24px;
-    align-self: start;
-  }
-  .profile-add-friend-input {
-    border-radius: 15px;
-    background-color: #121010;
-    display: flex;
-    width: 100%;
-    padding: 7px 14px;
-    border: 1px solid #a7a7a7;
-    color: #fff;
-  }
-
-  /* Friends list */
-
-  .profile-friend-list {
-    display: flex;
-    flex-direction: column;
-    max-width: 629px;
-    height: 435px;
-    border-radius: 45px;
-    background-color: rgba(18, 16, 16, 1);
-    border: 1px solid #a7a7a7;
-  }
-  .profile-friend-list-top {
-    display: flex;
-    justify-content: space-between;
-    flex-direction: row;
-    width: 90%;
-    margin-left: 5%;
-  }
-  .profile-friend-list-title {
-    font-family: "Keania One", sans-serif;
-    font-size: 40px;
-    color: #fff;
-  }
-  .profile-friend-list-search {
-    display: flex;
-    margin-left: 10%;
-    align-items: center;
-  }
-  .profile-friend-list-input {
-    border-radius: 15px;
-    background-color: #121010;
-    display: flex;
-    width: 100%;
-    padding: 7px 14px;
-    border: 1px solid #a7a7a7;
-    font-family: "Acme", sans-serif;
-    font-size: 22px;
-    color: #fff;
-  }
-  .profile-friends-ul {
-    margin: 4%;
-    margin-top: 0;
-    padding: 0;
-    font-size: 28px;
-  }
-  .profile-friends-list {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    color: #fff;
-    font-family: "Acme", sans-serif;
-    margin-top: 8px;
-    font-size: 28px;
-  }
-  .profile-friend-status {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-40%);
-  }
-  .profile-friend-actions {
-    position: absolute;
-    left: 69%;
-  }
-  .profile-friend-name {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: inline-block;
-    max-width: 200px;
-  }
-  .profile-scroll-container {
-    height: 300px;
-    overflow-y: auto;
-    margin: 0 5px 0;
-    scrollbar-width: thin;
-    scrollbar-color: #595959 #121010;
-  }
-  .profile-scroll-container::-webkit-scrollbar {
-    width: 8px;
-  }
-  .profile-scroll-container::-webkit-scrollbar-thumb {
-    background-color: #888;
-    border-radius: 10px;
-  }
-</style>
-
 <div class="profile-main">
   <div class="profile-top">
     <div class="profile-top-left">
@@ -204,9 +28,10 @@
       </button>
     </div>
   </div>
-  <div>
-    <div>
-      <div class="add-friend-container">
+
+  <div class="profile-middle">
+    <div class="profile-middle-left">
+      <div class="profile-add-friend-container">
         <input
           type="text"
           class="profile-add-friend-input"
@@ -214,123 +39,188 @@
           aria-label="Add new friend"
         />
       </div>
-      <div>
-        <div class="profile-friend-list">
-          <div class="profile-friend-list-top">
-            <div>
-              <h1 class="profile-friend-list-title">Friends</h1>
-            </div>
-            <div class="profile-friend-list-search">
-              <input
-                type="text"
-                class="profile-friend-list-input"
-                placeholder="Find friend"
-                aria-label="Find friend"
-              />
-            </div>
+      <div class="profile-friend-list">
+        <div class="profile-friend-list-top">
+          <div>
+            <h1 class="profile-friend-list-title">Friends</h1>
           </div>
-          <div class="profile-scroll-container">
-            <ul class="profile-friends-ul">
-              <li class="profile-friends-list">
-                <div>
-                  <span class="profile-friend-name">TestUserName2</span>
-                </div>
-                <div>
-                  <span class="profile-friend-status">offline</span>
-                  <span class="profile-friend-actions">accept | decline</span>
-                </div>
-              </li>
-              <li class="profile-friends-list">
-                <div>
-                  <span class="profile-friend-name">Max</span>
-                </div>
-                <div>
-                  <span class="profile-friend-status">online</span>
-                  <span class="profile-friend-actions">profile | remove</span>
-                </div>
-              </li>
-              <li class="profile-friends-list">
-                <div>
-                  <span class="profile-friend-name">Alex</span>
-                </div>
-                <div>
-                  <span class="profile-friend-status">online</span>
-                  <span class="profile-friend-actions">profile | remove</span>
-                </div>
-              </li>
-              <li class="profile-friends-list">
-                <div>
-                  <span class="profile-friend-name">Robert</span>
-                </div>
-                <div>
-                  <span class="profile-friend-status">online</span>
-                  <span class="profile-friend-actions">pending...</span>
-                </div>
-              </li>
-              <li class="profile-friends-list">
-                <div>
-                  <span class="profile-friend-name">42Admin</span>
-                </div>
-                <div>
-                  <span class="profile-friend-status">offline</span>
-                  <span class="profile-friend-actions">profile | remove</span>
-                </div>
-              </li>
-              <li class="profile-friends-list">
-                <div>
-                  <span class="profile-friend-name">VeryLongNameToCheck</span>
-                </div>
-                <div>
-                  <span class="profile-friend-status">offline</span>
-                  <span class="profile-friend-actions">profile | remove</span>
-                </div>
-              </li>
-              <li class="profile-friends-list">
-                <div>
-                  <span class="profile-friend-name">Test1</span>
-                </div>
-                <div>
-                  <span class="profile-friend-status">offline</span>
-                  <span class="profile-friend-actions">profile | remove</span>
-                </div>
-              </li>
-              <li class="profile-friends-list">
-                <div>
-                  <span class="profile-friend-name">Test2</span>
-                </div>
-                <div>
-                  <span class="profile-friend-status">offline</span>
-                  <span class="profile-friend-actions">profile | remove</span>
-                </div>
-              </li>
-              <li class="profile-friends-list">
-                <div>
-                  <span class="profile-friend-name">Test99</span>
-                </div>
-                <div>
-                  <span class="profile-friend-status">offline</span>
-                  <span class="profile-friend-actions">profile | remove</span>
-                </div>
-              </li>
-              <li class="profile-friends-list">
-                <div>
-                  <span class="profile-friend-name">Test100</span>
-                </div>
-                <div>
-                  <span class="profile-friend-status">offline</span>
-                  <span class="profile-friend-actions">profile | remove</span>
-                </div>
-              </li>
-            </ul>
+          <div class="profile-friend-list-search">
+            <input
+              type="text"
+              class="profile-friend-list-input"
+              placeholder="Find friend"
+              aria-label="Find friend"
+            />
           </div>
+        </div>
+        <div class="profile-scroll-container friends">
+          <ul class="profile-friends-ul">
+            <li class="profile-friends-list">
+              <div>
+                <span class="profile-friend-name">TestUserName2</span>
+              </div>
+              <div>
+                <span class="profile-friend-status">offline</span>
+                <span class="profile-friend-actions">accept | decline</span>
+              </div>
+            </li>
+            <li class="profile-friends-list">
+              <div>
+                <span class="profile-friend-name">Max</span>
+              </div>
+              <div>
+                <span class="profile-friend-status">online</span>
+                <span class="profile-friend-actions">profile | remove</span>
+              </div>
+            </li>
+            <li class="profile-friends-list">
+              <div>
+                <span class="profile-friend-name">Alex</span>
+              </div>
+              <div>
+                <span class="profile-friend-status">online</span>
+                <span class="profile-friend-actions">profile | remove</span>
+              </div>
+            </li>
+            <li class="profile-friends-list">
+              <div>
+                <span class="profile-friend-name">Robert</span>
+              </div>
+              <div>
+                <span class="profile-friend-status">online</span>
+                <span class="profile-friend-actions">pending...</span>
+              </div>
+            </li>
+            <li class="profile-friends-list">
+              <div>
+                <span class="profile-friend-name">42Admin</span>
+              </div>
+              <div>
+                <span class="profile-friend-status">offline</span>
+                <span class="profile-friend-actions">profile | remove</span>
+              </div>
+            </li>
+            <li class="profile-friends-list">
+              <div>
+                <span class="profile-friend-name">VeryLongNameToCheck</span>
+              </div>
+              <div>
+                <span class="profile-friend-status">offline</span>
+                <span class="profile-friend-actions">profile | remove</span>
+              </div>
+            </li>
+            <li class="profile-friends-list">
+              <div>
+                <span class="profile-friend-name">Test1</span>
+              </div>
+              <div>
+                <span class="profile-friend-status">offline</span>
+                <span class="profile-friend-actions">profile | remove</span>
+              </div>
+            </li>
+            <li class="profile-friends-list">
+              <div>
+                <span class="profile-friend-name">Test2</span>
+              </div>
+              <div>
+                <span class="profile-friend-status">offline</span>
+                <span class="profile-friend-actions">profile | remove</span>
+              </div>
+            </li>
+            <li class="profile-friends-list">
+              <div>
+                <span class="profile-friend-name">Test99</span>
+              </div>
+              <div>
+                <span class="profile-friend-status">offline</span>
+                <span class="profile-friend-actions">profile | remove</span>
+              </div>
+            </li>
+            <li class="profile-friends-list">
+              <div>
+                <span class="profile-friend-name">Test100</span>
+              </div>
+              <div>
+                <span class="profile-friend-status">offline</span>
+                <span class="profile-friend-actions">profile | remove</span>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
-    <div></div>
-    <div>
-      <div></div>
-      <div></div>
+
+    <div class="profile-recent-matches">
+      <div class="profile-recent-matches-top">
+        <h1 class="profile-recent-matches-title">Recent matches</h1>
+      </div>
+      <div class="profile-scroll-container matches">
+        <ul class="profile-recent-matches-ul">
+          <li class="profile-recent-matches-list">
+            <div>
+              <span class="profile-recent-matches-date">11/05/2024</span>
+            </div>
+            <div class="profile-recent-player-score">
+              <span>TestUser1</span>
+              <span class="profile-recent-matches-score">11</span>
+            </div>
+            <div class="profile-recent-player-score">
+              <span>TestUser2</span>
+              <span class="profile-recent-matches-score">9</span>
+            </div>
+          </li>
+          <li class="profile-recent-matches-list">
+            <div>
+              <span class="profile-recent-matches-date">10/05/2024</span>
+            </div>
+            <div class="profile-recent-player-score">
+              <span>TestUser1</span>
+              <span class="profile-recent-matches-score">5</span>
+            </div>
+            <div class="profile-recent-player-score">
+              <span>TestUser3</span>
+              <span class="profile-recent-matches-score">11</span>
+            </div>
+          </li>
+          <li class="profile-recent-matches-list">
+            <div>
+              <span class="profile-recent-matches-date">10/05/2024</span>
+            </div>
+            <div class="profile-recent-player-score">
+              <span>TestUser1</span>
+              <span class="profile-recent-matches-score">9</span>
+            </div>
+            <div class="profile-recent-player-score">
+              <span>TestUser4</span>
+              <span class="profile-recent-matches-score">11</span>
+            </div>
+          </li>
+          <li class="profile-recent-matches-list">
+            <div>
+              <span class="profile-recent-matches-date">06/05/2024</span>
+            </div>
+            <div class="profile-recent-player-score">
+              <span>TestUser1</span>
+              <span class="profile-recent-matches-score">12</span>
+            </div>
+            <div class="profile-recent-player-score">
+              <span>TestUser5</span>
+              <span class="profile-recent-matches-score">10</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="profile-dashboards">
+      <div class="dashboard-template">Dashboard 1</div>
+      <div class="dashboard-template">Dashboard 2</div>
     </div>
   </div>
-  <div></div>
+
+  <div class="profile-buttons">
+    <button class="profile-buttons-custom" tabindex="0">Back to menu</button>
+    <button class="profile-buttons-custom" tabindex="0">Delete account</button>
+  </div>
+
 </div>
