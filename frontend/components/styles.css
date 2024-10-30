@@ -1235,7 +1235,7 @@
 .profile-buttons {
   display: flex;
   justify-content: center;
-  margin-top: 3%;
+  margin-top: 1%;
   margin-bottom: 2%;
 }
 .profile-buttons-custom {
@@ -1247,4 +1247,50 @@
   padding: 8px 84px 8px;
   margin: 0px auto 32px;
   background-color: rgba(255, 0, 0, 0.25);
+}
+
+/* Profile match statistics container */
+
+.profile-match-statistics {
+  display: flex;
+  flex-direction: column;
+  max-width: 673px;
+  max-height: 507px;
+  border-radius: 45px;
+  background-color: rgba(18, 16, 16, 1);
+  width: 100%;
+  border: 1px solid #a7a7a7;
+}
+.profile-match-statistics-span {
+  font-size: 28px;
+}
+.profile-match-statistics-bottom {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.profile-matches-h2h {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: "Acme", sans-serif;
+  font-size: 28px;
+  color: fff;
+}
+.profile-h2h-overall {
+  margin: 10%;
+}
+.profile-h2h-value {
+  position: absolute;
+  left: 20%;
+}
+.profile-match-statistics-h2h-header {
+  font-size: 36px;
+}
+.profile-match-statistics-dashboard-template {
+  width: 250px;
+  height: 250px;
+  color: fff;
 }
