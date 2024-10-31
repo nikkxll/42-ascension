@@ -1390,3 +1390,37 @@
   color: fff;
   margin-right: 6.5%;
 }
+
+/* Navigation header container */
+
+.navigation-header-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.navigation-header-wrapper {
+  display: flex;
+  align-items: center;
+  background-color: #000;
+  width: 1472px;
+  height: 130px;
+}
+.navigation-header-content {
+  display: flex;
+  flex-direction: row;
+  gap: 25%;
+}
+.navigation-header-logo {
+  display: flex;
+  align-items: center;
+  width: 44%;
+  margin-left: 2%;
+}
+.navigation-header-logo-text {
+  color: #fff;
+  font: 400 100px "Keania One", sans-serif;
+}
+.navigation-header-item {
+  color: #fff;
+  font: 400 48px/1 "Keania One", sans-serif;
+}
