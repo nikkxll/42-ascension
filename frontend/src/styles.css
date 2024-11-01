@@ -56,9 +56,9 @@ section {
 }
 .signup {
   position: absolute;
-  left: 0;
-  top: 12%;
-  width: 50%;
+  left: 5%;
+  top: 18.15%;
+  width: 40%;
   display: none;
   height: 75%;
 }
@@ -69,9 +69,9 @@ section {
 
 .signin {
   position: absolute;
-  left: 0;
-  top: 12%;
-  width: 50%;
+  left: 5%;
+  top: 18.15%;
+  width: 40%;
   display: none;
   height: 75%;
 }
@@ -79,7 +79,7 @@ section {
 .matchView {
   position: absolute;
   right: 0;
-  top: 0;
+  top: 18.15%;
   display: none;
 }
 
@@ -156,6 +156,7 @@ section {
   max-width: 100%;
   gap: 20px;
   justify-content: space-between;
+  margin-left: 5.5%;
 }
 .logo {
   aspect-ratio: 1.43;
@@ -164,6 +165,10 @@ section {
   align-self: center;
   cursor: pointer;
   margin: -1px 0 0 -5px;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+.logo:hover {
+  transform: translateY(-3px);
 }
 .title {
   color: #fff;
@@ -210,6 +215,10 @@ section {
   font: 400 28px Acme, sans-serif;
   border: none;
   cursor: pointer;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+.submit-button:hover {
+  transform: translateY(-3px);
 }
 .button-wrapper {
   display: flex;
@@ -299,6 +308,10 @@ section {
   padding: 5px 62px 5px;
   margin: 21px auto 0;
   width: 75%;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+.auth-button:hover {
+  transform: translateY(-3px);
 }
 
 .auth-button:first-of-type {
@@ -362,6 +375,10 @@ section {
   font-family: "Keania One";
   font-size: 32px;
   color: #fff;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+.create-action:hover {
+  transform: translateY(-3px);
 }
 
 /* Recent matches container */
@@ -426,6 +443,11 @@ section {
   color: #fff;
   margin: 0 auto 0;
   cursor: pointer;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+
+.match-link:hover {
+  transform: translateY(-3px);
 }
 
 .matches-list::-webkit-scrollbar {
@@ -509,13 +531,13 @@ section {
   font-family: "Keania One";
   font-size: 40px;
   color: #fff;
-  margin: 25px auto 25px;
+  /* margin: 25px auto 25px; */
 }
 
 .match-stats {
   display: flex;
   flex-direction: column;
-  max-width: 716px;
+  max-width: 787px;
   max-height: 692px;
   border-radius: 45px;
   background-color: rgba(18, 16, 16, 1);
@@ -527,6 +549,7 @@ section {
   display: flex;
   justify-content: space-between;
   padding: 0 0 0 50px;
+  margin-right: 31.5%;
 }
 
 .match-stats-header-wrapper {
@@ -1560,6 +1583,11 @@ section {
   color: #fff;
   font: 400 48px/1 "Keania One", sans-serif;
   cursor: pointer;
+  text-decoration: none;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+.navigation-header-item:hover {
+  transform: translateY(-3px);
 }
 .navigation-header-item.active {
   text-decoration: underline;
