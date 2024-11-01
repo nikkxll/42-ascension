@@ -22,9 +22,9 @@
             <h1 class="navigation-header-logo-text">PONG</h1>
           </div>
           <div class="navigation-header-content">
-            <p class="navigation-header-item">HOME</p>
-            <p class="navigation-header-item">ABOUT</p>
-            <p class="navigation-header-item">SETTINGS</p>
+            <p class="navigation-header-item" onclick="goToHome()">HOME</p>
+            <p class="navigation-header-item" onclick="goToAbout()">ABOUT</p>
+            <p class="navigation-header-item" onclick="goToSettings()">SETTINGS</p>
           </div>
         </div>
       </nav>
@@ -516,6 +516,30 @@
         tournament.style.display = "none";
         profile.style.display = "block";
       }
+
+      function goToHome() {
+        homeLeft.style.display = "grid";
+        homeRight.style.display = "grid";
+      }
+
+      function goToAbout() {
+        homeLeft.style.display = "none";
+        homeRight.style.display = "none";
+      }
+
+      function goToSettings() {
+        homeLeft.style.display = "none";
+        homeRight.style.display = "none";
+      }
+
+      document.querySelectorAll(".navigation-header-item").forEach((item) => {
+        item.addEventListener("click", () => {
+          document.querySelectorAll(".navigation-header-item").forEach((i) => {
+            i.classList.remove("active");
+          });
+          item.classList.add("active");
+        });
+      });
     </script>
   </body>
 </html>
