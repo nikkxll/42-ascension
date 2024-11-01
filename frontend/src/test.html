@@ -13,23 +13,47 @@
       rel="stylesheet"
     />
     <link href="./styles.css" rel="stylesheet" />
+    <style>
+      #enviroment {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        padding: 0;
+      }
+    </style>
   </head>
+  <div id="enviroment"></div>
   <body>
     <section id="lobby">
-      <nav class="navigation-header-container">
+      <div class="navigation-header-container">
         <div class="navigation-header-wrapper">
           <div class="navigation-header-logo">
+            <img
+            loading="lazy"
+            src="./assets/app_logo.png"
+            alt="App Logo"
+            class="app-logo"
+            />
             <h1 class="navigation-header-logo-text">PONG</h1>
           </div>
           <div class="navigation-header-content">
-            <p class="navigation-header-item" onclick="goToHomeNavigation()">HOME</p>
-            <p class="navigation-header-item" onclick="goToAboutNavigation()">ABOUT</p>
-            <p class="navigation-header-item" onclick="goToSettingsNavigation()">
+            <p class="navigation-header-item" onclick="goToHomeNavigation()">
+              HOME
+            </p>
+            <p class="navigation-header-item" onclick="goToAboutNavigation()">
+              ABOUT
+            </p>
+            <p
+              class="navigation-header-item"
+              onclick="goToSettingsNavigation()"
+            >
               SETTINGS
             </p>
           </div>
         </div>
-      </nav>
+      </div>
       <div class="homeLeft half">
         <div class="player-brief-info-panel">
           <h1 class="auth-title">Add player</h1>
@@ -211,14 +235,14 @@
 
             <input
               type="text"
-              id="username"
+              id="signInUsername"
               class="form-input"
               placeholder="username"
             />
 
             <input
               type="password"
-              id="password"
+              id="signInPassword"
               class="form-input"
               placeholder="password"
             />
@@ -271,14 +295,14 @@
 
             <input
               type="text"
-              id="username"
+              id="signUpUsername"
               class="form-input"
               placeholder="username"
             />
 
             <input
               type="password"
-              id="password"
+              id="signUpPassword"
               class="form-input"
               placeholder="password"
             />
@@ -548,5 +572,15 @@
         });
       });
     </script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@v0.149.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@v0.149.0/examples/jsm/"
+        }
+      }
+    </script>
+    <script type="module" src="./base.js"></script>
+    <script type="module" src="./main.js"></script>
   </body>
 </html>
