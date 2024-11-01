@@ -1,0 +1,557 @@
+/* General styles */
+
+
+/* Sign in and Sign up forms */
+
+.register-container {
+  max-width: 583px;
+  max-height: 700px;
+  display: flex;
+}
+.register-form-wrapper {
+  border-radius: 45px;
+  background-color: rgba(18, 16, 16, 1);
+  width: 100%;
+  padding: 0px 52px 22px;
+  border: 1px solid #a7a7a7;
+}
+.header-container {
+  display: flex;
+  width: 317px;
+  max-width: 100%;
+  gap: 20px;
+  justify-content: space-between;
+}
+.logo {
+  aspect-ratio: 1.43;
+  object-fit: contain;
+  width: 38px;
+  align-self: center;
+  cursor: pointer;
+  margin: -1px 0 0 -5px;
+}
+.title {
+  color: #fff;
+  font-family: "Keania One";
+  font-size: 52px;
+}
+.form-input {
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  background-color: rgba(34, 34, 34, 1);
+  width: 458px;
+  max-width: 100%;
+  color: #fff;
+  margin: 18px 0 0 10px;
+  padding: 2px 25px;
+  font-family: "Acme";
+  font-size: 22px;
+}
+.first-input {
+  margin-top: 4px;
+}
+.remember-me-container {
+  display: flex;
+  gap: 8px;
+  margin: 24px 0 0 30px;
+}
+.checkbox-inner {
+  background-color: rgba(0, 8, 255, 0.5);
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+}
+.remember-text {
+  color: rgba(89, 89, 89, 1);
+  font: 400 22px Acme, sans-serif;
+  margin-top: -2px;
+}
+.submit-button {
+  border-radius: 20px;
+  background-color: rgba(50, 73, 94, 1);
+  color: #fff;
+  padding: 6px 188px;
+  font: 400 28px Acme, sans-serif;
+  border: none;
+  cursor: pointer;
+}
+.button-wrapper {
+  display: flex;
+  margin: 26px auto 0;
+  max-width: 100%;
+  gap: 20px;
+  justify-content: center;
+  font: 400 20px Acme, sans-serif;
+}
+.prompt {
+  display: flex;
+  margin: 26px auto 0;
+  width: 317px;
+  max-width: 100%;
+  gap: 20px;
+  justify-content: center;
+  font: 400 20px Acme, sans-serif;
+}
+.prompt-oauth {
+  display: flex;
+  margin: 26px auto 0;
+  width: 317px;
+  max-width: 100%;
+  gap: 20px;
+  justify-content: center;
+  font: 400 28px Acme, sans-serif;
+}
+.prompt-text {
+  color: rgba(255, 255, 255, 0.5);
+}
+.reg-link {
+  color: rgba(0, 186, 186, 1);
+  text-decoration: none;
+}
+.divider {
+  justify-content: center;
+  max-width: 100%;
+  height: 0px;
+  margin: 29px 0 0;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+.oauth-logo {
+  aspect-ratio: 3.06;
+  object-fit: contain;
+  width: 98px;
+  margin: 15px auto 0;
+  display: block;
+}
+.prompt-not-a-member {
+  display: flex;
+  margin: 18px auto 130px;
+  width: 317px;
+  max-width: 100%;
+  gap: 20px;
+  justify-content: center;
+  font: 400 20px Acme, sans-serif;
+}
+
+/* Small component to sign-in/sign-out player, check profile or log out */
+
+.player-brief-info-panel {
+  border-radius: 45px;
+  background-color: #121010;
+  display: flex;
+  max-width: 287px;
+  max-height: 325px;
+  height: 100%;
+  flex-direction: column;
+  border: 1px solid #a7a7a7;
+  color: #fff;
+  font: 400 28px Acme, sans-serif;
+}
+
+.auth-title {
+  align-self: center;
+  font: 40px "Keania One", sans-serif;
+  margin-bottom: 45px;
+}
+
+.auth-button {
+  border-radius: 20px;
+  background-color: #32495e;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  padding: 5px 62px 5px;
+  margin: 21px auto 0;
+  width: 75%;
+}
+
+.auth-button:first-of-type {
+  margin-top: 51px;
+}
+
+.auth-button:last-of-type {
+  margin-bottom: 51px;
+}
+
+.profile-avatar {
+  aspect-ratio: 0.85;
+  object-fit: contain;
+  object-position: center;
+  width: 100px;
+  align-self: center;
+  max-width: 100%;
+}
+
+.username {
+  align-self: center;
+  margin-top: 0px;
+  font: 400 28px Acme, sans-serif;
+}
+
+.profile-button {
+  border-radius: 20px;
+  background-color: #32495e;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  padding: 5px 62px 5px;
+  margin: 0 auto 0;
+  width: 75%;
+}
+
+.logout-button {
+  border-radius: 20px;
+  background-color: rgba(255, 0, 0, 0.3);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  padding: 5px 62px 5px;
+  margin: 18px auto 39px;
+  width: 75%;
+}
+
+/* Creation of any kind of game */
+
+.create-action {
+  border-radius: 45px;
+  max-width: 789px;
+  max-height: 59px;
+  background-color: #121010;
+  width: 100%;
+  cursor: pointer;
+  padding: 6px 70px 6px;
+  border: 1px solid #a7a7a7;
+  font-family: "Keania One";
+  font-size: 32px;
+  color: #fff;
+}
+
+/* Recent matches container */
+
+.matches-container {
+  display: flex;
+  max-width: 350px;
+  max-height: 420px;
+  flex-direction: column;
+  color: #fff;
+  font: 400 28px Acme, sans-serif;
+}
+
+.matches-card {
+  border-radius: 45px;
+  background-color: #121010;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 21px;
+  border: 1px solid #a7a7a7;
+}
+
+.matches-title {
+  font: 36px "Keania One", sans-serif;
+  text-align: center;
+  width: 100%;
+  margin: 40px auto 3px;
+}
+
+.matches-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
+  width: 100%;
+  max-height: 280px;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  margin: 0px 0 10px -5px;
+  scrollbar-color: #595959 #121010;
+}
+
+.match-result {
+  align-self: start;
+  margin-top: 12px;
+}
+
+.match-results {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.winner-name {
+  color: #00ff37;
+}
+
+.match-link {
+  text-decoration: none;
+  color: #fff;
+  margin: 0 auto 0;
+  cursor: pointer;
+}
+
+.matches-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.matches-list::-webkit-scrollbar-thumb {
+  background-color: #595959;
+  border-radius: 10px;
+}
+
+.matches-list::-webkit-scrollbar-track {
+  background-color: #121010;
+}
+
+/* Recent tournaments container */
+
+.tournament-container {
+  display: flex;
+  max-width: 350px;
+  max-height: 420px;
+  flex-direction: column;
+  color: #fff;
+  font-weight: 400;
+}
+
+.tournament-card {
+  border-radius: 45px;
+  background-color: #121010;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #a7a7a7;
+}
+
+.tournament-title {
+  align-self: center;
+  font: 36px "Keania One", sans-serif;
+  margin-top: 30px;
+  margin-bottom: 14px;
+}
+
+.tournament-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font: 24px/52px "Acme", sans-serif;
+  margin: 0px 8px 16px 8px;
+}
+
+.tournament-icon {
+  aspect-ratio: 0.73;
+  object-fit: contain;
+  object-position: center;
+  width: 19px;
+  align-self: stretch;
+  margin: 0 auto 2px;
+}
+
+.tournament-details {
+  text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  align-self: stretch;
+  flex-grow: 1;
+  width: 248px;
+  border: 1px solid #000;
+}
+
+.status-completed {
+  color: #00ff37;
+}
+
+.date-text {
+  font-size: 22px;
+}
+
+.tournament-link {
+  color: #fff;
+}
+
+/* Match statistics container */
+
+.match-stats-title {
+  font-family: "Keania One";
+  font-size: 40px;
+  color: #fff;
+  margin: 25px auto 25px;
+}
+
+.match-stats {
+  display: flex;
+  flex-direction: column;
+  max-width: 716px;
+  max-height: 692px;
+  border-radius: 45px;
+  background-color: rgba(18, 16, 16, 1);
+  width: 100%;
+  border: 1px solid #a7a7a7;
+}
+
+.match-stats-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 0 0 50px;
+}
+
+.match-stats-header-wrapper {
+  display: flex;
+  width: 581px;
+  max-width: 100%;
+  justify-content: space-between;
+}
+
+.match-stats-result {
+  margin: 0 70px 0;
+}
+
+.match-stats-text-format {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  color: #fff;
+  font-family: "Acme", sans-serif;
+  font-size: 34px;
+  margin-top: 8px;
+}
+
+.match-stats-result.time-info {
+  margin-top: 20px;
+}
+
+.match-stats-header-no-arrow {
+  display: flex;
+  justify-content: center;
+  margin-bottom: -10px;
+}
+
+.match-stats-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0 auto 6px;
+}
+
+.match-stats-scroll-container {
+  height: 200px;
+  overflow-y: auto;
+  padding: 0 25px 0;
+  margin: 0 45px 15px;
+  scrollbar-width: thin;
+  scrollbar-color: #595959 #121010;
+}
+
+.match-stats-scroll-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.match-stats-scroll-container::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+}
+
+.match-stats-player-name {
+  position: relative;
+  flex-grow: 1;
+  width: 33%;
+  text-align: left;
+}
+
+.match-stats-match-score {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-40%);
+}
+
+/* Add ai container */
+
+.add-ai-main-container {
+  display: flex;
+  flex-direction: column;
+  background-color: #121010;
+  border: 1px solid #a7a7a7;
+  border-radius: 45px;
+  max-width: 629px;
+  max-height: 151px;
+  color: #fff;
+}
+.add-ai-top-part {
+  display: flex;
+  align-items: center;
+  padding: 0 50px 0;
+  margin-bottom: 0px;
+  position: relative;
+}
+
+.add-ai-checkbox {
+  display: flex;
+  flex-direction: row;
+  margin: 26px auto 0px;
+}
+
+.add-ai-checkbox input[type="checkbox"] {
+  transform: scale(1.5);
+  margin-right: 6px;
+}
+
+.add-ai-checkbox-space {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.add-ai-header {
+  font: 400 32px Acme, sans-serif;
+  margin-bottom: 0px;
+}
+
+.settings-icon {
+  margin-top: 26px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+.add-ai-buttons {
+  display: flex;
+  flex-direction: row;
+  padding-top: 0px;
+}
+.add-ai-button {
+  border-radius: 20px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font: 400 24px Acme, sans-serif;
+  padding: 6px 62px 6px;
+  margin: 24px auto 32px;
+}
+.add-ai-button.back {
+  background-color: rgba(255, 0, 0, 0.25);
+}
+
+.add-ai-button.continue {
+  background-color: #32495e;
+}
+
+.add-ai-tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+  font: 400 18px Acme, sans-serif;
+}
+
+.add-ai-tooltip .add-ai-tooltiptext {
+  visibility: hidden;
+  width: 300px;
+  background-color: rgba(89, 89, 89, 0.5);
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  margin-left: 20px;
+  margin-top: 21px;
+  position: absolute;
+  z-index: 1;
+}
+
+.add-ai-tooltip:hover .add-ai-tooltiptext {
+  visibility: visible;
+}
