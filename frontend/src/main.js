@@ -104,7 +104,7 @@ window.startGame = (ai) => {
     renderer.setSize(window.innerWidth * 0.96, window.innerHeight * 0.96);
 
     // needs to be a game screen that we overlay and make visible
-    // document.getElementById("gameWindow").innerHTML = "";
+    document.getElementById("gameWindow").innerHTML = "";
     document.getElementById("gameWindow").appendChild(renderer.domElement);
 
     // Add lights to the scene for score visibility
@@ -527,6 +527,7 @@ window.startGame = (ai) => {
                 gameResult = "Game ended";
                 cancelAnimationFrame(animationId);
                 gameWindow.style.display = "none";
+                document.getElementById("gameWindow").innerHTML = "";
 				document.getElementById("gameStartButton").disabled = false;
                 return;
             }
