@@ -56,8 +56,8 @@ section {
 }
 .signup {
   position: absolute;
-  left: 5%;
-  top: 18.15%;
+  left: 3.436%;
+  top: 18.7%;
   width: 40%;
   display: none;
   height: 75%;
@@ -65,12 +65,12 @@ section {
 /* .signupInput {
   width: 80%;
   margin: 2% 10%;
-} */
-
-.signin {
+  } */
+  
+  .signin {
   position: absolute;
-  left: 5%;
-  top: 18.15%;
+  left: 3.436%;
+  top: 18.7%;
   width: 40%;
   display: none;
   height: 75%;
@@ -79,7 +79,7 @@ section {
 .matchView {
   position: absolute;
   right: 0;
-  top: 18.15%;
+  top: 18.7%;
   display: none;
 }
 
@@ -139,8 +139,8 @@ section {
 /* Sign in and Sign up forms */
 
 .register-container {
-  width: 583px;
-  height: 700px;
+  width: 680px;
+  height: 692px;
   display: flex;
 }
 .register-form-wrapper {
@@ -467,8 +467,8 @@ section {
 
 .tournament-container {
   display: flex;
-  max-width: 350px;
-  max-height: 420px;
+  width: 350px;
+  height: 420px;
   flex-direction: column;
   color: #fff;
   font-weight: 400;
@@ -477,6 +477,7 @@ section {
 .tournament-card {
   border-radius: 45px;
   background-color: rgba(18, 16, 16, 0.25);
+  height: 420px;
   display: flex;
   flex-direction: column;
   border: 1px solid #a7a7a7;
@@ -486,7 +487,7 @@ section {
   align-self: center;
   font: 36px "Keania One", sans-serif;
   margin-top: 30px;
-  margin-bottom: 14px;
+  margin-bottom: 25px;
 }
 
 .tournament-content {
@@ -528,6 +529,13 @@ section {
 /* Match statistics container */
 
 .match-stats-title {
+  font-family: "Keania One";
+  font-size: 40px;
+  color: #fff;
+  margin: 18px auto 18px;
+}
+
+.match-stats-title-top {
   font-family: "Keania One";
   font-size: 40px;
   color: #fff;
