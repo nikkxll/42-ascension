@@ -67,7 +67,7 @@ section {
   margin: 2% 10%;
   } */
   
-  .signin {
+.signin {
   position: absolute;
   left: 3.436%;
   top: 18.7%;
@@ -156,7 +156,7 @@ section {
   max-width: 100%;
   gap: 20px;
   justify-content: space-between;
-  margin-left: 5.5%;
+  margin-left: 56px;
 }
 .logo {
   aspect-ratio: 1.43;
@@ -164,7 +164,7 @@ section {
   width: 38px;
   align-self: center;
   cursor: pointer;
-  margin: -1px 0 0 -5px;
+  margin: 8px 0 0 -5px;
   transition: box-shadow 0.3s, transform 0.3s;
 }
 .logo:hover {
@@ -176,6 +176,7 @@ section {
   font-size: 52px;
 }
 .form-input {
+  position: relative;
   border-radius: 20px;
   display: flex;
   justify-content: center;
@@ -183,7 +184,7 @@ section {
   width: 458px;
   max-width: 100%;
   color: #fff;
-  margin: 18px 0 0 10px;
+  margin: 18px 0 0 32px;
   padding: 2px 25px;
   font-family: "Acme";
   font-size: 22px;
@@ -247,7 +248,7 @@ section {
   font: 400 28px Acme, sans-serif;
 }
 .prompt-text {
-  color: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 1);
 }
 .reg-link {
   color: rgba(0, 186, 186, 1);
@@ -557,6 +558,7 @@ section {
   justify-content: space-between;
   padding: 0 0 0 50px;
   margin-right: 31.5%;
+  margin-left: 6%;
 }
 
 .match-stats-header-wrapper {
