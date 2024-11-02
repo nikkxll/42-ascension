@@ -1599,6 +1599,7 @@ section {
 /* App logo */
 
 .app-logo {
-  width: 100px;
-  height: 100px;
+  width: 65px;
+  height: 65px;
+  margin-left: 3px;
 }
