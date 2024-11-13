@@ -661,7 +661,7 @@
           </div>
 
           <h2 class="tournament-round h2" id="secondSemifinal">Semifinal 2</h2>
-          
+
           <!-- Tournament SF2 -->
           <div class="tournament-match-container" id="secondSemifinalContent">
             <h1 class="tournament-match-title">Semifinal 1</h1>
@@ -703,10 +703,19 @@
         >
           Back to menu
         </button>
-        <button class="tournament-setup-buttons button generate" tabindex="0" onclick="generateSemifinals()" id="generateSF">
+        <button
+          class="tournament-setup-buttons button generate"
+          tabindex="0"
+          onclick="generateSemifinals()"
+          id="generateSF"
+        >
           Generate bracket
         </button>
-        <button class="tournament-setup-buttons button start-sf-1" tabindex="0" id="startFirstSF">
+        <button
+          class="tournament-setup-buttons button start-sf-1"
+          tabindex="0"
+          id="startFirstSF"
+        >
           Start first SF
         </button>
       </div>
@@ -759,13 +768,19 @@
       const tournamentSetup = document.getElementById("tournamentSetup");
 
       const header = document.getElementById("header");
+
+      /* overlay to protect background buttons from being accidentally clicked */
       const overlay = document.getElementById("overlay");
 
       /* tournament transitions */
       const firstSemifinal = document.getElementById("firstSemifinal");
       const secondSemifinal = document.getElementById("secondSemifinal");
-      const firstSemifinalContent = document.getElementById("firstSemifinalContent");
-      const secondSemifinalContent = document.getElementById("secondSemifinalContent");
+      const firstSemifinalContent = document.getElementById(
+        "firstSemifinalContent"
+      );
+      const secondSemifinalContent = document.getElementById(
+        "secondSemifinalContent"
+      );
       const final = document.getElementById("final");
       const generateSFButton = document.getElementById("generateSF");
       const startFirstSemifinalButton = document.getElementById("startFirstSF");
@@ -793,6 +808,13 @@
         profile.style.display = "none";
         tournamentSetup.style.display = "none";
         tournament.style.display = "block";
+
+        const cards = document.querySelectorAll(".game-player-card-inner");
+
+        cards.forEach((card) => {
+            card.classList.remove("selected");
+            card.classList.remove("shaded");
+        });
       }
 
       function goToProfile() {
@@ -855,6 +877,7 @@
       }
     </script>
     <script>
+      /* Players selector for tournament pre-setup */
       document.addEventListener("DOMContentLoaded", () => {
         const cards = document.querySelectorAll(".game-player-card-inner");
 
