@@ -432,8 +432,16 @@
             <img src="./assets/default_avatar.png" alt="default_avatar" class="gameStartPlayerAvatar">
             <h2 class="gameStartPlayerDisplayName">Test1</h2>
           </div></div>
+        </div>
+        <div class="gameButtonContainer">
+          <button onclick="goToHome()">Go back</button>
+          <button>Randomize</button>
+          <button onclick="startOff()" id="startGameButton">Start game</button>
+        </div>
+    </section>
 
-      </div>
+    <section style="display: none" id="2v2GameStart">
+      <div class="gameStartView">
       <div class="gameStartPlayer box">
         <div class="gameStartSelectable">
           <img src="./assets/default_avatar.png" alt="default_avatar" class="gameStartPlayerAvatar">
@@ -516,6 +524,7 @@
       <button onclick="goToHome()">go back</button>
     </div>
   </section>
+  <div id="gameWindow"></div>
   <script>
     /* Collection of all the buttons that transition the views */
     /* home screen transitions */
@@ -629,6 +638,26 @@
         item.classList.add("active");
       });
     });
+  </script>
+  <script>
+    let gameWindow = document.getElementById("gameWindow")
+    //async function  startOff() {
+    function  startOff() {
+      gameWindow.style.display = "block"
+      //let result = await startGame()
+      // startGame(ai)
+      // ai = 2 two AIs: AI vs god level AI
+      // ai = 1 one AI vs human
+      // ai = 0 two humans
+      // (to be implemented) ai = -2 four humans
+      let result = startGame(1)
+      console.log("index.html result from startGame=", result)
+      //gameWindow.style.display = "none"
+      // startGame().then(result => {
+         //  	console.log("result =", result);  // Log the result
+          //  	gameWindow.style.display = "none";  // Hide the game window after the game finishes
+        // }	
+    }
   </script>
   <script type="importmap">
       {

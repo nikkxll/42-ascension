@@ -469,6 +469,8 @@ window.startGame = (ai) => {
                 gameResult = "Game ended";
                 gameOverFlag = 1
                 cancelAnimationFrame(animationId);
+                document.getElementById("gameWindow").removeChild(renderer.domElement);
+                document.getElementById("gameWindow").style.display = "none"
                 return gameResult; 
 
             }
