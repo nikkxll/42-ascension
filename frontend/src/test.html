@@ -1,35 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
-  <link href="https://fonts.googleapis.com/css?family=Keania One" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Acme&display=swap" rel="stylesheet" />
-  <link href="./styles.css" rel="stylesheet" />
-  <style>
-    #enviroment {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      padding: 0;
-      z-index: -1;
-    }
-  </style>
-</head>
-<div id="enviroment"></div>
-
-<body>
-  <section id="lobby">
-    <div class="navigation-header-container">
-      <div class="navigation-header-wrapper">
-        <div class="navigation-header-logo">
-          <h1 class="navigation-header-logo-text">P</h1>
-          <img loading="lazy" src="./assets/app_logo.png" alt="App Logo" class="app-logo" />
-          <h1 class="navigation-header-logo-text">NG</h1>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Keania One"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Acme&display=swap"
+      rel="stylesheet"
+    />
+    <link href="./styles.css" rel="stylesheet" />
+    <style>
+      #enviroment {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        padding: 0;
+        z-index: -1;
+      }
+    </style>
+  </head>
+  <div id="enviroment"></div>
+  <body>
+    <section id="lobby">
+      <div class="navigation-header-container">
+        <div class="navigation-header-wrapper">
+          <div class="navigation-header-logo">
+            <h1 class="navigation-header-logo-text">P</h1>
+            <img
+              loading="lazy"
+              src="./assets/app_logo.png"
+              alt="App Logo"
+              class="app-logo"
+            />
+            <h1 class="navigation-header-logo-text">NG</h1>
+          </div>
+          <div class="navigation-header-content">
+            <p class="navigation-header-item" onclick="goToHomeNavigation()">
+              HOME
+            </p>
+            <p class="navigation-header-item" onclick="goToAboutNavigation()">
+              ABOUT
+            </p>
+            <p
+              class="navigation-header-item"
+              onclick="goToSettingsNavigation()"
+            >
+              SETTINGS
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="homeLeft half">
+        <div class="player-brief-info-panel">
+          <h1 class="auth-title">Add player</h1>
+          <button onclick="goToSignup()" class="auth-button" type="button">
+            Sign up
+          </button>
+          <button onclick="goToSignin()" class="auth-button" type="button">
+            Sign in
+          </button>
+        </div>
+        <div class="player-brief-info-panel">
+          <h1 class="auth-title">Add player</h1>
+          <button onclick="goToSignup()" class="auth-button" type="button">
+            Sign up
+          </button>
+          <button onclick="goToSignin()" class="auth-button" type="button">
+            Sign in
+          </button>
+        </div>
+        <div class="player-brief-info-panel">
+          <h1 class="auth-title">Add player</h1>
+          <button onclick="goToSignup()" class="auth-button" type="button">
+            Sign up
+          </button>
+          <button onclick="goToSignin()" class="auth-button" type="button">
+            Sign in
+          </button>
         </div>
         <div class="navigation-header-content">
           <p class="navigation-header-item" onclick="goToHomeNavigation()">
@@ -340,35 +393,46 @@
           </ul>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section style="display: none" id="gameStart">
-    <div class="gameStartView">
-      <div class="gameStartPlayer box"></div>
-      <div class="gameStartPlayer box"></div>
-      <div class="gameStartPlayer box"></div>
-      <div class="gameStartPlayer box"></div>
-      <img class="vsImage" />
-      <div class="gameStartPlayer box"></div>
-      <div class="gameStartPlayer box"></div>
-      <div class="gameStartPlayer box"></div>
-      <div class="gameStartPlayer box"></div>
-    </div>
-    <div class="gameButtonContainer">
-      <button onclick="goToHome()">Go back</button>
-      <button>Randomize</button>
-      <button onclick="">Start game</button>
-    </div>
-  </section>
-
-  <section style="display: none" id="2v2GameStart">
-    <div class="gameStartView">
-      <div class="gameStartPlayer box">
-        <div class="gameStartSelectable">
-          <img src="./assets/default_avatar.png" alt="default_avatar" class="gameStartPlayerAvatar">
-          <h2 class="gameStartPlayerDisplayName">Test1</h2>
+    <section style="display: none" id="gameStart">
+      <div class="gameStartView">
+        <div class="gameStartPlayer box">
+          <div class="gameStartSelectable">
+            <img src="./assets/default_avatar.png" alt="default_avatar" class="gameStartPlayerAvatar">
+            <h2 class="gameStartPlayerDisplayName">Test1</h2>
+          </div>
         </div>
+        <div class="gameStartPlayer box"> <div class="gameStartSelectable">
+            <img src="./assets/default_avatar.png" alt="default_avatar" class="gameStartPlayerAvatar">
+            <h2 class="gameStartPlayerDisplayName">Test1</h2>
+          </div></div>
+        <div class="gameStartPlayer box"> <div class="gameStartSelectable">
+            <img src="./assets/default_avatar.png" alt="default_avatar" class="gameStartPlayerAvatar">
+            <h2 class="gameStartPlayerDisplayName">Test1</h2>
+          </div></div>
+        <div class="gameStartPlayer box"> <div class="gameStartSelectable">
+            <img src="./assets/default_avatar.png" alt="default_avatar" class="gameStartPlayerAvatar">
+            <h2 class="gameStartPlayerDisplayName">Test1</h2>
+          </div></div>
+        <img class="vsImage" src="./assets/vs_logo.png"/>
+        <div class="gameStartPlayer box"> <div class="gameStartSelectable">
+            <img src="./assets/default_avatar.png" alt="default_avatar" class="gameStartPlayerAvatar">
+            <h2 class="gameStartPlayerDisplayName">Test1</h2>
+          </div></div>
+        <div class="gameStartPlayer box"> <div class="gameStartSelectable">
+            <img src="./assets/default_avatar.png" alt="default_avatar" class="gameStartPlayerAvatar">
+            <h2 class="gameStartPlayerDisplayName">Test1</h2>
+          </div></div>
+        <div class="gameStartPlayer box"> <div class="gameStartSelectable">
+            <img src="./assets/default_avatar.png" alt="default_avatar" class="gameStartPlayerAvatar">
+            <h2 class="gameStartPlayerDisplayName">Test1</h2>
+          </div></div>
+        <div class="gameStartPlayer box"> <div class="gameStartSelectable">
+            <img src="./assets/default_avatar.png" alt="default_avatar" class="gameStartPlayerAvatar">
+            <h2 class="gameStartPlayerDisplayName">Test1</h2>
+          </div></div>
+
       </div>
       <div class="gameStartPlayer box">
         <div class="gameStartSelectable">

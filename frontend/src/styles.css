@@ -91,11 +91,41 @@ section {
   grid-template-columns: 21% 21% 8% 21% 21%;
   grid-template-rows: 49% 49%;
 }
+
+.gameStartPlayerAvatar {
+  width: 50%;
+  margin-left: 25%;
+}
+
+.gameStartSelectable {
+  width: 80%;
+  height: 80%;
+  border: 1px solid white;
+  border-radius: 20px;
+  margin-left: 10%;
+  margin-top: 10%;
+}
+
+.gameStartSelectable:hover {
+  border: 1px solid blue;
+}
+.gameStartSelectableActive {
+  border: 1px solid green;
+}
+
+.gameStartPlayerDisplayName {
+  width: 100%;
+  margin-top: 10%;
+  text-align: center;
+}
+
 .vsImage {
   grid-row-start: 1;
   grid-row-end: 3;
   grid-column-start: 3;
   grid-column-end: 4;
+  width: 100%;
+  align-self: center;
 }
 .gameButtonContainer {
   height: 10%;
