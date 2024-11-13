@@ -880,13 +880,17 @@ section {
 /* Tournament pre setup */
 
 .tournament-setup {
-  display: flex;
-  max-width: 629px;
-  max-height: 496px;
+  position: absolute;
+  left: 31.60%;
+  top: 21%;
+  display: none;
+  width: 629px;
+  height: 496px;
   flex-direction: column;
-  background-color: #121010;
+  background-color: rgba(18, 16, 16, 0.75);
   border-radius: 45px;
   border: 1px solid #a7a7a7;
+  z-index: 1001;
 }
 .tournament-setup-name {
   display: flex;
@@ -1613,4 +1617,18 @@ section {
   height: 63px;
   margin-left: 3px;
   margin-top: 3px;
+}
+
+/* Overlay */
+
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: none;
+  pointer-events: none;
 }

@@ -27,7 +27,7 @@
   <div id="enviroment"></div>
   <body>
     <section id="lobby">
-      <div class="navigation-header-container">
+      <div class="navigation-header-container" id="header">
         <div class="navigation-header-wrapper">
           <div class="navigation-header-logo">
             <h1 class="navigation-header-logo-text">P</h1>
@@ -207,7 +207,7 @@
             CREATE SINGLE GAME
           </button>
           <button
-            onclick="goToTournament()"
+            onclick="openTournamentSetupBox()"
             class="create-action"
             tabindex="0"
             aria-label="Create Single Game"
@@ -471,6 +471,79 @@
         <button onclick="goToHome()">go back</button>
       </div>
     </section>
+
+    <!-- Tournament pop up window setup -->
+
+    <div class="tournament-setup" id="tournamentSetup">
+      <div class="tournament-setup-name">
+        <input
+          type="text"
+          id="tournamentName"
+          class="tournament-setup-name-input"
+          placeholder="Enter the tournament name"
+          aria-label="Enter the tournament name"
+        />
+      </div>
+      <div class="tournament-setup-header-container">
+        <h1 class="tournament-setup-header">Add users to the tournament</h1>
+      </div>
+      <div class="tournament-setup-grid">
+        <div class="game-player-card tournament">
+          <article class="game-player-card-inner">
+            <img
+              loading="lazy"
+              src="./assets/default_avatar.png"
+              alt="Player avatar"
+              class="tournament-setup-avatar"
+            />
+            <h3 class="tournament-setup-player-name">TestUserName1</h3>
+          </article>
+        </div>
+        <div class="game-player-card tournament">
+          <article class="game-player-card-inner">
+            <img
+              loading="lazy"
+              src="./assets/default_avatar.png"
+              alt="Player avatar"
+              class="tournament-setup-avatar"
+            />
+            <h3 class="tournament-setup-player-name">TestUserName2</h3>
+          </article>
+        </div>
+        <div class="game-player-card tournament">
+          <article class="game-player-card-inner">
+            <img
+              loading="lazy"
+              src="./assets/default_avatar.png"
+              alt="Player avatar"
+              class="tournament-setup-avatar"
+            />
+            <h3 class="tournament-setup-player-name">TestUserName3</h3>
+          </article>
+        </div>
+        <div class="game-player-card tournament">
+          <article class="game-player-card-inner">
+            <img
+              loading="lazy"
+              src="./assets/default_avatar.png"
+              alt="Player avatar"
+              class="tournament-setup-avatar"
+            />
+            <h3 class="tournament-setup-player-name">TestUserName4</h3>
+          </article>
+        </div>
+      </div>
+      <div class="tournament-setup-buttons">
+        <button class="tournament-setup-buttons button back" tabindex="0" onclick="goToHome()">
+          Back
+        </button>
+        <button class="tournament-setup-buttons button continue" tabindex="0">
+          Continue
+        </button>
+      </div>
+    </div>
+    <div id="overlay"></div>
+
     <script>
       /* Collection of all the buttons that transition the views */
       /* home screen transitions */
@@ -481,46 +554,51 @@
       const signin = document.getElementsByClassName("signin")[0];
 
       const matchView = document.getElementsByClassName("matchView")[0];
-
+      
       function goToSignup() {
         homeLeft.style.display = "none";
         signin.style.display = "none";
         signup.style.display = "block";
       }
-
+      
       function goToSignin() {
         homeLeft.style.display = "none";
         signin.style.display = "block";
         signup.style.display = "none";
       }
-
+      
       function goToLobby() {
         homeLeft.style.display = "grid";
         signin.style.display = "none";
         signup.style.display = "none";
       }
-
+      
       function goToMatchView() {
         matchView.style.display = "block";
         homeRight.style.display = "none";
       }
-
+      
       function goToHomeRight() {
         matchView.style.display = "none";
         homeRight.style.display = "grid";
       }
-
+      
       /* section transitions */
       const lobby = document.getElementById("lobby");
       const gameStart = document.getElementById("gameStart");
       const tournament = document.getElementById("tournament");
       const profile = document.getElementById("profile");
+      const tournamentSetup = document.getElementById("tournamentSetup");
+      const header = document.getElementById("header");
+      const overlay = document.getElementById("overlay");
 
       function goToHome() {
         lobby.style.display = "block";
         gameStart.style.display = "none";
         tournament.style.display = "none";
         profile.style.display = "none";
+        tournamentSetup.style.display = "none";
+        overlay.style.display = "none";
       }
 
       function goToGameStart() {
@@ -559,6 +637,12 @@
         homeRight.style.display = "none";
       }
 
+      function openTournamentSetupBox() {
+        tournamentSetup.style.display = "block";
+        overlay.style.display = "block";
+        overlay.style.pointerEvents = "auto";
+      }
+
       window.addEventListener("DOMContentLoaded", () => {
         const navItems = document.querySelectorAll(".navigation-header-item");
         navItems[0].classList.add("active");
@@ -580,6 +664,31 @@
           "three/addons/": "https://cdn.jsdelivr.net/npm/three@v0.149.0/examples/jsm/"
         }
       }
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const cards = document.querySelectorAll(".game-player-card-inner");
+    
+        cards.forEach((card) => {
+          card.addEventListener("click", () => {
+            if (card.classList.contains("selected")) {
+              card.classList.remove("selected");
+              cards.forEach((c) => c.classList.remove("shaded"));
+            } else {
+              cards.forEach((c) => c.classList.remove("selected"));
+              card.classList.add("selected");
+    
+              cards.forEach((c) => {
+                if (c !== card) {
+                  c.classList.add("shaded");
+                } else {
+                  c.classList.remove("shaded");
+                }
+              });
+            }
+          });
+        });
+      });
     </script>
     <script type="module" src="./base.js"></script>
     <script type="module" src="./main.js"></script>
