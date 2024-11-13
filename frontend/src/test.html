@@ -21,6 +21,7 @@
         width: 100vw;
         height: 100vh;
         padding: 0;
+        z-index: -1;
       }
     </style>
   </head>
@@ -423,15 +424,41 @@
 
     <section style="display: none" id="gameStart">
       <div class="gameStartView">
-        <div class="gameStartPlayer box"></div>
-        <div class="gameStartPlayer box"></div>
-        <div class="gameStartPlayer box"></div>
-        <div class="gameStartPlayer box"></div>
-        <img class="vsImage" />
-        <div class="gameStartPlayer box"></div>
-        <div class="gameStartPlayer box"></div>
-        <div class="gameStartPlayer box"></div>
-        <div class="gameStartPlayer box"></div>
+        <div class="gameStartPlayer box">
+          <div class="gameStartSelectable">
+            <img src="./assets/default_avatar.png" alt="default_avatar" class="gameStartPlayerAvatar">
+            <h2 class="gameStartPlayerDisplayName">Test1</h2>
+          </div>
+        </div>
+        <div class="gameStartPlayer box"> <div class="gameStartSelectable">
+            <img src="./assets/default_avatar.png" alt="default_avatar" class="gameStartPlayerAvatar">
+            <h2 class="gameStartPlayerDisplayName">Test1</h2>
+          </div></div>
+        <div class="gameStartPlayer box"> <div class="gameStartSelectable">
+            <img src="./assets/default_avatar.png" alt="default_avatar" class="gameStartPlayerAvatar">
+            <h2 class="gameStartPlayerDisplayName">Test1</h2>
+          </div></div>
+        <div class="gameStartPlayer box"> <div class="gameStartSelectable">
+            <img src="./assets/default_avatar.png" alt="default_avatar" class="gameStartPlayerAvatar">
+            <h2 class="gameStartPlayerDisplayName">Test1</h2>
+          </div></div>
+        <img class="vsImage" src="./assets/vs_logo.png"/>
+        <div class="gameStartPlayer box"> <div class="gameStartSelectable">
+            <img src="./assets/default_avatar.png" alt="default_avatar" class="gameStartPlayerAvatar">
+            <h2 class="gameStartPlayerDisplayName">Test1</h2>
+          </div></div>
+        <div class="gameStartPlayer box"> <div class="gameStartSelectable">
+            <img src="./assets/default_avatar.png" alt="default_avatar" class="gameStartPlayerAvatar">
+            <h2 class="gameStartPlayerDisplayName">Test1</h2>
+          </div></div>
+        <div class="gameStartPlayer box"> <div class="gameStartSelectable">
+            <img src="./assets/default_avatar.png" alt="default_avatar" class="gameStartPlayerAvatar">
+            <h2 class="gameStartPlayerDisplayName">Test1</h2>
+          </div></div>
+        <div class="gameStartPlayer box"> <div class="gameStartSelectable">
+            <img src="./assets/default_avatar.png" alt="default_avatar" class="gameStartPlayerAvatar">
+            <h2 class="gameStartPlayerDisplayName">Test1</h2>
+          </div></div>
       </div>
       <div class="gameButtonContainer">
         <button onclick="goToHome()">Go back</button>
