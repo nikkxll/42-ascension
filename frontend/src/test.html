@@ -628,9 +628,71 @@
           </div>
         </div>
         <div class="tournament-top-right">
-          <h2 class="tournament-round h2">Semifinal 1</h2>
-          <h2 class="tournament-round h2">Semifinal 2</h2>
-          <h2 class="tournament-round h2">Final</h2>
+          <h2 class="tournament-round h2" id="firstSemifinal">Semifinal 1</h2>
+
+          <!-- Tournament SF1 -->
+          <div class="tournament-match-container" id="firstSemifinalContent">
+            <h1 class="tournament-match-title">Semifinal 1</h1>
+            <div class="tournament-match-players">
+              <div class="tournament-match-player-info-left">
+                <img
+                  loading="lazy"
+                  src="./assets/default_avatar.png"
+                  alt="Player avatar"
+                  class="tournament-match-avatar"
+                />
+                <h3 class="game-player-name tournament">Vladimir</h3>
+              </div>
+              <img
+                class="tournament-match-vs-logo"
+                src="./assets/vs_logo.png"
+                alt="Versus logo"
+              />
+              <div class="tournament-match-player-info-right">
+                <img
+                  loading="lazy"
+                  src="./assets/default_avatar.png"
+                  alt="Player avatar"
+                  class="tournament-match-avatar"
+                />
+                <h3 class="game-player-name tournament">Max</h3>
+              </div>
+            </div>
+          </div>
+
+          <h2 class="tournament-round h2" id="secondSemifinal">Semifinal 2</h2>
+          
+          <!-- Tournament SF2 -->
+          <div class="tournament-match-container" id="secondSemifinalContent">
+            <h1 class="tournament-match-title">Semifinal 1</h1>
+            <div class="tournament-match-players">
+              <div class="tournament-match-player-info-left">
+                <img
+                  loading="lazy"
+                  src="./assets/default_avatar.png"
+                  alt="Player avatar"
+                  class="tournament-match-avatar"
+                />
+                <h3 class="game-player-name tournament">TestUser</h3>
+              </div>
+              <img
+                class="tournament-match-vs-logo"
+                src="./assets/vs_logo.png"
+                alt="Versus logo"
+              />
+              <div class="tournament-match-player-info-right">
+                <img
+                  loading="lazy"
+                  src="./assets/default_avatar.png"
+                  alt="Player avatar"
+                  class="tournament-match-avatar"
+                />
+                <h3 class="game-player-name tournament">NewUser</h3>
+              </div>
+            </div>
+          </div>
+
+          <h2 class="tournament-round h2" id="final">Final</h2>
         </div>
       </div>
       <div class="tournament-setup-buttons">
@@ -641,8 +703,11 @@
         >
           Back to menu
         </button>
-        <button class="tournament-setup-buttons button generate" tabindex="0">
+        <button class="tournament-setup-buttons button generate" tabindex="0" onclick="generateSemifinals()" id="generateSF">
           Generate bracket
+        </button>
+        <button class="tournament-setup-buttons button start-sf-1" tabindex="0" id="startFirstSF">
+          Start first SF
         </button>
       </div>
     </div>
@@ -692,8 +757,18 @@
       const tournament = document.getElementById("tournament");
       const profile = document.getElementById("profile");
       const tournamentSetup = document.getElementById("tournamentSetup");
+
       const header = document.getElementById("header");
       const overlay = document.getElementById("overlay");
+
+      /* tournament transitions */
+      const firstSemifinal = document.getElementById("firstSemifinal");
+      const secondSemifinal = document.getElementById("secondSemifinal");
+      const firstSemifinalContent = document.getElementById("firstSemifinalContent");
+      const secondSemifinalContent = document.getElementById("secondSemifinalContent");
+      const final = document.getElementById("final");
+      const generateSFButton = document.getElementById("generateSF");
+      const startFirstSemifinalButton = document.getElementById("startFirstSF");
 
       function goToHome() {
         lobby.style.display = "block";
@@ -746,6 +821,15 @@
         tournamentSetup.style.display = "block";
         overlay.style.display = "block";
         overlay.style.pointerEvents = "auto";
+      }
+
+      function generateSemifinals() {
+        firstSemifinal.style.display = "none";
+        secondSemifinal.style.display = "none";
+        firstSemifinalContent.style.display = "block";
+        secondSemifinalContent.style.display = "block";
+        generateSFButton.style.display = "none";
+        startFirstSemifinalButton.style.display = "block";
       }
 
       window.addEventListener("DOMContentLoaded", () => {
