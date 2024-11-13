@@ -228,7 +228,7 @@
         <div class="register-container">
           <form class="register-form-wrapper" action="POST">
             <header class="header-container">
-              <p onclick="goToLobby()" class="logo">
+              <p onclick="goToLobby()" class="animation">
                 <img src="./assets/back_arrow.svg" alt="" />
               </p>
               <h1 class="title">Sign in</h1>
@@ -281,7 +281,7 @@
         <div class="register-container">
           <form class="register-form-wrapper">
             <header class="header-container">
-              <p onclick="goToLobby()" class="logo">
+              <p onclick="goToLobby()" class="animation">
                 <img src="./assets/back_arrow.svg" alt="" />
               </p>
               <h1 class="title">Sign up</h1>
@@ -301,19 +301,19 @@
               placeholder="username"
             />
 
-              <input
-                type="password"
-                id="signUpPassword"
-                class="form-input"
-                placeholder="password"
-              />
-  
-              <input
-                type="password"
-                id="repeatPassword"
-                class="form-input"
-                placeholder="repeat password"
-              />
+            <input
+              type="password"
+              id="signUpPassword"
+              class="form-input"
+              placeholder="password"
+            />
+
+            <input
+              type="password"
+              id="repeatPassword"
+              class="form-input"
+              placeholder="repeat password"
+            />
 
             <div class="remember-me-container">
               <input type="checkbox" id="rememberMe" class="checkbox-inner" />
@@ -349,7 +349,7 @@
         <div class="match-stats">
           <div class="match-stats-header">
             <header class="match-stats-header-wrapper">
-              <p onclick="goToHomeRight()" class="logo">
+              <p onclick="goToHomeRight()" class="animation">
                 <img src="./assets/back_arrow.svg" alt="" />
               </p>
               <h1 class="match-stats-title-top">Match statistics</h1>
@@ -440,7 +440,7 @@
       </div>
     </section>
 
-    <section style="display: none" id="tournament">
+    <!-- <section style="display: none" id="tournament">
       <div class="tournamentLeft half">
         <div class="tournamentName">42 national tornament</div>
         <div class="box tournamentPlayer">
@@ -463,7 +463,7 @@
         <button onclick="goToHome()">Back to Menu</button>
         <button onclick="">Start the games</button>
       </div>
-    </section>
+    </section> -->
 
     <section style="display: none" id="profile">
       <div class="profile box">
@@ -534,15 +534,118 @@
         </div>
       </div>
       <div class="tournament-setup-buttons">
-        <button class="tournament-setup-buttons button back" tabindex="0" onclick="goToHome()">
+        <button
+          class="tournament-setup-buttons button back"
+          tabindex="0"
+          onclick="goToHome()"
+        >
           Back
         </button>
-        <button class="tournament-setup-buttons button continue" tabindex="0">
+        <button
+          class="tournament-setup-buttons button continue"
+          tabindex="0"
+          onclick="goToTournament()"
+        >
           Continue
         </button>
       </div>
     </div>
+
     <div id="overlay"></div>
+
+    <!-- Tournament main container -->
+    <div class="tournament-main" id="tournament">
+      <div class="tournament-top">
+        <div class="tournament-top-left">
+          <div class="tournament-name">
+            <h1 class="tournament-name-text">Transcendence Cup 2024</h1>
+          </div>
+          <div class="tournament-grid">
+            <div class="game-player-card">
+              <article class="tournament-game-player-card-inner">
+                <h2 class="game-player-number">Player 1</h2>
+                <img
+                  loading="lazy"
+                  src="./assets/default_avatar.png"
+                  alt="Player avatar"
+                  class="game-player-avatar"
+                />
+                <h3 class="game-player-name">Vladimir</h3>
+                <div class="game-player-win-rate-container">
+                  <p class="game-player-statistics-param">Win rate</p>
+                  <p class="game-player-statistics-param-number last">80.3 %</p>
+                </div>
+              </article>
+            </div>
+            <div class="game-player-card">
+              <article class="tournament-game-player-card-inner">
+                <h2 class="game-player-number">Player 2</h2>
+                <img
+                  loading="lazy"
+                  src="./assets/default_avatar.png"
+                  alt="Player avatar"
+                  class="game-player-avatar"
+                />
+                <h3 class="game-player-name">Max</h3>
+                <div class="game-player-win-rate-container">
+                  <p class="game-player-statistics-param">Win rate</p>
+                  <p class="game-player-statistics-param-number last">66.6 %</p>
+                </div>
+              </article>
+            </div>
+            <div class="game-player-card">
+              <article class="tournament-game-player-card-inner">
+                <h2 class="game-player-number">Player 3</h2>
+                <img
+                  loading="lazy"
+                  src="./assets/default_avatar.png"
+                  alt="Player avatar"
+                  class="game-player-avatar"
+                />
+                <h3 class="game-player-name">TestUser</h3>
+                <div class="game-player-win-rate-container">
+                  <p class="game-player-statistics-param">Win rate</p>
+                  <p class="game-player-statistics-param-number last">100 %</p>
+                </div>
+              </article>
+            </div>
+            <div class="game-player-card">
+              <article class="tournament-game-player-card-inner">
+                <h2 class="game-player-number">Player 4</h2>
+                <img
+                  loading="lazy"
+                  src="./assets/default_avatar.png"
+                  alt="Player avatar"
+                  class="game-player-avatar"
+                />
+                <h3 class="game-player-name">NewUser</h3>
+                <div class="game-player-win-rate-container">
+                  <p class="game-player-statistics-param">Win rate</p>
+                  <p class="game-player-statistics-param-number last">-</p>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+        <div class="tournament-top-right">
+          <h2 class="tournament-round h2">Semifinal 1</h2>
+          <h2 class="tournament-round h2">Semifinal 2</h2>
+          <h2 class="tournament-round h2">Final</h2>
+        </div>
+      </div>
+      <div class="tournament-setup-buttons">
+        <button
+          class="tournament-setup-buttons button back-to-menu"
+          tabindex="0"
+          onclick="goToHome()"
+        >
+          Back to menu
+        </button>
+        <button class="tournament-setup-buttons button generate" tabindex="0">
+          Generate bracket
+        </button>
+      </div>
+    </div>
 
     <script>
       /* Collection of all the buttons that transition the views */
@@ -554,35 +657,35 @@
       const signin = document.getElementsByClassName("signin")[0];
 
       const matchView = document.getElementsByClassName("matchView")[0];
-      
+
       function goToSignup() {
         homeLeft.style.display = "none";
         signin.style.display = "none";
         signup.style.display = "block";
       }
-      
+
       function goToSignin() {
         homeLeft.style.display = "none";
         signin.style.display = "block";
         signup.style.display = "none";
       }
-      
+
       function goToLobby() {
         homeLeft.style.display = "grid";
         signin.style.display = "none";
         signup.style.display = "none";
       }
-      
+
       function goToMatchView() {
         matchView.style.display = "block";
         homeRight.style.display = "none";
       }
-      
+
       function goToHomeRight() {
         matchView.style.display = "none";
         homeRight.style.display = "grid";
       }
-      
+
       /* section transitions */
       const lobby = document.getElementById("lobby");
       const gameStart = document.getElementById("gameStart");
@@ -611,8 +714,10 @@
       function goToTournament() {
         lobby.style.display = "none";
         gameStart.style.display = "none";
-        tournament.style.display = "block";
+        overlay.style.display = "none";
         profile.style.display = "none";
+        tournamentSetup.style.display = "none";
+        tournament.style.display = "block";
       }
 
       function goToProfile() {
@@ -654,8 +759,8 @@
             i.classList.remove("active");
           });
           item.classList.add("active");
-          });
         });
+      });
     </script>
     <script type="importmap">
       {
@@ -668,24 +773,30 @@
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const cards = document.querySelectorAll(".game-player-card-inner");
-    
+
         cards.forEach((card) => {
           card.addEventListener("click", () => {
             if (card.classList.contains("selected")) {
               card.classList.remove("selected");
-              cards.forEach((c) => c.classList.remove("shaded"));
             } else {
-              cards.forEach((c) => c.classList.remove("selected"));
               card.classList.add("selected");
-    
-              cards.forEach((c) => {
-                if (c !== card) {
-                  c.classList.add("shaded");
-                } else {
-                  c.classList.remove("shaded");
-                }
-              });
             }
+
+            const anySelected = Array.from(cards).some((c) =>
+              c.classList.contains("selected")
+            );
+
+            cards.forEach((c) => {
+              if (anySelected) {
+                if (c.classList.contains("selected")) {
+                  c.classList.remove("shaded");
+                } else {
+                  c.classList.add("shaded");
+                }
+              } else {
+                c.classList.remove("shaded");
+              }
+            });
           });
         });
       });
