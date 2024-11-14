@@ -105,6 +105,7 @@ window.startGame = (ai) => {
     // needs to be a game screen that we overlay and make visible
     //document.getElementById("gameWindow").innerHTML = "";
     document.getElementById("gameWindow").appendChild(renderer.domElement);
+    //document.getElementById("gameStartButton").disabled = true;
 
     // Add lights to the scene for score visibility
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Softer global illumination
@@ -320,14 +321,19 @@ window.startGame = (ai) => {
     function keyDownAction(event) {
         let code = event.which;
         if (code == 32){ // space = 32
-            event.preventDefault();
+            //event.preventDefault();
         }
         if (!pressedKeys.has(code))
             pressedKeys.add(code);
         if (isPressed(27) && isPaused){ // 27 = escape
             cancelAnimationFrame(animationId);
-            //gameWindow.style.display = "none";
-            window.getElementById("gameStartButton").style.display = "none";
+            gameWindow.style.display = "none";
+            //window.getElementById("gameWindow").style.display = "none";
+            //window.getElementById("gameWindow").removeChild(renderer.domElement);
+            gameWindow.removeChild(renderer.domElement);
+            document.removeEventListener("keydown", keyDownAction);
+            document.removeEventListener("keyup", keyUpAction);
+            return 1;
         }
         else if (code == 32){ // space
             if (!isPaused){
@@ -344,6 +350,7 @@ window.startGame = (ai) => {
                 loop();
             }
         }
+        return 0;
     }
     function keyUpAction(event) {
         pressedKeys.delete(event.which);
@@ -359,80 +366,80 @@ window.startGame = (ai) => {
         player4Velocity = isPressedByChar('O') ? playerSpeed : 0
             - (isPressedByChar('L') ? playerSpeed : 0);  // O = 79, L = 76
     }
-    function movement(event) {
-        let code = event.which;
-        if (code == 32){ // space
-            event.preventDefault();
-        }
-        if (code == 38)
-            player1Velocity = playerSpeed
-        else if (code == 40)
-            player1Velocity = playerSpeed
-        if (!pressedKeys.has(code)){
-            pressedKeys.add(code);   
- //           event.preventDefault();
-            console.log("Keydown ", code)
-            if (code == 38)
-                player1Velocity = playerSpeed
-            else if (code == 40)
-                player1Velocity = playerSpeed
-            //else if (code == 87)
-            else if ('W'.charCodeAt(0) == code)
-                player2Velocity = playerSpeed
-            else if ('S'.charCodeAt(0) == code)
-                player2Velocity = -playerSpeed
-            else if ('R'.charCodeAt(0) == code)
-                player3Velocity = playerSpeed
-            else if ('F'.charCodeAt(0) == code)
-                player3Velocity = -playerSpeed
-            else if ('O'.charCodeAt(0) == code)
-                player4Velocity = playerSpeed
-            else if ('L'.charCodeAt(0) == code)
-                player4Velocity = -playerSpeed
-            else if (code == 27){ // escape
-                cancelAnimationFrame(animationId);
-                //gameWindow.style.display = "none";
-            }
-            else if (code == 32){ // space
-                if (!isPaused){
-                    pause3dObj.position.z = -5
-                    render();
-                    isPaused = true;
-                    //console.log("Space is pressed, game is paused", isPaused);
-                }
-                else {
-                    pause3dObj.position.z = 100
-                    isPaused = false;
-                    console.log("Space is pressed again, game is resumed ", isPaused);
-                    clock = new THREE.Clock();
-                    loop();
-                }
-            }
-        }
-        //else if (code == 13) // enter 
-        //    setCameraTop()
-    }
+//     function movement(event) {
+//         let code = event.which;
+//         if (code == 32){ // space
+//             event.preventDefault();
+//         }
+//         if (code == 38)
+//             player1Velocity = playerSpeed
+//         else if (code == 40)
+//             player1Velocity = playerSpeed
+//         if (!pressedKeys.has(code)){
+//             pressedKeys.add(code);   
+//  //           event.preventDefault();
+//             console.log("Keydown ", code)
+//             if (code == 38)
+//                 player1Velocity = playerSpeed
+//             else if (code == 40)
+//                 player1Velocity = playerSpeed
+//             //else if (code == 87)
+//             else if ('W'.charCodeAt(0) == code)
+//                 player2Velocity = playerSpeed
+//             else if ('S'.charCodeAt(0) == code)
+//                 player2Velocity = -playerSpeed
+//             else if ('R'.charCodeAt(0) == code)
+//                 player3Velocity = playerSpeed
+//             else if ('F'.charCodeAt(0) == code)
+//                 player3Velocity = -playerSpeed
+//             else if ('O'.charCodeAt(0) == code)
+//                 player4Velocity = playerSpeed
+//             else if ('L'.charCodeAt(0) == code)
+//                 player4Velocity = -playerSpeed
+//             else if (code == 27){ // escape
+//                 cancelAnimationFrame(animationId);
+//                 //gameWindow.style.display = "none";
+//             }
+//             else if (code == 32){ // space
+//                 if (!isPaused){
+//                     pause3dObj.position.z = -5
+//                     render();
+//                     isPaused = true;
+//                     //console.log("Space is pressed, game is paused", isPaused);
+//                 }
+//                 else {
+//                     pause3dObj.position.z = 100
+//                     isPaused = false;
+//                     console.log("Space is pressed again, game is resumed ", isPaused);
+//                     clock = new THREE.Clock();
+//                     loop();
+//                 }
+//             }
+//         }
+//         //else if (code == 13) // enter 
+//         //    setCameraTop()
+//     }
     
-    // registered as keyup listener, cleares the movement of the players
-    // 38 = ArrowUp, 40 = ArrowDown, 87 = w, 83 = s
-    function clear(event)
-    {
-        pressedKeys.delete(event.which);
-        let code = event.which;
-        console.log("Keyup ", code)
-        if ((code == 40 || code == 38) && player1Velocity != 0)
-            player1Velocity = 0
-        else if ((code == 'W'.charCodeAt(0) || code == 'S'.charCodeAt(0) && player2Velocity != 0))
-            player2Velocity = 0
-        else if ((code == 'R'.charCodeAt(0) || code == 'F'.charCodeAt(0)) && player3Velocity != 0)
-            player3Velocity = 0
-        else if ((code == 'O'.charCodeAt(0) || code == 'L'.charCodeAt(0)) && player4Velocity != 0)
-            player4Velocity = 0
-        // else if (code == 32){ // space
-        //     //isPaused = false
-        //     console.log("Space is released")
-        // }
-    }
+    // // registered as keyup listener, cleares the movement of the players
+    // // 38 = ArrowUp, 40 = ArrowDown, 87 = w, 83 = s
+    // function clear(event)
+    // {
+    //     pressedKeys.delete(event.which);
+    //     let code = event.which;
+    //     console.log("Keyup ", code)
+    //     if ((code == 40 || code == 38) && player1Velocity != 0)
+    //         player1Velocity = 0
+    //     else if ((code == 'W'.charCodeAt(0) || code == 'S'.charCodeAt(0) && player2Velocity != 0))
+    //         player2Velocity = 0
+    //     else if ((code == 'R'.charCodeAt(0) || code == 'F'.charCodeAt(0)) && player3Velocity != 0)
+    //         player3Velocity = 0
+    //     else if ((code == 'O'.charCodeAt(0) || code == 'L'.charCodeAt(0)) && player4Velocity != 0)
+    //         player4Velocity = 0
+    //     // else if (code == 32){ // space
+    //     //     //isPaused = false
+    //     //     console.log("Space is released")
+    //     // }
+    // }
     
     // util function
     var render = function() {
@@ -566,7 +573,7 @@ window.startGame = (ai) => {
         if (delta > interval){
             if (isPaused){
                 cancelAnimationFrame(animationId)
-                return
+                return;
             }
             console.log("Game loop is running. isPause=", isPaused)
             //pause3dObj.rotation.x += 0.01;
@@ -578,7 +585,7 @@ window.startGame = (ai) => {
                 document.getElementById("gameWindow").style.display = "none";
                 //document.getElementById("gameWindow").innerHTML = "";
                 document.getElementById("gameWindow").removeChild(renderer.domElement);
-				document.getElementById("gameStartButton").disabled = false;
+				//document.getElementById("gameStartButton").disabled = false;
                 return;
             }
             keyEventHandler() // check for key presses
