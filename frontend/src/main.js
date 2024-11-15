@@ -8,8 +8,6 @@ const ballAccelerationCoef = 1.5
 const ballSpeedLimit = 1000
 // initial speed of the ball
 const ballStartSpeed = 6
-let hight = 20;
-let width = 40;
 
 function getRandom(min, max) {
     return Math.random() * (max - min) + min;
@@ -87,10 +85,11 @@ function setCameraAside(camera) {
 // ai = 0 two humans
 // (to be implemented) ai = -2 four humans
 window.startGame = (ai) => {
-    let gameResult = "Game is not finished yet";
     let isPaused = false;
     const maxScore = 5;
     const playerSpeed = 17;  //12
+    const hight = 20;
+    const width = 40;
     
     // create a scene and camera
     const scene = new THREE.Scene();
@@ -108,12 +107,13 @@ window.startGame = (ai) => {
     //document.getElementById("gameStartButton").disabled = true;
 
     // Add lights to the scene for score visibility
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Softer global illumination
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1); // Softer global illumination
     scene.add(ambientLight)
 
     // players geometry and material is shared so we create it once
     const playergeometry = new THREE.BoxGeometry(0.5, 4, 1);
-    const playermaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    const playermaterial = new THREE.MeshBasicMaterial({ color: 0x00400E }); 
+    //#00400E =  rgba(0, 255, 55, 0.25) with black backround
     // creates the player box
     const player1Mesh = new THREE.Mesh(playergeometry, playermaterial);
     const player2Mesh = new THREE.Mesh(playergeometry, playermaterial);
@@ -134,7 +134,7 @@ window.startGame = (ai) => {
 
     
     // create separate material and geometry for the ball1 and register it
-    const ball1material = new THREE.MeshBasicMaterial({ color: 0xff00ff });
+    const ball1material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
     const ball1Geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5)
     const ball1Mesh = new THREE.Mesh(ball1Geometry, ball1material);
     let ball1Edge = new THREE.EdgesGeometry(ball1Geometry);
@@ -151,7 +151,7 @@ window.startGame = (ai) => {
     // if we have 4 players we create the other two
     const playergeometry2 = new THREE.BoxGeometry(0.5, 4, 1);
     let player2Edge = new THREE.EdgesGeometry(playergeometry2);
-    const playermaterial2 = new THREE.MeshBasicMaterial({ color: 0x00ffff });
+    const playermaterial2 = new THREE.MeshBasicMaterial({ color: 0x32495E }); //rgba(50, 73, 94, 1) corresponds to #32495E in hex.
     const player3mesh = new THREE.Mesh(playergeometry2, playermaterial2);
     const player4mesh = new THREE.Mesh(playergeometry2, playermaterial2);
     const player3outline = new THREE.LineSegments(player2Edge, new THREE.LineBasicMaterial({color: 0x000000}));
@@ -170,7 +170,7 @@ window.startGame = (ai) => {
     // scene.add(ball2)
     const pyramidGeometry = new THREE.ConeGeometry(0.5, 1, 4); // Radius, Height, RadialSegments
     let ball2EdgesGeometry = new THREE.EdgesGeometry(pyramidGeometry);
-    const pyramidMaterial = new THREE.MeshBasicMaterial({ color: 0xffa500, wireframe: false }); // Orange color
+    const pyramidMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: false });
     const ball2mesh = new THREE.Mesh(pyramidGeometry, pyramidMaterial);
     const ball2Edges = new THREE.LineSegments(ball2EdgesGeometry, new THREE.LineBasicMaterial({color: 0x000000}));
     const ball2 = new THREE.Group();
@@ -199,7 +199,6 @@ window.startGame = (ai) => {
     let outerboxes = [[], [], []]
 
     /* ----- Local game logic and setup ----- */
-    // startAngle = getRandom(-1, 1);
     // let ball1Velocity = {x: Math.cos(startAngle) * ballStartSpeed, y: Math.sin(startAngle) * ballStartSpeed, z: 0}
     if (ai == -2){
         startAngle = getRandom(-1, 1)
@@ -209,7 +208,6 @@ window.startGame = (ai) => {
     // the per frame shift that is influenced by keyboard presses  = player1Velocity * (time duration since last frame)
     let player1Velocity = 0
     let player2Velocity = 0
-    //player3.velocity =  new THREE.Vector3(0, 0, 0);
     let player3Velocity = 0
     let player4Velocity = 0
 
@@ -223,7 +221,7 @@ window.startGame = (ai) => {
 
         const textGeometry = new TextGeometry(text, {
             font: font,
-            size: 2, //1,
+            size: 1, //1,
             height: 0.01,
             // curveSegments: 12,
             // bevelEnabled: true,
@@ -232,9 +230,9 @@ window.startGame = (ai) => {
             //    bevelSegments: 5
         });
 
-        const textMaterial = new THREE.MeshPhongMaterial({ color: 0xff00ff});
+        const textMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff,});
         score3dObj = new THREE.Mesh(textGeometry, textMaterial);
-        score3dObj.position.set(-4, 7, -2); 
+        score3dObj.position.set(-1, 7, -2); 
         scene.add(score3dObj);
         score3dObj.rotation.x = - Math.atan((score3dObj.position.y - camera.position.y)/ (score3dObj.position.z - camera.position.z));
     }
@@ -251,12 +249,12 @@ window.startGame = (ai) => {
         pauseFont = loadedFont;
         const pauseGeometry = new TextGeometry("PAUSE", {
             font: pauseFont,
-            size: 4,
+            size: 3,
             height: 0.01,
         });
-        const pauseMaterial = new THREE.MeshPhongMaterial({ color: 0xff00ff });
+        const pauseMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
         pause3dObj = new THREE.Mesh(pauseGeometry, pauseMaterial);
-        pause3dObj.position.set(-7, 0, 100);
+        pause3dObj.position.set(-5, 0, 100);
         pause3dObj.rotation.x = - Math.atan((pause3dObj.position.y - camera.position.y)/ (pause3dObj.position.z - camera.position.z));
         scene.add(pause3dObj)
     });
@@ -269,7 +267,9 @@ window.startGame = (ai) => {
 
         // use the same geometry for all outer boxes
         const outerboxgeometry = new THREE.BoxGeometry(0.95, 0.95, 1);
-        const outerboxmaterial = new THREE.MeshBasicMaterial({ color: 0xf000f0, });
+        const outerboxmaterial = new THREE.MeshBasicMaterial({
+            color: 0x4c0000, // Red color   with 0.3 opacity   background: rgba(255, 0, 0, 0.3);
+        });
         // loop over all the rows that share the height of the outer boxes
         outerboxes.forEach((element, row) => {
             for (let i = 1; i < 44; i++) {
@@ -315,9 +315,11 @@ window.startGame = (ai) => {
     const pressedKeys = new Set();
     const isPressed = (key) => pressedKeys.has(key);
     const isPressedByChar = (char) => isPressed(char.charCodeAt(0));
+    let cameraAside = false;
 
     // function registered as an event listener to keydown events
     // 38 = ArrowUp, 40 = ArrowDown, 87 = w, 83 = s
+    
     function keyDownAction(event) {
         let code = event.which;
         if (code == 32){ // space = 32
@@ -325,30 +327,37 @@ window.startGame = (ai) => {
         }
         if (!pressedKeys.has(code))
             pressedKeys.add(code);
-        if (isPressed(27) && isPaused){ // 27 = escape
+        if (isPressed(27) && (isPaused || Math.max(...gameCount) >= maxScore)){ // 27 = escape
+            console.log("Esc is pressed, game to be terminated.");
             cancelAnimationFrame(animationId);
-            gameWindow.style.display = "none";
-            //window.getElementById("gameWindow").style.display = "none";
-            //window.getElementById("gameWindow").removeChild(renderer.domElement);
-            gameWindow.removeChild(renderer.domElement);
+            document.getElementById("gameWindow").style.display = "none";
+            document.getElementById("gameWindow").removeChild(renderer.domElement);
             document.removeEventListener("keydown", keyDownAction);
             document.removeEventListener("keyup", keyUpAction);
             return 1;
         }
-        else if (code == 32){ // space
+        else if (code == 32 && Math.max(...gameCount) < maxScore){ // space
             if (!isPaused){
                 pause3dObj.position.z = -5
                 render();
                 isPaused = true;
-                console.log("Space is pressed, game is paused. isPaused=", isPaused);
+                console.log("Space is pressed, game is paused.");
             }
             else {
                 pause3dObj.position.z = 100
                 isPaused = false;
-                console.log("Space is pressed again, game is resumed. isPaused=", isPaused);
+                console.log("Space is pressed again, game is resumed.", isPaused);
                 clock = new THREE.Clock();
                 loop();
             }
+        }
+        else if (code == 'C'.charCodeAt(0)){
+            cameraAside = !cameraAside;
+            if (cameraAside)
+                setCameraAside(camera)
+            else
+                setCameraTop(camera)
+            render()
         }
         return 0;
     }
@@ -356,90 +365,11 @@ window.startGame = (ai) => {
         pressedKeys.delete(event.which);
     }
     function keyEventHandler() {
-        console.log("Keydown set ", pressedKeys)
-        player1Velocity = (isPressed(38) ? playerSpeed : 0)
-            - (isPressed(40) ? playerSpeed : 0); // 40 = `ArrowDown`, 38 = `ArrowUp`
-        player2Velocity = (isPressedByChar('W') ? playerSpeed : 0)
-            - (isPressedByChar('S') ? playerSpeed : 0);   // W = 87, S = 83
-        player3Velocity = (isPressedByChar('R') ? playerSpeed : 0)
-            - (isPressedByChar('F') ? playerSpeed : 0);    // R = 82, F = 70
-        player4Velocity = isPressedByChar('O') ? playerSpeed : 0
-            - (isPressedByChar('L') ? playerSpeed : 0);  // O = 79, L = 76
+        player1Velocity = (isPressed(38) - isPressed(40)) * playerSpeed; // 40 = `ArrowDown`, 38 = `ArrowUp`
+        player2Velocity = (isPressedByChar('W') - isPressedByChar('S')) * playerSpeed; // 87 = `W`, 83 = `S`
+        player3Velocity = (isPressedByChar('R') - isPressedByChar('F')) * playerSpeed; // 82 = `R`, 70 = `F`
+        player4Velocity = (isPressedByChar('O') - isPressedByChar('L')) * playerSpeed; // 79 = `O`, 76 = `L`
     }
-//     function movement(event) {
-//         let code = event.which;
-//         if (code == 32){ // space
-//             event.preventDefault();
-//         }
-//         if (code == 38)
-//             player1Velocity = playerSpeed
-//         else if (code == 40)
-//             player1Velocity = playerSpeed
-//         if (!pressedKeys.has(code)){
-//             pressedKeys.add(code);   
-//  //           event.preventDefault();
-//             console.log("Keydown ", code)
-//             if (code == 38)
-//                 player1Velocity = playerSpeed
-//             else if (code == 40)
-//                 player1Velocity = playerSpeed
-//             //else if (code == 87)
-//             else if ('W'.charCodeAt(0) == code)
-//                 player2Velocity = playerSpeed
-//             else if ('S'.charCodeAt(0) == code)
-//                 player2Velocity = -playerSpeed
-//             else if ('R'.charCodeAt(0) == code)
-//                 player3Velocity = playerSpeed
-//             else if ('F'.charCodeAt(0) == code)
-//                 player3Velocity = -playerSpeed
-//             else if ('O'.charCodeAt(0) == code)
-//                 player4Velocity = playerSpeed
-//             else if ('L'.charCodeAt(0) == code)
-//                 player4Velocity = -playerSpeed
-//             else if (code == 27){ // escape
-//                 cancelAnimationFrame(animationId);
-//                 //gameWindow.style.display = "none";
-//             }
-//             else if (code == 32){ // space
-//                 if (!isPaused){
-//                     pause3dObj.position.z = -5
-//                     render();
-//                     isPaused = true;
-//                     //console.log("Space is pressed, game is paused", isPaused);
-//                 }
-//                 else {
-//                     pause3dObj.position.z = 100
-//                     isPaused = false;
-//                     console.log("Space is pressed again, game is resumed ", isPaused);
-//                     clock = new THREE.Clock();
-//                     loop();
-//                 }
-//             }
-//         }
-//         //else if (code == 13) // enter 
-//         //    setCameraTop()
-//     }
-    
-    // // registered as keyup listener, cleares the movement of the players
-    // // 38 = ArrowUp, 40 = ArrowDown, 87 = w, 83 = s
-    // function clear(event)
-    // {
-    //     pressedKeys.delete(event.which);
-    //     let code = event.which;
-    //     console.log("Keyup ", code)
-    //     if ((code == 40 || code == 38) && player1Velocity != 0)
-    //         player1Velocity = 0
-    //     else if ((code == 'W'.charCodeAt(0) || code == 'S'.charCodeAt(0) && player2Velocity != 0))
-    //         player2Velocity = 0
-    //     else if ((code == 'R'.charCodeAt(0) || code == 'F'.charCodeAt(0)) && player3Velocity != 0)
-    //         player3Velocity = 0
-    //     else if ((code == 'O'.charCodeAt(0) || code == 'L'.charCodeAt(0)) && player4Velocity != 0)
-    //         player4Velocity = 0
-    //     // else if (code == 32){ // space
-    //     //     //isPaused = false
-    //     //     console.log("Space is released")
-    //     // }
-    // }
     
     // util function
     var render = function() {
@@ -548,7 +478,6 @@ window.startGame = (ai) => {
         let startAngle = getRandom(-1, 1)
         ball.velocity = {x: Math.cos(startAngle) * Math.sign(ball.velocity.x) * ballStartSpeed, y: Math.sin(startAngle) * Math.sign(ball.velocity.y) * ballStartSpeed}
         deltaTimeAi = 2;
-        console.log("Game count ",  gameCount[1] + " : " + gameCount[0], "  Pause=", isPaused)
     }
 
     /* ----- loop setup ----- */
@@ -572,20 +501,15 @@ window.startGame = (ai) => {
         // if its time to draw a new frame
         if (delta > interval){
             if (isPaused){
-                cancelAnimationFrame(animationId)
                 return;
             }
-            console.log("Game loop is running. isPause=", isPaused)
-            //pause3dObj.rotation.x += 0.01;
-            if (gameCount[0] >= maxScore || gameCount[1] >= maxScore){
+            if (Math.max(...gameCount) >= maxScore){
+                isPaused = true;
                 console.log("Game ended", gameCount);
-                gameResult = "Game ended";
-                cancelAnimationFrame(animationId);
-                //gameWindow.style.display = "none";
-                document.getElementById("gameWindow").style.display = "none";
-                //document.getElementById("gameWindow").innerHTML = "";
-                document.getElementById("gameWindow").removeChild(renderer.domElement);
-				//document.getElementById("gameStartButton").disabled = false;
+                updateScore("Score: " + gameCount[1] + " : " + gameCount[0] + ". Game ended!");
+                score3dObj.position.set(-7, 7, -2); 
+                render()
+                // fetch the game result to backend and update game state?
                 return;
             }
             keyEventHandler() // check for key presses
@@ -647,23 +571,8 @@ window.startGame = (ai) => {
     }
 
     // allows keydown and keyup to move player
-    //document.addEventListener("keydown", movement, false)
-    //document.addEventListener("keyup", clear, false)
     document.addEventListener("keydown", keyDownAction, false)
     document.addEventListener("keyup", keyUpAction, false)
-
-    // function handleKeydown(event) {
-    //      console.log(`Key pressed once: ${event.code}`);
-    //      document.removeEventListener("keydown", handleKeydown);
-    // }
-    
-    // document.addEventListener("keydown", handleKeydown, false);
-    // document.addEventListener("keyup", () => {
-    //     document.addEventListener("keydown", movement),
-    //     false
-    // });
-
-    
 
 
     /* ----- Main logic ----- */
@@ -671,18 +580,5 @@ window.startGame = (ai) => {
     setup()
     loop()
 
-    return gameResult;
-    // return new Promise((resolve, reject) => {
-    //     // Simulate the game logic with a timeout, or call the game logic here
-    //     setTimeout(() => {
-    //         let result = "Game finished successfully"; // Example result
-    //         resolve(result); // Resolve the promise with the result
-    //     }, 3000); // Simulating a 3-second delay for the game
-    // });
-                // data to return
-                // player 1 score1
-                // player 2 score2
-                // game_time time
-                // ??? mean max speed of the ball1
-
+    return
 }
