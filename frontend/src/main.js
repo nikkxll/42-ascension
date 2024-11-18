@@ -334,6 +334,7 @@ window.startGame = (ai) => {
             document.getElementById("gameWindow").removeChild(renderer.domElement);
             document.removeEventListener("keydown", keyDownAction);
             document.removeEventListener("keyup", keyUpAction);
+            document.getElementById("tournament").style.display = "block";
             return 1;
         }
         else if (code == 32 && Math.max(...gameCount) < maxScore){ // space

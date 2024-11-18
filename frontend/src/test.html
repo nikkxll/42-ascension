@@ -653,7 +653,7 @@
                   alt="Player avatar"
                   class="tournament-match-avatar"
                 />
-                <h3 class="game-player-name tournament">Vladimir</h3>
+                <h3 class="game-player-name tournament">Player 2</h3>
               </div>
               <h2 class="tournament-match-left-score">-</h2>
               <img
@@ -669,7 +669,7 @@
                   alt="Player avatar"
                   class="tournament-match-avatar"
                 />
-                <h3 class="game-player-name tournament">Max</h3>
+                <h3 class="game-player-name tournament">Player 3</h3>
               </div>
             </div>
           </div>
@@ -687,7 +687,7 @@
                   alt="Player avatar"
                   class="tournament-match-avatar"
                 />
-                <h3 class="game-player-name tournament">TestUser</h3>
+                <h3 class="game-player-name tournament">Player 4</h3>
               </div>
               <h2 class="tournament-match-left-score">-</h2>
               <img
@@ -703,7 +703,7 @@
                   alt="Player avatar"
                   class="tournament-match-avatar"
                 />
-                <h3 class="game-player-name tournament">NewUser</h3>
+                <h3 class="game-player-name tournament">Player 1</h3>
               </div>
             </div>
           </div>
@@ -937,25 +937,29 @@
     <script type="module" src="./base.js"></script>
     <script type="module" src="./main.js"></script>
     <script>
-			let gameWindow = document.getElementById("gameWindow")
-			//async function  startOff() {
-			function  startOff() {
-        runGame();
+			let gameWindow = document.getElementById("gameWindow");
+			function startOff() {
+				//const newElement = gameWindow.cloneNode(true); // Clone the element
+				//gameWindow.parentNode.replaceChild(newElement, gameWindow); // Replace it
+				//gameWindow.innerHTML = "";
 				gameWindow.style.display = "block";
-				//let result = await startGame()
-				// startGame(ai)
+        runGame();
 				// ai = 2 two AIs: AI vs god level AI
 				// ai = 1 one AI vs human
 				// ai = 0 two humans
-				// (to be implemented) ai = -2 four humans
-				let result = startGame(1);
-				console.log("index.html result from startGame=", result)
+				// ai = -2 four humans
+				let result = startGame(0);
+				console.log("index.html result from startGame=", result);
+				document.getElementById("gameStartButton").blur();
+				//document.getElementById("gameStartButton").disabled = true;
 				//gameWindow.style.display = "none"
-				// startGame().then(result => {
-     			//  	console.log("result =", result);  // Log the result
-      			//  	gameWindow.style.display = "none";  // Hide the game window after the game finishes
-    			// }	
-			};
+			}
+
+			// function resetGameState() {
+			// 	// Add code here to reset game variables, clear game window, etc.
+			// 	 // Example: clearing game content
+			// 	 gameWindow.innerHTML = "";
+			// }
 		</script>
   </body>
 </html>
