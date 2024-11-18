@@ -22,9 +22,21 @@
         height: 100vh;
         padding: 0;
       }
+      #gameWindow {
+				width: 96vw;
+				height: 96vh;
+				position: absolute;
+				top: 2vh;
+				left: 2vw;
+				display: none;
+				background: #ffffff;
+				border: 2px solid white;
+				box-sizing: content-box;
+			}
     </style>
   </head>
   <div id="enviroment"></div>
+  <div id="gameWindow"></div>
   <body>
     <section id="lobby">
       <div class="navigation-header-container" id="header">
@@ -533,7 +545,7 @@
           </article>
         </div>
       </div>
-      <div class="tournament-setup-buttons">
+      <div class="tournament-setup-buttons selection">
         <button
           class="tournament-setup-buttons button back"
           tabindex="0"
@@ -643,11 +655,13 @@
                 />
                 <h3 class="game-player-name tournament">Vladimir</h3>
               </div>
+              <h2 class="tournament-match-left-score">-</h2>
               <img
                 class="tournament-match-vs-logo"
                 src="./assets/vs_logo.png"
                 alt="Versus logo"
               />
+              <h2 class="tournament-match-right-score">-</h2>
               <div class="tournament-match-player-info-right">
                 <img
                   loading="lazy"
@@ -664,7 +678,7 @@
 
           <!-- Tournament SF2 -->
           <div class="tournament-match-container" id="secondSemifinalContent">
-            <h1 class="tournament-match-title">Semifinal 1</h1>
+            <h1 class="tournament-match-title">Semifinal 2</h1>
             <div class="tournament-match-players">
               <div class="tournament-match-player-info-left">
                 <img
@@ -675,11 +689,13 @@
                 />
                 <h3 class="game-player-name tournament">TestUser</h3>
               </div>
+              <h2 class="tournament-match-left-score">-</h2>
               <img
                 class="tournament-match-vs-logo"
                 src="./assets/vs_logo.png"
                 alt="Versus logo"
               />
+              <h2 class="tournament-match-right-score">-</h2>
               <div class="tournament-match-player-info-right">
                 <img
                   loading="lazy"
@@ -695,7 +711,7 @@
           <h2 class="tournament-round h2" id="final">Final</h2>
         </div>
       </div>
-      <div class="tournament-setup-buttons">
+      <div class="tournament-setup-buttons lobby">
         <button
           class="tournament-setup-buttons button back-to-menu"
           tabindex="0"
@@ -715,6 +731,7 @@
           class="tournament-setup-buttons button start-sf-1"
           tabindex="0"
           id="startFirstSF"
+          onclick="startOff()"
         >
           Start first SF
         </button>
@@ -787,6 +804,15 @@
 
       function goToHome() {
         lobby.style.display = "block";
+        gameStart.style.display = "none";
+        tournament.style.display = "none";
+        profile.style.display = "none";
+        tournamentSetup.style.display = "none";
+        overlay.style.display = "none";
+      }
+
+      function runGame() {
+        lobby.style.display = "none";
         gameStart.style.display = "none";
         tournament.style.display = "none";
         profile.style.display = "none";
@@ -910,5 +936,26 @@
     </script>
     <script type="module" src="./base.js"></script>
     <script type="module" src="./main.js"></script>
+    <script>
+			let gameWindow = document.getElementById("gameWindow")
+			//async function  startOff() {
+			function  startOff() {
+        runGame();
+				gameWindow.style.display = "block";
+				//let result = await startGame()
+				// startGame(ai)
+				// ai = 2 two AIs: AI vs god level AI
+				// ai = 1 one AI vs human
+				// ai = 0 two humans
+				// (to be implemented) ai = -2 four humans
+				let result = startGame(1);
+				console.log("index.html result from startGame=", result)
+				//gameWindow.style.display = "none"
+				// startGame().then(result => {
+     			//  	console.log("result =", result);  // Log the result
+      			//  	gameWindow.style.display = "none";  // Hide the game window after the game finishes
+    			// }	
+			};
+		</script>
   </body>
 </html>

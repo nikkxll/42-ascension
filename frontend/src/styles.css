@@ -941,7 +941,9 @@ section {
   padding: 4px 30px 4px;
   width: 90%;
   gap: 50%;
-  margin: 12px auto;
+}
+.tournament-setup-buttons.selection {
+  margin: 30px auto;
 }
 .tournament-setup-buttons.button {
   border-radius: 20px;
@@ -971,7 +973,7 @@ section {
 
 .tournament-main {
   position: absolute;
-  top: 0.5%;
+  top: 5%;
   left: 0;
   width: 100%;
   height: 99.5%;
@@ -998,7 +1000,7 @@ section {
 .tournament-top-right {
   display: flex;
   flex-direction: column;
-  margin-top: 1.4%;
+  margin-top: 1.7%;
 }
 .tournament-round {
   border-radius: 45px;
@@ -1042,6 +1044,9 @@ section {
   padding-bottom: 1%;
   font-size: 30px;
   transition: box-shadow 0.3s, transform 0.3s;
+}
+.tournament-setup-buttons.lobby {
+  margin: 34px auto;
 }
 .tournament-setup-buttons.back-to-menu {
   background-color: rgba(255, 0, 0, 0.25);
@@ -1112,14 +1117,34 @@ section {
 .tournament-match-vs-logo {
   width: 100px;
   height: 100px;
-  position: absolute;
-  left: 68.7%;
+  /* position: absolute;
+  left: 68.7%; */
+}
+
+.tournament-match-left-score {
+  /* position: absolute;
+  left: 60%; */
+}
+
+.tournament-match-right-score {
+  /* position: absolute;
+  left: 75%; */
 }
 
 .tournament-match-player-info-left {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.tournament-match-match-score {
+  position: absolute;
+  left: 67%;
+  display: flex;
+  flex-direction: row;
+  font-family: "Acme", sans-serif;
+  font-size: 32px;
+  margin-top: 8px;
 }
 
 .tournament-match-player-info-right {
