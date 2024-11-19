@@ -2,7 +2,6 @@ services:
   frontend:
     build: ./frontend
     ports:
-
       - '8443:8443'
     volumes:
       - ./frontend/src:/var/www/html

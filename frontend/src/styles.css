@@ -31,7 +31,7 @@ body {
   gap: 5%;
   grid-template-columns: 41.1% 40%;
   grid-template-rows: 48% 48%;
-  height: 75%;
+  height: 76.1%;
   /* display: none; */
 }
 section {
@@ -97,6 +97,7 @@ section {
 }
 
 .gameStartView {
+  position: absolute;
   width: 100%;
   height: 90%;
   display: grid;
@@ -143,6 +144,8 @@ section {
   align-self: center;
 }
 .gameButtonContainer {
+  position: absolute;
+  top: 90%;
   height: 10%;
   width: 100%;
   display: grid;
@@ -203,7 +206,7 @@ section {
   justify-content: space-between;
   margin-left: 56px;
 }
-.logo {
+.animation {
   aspect-ratio: 1.43;
   object-fit: contain;
   width: 38px;
@@ -212,7 +215,7 @@ section {
   margin: 8px 0 0 -5px;
   transition: box-shadow 0.3s, transform 0.3s;
 }
-.logo:hover {
+.animation:hover {
   transform: translateY(-3px);
 }
 .title {
@@ -590,8 +593,8 @@ section {
 .match-stats {
   display: flex;
   flex-direction: column;
-  max-width: 787px;
-  max-height: 692px;
+  max-width: 92.5%;
+  max-height: 83.7%;
   border-radius: 45px;
   background-color: rgba(18, 16, 16, 0.25);
   width: 100%;
@@ -804,7 +807,7 @@ section {
 
 .game-player-name {
   font-size: 34px;
-  margin-top: 6px;
+  margin-top: 2px;
   margin-bottom: 10px;
 }
 
@@ -925,13 +928,17 @@ section {
 /* Tournament pre setup */
 
 .tournament-setup {
-  display: flex;
-  max-width: 629px;
-  max-height: 496px;
+  position: absolute;
+  left: 31.60%;
+  top: 21%;
+  display: none;
+  width: 629px;
+  height: 496px;
   flex-direction: column;
-  background-color: #121010;
-  border-radius: 45px;
+  background-color: rgba(18, 16, 16, 1);
+  border-radius: 20px;
   border: 1px solid #a7a7a7;
+  z-index: 1001;
 }
 .tournament-setup-name {
   display: flex;
@@ -939,8 +946,8 @@ section {
   margin: 36px 0 12px 0;
 }
 .tournament-setup-name-input {
-  border-radius: 45px;
-  background-color: #121010;
+  border-radius: 15px;
+  background-color: rgba(18, 16, 16, 1);
   color: #fff;
   padding: 12px 16px 12px;
   width: 90%;
@@ -982,7 +989,9 @@ section {
   padding: 4px 30px 4px;
   width: 90%;
   gap: 50%;
-  margin: 12px auto;
+}
+.tournament-setup-buttons.selection {
+  margin: 30px auto;
 }
 .tournament-setup-buttons.button {
   border-radius: 20px;
@@ -995,21 +1004,32 @@ section {
   background-color: rgba(255, 0, 0, 0.25);
   padding-left: 8%;
   align-content: center;
+  transition: box-shadow 0.3s, transform 0.3s;
 }
 .tournament-setup-buttons.continue {
   background-color: #32495e;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+.tournament-setup-buttons.back:hover {
+  transform: translateY(-3px);
+}
+.tournament-setup-buttons.continue:hover {
+  transform: translateY(-3px);
 }
 
 /* Tournament lobby */
 
 .tournament-main {
-  max-width: 95%;
-  max-height: 95%;
-  display: flex;
+  position: absolute;
+  top: 5%;
+  left: 0;
+  width: 100%;
+  height: 99.5%;
+  display: none;
   flex-direction: column;
   font-family: "Acme", sans-serif;
   color: #fff;
-  background-color: #121010;
+  background-color: rgba(18, 16, 16, 0.25);
   border-radius: 45px;
 }
 .tournament-top {
@@ -1028,11 +1048,11 @@ section {
 .tournament-top-right {
   display: flex;
   flex-direction: column;
-  margin-top: 1.4%;
+  margin-top: 1.7%;
 }
 .tournament-round {
   border-radius: 45px;
-  background-color: #262424;
+  background-color: rgba(18, 16, 16, 0.25);
   width: 72%;
   padding: 77px 77px 77px;
   border: 1px solid #a7a7a7;
@@ -1043,7 +1063,7 @@ section {
   color: rgba(255, 255, 255, 0.25);
   font-family: "Keania One";
   font-size: 64px;
-  padding: 7.4%;
+  padding: 7.2%;
   margin: 10px 0 10px 0;
 }
 .tournament-name {
@@ -1057,7 +1077,7 @@ section {
 .tournament-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  margin: 0 12% 0;
+  margin: 2.5% 12% 5.5%;
   gap: 4.4%;
   place-items: center;
 }
@@ -1065,35 +1085,71 @@ section {
   width: 400px;
 }
 .tournament-setup-buttons.generate {
-  background-color: #32495e;
+  display: block;
+  background-color: rgba(50, 73, 94, 0.8);
   justify-content: center;
   padding-top: 1%;
   padding-bottom: 1%;
+  font-size: 30px;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+.tournament-setup-buttons.lobby {
+  margin: 34px auto;
 }
 .tournament-setup-buttons.back-to-menu {
   background-color: rgba(255, 0, 0, 0.25);
   justify-content: center;
   padding-top: 1%;
   padding-bottom: 1%;
+  font-size: 30px;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+.tournament-setup-buttons.start-sf-1 {
+  display: none;
+  background-color: rgba(4, 255, 0, 0.25);
+  justify-content: center;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  font-size: 30px;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+.tournament-setup-buttons.generate:hover {
+  transform: translateY(-3px);
+}
+.tournament-setup-buttons.back-to-menu:hover {
+  transform: translateY(-3px);
+}
+.tournament-setup-buttons.start-sf-1:hover {
+  transform: translateY(-3px);
+}
+.tournament-game-player-card-inner {
+  border-radius: 45px;
+  background-color: rgba(38, 36, 36, 0.25);
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #a7a7a7;
 }
 
 /* Tournament match container */
 
 .tournament-match-container {
-  display: flex;
+  display: none;
   flex-direction: column;
   color: #fff;
-  background-color: #121010;
+  background-color: rgba(18, 16, 16, 0.25);
+  border: 1px solid #a7a7a7;
   border-radius: 45px;
-  max-width: 675px;
-  max-height: 202px;
+  max-width: 86.8%;
+  margin: 10px 0 11px 0;
 }
 
 .tournament-match-title {
   display: flex;
   justify-content: center;
   font-family: "Keania One", sans-serif;
-  font-size: 40px;
+  font-size: 42px;
   margin-bottom: 6px;
   margin-top: 16px;
 }
@@ -1103,15 +1159,33 @@ section {
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  margin-bottom: 2px;
+  margin: 0 5% 0;
 }
 
 .tournament-match-vs-logo {
   width: 100px;
   height: 100px;
+  /* position: absolute;
+  left: 68.7%; */
 }
 
-.tournament-match-player-info {
+.tournament-match-player-info-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tournament-match-match-score {
+  position: absolute;
+  left: 67%;
+  display: flex;
+  flex-direction: row;
+  font-family: "Acme", sans-serif;
+  font-size: 32px;
+  margin-top: 8px;
+}
+
+.tournament-match-player-info-right {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1658,4 +1732,18 @@ section {
   height: 63px;
   margin-left: 3px;
   margin-top: 3px;
+}
+
+/* Overlay */
+
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: none;
+  pointer-events: none;
 }
