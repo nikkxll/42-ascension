@@ -480,10 +480,18 @@ window.startGame = (ai) => {
         deltaTimeAi = 2;
     }
 
+    function updateGameState(){
+        window.singleGameState.player1_score = gameCount[0];
+        window.singleGameState.player2_score = gameCount[1];
+        window.singleGameState.match_time = Date.now() - startTime
+        console.log(window.singleGameState);
+    }
+
     /* ----- loop setup ----- */
     let animationId = null;
     // start a clock
     let clock = new THREE.Clock();
+    const startTime = new Date();
     // keep track of deltatime since last frame
     let delta = 0;
     // 75 max fps
@@ -495,7 +503,7 @@ window.startGame = (ai) => {
 
     //console.log("player1 scale=", player1.scale.y, "ball scale=", ball1.scale.y)
     function loop() {
-        if (ai != 0)
+        if (!isPaused && ai >= 1)
             runAi()
         animationId = requestAnimationFrame(loop);
         // if its time to draw a new frame
@@ -508,7 +516,8 @@ window.startGame = (ai) => {
                 console.log("Game ended", gameCount);
                 updateScore("Score: " + gameCount[1] + " : " + gameCount[0] + ". Game ended!");
                 score3dObj.position.set(-7, 7, -2); 
-                render()
+                render();
+                updateGameState();
                 // fetch the game result to backend and update game state?
                 return;
             }
