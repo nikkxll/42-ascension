@@ -35,6 +35,7 @@
       }
     </style>
   </head>
+
   <!-- Animated background -->
 
   <div id="enviroment"></div>
@@ -230,7 +231,7 @@
 
         <div class="buttonContainer">
           <button
-            onclick="goToGameStart()"
+            onclick="goToSingleGameSettings()"
             class="create-action"
             tabindex="0"
             aria-label="Create Single Game"
@@ -460,6 +461,39 @@
         </div>
       </div>
     </section>
+
+    <!-- Single game settings window -->
+
+    <div class="add-ai-main-container" id="singleGameSettings">
+      <div class="add-ai-top-part">
+        <h2 class="add-ai-header">Add AI to the lobby</h2>
+        <div class="add-ai-checkbox">
+          <div class="add-ai-checkbox-space">
+            <input type="checkbox" />
+            <span class="add-ai-header">Yes</span>
+          </div>
+          <div class="add-ai-checkbox-space">
+            <input type="checkbox" />
+            <span class="add-ai-header">No</span>
+          </div>
+        </div>
+        <div class="add-ai-tooltip">
+          <img
+            src="./assets/question_mark.png"
+            alt="settings"
+            class="settings-icon"
+          />
+          <span class="add-ai-tooltiptext"
+            >In order to play with AI you need to add it to the lobby. To do so
+            you have to have 3 players at max.</span
+          >
+        </div>
+      </div>
+      <div class="add-ai-buttons">
+        <button class="add-ai-button back" tabindex="0" onclick="goToHome()">Back</button>
+        <button class="add-ai-button continue" tabindex="0" onclick="goToGameStart()">Continue</button>
+      </div>
+    </div>
 
     <!-- Single game -->
 
@@ -949,6 +983,7 @@
       /* section transitions */
       const lobby = document.getElementById("lobby");
       const gameStart = document.getElementById("gameStart");
+      const singleGameSettings = document.getElementById("singleGameSettings");
       const tournament = document.getElementById("tournament");
       const profile = document.getElementById("profile");
       const tournamentSetup = document.getElementById("tournamentSetup");
@@ -975,6 +1010,7 @@
       function goToHome() {
         lobby.style.display = "block";
         gameStart.style.display = "none";
+        singleGameSettings.style.display = "none";
         tournament.style.display = "none";
         profile.style.display = "none";
         tournamentSetup.style.display = "none";
@@ -989,12 +1025,20 @@
         tournamentSetup.style.display = "none";
         overlay.style.display = "none";
       }
-
+      
+      function goToSingleGameSettings() {
+        singleGameSettings.style.display = "block";
+        overlay.style.display = "block";
+        overlay.style.pointerEvents = "auto";
+      }
+      
       function goToGameStart() {
         lobby.style.display = "none";
         gameStart.style.display = "block";
         tournament.style.display = "none";
+        singleGameSettings.style.display = "none";
         profile.style.display = "none";
+        overlay.style.display = "none";
         otherGameStart.style.display = "none";
       }
 
