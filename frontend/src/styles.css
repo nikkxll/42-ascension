@@ -98,9 +98,12 @@ section {
 
 .gameStartView {
   position: absolute;
-  width: 100%;
+  left: 2%;
+  width: 96%;
   height: 90%;
   display: grid;
+  align-items: center;
+  justify-content: center;
   gap: 2%;
   grid-template-columns: 21% 21% 8% 21% 21%;
   grid-template-rows: 49% 49%;
@@ -845,13 +848,14 @@ section {
 /* Single game lobby container */
 
 .single-game-lobby {
-  max-width: 95%;
-  max-height: 95%;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 5.6%;
   display: flex;
   flex-direction: column;
   font-family: "Acme", sans-serif;
   color: #fff;
-  background-color: #121010;
   border-radius: 45px;
 }
 
@@ -863,6 +867,9 @@ section {
 .single-game-bottom {
   display: flex;
   flex-direction: row;
+  justify-content:baseline;
+  margin-top: 1%;
+  gap: 9.5%;
 }
 
 .single-game-vs-logo {
@@ -879,10 +886,10 @@ section {
 .single-game-grid-left {
   display: grid;
   grid-template-columns: 52% 52%;
-  gap: 20px;
+  gap: 50px;
   width: 100%;
   margin: 3%;
-  margin-left: 5%;
+  margin-left: 4.2%;
   margin-top: 2%;
   margin-bottom: 2%;
 }
@@ -890,9 +897,9 @@ section {
 .single-game-grid-right {
   display: grid;
   grid-template-columns: 52% 52%;
-  gap: 20px;
+  gap: 50px;
   width: 100%;
-  margin: 3%;
+  margin-left: 2%;
   margin-right: 5%;
   margin-top: 2%;
   margin-bottom: 2%;
@@ -903,9 +910,10 @@ section {
   border: none;
   color: #fff;
   cursor: pointer;
-  font: 400 32px Acme, sans-serif;
-  padding: 8px 84px 8px;
+  font: 400 30px Acme, sans-serif;
+  padding: 12px 84px 12px;
   margin: 0px auto 32px;
+  transition: box-shadow 0.3s, transform 0.3s;
 }
 
 .single-game-buttons.back {
