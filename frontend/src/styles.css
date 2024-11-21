@@ -788,7 +788,7 @@ section {
   font: 400 28px Acme, sans-serif;
 }
 
-.game-player-card-inner {
+.game-player-card-inner-single {
   border-radius: 45px;
   background-color: #262424;
   display: flex;
@@ -868,8 +868,7 @@ section {
   display: flex;
   flex-direction: row;
   justify-content:baseline;
-  margin-top: 1%;
-  gap: 9.5%;
+  margin-top: 2%;
 }
 
 .single-game-vs-logo {
@@ -910,7 +909,7 @@ section {
   border: none;
   color: #fff;
   cursor: pointer;
-  font: 400 30px Acme, sans-serif;
+  font: 400 26px Acme, sans-serif;
   padding: 12px 84px 12px;
   margin: 0px auto 32px;
   transition: box-shadow 0.3s, transform 0.3s;
@@ -921,7 +920,11 @@ section {
 }
 
 .single-game-buttons.randomize {
-  background-color: #32495e;
+  background-color: rgba(75, 149, 233, 0.25);
+}
+
+.single-game-buttons.clear-selection {
+  background-color: rgba(255, 255, 0, 0.25);
 }
 
 .single-game-buttons.start {
@@ -934,6 +937,20 @@ section {
 
 .game-player-card-inner.shaded {
   opacity: 0.5;
+}
+
+.player-disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.game-player-card-inner-single.player-selected {
+  border: 1px solid green;
+  pointer-events: none;
+}
+
+.player-selectable {
+  cursor: pointer;
 }
 
 /* Tournament pre setup */
@@ -1210,6 +1227,16 @@ section {
 .game-player-name.tournament {
   font-family: "Acme", sans-serif;
   font-size: 34px;
+}
+
+.game-player-card-inner {
+  border-radius: 45px;
+  background-color: #262424;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #a7a7a7;
 }
 
 /* Tournament statistics container */

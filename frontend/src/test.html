@@ -490,8 +490,16 @@
         </div>
       </div>
       <div class="add-ai-buttons">
-        <button class="add-ai-button back" tabindex="0" onclick="goToHome()">Back</button>
-        <button class="add-ai-button continue" tabindex="0" onclick="goToGameStart()">Continue</button>
+        <button class="add-ai-button back" tabindex="0" onclick="goToHome()">
+          Back
+        </button>
+        <button
+          class="add-ai-button continue"
+          tabindex="0"
+          onclick="goToGameStart()"
+        >
+          Continue
+        </button>
       </div>
     </div>
 
@@ -502,7 +510,7 @@
         <div class="single-game-top">
           <div class="single-game-grid-left">
             <div class="game-player-card">
-              <article class="game-player-card-inner">
+              <article class="game-player-card-inner-single">
                 <h2 class="game-player-number">Player 1</h2>
                 <img
                   loading="lazy"
@@ -522,7 +530,7 @@
               </article>
             </div>
             <div class="game-player-card">
-              <article class="game-player-card-inner">
+              <article class="game-player-card-inner-single">
                 <h2 class="game-player-number">Player 2</h2>
                 <img
                   loading="lazy"
@@ -542,7 +550,7 @@
               </article>
             </div>
             <div class="game-player-card">
-              <article class="game-player-card-inner">
+              <article class="game-player-card-inner-single">
                 <h2 class="game-player-number">Player 3</h2>
                 <img
                   loading="lazy"
@@ -562,7 +570,7 @@
               </article>
             </div>
             <div class="game-player-card">
-              <article class="game-player-card-inner">
+              <article class="game-player-card-inner-single">
                 <h2 class="game-player-number">Player 4</h2>
                 <img
                   loading="lazy"
@@ -591,7 +599,7 @@
           </div>
           <div class="single-game-grid-right">
             <div class="game-player-card">
-              <article class="game-player-card-inner">
+              <article class="game-player-card-inner-single">
                 <h2 class="game-player-number">Player 1</h2>
                 <img
                   loading="lazy"
@@ -611,7 +619,7 @@
               </article>
             </div>
             <div class="game-player-card">
-              <article class="game-player-card-inner">
+              <article class="game-player-card-inner-single">
                 <h2 class="game-player-number">Player 2</h2>
                 <img
                   loading="lazy"
@@ -631,7 +639,7 @@
               </article>
             </div>
             <div class="game-player-card">
-              <article class="game-player-card-inner">
+              <article class="game-player-card-inner-single">
                 <h2 class="game-player-number">Player 3</h2>
                 <img
                   loading="lazy"
@@ -651,7 +659,7 @@
               </article>
             </div>
             <div class="game-player-card">
-              <article class="game-player-card-inner">
+              <article class="game-player-card-inner-single">
                 <h2 class="game-player-number">Player 4</h2>
                 <img
                   loading="lazy"
@@ -673,11 +681,34 @@
           </div>
         </div>
         <div class="single-game-bottom">
-          <button class="single-game-buttons back" tabindex="0">Back to menu</button>
-          <button class="single-game-buttons randomize" tabindex="0">
+          <button
+            class="single-game-buttons back"
+            tabindex="0"
+            onclick="goToHome()"
+          >
+            Back to menu
+          </button>
+          <button
+            class="single-game-buttons clear-selection"
+            tabindex="0"
+            onclick="resetAll()"
+          >
+            Clear selection
+          </button>
+          <button
+            class="single-game-buttons randomize"
+            tabindex="0"
+            onclick="randomizeChoice()"
+          >
             Randomize
           </button>
-          <button class="single-game-buttons start" tabindex="0">Start match</button>
+          <button
+            class="single-game-buttons start"
+            tabindex="0"
+            onclick="startOff()"
+          >
+            Start match
+          </button>
         </div>
       </div>
     </section>
@@ -1036,8 +1067,10 @@
     </div>
 
     <script>
+
       /* Collection of all the buttons that transition the views */
       /* home screen transitions */
+      
       const homeLeft = document.getElementsByClassName("homeLeft")[0];
       const homeRight = document.getElementsByClassName("homeRight")[0];
 
@@ -1109,6 +1142,7 @@
         profile.style.display = "none";
         tournamentSetup.style.display = "none";
         overlay.style.display = "none";
+        resetAll();
       }
 
       function runGame() {
@@ -1119,13 +1153,13 @@
         tournamentSetup.style.display = "none";
         overlay.style.display = "none";
       }
-      
+
       function goToSingleGameSettings() {
         singleGameSettings.style.display = "block";
         overlay.style.display = "block";
         overlay.style.pointerEvents = "auto";
       }
-      
+
       function goToGameStart() {
         lobby.style.display = "none";
         gameStart.style.display = "block";
@@ -1220,7 +1254,9 @@
       }
     </script>
     <script>
+
       /* Players selector for tournament pre-setup */
+
       document.addEventListener("DOMContentLoaded", () => {
         const cards = document.querySelectorAll(".game-player-card-inner");
 
@@ -1254,6 +1290,9 @@
     <script type="module" src="./base.js"></script>
     <script type="module" src="./main.js"></script>
     <script>
+
+      /* Game start */
+
       let gameWindow = document.getElementById("gameWindow");
       function startOff() {
         //const newElement = gameWindow.cloneNode(true); // Clone the element
@@ -1277,6 +1316,161 @@
       // 	 // Example: clearing game content
       // 	 gameWindow.innerHTML = "";
       // }
+    </script>
+    <script>
+
+      /* Single game lobby interaction */
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const leftPlayers = document.querySelectorAll(
+          ".single-game-grid-left .game-player-card-inner-single"
+        );
+        const rightPlayers = document.querySelectorAll(
+          ".single-game-grid-right .game-player-card-inner-single"
+        );
+        const startButton = document.querySelector(
+          ".single-game-buttons.start"
+        );
+        let leftSelectedIndex = null;
+        let playersSelected = 0;
+
+        // Updates the start button based on the selected players
+        function updateStartButton() {
+          startButton.disabled = playersSelected !== 2;
+          startButton.style.opacity = playersSelected === 2 ? "1" : "0.5";
+          startButton.style.cursor =
+            playersSelected === 2 ? "pointer" : "not-allowed";
+        }
+
+        // Reset all selections
+        window.resetAll = function () {
+          playersSelected = 0;
+          leftSelectedIndex = null;
+          leftPlayers.forEach((p) => {
+            p.classList.remove("player-disabled", "player-selected");
+            p.classList.add("player-selectable");
+          });
+          rightPlayers.forEach((p) => {
+            p.classList.remove(
+              "player-disabled",
+              "player-selected",
+              "player-selectable"
+            );
+          });
+          updateStartButton();
+        };
+
+        window.randomizeChoice = function () {
+          resetAll();
+
+          // Randomly select left player
+          const randomLeftIndex = Math.floor(
+            Math.random() * leftPlayers.length
+          );
+          const leftPlayerEvent = new Event("click");
+          leftPlayers[randomLeftIndex].dispatchEvent(leftPlayerEvent);
+
+          // Get available right players based on left selection
+          const availableRightPlayers = Array.from(rightPlayers).filter(
+            (player) => player.classList.contains("player-selectable")
+          );
+
+          // Randomly select right player
+          const randomRightIndex = Math.floor(
+            Math.random() * availableRightPlayers.length
+          );
+          const rightPlayerEvent = new Event("click");
+          setTimeout(() => {
+            availableRightPlayers[randomRightIndex].dispatchEvent(
+              rightPlayerEvent
+            );
+            updateStartButton();
+          }, 500);
+        };
+
+        leftPlayers.forEach((player, index) => {
+          player.classList.add("player-selectable");
+
+          player.addEventListener("click", () => {
+            if (playersSelected >= 2) return;
+
+            leftPlayers.forEach((p) => {
+              p.classList.add("player-disabled");
+              p.classList.remove("player-selected");
+            });
+
+            // Enable selected player
+            player.classList.remove("player-disabled");
+            player.classList.add("player-selected");
+            leftSelectedIndex = index;
+            if (playersSelected === 0) playersSelected++;
+            updateStartButton();
+
+            // Handle right side based on selected player
+            rightPlayers.forEach((rightPlayer, rightIndex) => {
+              rightPlayer.classList.remove(
+                "player-disabled",
+                "player-selectable",
+                "player-selected"
+              );
+
+              switch (index) {
+                case 0:
+                  if (rightIndex > 0) {
+                    rightPlayer.classList.add("player-selectable");
+                  } else {
+                    rightPlayer.classList.add("player-disabled");
+                  }
+                  break;
+                case 1:
+                  if (rightIndex !== 1) {
+                    rightPlayer.classList.add("player-selectable");
+                  } else {
+                    rightPlayer.classList.add("player-disabled");
+                  }
+                  break;
+                case 2:
+                  if (rightIndex !== 2) {
+                    rightPlayer.classList.add("player-selectable");
+                  } else {
+                    rightPlayer.classList.add("player-disabled");
+                  }
+                  break;
+                case 3:
+                  if (rightIndex !== 3) {
+                    rightPlayer.classList.add("player-selectable");
+                  } else {
+                    rightPlayer.classList.add("player-disabled");
+                  }
+                  break;
+              }
+            });
+          });
+        });
+
+        rightPlayers.forEach((player) => {
+          player.addEventListener("click", () => {
+            if (
+              leftSelectedIndex !== null &&
+              player.classList.contains("player-selectable") &&
+              playersSelected < 2
+            ) {
+              playersSelected++;
+              rightPlayers.forEach((p) => {
+                p.classList.remove("player-selectable");
+                p.classList.add("player-disabled");
+              });
+
+              player.classList.remove("player-disabled");
+              player.classList.add("player-selected");
+              updateStartButton();
+            }
+          });
+        });
+
+        // Initialize start button
+        updateStartButton();
+      });
     </script>
   </body>
 </html>
