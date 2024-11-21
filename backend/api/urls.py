@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path("csrf/", views.get_csrf_token, name="csrf"),
     path("players/", views.manage_players, name="manage_players"),
     path("players/<int:id>/", views.manage_player, name="manage_player"),
     path('players/<int:id>/avatar/', views.upload_avatar, name='upload_avatar'),

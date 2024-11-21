@@ -5,6 +5,7 @@ from django.db import IntegrityError
 from .models import Player, Friendship
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth import authenticate
 from .decorators import session_authenticated_logged_in, session_authenticated_id
 
@@ -22,6 +23,18 @@ from urllib.parse import urlencode
 
 from django.utils import timezone
 from datetime import timedelta
+
+
+
+
+##################################
+# CSRF
+##################################
+
+
+@ensure_csrf_cookie
+def get_csrf_token(request):
+    return JsonResponse({"message": "CSRF token set"})
 
 
 ##################################
