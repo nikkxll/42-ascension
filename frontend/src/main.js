@@ -2,6 +2,8 @@
 import * as THREE from 'three';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+import * as state from "./state.js";
+
 
 const ballAccelerationCoef = 1.0  // 1.5
 const ballSpeedLimit = 1000;
