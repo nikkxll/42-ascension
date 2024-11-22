@@ -351,9 +351,12 @@ window.startGame = (ai) => {
             document.removeEventListener("keydown", keyDownAction);
             document.removeEventListener("keyup", keyUpAction);
             console.log("game terminated", window.singleGameState);
-            if (window.singleGameState.size > 0){
+            console.log("game terminated size ", window.singleGameState.size);
+            //goToHome();
+            goToTournament();
+            if (window.singleGameState.player1 == undefined){
                 //updateGameState();
-                gotoHome();
+                goToHome();
                 console.log("return to main");
             }
             else {
