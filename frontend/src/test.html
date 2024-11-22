@@ -261,7 +261,7 @@
 
       <div class="signin box">
         <div class="register-container">
-          <form class="register-form-wrapper" action="POST">
+          <form class="register-form-wrapper">
             <header class="header-container">
               <p onclick="goToLobby()" class="animation">
                 <img src="./assets/back_arrow.svg" alt="" />
@@ -284,7 +284,7 @@
             />
 
             <div class="button-wrapper">
-              <button type="submit" class="submit-button">Sign in</button>
+              <button type="button" class="submit-button" onclick="requestLoginButton()">Sign in</button>
             </div>
 
             <div class="prompt">
@@ -359,7 +359,7 @@
             </div>
 
             <div class="button-wrapper">
-              <button type="submit" class="submit-button">Sign up</button>
+              <button type="button" class="submit-button" onclick="requestSignUp()">Sign up</button>
             </div>
 
             <div class="prompt">
@@ -1471,6 +1471,61 @@
         // Initialize start button
         updateStartButton();
       });
+    </script>
+    <script>
+    
+      // Logging in and signing up
+
+      window["loggedinUsers"] = {}
+      window["loggedinUsersIds"] = []
+      const requestSignUp = async () => {
+        const username = document.getElementById("signUpUsername").value
+        const password = document.getElementById("signUpPassword").value
+        try {
+          const response = await fetch("https://localhost:8443/api/players/", {
+            method: "POST",
+            body: JSON.stringify({
+              username,
+              password,
+              displayName: document.getElementById("displayName").value,
+            })
+          })
+          const json = await response.json().then(
+            requestLogin(
+              username, password
+            )
+          );
+          // updateLoggedinUsers()
+        } catch (error) {
+          console.error(error.message);
+        }
+      }
+  
+      const updateLoggedinUsers = () => {
+        console.log(window["loggedinUsers"][window["loggedinUsersIds"][0]])
+      }
+  
+      const requestLoginButton = async () => {
+        await requestLogin(document.getElementById("signInUsername").value, document.getElementById("signInPassword").value)
+      }
+  
+      const requestLogin = async (_username, _password) => {
+        try {
+          const response = await fetch("https://localhost:8443/api/auth/login/", {
+            method: "POST",
+            body: JSON.stringify({
+              username: _username,
+              password: _password,
+            })
+          })
+          const json = await response.json();
+          window["loggedinUsers"][json.data.id] = json.data
+          window["loggedinUsersIds"].push(json.data.id)
+          updateLoggedinUsers()
+        } catch (error) {
+          console.error(error.message);
+        }
+      }
     </script>
   </body>
 </html>
