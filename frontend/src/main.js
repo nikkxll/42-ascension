@@ -351,15 +351,15 @@ window.startGame = (ai) => {
             document.removeEventListener("keydown", keyDownAction);
             document.removeEventListener("keyup", keyUpAction);
             console.log("game terminated", window.singleGameState);
-            if (window.singleGameState.size > 0){
-                //updateGameState();
-                gotoHome();
-                console.log("return to main");
-            }
-            else {
-                //updateTouramentState();
-                console.log("return to tournament");
-            }
+            gotoHome();
+            // if (window.singleGameState.size > 0){
+            //     //updateGameState();
+            //     console.log("return to main");
+            // }
+            // else {
+            //     //updateTouramentState();
+            //     console.log("return to tournament");
+            // }
             return 1;
         }
         else if (code == 32 && Math.max(...gameCount) < maxScore){ // space
