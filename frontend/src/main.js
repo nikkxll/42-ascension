@@ -3,7 +3,6 @@ import * as THREE from 'three';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
-
 const ballAccelerationCoef = 1.0  // 1.5
 const ballSpeedLimit = 1000;
 // initial speed of the ball
@@ -83,6 +82,7 @@ function setCameraAside(camera) {
 // ai = 0 two humans
 // (to be implemented) ai = -2 four humans
 window.startGame = (ai) => {
+    console.log("game is started. window.singleGameState=", window.singleGameState);
     let isPaused = false;
     const maxScore = 5;
     const playerSpeed = 17;  // 17 12
@@ -348,6 +348,16 @@ window.startGame = (ai) => {
             document.getElementById("gameWindow").removeChild(renderer.domElement);
             document.removeEventListener("keydown", keyDownAction);
             document.removeEventListener("keyup", keyUpAction);
+            console.log("game terminated", window.singleGameState);
+            if (window.singleGameState.size > 0){
+                //updateGameState();
+                gotoHome();
+                console.log("return to main");
+            }
+            else {
+                //updateTouramentState();
+                console.log("return to tournament");
+            }
             return 1;
         }
         else if (code == 32 && Math.max(...gameCount) < maxScore){ // space
@@ -495,6 +505,7 @@ window.startGame = (ai) => {
     }
 
     function updateGameState(){
+        console.log("updateGameState", window.singleGameState);
         window.singleGameState.player1_score = gameCount[0];
         window.singleGameState.player2_score = gameCount[1];
         window.singleGameState.match_time = Date.now() - startTime
