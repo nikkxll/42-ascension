@@ -22,7 +22,7 @@ body {
 .homeLeft {
   position: absolute;
   left: 0;
-  top: 18.7%;
+  top: 18.7vh;
   display: grid;
   align-items: center;
   justify-content: center;
@@ -40,7 +40,7 @@ section {
 .homeRight {
   position: absolute;
   right: 0;
-  top: 18.7%;
+  top: 18.7vh;
   display: grid;
   column-gap: 0%;
   grid-template-columns: 51.9% 50%;
@@ -57,8 +57,8 @@ section {
 }
 .signup {
   position: absolute;
-  left: 3.436%;
-  top: 18.7%;
+  left: 3.436vw;
+  top: 18.7vh;
   width: 40%;
   display: none;
   height: 75%;
@@ -70,8 +70,8 @@ section {
   
 .signin {
   position: absolute;
-  left: 3.436%;
-  top: 18.7%;
+  left: 3.436vw;
+  top: 18.7vh;
   width: 40%;
   display: none;
   height: 75%;
@@ -80,7 +80,7 @@ section {
 .matchView {
   position: absolute;
   right: 0;
-  top: 18.7%;
+  top: 18.7vh;
   display: none;
 }
 
@@ -98,9 +98,12 @@ section {
 
 .gameStartView {
   position: absolute;
-  width: 100%;
-  height: 90%;
+  left: 2vw;
+  width: 96vw;
+  height: 90vh;
   display: grid;
+  align-items: center;
+  justify-content: center;
   gap: 2%;
   grid-template-columns: 21% 21% 8% 21% 21%;
   grid-template-rows: 49% 49%;
@@ -145,9 +148,9 @@ section {
 }
 .gameButtonContainer {
   position: absolute;
-  top: 90%;
+  top: 90vh;
   height: 10%;
-  width: 100%;
+  width: 100vw;
   display: grid;
   padding-top: 2%;
   column-gap: 20%;
@@ -673,21 +676,25 @@ section {
 
 .match-stats-match-score {
   position: absolute;
-  left: 50%;
+  left: 50vw;
   transform: translateX(-40%);
 }
 
 /* Add ai container */
 
 .add-ai-main-container {
-  display: flex;
+  position: absolute;
+  display: none;
+  top: 41.6vh;
+  left: 31.4vw;
   flex-direction: column;
-  background-color: #121010;
-  border: 1px solid #a7a7a7;
-  border-radius: 45px;
-  max-width: 629px;
-  max-height: 151px;
+  background-color: rgba(18, 16, 16, 1);
+  border: 1px solid #5c5c5c;
+  border-radius: 20px;
+  width: 629px;
+  height: 151px;
   color: #fff;
+  z-index: 1001;
 }
 .add-ai-top-part {
   display: flex;
@@ -704,7 +711,7 @@ section {
 }
 
 .add-ai-checkbox input[type="checkbox"] {
-  transform: scale(1.5);
+  transform: scale(1.3);
   margin-right: 6px;
 }
 
@@ -756,13 +763,12 @@ section {
 .add-ai-tooltip .add-ai-tooltiptext {
   visibility: hidden;
   width: 300px;
-  background-color: rgba(89, 89, 89, 0.5);
+  background-color: rgba(89, 89, 89, 0.8);
   color: #fff;
   text-align: center;
   border-radius: 6px;
   padding: 5px 0;
   margin-left: 20px;
-  margin-top: 21px;
   position: absolute;
   z-index: 1;
 }
@@ -782,7 +788,7 @@ section {
   font: 400 28px Acme, sans-serif;
 }
 
-.game-player-card-inner {
+.game-player-card-inner-single {
   border-radius: 45px;
   background-color: #262424;
   display: flex;
@@ -842,13 +848,14 @@ section {
 /* Single game lobby container */
 
 .single-game-lobby {
-  max-width: 95%;
-  max-height: 95%;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 5.6%;
   display: flex;
   flex-direction: column;
   font-family: "Acme", sans-serif;
   color: #fff;
-  background-color: #121010;
   border-radius: 45px;
 }
 
@@ -860,6 +867,8 @@ section {
 .single-game-bottom {
   display: flex;
   flex-direction: row;
+  justify-content:baseline;
+  margin-top: 2%;
 }
 
 .single-game-vs-logo {
@@ -876,10 +885,10 @@ section {
 .single-game-grid-left {
   display: grid;
   grid-template-columns: 52% 52%;
-  gap: 20px;
+  gap: 50px;
   width: 100%;
   margin: 3%;
-  margin-left: 5%;
+  margin-left: 4.2%;
   margin-top: 2%;
   margin-bottom: 2%;
 }
@@ -887,9 +896,9 @@ section {
 .single-game-grid-right {
   display: grid;
   grid-template-columns: 52% 52%;
-  gap: 20px;
+  gap: 50px;
   width: 100%;
-  margin: 3%;
+  margin-left: 2%;
   margin-right: 5%;
   margin-top: 2%;
   margin-bottom: 2%;
@@ -900,9 +909,10 @@ section {
   border: none;
   color: #fff;
   cursor: pointer;
-  font: 400 32px Acme, sans-serif;
-  padding: 8px 84px 8px;
+  font: 400 26px Acme, sans-serif;
+  padding: 12px 84px 12px;
   margin: 0px auto 32px;
+  transition: box-shadow 0.3s, transform 0.3s;
 }
 
 .single-game-buttons.back {
@@ -910,7 +920,11 @@ section {
 }
 
 .single-game-buttons.randomize {
-  background-color: #32495e;
+  background-color: rgba(75, 149, 233, 0.25);
+}
+
+.single-game-buttons.clear-selection {
+  background-color: rgba(255, 255, 0, 0.25);
 }
 
 .single-game-buttons.start {
@@ -925,12 +939,26 @@ section {
   opacity: 0.5;
 }
 
+.player-disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.game-player-card-inner-single.player-selected {
+  border: 1px solid green;
+  pointer-events: none;
+}
+
+.player-selectable {
+  cursor: pointer;
+}
+
 /* Tournament pre setup */
 
 .tournament-setup {
   position: absolute;
-  left: 31.60%;
-  top: 21%;
+  left: 31.6vw;
+  top: 21vh;
   display: none;
   width: 629px;
   height: 496px;
@@ -1021,10 +1049,10 @@ section {
 
 .tournament-main {
   position: absolute;
-  top: 5%;
+  top: 5vh;
   left: 0;
-  width: 100%;
-  height: 99.5%;
+  width: 100vw;
+  height: 99.5vh;
   display: none;
   flex-direction: column;
   font-family: "Acme", sans-serif;
@@ -1165,8 +1193,6 @@ section {
 .tournament-match-vs-logo {
   width: 100px;
   height: 100px;
-  /* position: absolute;
-  left: 68.7%; */
 }
 
 .tournament-match-player-info-left {
@@ -1177,7 +1203,7 @@ section {
 
 .tournament-match-match-score {
   position: absolute;
-  left: 67%;
+  left: 67vw;
   display: flex;
   flex-direction: row;
   font-family: "Acme", sans-serif;
@@ -1199,6 +1225,16 @@ section {
 .game-player-name.tournament {
   font-family: "Acme", sans-serif;
   font-size: 34px;
+}
+
+.game-player-card-inner {
+  border-radius: 45px;
+  background-color: #262424;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #a7a7a7;
 }
 
 /* Tournament statistics container */
@@ -1416,12 +1452,12 @@ section {
 }
 .profile-friend-status {
   position: absolute;
-  left: 50%;
+  left: 50vw;
   transform: translateX(-40%);
 }
 .profile-friend-actions {
   position: absolute;
-  left: 69%;
+  left: 69vw;
 }
 .profile-friend-name {
   white-space: nowrap;
@@ -1491,7 +1527,7 @@ section {
 }
 .profile-recent-matches-score {
   position: absolute;
-  left: 95%;
+  left: 95vw;
   transform: translateX(-40%);
 }
 .profile-recent-player-score {
@@ -1571,7 +1607,7 @@ section {
 }
 .profile-h2h-value {
   position: absolute;
-  left: 20%;
+  left: 20vw;
 }
 .profile-match-statistics-h2h-header {
   font-size: 36px;
@@ -1622,7 +1658,7 @@ section {
 }
 .profile-friend-statistics-score {
   position: absolute;
-  left: 96%;
+  left: 96vw;
   transform: translateX(-40%);
 }
 .profile-friend-statistics-recent-matches {
@@ -1665,7 +1701,7 @@ section {
 }
 .profile-friend-statistics-h2h {
   position: absolute;
-  left: 37%;
+  left: 37vw;
   transform: translateX(-40%);
 }
 .profile-friend-matches-h2h {
@@ -1682,8 +1718,8 @@ section {
 
 .navigation-header-container {
   position: absolute;
-  left: 6.5%;
-  top: 1.9%;
+  left: 6.5vw;
+  top: 1.9vh;
   display: flex;
   flex-direction: column;
   align-items: center;
