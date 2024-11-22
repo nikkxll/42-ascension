@@ -2,12 +2,13 @@
 import * as THREE from 'three';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+import * as state from "./state.js";
 
 
-const ballAccelerationCoef = 1.5
-const ballSpeedLimit = 1000
+const ballAccelerationCoef = 1.0  // 1.5
+const ballSpeedLimit = 1000;
 // initial speed of the ball
-const ballStartSpeed = 6
+const ballStartSpeed = 6; // 6
 
 function getRandom(min, max) {
     return Math.random() * (max - min) + min;
@@ -40,28 +41,26 @@ function checkBallPositionY(ball, minY, maxY){
 function checkRacketHitBall(ball, player){
     if (ball.hitRacketFlag == 1)
         return
-    if (!(Math.abs(ball.position.x - player.position.x) <= player.scale.x / 2 + ball.scale.x / 2 &&
-        Math.abs(ball.position.y - player.position.y) <= player.scale.y / 2 + ball.scale.y))
+    if (!(Math.abs(ball.position.x - player.position.x) <= player.size.x / 2 + ball.size.x / 2 &&
+        Math.abs(ball.position.y - player.position.y) <= player.size.y / 2 + ball.size.y / 2 ))
         return
-    ball.hitRacketFlag = 1
-    //console.log("Hit racket", Math.abs(ball1.position.y - player1.position.y) , " vs ", player1.scale.y / 2 + ball1.scale.y)
-    let side = Math.sign(player.position.x)
-    ball.position.x = player.position.x - side * (player.scale.x / 2 + ball.scale.x / 2 + 0.01)
-    ball.speed = Math.sqrt(ball.velocity.y * ball.velocity.y + ball.velocity.x * ball.velocity.x)
+    ball.hitRacketFlag = 1;
+    let side = Math.sign(player.position.x);
+    ball.position.x = player.position.x - side * (player.size.x / 2 + ball.size.x / 2 + 0.01);
+    ball.speed = Math.sqrt(ball.velocity.y * ball.velocity.y + ball.velocity.x * ball.velocity.x);
     if (ball.speed < ballSpeedLimit){
-        ball.velocity.x *= -ballAccelerationCoef
-        ball.velocity.y *= ballAccelerationCoef
-        ball.speed *= ballAccelerationCoef
+        ball.velocity.x *= -ballAccelerationCoef;
+        ball.velocity.y *= ballAccelerationCoef;
+        ball.speed *= ballAccelerationCoef;
     }
     else
-        ball.velocity.x *= -1
-    let deltaAngle = - side * (ball.position.y - player.position.y) / player.scale.y
-    let ballDirectionAngle = Math.atan2(ball.velocity.y, ball.velocity.x) + deltaAngle
-    ball.velocity.x = ball.speed * Math.cos(ballDirectionAngle)
-    ball.velocity.y = ball.speed * Math.sin(ballDirectionAngle)
-    // if the ball1's v_x  is too low or wrong direction
+        ball.velocity.x *= -1;
+    let deltaAngle = - side * (ball.position.y - player.position.y) / player.size.y;
+    let ballDirectionAngle = Math.atan2(ball.velocity.y, ball.velocity.x) + deltaAngle;
+    ball.velocity.x = ball.speed * Math.cos(ballDirectionAngle);
+    ball.velocity.y = ball.speed * Math.sin(ballDirectionAngle);
     if (Math.sign(ball.position.x) * ball.velocity.x > -5){
-        ball.velocity.x = - Math.sign(ball.position.x) * ballStartSpeed
+        ball.velocity.x = - Math.sign(ball.position.x) * ballStartSpeed;
     }
 }
 
@@ -85,9 +84,10 @@ function setCameraAside(camera) {
 // ai = 0 two humans
 // (to be implemented) ai = -2 four humans
 window.startGame = (ai) => {
+    console.log("game is started. window.singleGameState=", window.singleGameState);
     let isPaused = false;
     const maxScore = 5;
-    const playerSpeed = 17;  //12
+    const playerSpeed = 17;  // 17 12
     const hight = 20;
     const width = 40;
     
@@ -110,6 +110,16 @@ window.startGame = (ai) => {
     const ambientLight = new THREE.AmbientLight(0xffffff, 1); // Softer global illumination
     scene.add(ambientLight)
 
+
+    // Test line Define the line's geometry (vertices)
+    const points = [];
+    points.push(new THREE.Vector3(width/2, hight/2, 0)); // Start point
+    points.push(new THREE.Vector3(width/2, -hight/2, 0)); // End point
+    const geometry = new THREE.BufferGeometry().setFromPoints(points);
+    const material = new THREE.LineBasicMaterial({ color: 0xffffff }); // Red color
+    const testline = new THREE.Line(geometry, material);
+    scene.add(testline);
+
     // players geometry and material is shared so we create it once
     const playergeometry = new THREE.BoxGeometry(0.5, 4, 1);
     const playermaterial = new THREE.MeshBasicMaterial({ color: 0x00400E }); 
@@ -124,6 +134,8 @@ window.startGame = (ai) => {
 
     const player1 = new THREE.Group();
     const player2 = new THREE.Group();
+    player1.size = {x: 0.5, y: 4, z: 1};
+    player2.size = {x: 0.5, y: 4, z: 1};
     player1.add(player1Mesh);
     player2.add(player2Mesh);
     player1.add(player1outline);
@@ -140,15 +152,17 @@ window.startGame = (ai) => {
     let ball1Edge = new THREE.EdgesGeometry(ball1Geometry);
     const balll1Outline = new THREE.LineSegments(ball1Edge, new THREE.LineBasicMaterial({color: 0x000000}));
     const ball1 = new THREE.Group();
-    ball1.add(ball1Mesh)
-    ball1.add(balll1Outline)
-    scene.add(ball1)
-    ball1.hitRacketFlag = 0
-    ball1.speed = ballStartSpeed
-    let startAngle = getRandom(-1, 1)
-    ball1.velocity = {x: Math.cos(startAngle) * ballStartSpeed, y: Math.sin(startAngle) * ballStartSpeed}
+    ball1.size = {x: 0.5, y: 0.5, z: 0.5};
+    ball1.add(ball1Mesh);
+    ball1.add(balll1Outline);
+    scene.add(ball1);
+    ball1.hitRacketFlag = 0;
+    ball1.speed = ballStartSpeed;
+    let startAngle = getRandom(-1, 1);
+    ball1.velocity = {x: Math.cos(startAngle) * ballStartSpeed, y: Math.sin(startAngle) * ballStartSpeed};
 
-    // if we have 4 players we create the other two
+    // for case of  4 players we create the other two
+    // create separate material and geometry for the ball2 and register it
     const playergeometry2 = new THREE.BoxGeometry(0.5, 4, 1);
     let player2Edge = new THREE.EdgesGeometry(playergeometry2);
     const playermaterial2 = new THREE.MeshBasicMaterial({ color: 0x32495E }); //rgba(50, 73, 94, 1) corresponds to #32495E in hex.
@@ -159,10 +173,13 @@ window.startGame = (ai) => {
 
     const player3 = new THREE.Group();
     const player4 = new THREE.Group();
+    player3.size = {x: 0.5, y: 4, z: 1};
+    player4.size = {x: 0.5, y: 4, z: 1};
     player3.add(player3mesh);
     player4.add(player4mesh);
     player3.add(player3outline);
     player4.add(player4outline);
+
 
     // const ballmaterial2 = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
     // const ballMesh2 = new THREE.BoxGeometry(0.5, 0.5, 0.5)
@@ -174,11 +191,13 @@ window.startGame = (ai) => {
     const ball2mesh = new THREE.Mesh(pyramidGeometry, pyramidMaterial);
     const ball2Edges = new THREE.LineSegments(ball2EdgesGeometry, new THREE.LineBasicMaterial({color: 0x000000}));
     const ball2 = new THREE.Group();
-    ball2.add(ball2mesh)    
-    ball2.add(ball2Edges)
-    ball2.hitRacketFlag = 0
-    ball1.speed = ballStartSpeed
+    ball2.size = {x: 0.5, y: 1, z: 4};
+    ball2.add(ball2mesh);
+    ball2.add(ball2Edges);
+    ball2.hitRacketFlag = 0;
+    ball2.speed = ballStartSpeed;
 
+    // we add the players 3 and 5 and ball2 to the scene only if it is a 4 player game
     if (ai == -2){
         // Add the groups to the scene
         scene.add(player3);
@@ -189,22 +208,19 @@ window.startGame = (ai) => {
         ball2.position.y = 5;
         ball2.velocity =  new THREE.Vector3(0, 0, 0);
 
-        player3.position.x = -width / 2
-        player3.position.y = hight / 4
-        player4.position.x = width / 2
-        player4.position.y = hight / 4 
+        player3.position.x = -width / 2;
+        player3.position.y = hight / 4;
+        player4.position.x = width / 2;
+        player4.position.y = hight / 4;
+
+        startAngle = getRandom(-1, 1)
+        ball2.velocity = {x: Math.cos(startAngle) * ballStartSpeed, y: Math.sin(startAngle) * ballStartSpeed, z: 0}
     }
 
     // double array for the outer boxes
     let outerboxes = [[], [], []]
 
     /* ----- Local game logic and setup ----- */
-    // let ball1Velocity = {x: Math.cos(startAngle) * ballStartSpeed, y: Math.sin(startAngle) * ballStartSpeed, z: 0}
-    if (ai == -2){
-        startAngle = getRandom(-1, 1)
-        ball2.velocity = {x: Math.cos(startAngle) * ballStartSpeed, y: Math.sin(startAngle) * ballStartSpeed, z: 0}
-    }
-
     // the per frame shift that is influenced by keyboard presses  = player1Velocity * (time duration since last frame)
     let player1Velocity = 0
     let player2Velocity = 0
@@ -334,6 +350,16 @@ window.startGame = (ai) => {
             document.getElementById("gameWindow").removeChild(renderer.domElement);
             document.removeEventListener("keydown", keyDownAction);
             document.removeEventListener("keyup", keyUpAction);
+            console.log("game terminated", window.singleGameState);
+            gotoHome();
+            // if (window.singleGameState.size > 0){
+            //     //updateGameState();
+            //     console.log("return to main");
+            // }
+            // else {
+            //     //updateTouramentState();
+            //     console.log("return to tournament");
+            // }
             return 1;
         }
         else if (code == 32 && Math.max(...gameCount) < maxScore){ // space
@@ -480,10 +506,19 @@ window.startGame = (ai) => {
         deltaTimeAi = 2;
     }
 
+    function updateGameState(){
+        console.log("updateGameState", window.singleGameState);
+        window.singleGameState.player1_score = gameCount[0];
+        window.singleGameState.player2_score = gameCount[1];
+        window.singleGameState.match_time = Date.now() - startTime
+        console.log(window.singleGameState);
+    }
+
     /* ----- loop setup ----- */
     let animationId = null;
     // start a clock
     let clock = new THREE.Clock();
+    const startTime = new Date();
     // keep track of deltatime since last frame
     let delta = 0;
     // 75 max fps
@@ -495,7 +530,7 @@ window.startGame = (ai) => {
 
     //console.log("player1 scale=", player1.scale.y, "ball scale=", ball1.scale.y)
     function loop() {
-        if (ai != 0)
+        if (!isPaused && ai >= 1)
             runAi()
         animationId = requestAnimationFrame(loop);
         // if its time to draw a new frame
@@ -508,7 +543,8 @@ window.startGame = (ai) => {
                 console.log("Game ended", gameCount);
                 updateScore("Score: " + gameCount[1] + " : " + gameCount[0] + ". Game ended!");
                 score3dObj.position.set(-7, 7, -2); 
-                render()
+                render();
+                updateGameState();
                 // fetch the game result to backend and update game state?
                 return;
             }
