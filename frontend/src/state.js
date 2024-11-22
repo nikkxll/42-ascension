@@ -44,7 +44,8 @@ window.tournamentState = {
 //     match_time: 0
 //     //"status": "0",
 // }
-window.singleGameState = {
+
+ window.singleGameState = {
     player1: "id1", 
     player2: "id2",
     player3: "id3",
