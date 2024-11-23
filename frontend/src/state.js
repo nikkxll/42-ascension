@@ -35,8 +35,9 @@ window.tournamentState = {
         {"player1": "3", "player2": "4", "status": "0", "score": ""},
     ]
 }
-//window.singleGameState = {}  for tournament
-// window.singleGameState = {
+
+window.singleGameState = {}  //for tournament
+// window.singleGameState = {   //for single game
 //     player1: "id1",
 //     player2: "id2",
 //     player1_score: 0,
@@ -45,16 +46,25 @@ window.tournamentState = {
 //     //"status": "0",
 // }
 
- window.singleGameState = {
-    player1: "id1", 
-    player2: "id2",
-    player3: "id3",
-    player4: "id4",
-    player1_score: 0,
-    player2_score: 0,
-    match_time: 0
-    //"status": "0",
-}
+// window.singleGameState = {   //for single game with ai
+//     player1: "id1",
+//     player2: aiId,  // aiId is the id of the AI . It is 2 as Vladimir said
+//     player1_score: 0,
+//     player2_score: 0,
+//     match_time: 0
+//     //"status": "0",
+// }
+
+//  window.singleGameState = {   // for 4 player game
+//     player1: "id1", 
+//     player2: "id2",
+//     player3: "id3",
+//     player4: "id4",
+//     player1_score: 0,
+//     player2_score: 0,
+//     match_time: 0
+//     //"status": "0",
+// }
 
 let userinfo = {
     allMatches: [

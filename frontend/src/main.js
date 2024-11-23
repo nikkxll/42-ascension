@@ -4,6 +4,11 @@ import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import * as state from "./state.js";
 
+const GameType = {
+    Duo: 0,
+    Cup: 1,
+    Quatro: 2
+};
 
 const ballAccelerationCoef = 1.0  // 1.5
 const ballSpeedLimit = 1000;
@@ -84,7 +89,25 @@ function setCameraAside(camera) {
 // ai = 0 two humans
 // (to be implemented) ai = -2 four humans
 window.startGame = (ai) => {
-    console.log("game is started. window.singleGameState=", window.singleGameState);
+    let gameType;
+    if (
+        window.singleGameState && 
+        typeof window.singleGameState === "object" &&
+        Object.keys(window.singleGameState).length === 0
+    ) {
+        gameType = GameType.Cup;
+        console.log("gameType is Cup");
+    }
+    else if (window.singleGameState.player3 && window.singleGameState.player4) {
+        gameType = GameType.Quatro;
+        console.log("gameType is Quatro");
+    }
+    else {
+        gameType = GameType.Duo;
+        console.log("gameType is Duo");
+    }
+
+
     let isPaused = false;
     const maxScore = 5;
     const playerSpeed = 17;  // 17 12
@@ -350,20 +373,17 @@ window.startGame = (ai) => {
             document.getElementById("gameWindow").removeChild(renderer.domElement);
             document.removeEventListener("keydown", keyDownAction);
             document.removeEventListener("keyup", keyUpAction);
-            console.log("game terminated", window.singleGameState);
-            console.log("game terminated size ", window.singleGameState.size);
-            //goToHome();
-            goToTournament();
-            if (window.singleGameState.player1 == undefined){
-                //updateGameState();
-                goToHome();
-                console.log("return to main");
+            console.log("game terminated, singleGameState=", window.singleGameState);
+            if (gameType == GameType.Cup){
+                goToTournament();
+                //updateTouramentState();
+                console.log("Game of tournament is over");
             }
             else {
-                //updateTouramentState();
-                console.log("return to tournament");
+                goToHome();
+                console.log("Game of single game or 2x2 game is over");
             }
-            return 1;
+            return 0;
         }
         else if (code == 32 && Math.max(...gameCount) < maxScore){ // space
             if (!isPaused){
