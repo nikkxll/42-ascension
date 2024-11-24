@@ -13,6 +13,7 @@ urlpatterns = [
     path("tournaments/", views.manage_tournaments, name="manage_tournaments"),
     path("tournaments/current/", views.get_current_sessions_tournament, name="get_current_sessions_tournament"),
     path("tournaments/<int:id>/", views.get_tournament, name="get_tournament"),
+    path("tournaments/<int:id>/matches/", views.manage_tournament_match, name="manage_tournament_match"),
     path("matches/", views.manage_matches, name="manage_matches"),
     path("matches/<int:id>/", views.manage_match_update, name="manage_match_update"),
     path('auth/login/', views.custom_login, name='login'),

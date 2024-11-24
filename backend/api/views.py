@@ -644,6 +644,24 @@ def create_tournament(request):
         status=201,
     )
 
+@csrf_exempt
+def manage_tournament_match(request, id = None):
+    try:
+        if request.method == "POST":
+            return create_match(request, id)
+    except BadRequest as e:
+        return JsonResponse(
+            {"ok": False, "error": str(e), "statusCode": 400}, status=400
+        )
+    except Exception as e:
+        return JsonResponse(
+            {"ok": False, "error": str(e), "statusCode": 500}, status=500
+        )
+
+    return JsonResponse(
+        {"ok": False, "error": "Invalid request method", "statusCode": 405}, status=405
+    )
+
 
 ##################################
 # Matches
@@ -732,7 +750,7 @@ def check_sessions(request, ids):
     # for id in ids:
     #     print(id)
     if len(ids) != 2 and len(ids) != 4:
-        raise Exception(f"Expected at least 2 or 4 ids and got {len(ids)}")
+        raise BadRequest(f"Expected at least 2 or 4 ids and got {len(ids)}")
     found_sessions_keys = ["session_" + id for id in ids if id != AI_ID]
     # Get corresponding values from cookies
     sessions_values_ids = [
@@ -766,8 +784,7 @@ def check_score_format(score):
     return False
 
 
-def create_match(request):
-    WINNER_LOSER_KEYS = ["winner1", "winner2", "loser1", "loser2"]
+def create_match(request, id = None):
     if not request.body:
         raise BadRequest("No data provided")
     data = json.loads(request.body)
@@ -800,10 +817,11 @@ def create_match(request):
     match = Match()
     duration_seconds = data.get("duration")
     if duration_seconds:
-        match.duration = timedelta(seconds=duration_seconds)
-    tournament_id = data.get("tournamentId")
-    tournament = Tournament.objects.get(id=tournament_id)
+        match.duration = timedelta(seconds=int(duration_seconds))
+    tournament_id = id
+    tournament = None
     if tournament_id:
+        tournament = Tournament.objects.get(id=tournament_id)
         if user_ids_count != 2:
             raise BadRequest("Match must have 2 players if it is part of a tournament")
         # Check if the tournament does not have 3 matches already
@@ -902,7 +920,7 @@ def update_match(request, id):
 
     duration_seconds = data.get("duration")
     if duration_seconds:
-        match.duration = timedelta(seconds=duration_seconds)
+        match.duration = timedelta(seconds=int(duration_seconds))
 
     score = data.get("score")
     step = 2 if user_ids_count == 2 else 1

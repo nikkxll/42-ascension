@@ -727,16 +727,38 @@ Several users can be logged in at the same time. Each session is stored in cooki
 }
 ```
 
-#### Create a New Match (1x1, 2x2 and finals for the tournament)
+#### Create a Final Match for the Tournament
 
-- **Endpoint**: `POST /api/matches/`
+- **Endpoint**: `POST /api/tournament/{id}/matches/`
 
-- **Description**: Create a new match. A match can be created only for 2 or 4 players. If the AI Player is in the match, the id of `ai_user` must be passed in `userIds` array. For 2 x 2 match, players with first two ids will be in the team 1 and players with the last 2 ids in array will be in the team 2. Example of `score`: "11:4", `duration`: "3000". `duration` is passed in seconds as a string. If `tournamentId` is passed, the match will be created as the finals for the tournament. The First and second matches for tournaments are always created with the tournament creation. For the AI Player, id must be passed in `userIds`. For all other users, logged in session is required.
+- **Description**: Create a final match on the tournament with `id`. A final match can be created only for 2 players. If the AI Player is in the match, the id of `ai_user` must be passed in `userIds` array. Example of `score`: "11:4", `duration`: "3000". `duration` is passed in seconds as a string. The First and second matches for tournaments are always created with the tournament creation. For all other users, logged in session is required. AI Player does not need a session.
 
 - **Request Body**:
 
   - `userIds` (string array, required)
-  - `tournamentId` (string, optional)
+  - `score` (string, optional)
+  - `duration` (string, optional)
+
+- **Example Response**:
+
+```
+{
+	"ok": true,
+	"message": "Match successfully created!",
+	"data": { "id": 7 },
+	"statusCode": 201
+}
+```
+
+#### Create a New Match (1x1, 2x2)
+
+- **Endpoint**: `POST /api/matches/`
+
+- **Description**: Create a new match. A match can be created only for 2 or 4 players. If the AI Player is in the match, the id of `ai_user` must be passed in `userIds` array. For 2 x 2 match, players with first two ids will be in the team 1 and players with the last 2 ids in array will be in the team 2. Example of `score`: "11:4", `duration`: "3000". `duration` is passed in seconds as a string. For all other users, logged in session is required. AI Player does not need a session.
+
+- **Request Body**:
+
+  - `userIds` (string array, required)
   - `score` (string, optional)
   - `duration` (string, optional)
 
