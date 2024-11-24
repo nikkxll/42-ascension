@@ -101,7 +101,7 @@
 		<button id="openside" class="btn btn-dark" onclick="toggleSide()"><</button>
 		<div class="box" id="gameSetup">
 			big settings page with color, tournaments and other misc settings. you can select the users to play here
-			<button class="btn btn-light" id="gameStartButton" onclick="startOff()">
+			<button class="btn btn-light" id="gameStartButton" onclick="startOff()">	
 				Start Game!
 			</button>
 		</div>
@@ -149,6 +149,8 @@
             }
         </script>
 		<script type="module" src="/base.js"></script>
+		<!-- <script type="module" src="/state.js"></script> -->
+		<script src="./state.js"></script>
 		<script type="module" src="/main.js"></script>
 		<script>
 			let isOpen = true
@@ -175,10 +177,27 @@
 		</script>
 		<script>
 			let gameWindow = document.getElementById("gameWindow")
-			function startOff()  {
+			function  startOff() {
+				//const newElement = gameWindow.cloneNode(true); // Clone the element
+				//gameWindow.parentNode.replaceChild(newElement, gameWindow); // Replace it
+				//gameWindow.innerHTML = "";
 				gameWindow.style.display = "block"
-				startGame()
+				// ai = 2 two AIs: AI vs god level AI
+				// ai = 1 one AI vs human
+				// ai = 0 two humans
+				// ai = -2 four humans
+				let result = startGame(-2)
+				console.log("index.html result from startGame=", result)
+				document.getElementById("gameStartButton").blur()
+				//document.getElementById("gameStartButton").disabled = true;
+				//gameWindow.style.display = "none"
 			}
+
+			// function resetGameState() {
+			// 	// Add code here to reset game variables, clear game window, etc.
+			// 	 // Example: clearing game content
+			// 	 gameWindow.innerHTML = "";
+			// }
 		</script>
 	</body>
 </html>
