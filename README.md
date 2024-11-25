@@ -289,7 +289,62 @@ Several users can be logged in at the same time. Each session is stored in cooki
 {
 	"ok": true,
 	"message": "Tournament successfully created!",
-	"data": { "id": 3, "name": "New tournament" },
+	"data": {
+		"id": 3,
+		"name": "New tournament",
+		"winner": null,
+		"createdAt": "2024-11-25T16:22:42.311855+00:00",
+		"matches": [
+			{
+				"id": 10,
+				"players": [
+					{
+						"id": 1,
+						"username": "ai_player",
+						"displayName": "AI Player",
+						"avatarUrl": "/media/avatars/fallback.png",
+						"status": "Offline",
+						"createdAt": "2024-11-24T18:36:52.426637+00:00"
+					},
+					{
+						"id": 3,
+						"username": "tony",
+						"displayName": null,
+						"avatarUrl": "/media/avatars/fallback.png",
+						"status": "Offline",
+						"createdAt": "2024-11-24T18:37:02.210328+00:00"
+					}
+				],
+				"score": null,
+				"duration": null,
+				"createdAt": "2024-11-25T16:22:42.332828+00:00"
+			},
+			{
+				"id": 11,
+				"players": [
+					{
+						"id": 4,
+						"username": "mary",
+						"displayName": "Mary",
+						"avatarUrl": "/media/avatars/fallback.png",
+						"status": "Offline",
+						"createdAt": "2024-11-24T18:37:04.732933+00:00"
+					},
+					{
+						"id": 5,
+						"username": "paul",
+						"displayName": "Paul",
+						"avatarUrl": "/media/avatars/fallback.png",
+						"status": "Offline",
+						"createdAt": "2024-11-24T18:37:06.543396+00:00"
+					}
+				],
+				"score": null,
+				"duration": null,
+				"createdAt": "2024-11-25T16:22:42.338462+00:00"
+			}
+		]
+	},
 	"statusCode": 201
 }
 ```

@@ -663,7 +663,7 @@ def create_tournament(request):
         {
             "ok": True,
             "message": "Tournament successfully created!",
-            "data": {"id": tournament.id, "name": tournament.name},
+            "data": form_tournament_json(tournament),
             "statusCode": 201,
         },
         status=201,
