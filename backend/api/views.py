@@ -544,7 +544,7 @@ def get_tournament(request, id):
 
 def find_ids_from_sessions(request):
     found_session_ids = [
-        int(decrypt_session_value(value)["id"])
+        decrypt_session_value(value)["id"]
         for key, value in request.COOKIES.items()
         if key.startswith("session_")
     ]
@@ -770,7 +770,7 @@ def get_player_matches(request, id):
 # Still the AI_ID should be provided in ids argument
 def check_sessions(request, ids):
     # Filter out None values
-    ids = [str(id) for id in ids if id is not None]
+    ids = [id for id in ids if id is not None]
 
     # print("ids")
     # for id in ids:
@@ -844,7 +844,7 @@ def create_match(request, id=None):
 
     duration_seconds = data.get("duration")
     if duration_seconds:
-        match.duration = timedelta(seconds=int(duration_seconds))
+        match.duration = timedelta(seconds=duration_seconds)
     tournament_id = id
     tournament = None
     if tournament_id:
@@ -864,8 +864,8 @@ def create_match(request, id=None):
             # print("tournament_match.player2.user.id")
             # print(tournament_match.player2.user.id)
             if not (
-                str(tournament_match.player1.user.id) in user_ids
-                or str(tournament_match.player2.user.id) in user_ids
+                tournament_match.player1.user.id in user_ids
+                or tournament_match.player2.user.id in user_ids
             ):
                 raise BadRequest("Players from semifinals must be in finals")
         match.tournament = Tournament.objects.get(id=tournament_id)
@@ -947,7 +947,7 @@ def update_match(request, id):
 
     duration_seconds = data.get("duration")
     if duration_seconds:
-        match.duration = timedelta(seconds=int(duration_seconds))
+        match.duration = timedelta(seconds=duration_seconds)
 
     score = data.get("score")
     step = 2 if user_ids_count == 2 else 1

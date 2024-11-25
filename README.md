@@ -276,12 +276,12 @@ Several users can be logged in at the same time. Each session is stored in cooki
 
 - **Endpoint**: `POST /api/tournaments/`
 
-- **Description**: Create a tournament with 2 blank matches. These 2 first matches will have the players assigned in the order from `userIds`. The first match will have two first players with user ids from `userIds`, The second match will have players with the next ids from `userIds`. For the AI Player, id of "1" should be added to `userIds`. Tournament can only be created for 4 user ids. All users in ids array must be logged in.
+- **Description**: Create a tournament with 2 blank matches. These 2 first matches will have the players assigned in the order from `userIds`. The first match will have two first players with user ids from `userIds`, The second match will have players with the next ids from `userIds`. For the AI Player, id of `1` should be added to `userIds`. Tournament can only be created for 4 user ids. All users in ids array must be logged in.
 
 - **Request Body**:
 
   - `name` (string, required)
-  - `userIds` (string array, required)
+  - `userIds` (array of numbers, required)
 
 - **Example Response**:
 
@@ -829,13 +829,13 @@ Several users can be logged in at the same time. Each session is stored in cooki
 
 - **Endpoint**: `POST /api/tournaments/{id}/matches/`
 
-- **Description**: Create a final match on the tournament with `id`. A final match can be created only for 2 players. If the AI Player is in the match, the id of `ai_user` must be passed in `userIds` array. Example of `score`: "11:4", `duration`: "3000". `duration` is passed in seconds as a string. The First and second matches for tournaments are always created with the tournament creation. For all other users, logged in session is required. AI Player does not need a session.
+- **Description**: Create a final match on the tournament with `id`. A final match can be created only for 2 players. If the AI Player is in the match, the id of `ai_user` must be passed in `userIds` array. Example of `score: "11:4"`, `duration: 3000`. `duration` is passed in seconds as a string. The First and second matches for tournaments are always created with the tournament creation. For all other users, logged in session is required. AI Player does not need a session.
 
 - **Request Body**:
 
-  - `userIds` (string array, required)
+  - `userIds` (array of numbers, required)
   - `score` (string, optional)
-  - `duration` (string, optional)
+  - `duration` (number, optional)
 
 - **Example Response**:
 
@@ -852,13 +852,13 @@ Several users can be logged in at the same time. Each session is stored in cooki
 
 - **Endpoint**: `POST /api/matches/`
 
-- **Description**: Create a new match. A match can be created only for 2 or 4 players. If the AI Player is in the match, the id of `ai_user` must be passed in `userIds` array. For 2 x 2 match, players with first two ids will be in the team 1 and players with the last 2 ids in array will be in the team 2. Example of `score`: "11:4", `duration`: "3000". `duration` is passed in seconds as a string. For all other users, logged in session is required. AI Player does not need a session.
+- **Description**: Create a new match. A match can be created only for 2 or 4 players. If the AI Player is in the match, the id of `ai_user` must be passed in `userIds` array. For 2 x 2 match, players with first two ids will be in the team 1 and players with the last 2 ids in array will be in the team 2. Example of `score: "11:4"`, `duration: 3000`. `duration` is passed in seconds as a string. For all other users, logged in session is required. AI Player does not need a session.
 
 - **Request Body**:
 
-  - `userIds` (string array, required)
+  - `userIds` (array of numbers, required)
   - `score` (string, optional)
-  - `duration` (string, optional)
+  - `duration` (number, optional)
 
 - **Example Response**:
 
@@ -875,7 +875,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 
 - **Endpoint**: `PATCH /api/matches/{id}/`
 
-- **Description**: Update the match. Example of `score`: "11:4", `duration`: "3000". If the id would be found as the finals match in the tournament and the score is changed, winner of the tournament will be update accordingly. Users participating in the match must be logged in.
+- **Description**: Update the match. Example of `score: "11:4"`, `duration: 3000`. If the id would be found as the finals match in the tournament and the score is changed, winner of the tournament will be update accordingly. Users participating in the match must be logged in.
 
 - **URL Parameters**:
 
@@ -884,7 +884,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 - **Request Body**:
 
   - `score` (string, optional)
-  - `duration` (string, optional)
+  - `duration` (number, optional)
 
 - **Example Response**:
 
