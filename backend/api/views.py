@@ -569,8 +569,6 @@ def get_current_sessions_tournament(request):
                     status=400,
                 )
             players = Player.objects.filter(user__id__in=found_session_ids)
-            # print("players")
-            # print(players)
             tournaments = (
                 Tournament.objects.annotate(
                     player_count=Count(
@@ -582,8 +580,6 @@ def get_current_sessions_tournament(request):
                 )
                 # .distinct()  # Avoid duplicates
             )
-            # print("tournaments")
-            # print(tournaments)
 
             if tournaments.exists():
                 # Return the first matching tournament (or adjust logic for multiple)
@@ -648,9 +644,8 @@ def create_tournament(request):
                 {"ok": False, "error": "Player ID is required", "statusCode": 400},
                 status=400,
             )
-        # print("user_id", user_id)
+
         player = get_player_by_user_id(user_id)
-        # print("player", player)
         TournamentParticipant.objects.create(
             tournament=tournament, player=player, order=index
         )
@@ -841,7 +836,7 @@ def create_match(request, id=None):
     if score:
         if not check_score_format(score):
             raise BadRequest("Invalid score format. Example format: [11, 2]")
-        match.score = score.join(":")
+        match.score = ":".join(score)
         is_winners_first = True if score[0] > score[1] else False
         offset = 0 if is_winners_first else 2
         MODULO_DIV = 4
@@ -962,7 +957,7 @@ def update_match(request, id):
         is_winners_first = True if score[0] > score[1] else False
         offset = 0 if is_winners_first else 2
         MODULO_DIV = 4
-        match.score = score.join(":")
+        match.score = ":".join(score)
         for index, user_id in enumerate(user_ids):
             # Set winner1, winner2, loser1, loser2 (leaving winner2 and loser2 empty if 2 players)
             match.__setattr__(
