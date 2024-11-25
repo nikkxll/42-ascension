@@ -192,6 +192,31 @@ const requestAddCup = async (data) => {
         const json = await response.json().then(
             data => {
                 console.log(data);
+                window.tournamentState.data = data.data;
+                console.log("tournamentState=", window.tournamentState);
+                return data;
+            }
+        );
+
+    } catch (error) {
+      console.error(error.message);
+    }
+}
+
+const requestPatchMatch = async (id, data) => {
+    try {
+        const response = await fetch("/api/matches/" + id + "/", {
+            method: "POST",
+            body: JSON.stringify(data)
+        })
+        console.log("response=", response);
+        //if (!response.ok)
+        //    throw new Error("HTTP error, status = " + response.status);
+        const json = await response.json().then(
+            data => {
+                console.log(data);
+                window.tournamentState.data = data.data;
+                console.log("tournamentState=", window.tournamentState);
                 return data;
             }
         );
