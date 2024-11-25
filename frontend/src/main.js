@@ -131,33 +131,70 @@ let updateOuterBoxes = (element, row) => {
     });
 };
 
+const requestAddMatch = async (data) => {
+    try {
+        const response = await fetch("/api/matches/", {
+            method: "POST",
+            body: JSON.stringify(data)
+        })
+        console.log("response=", response);
+        //if (!response.ok)
+        //    throw new Error("HTTP error, status = " + response.status);
+        const json = await response.json().then(
+            data => {
+                console.log(data);
+                return data;
+            }
+        );
+
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+
+  const requestAddCup = async (data) => {
+    try {
+        const response = await fetch("/api/tournaments/", {
+            method: "POST",
+            body: JSON.stringify(data)
+        })
+        console.log("response=", response);
+        //if (!response.ok)
+        //    throw new Error("HTTP error, status = " + response.status);
+        const json = await response.json().then(
+            data => {
+                console.log(data);
+                return data;
+            }
+        );
+
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+
 function updateStateFetch(startTime, gameCount){
     console.log("Game ended", gameCount);
     const {gameType, ai, matchNumber} = gameTypeSelector();
     if (GameType.Cup != gameType){
-        window.singleGameState.score = gameCount[0] + ":" + gameCount[1];
-        window.singleGameState.userIds = 
-            window.singleGameState.player1 + "," + 
-            window.singleGameState.player2;
+        window.singleGameState.score = String(gameCount[0]) + ":" + String(gameCount[1]);
+        window.singleGameState.userIds = [
+            String(window.singleGameState.player1),
+            String(window.singleGameState.player2)]
         if (GameType.Quatro == gameType){
-            window.singleGameState.userIds += "," + 
-                window.singleGameState.player3 + "," + 
-                window.singleGameState.player4;
+            window.singleGameState.userIds.push(String(window.singleGameState.player3));
+            window.singleGameState.userIds.push(String(window.singleGameState.player4)); 
         }
-        window.singleGameState.duration = Date.now() - startTime
+        window.singleGameState.duration = String(Math.floor((Date.now() - startTime) / 1000));
         console.log("state after update", window.singleGameState);
         let body = {
             score: window.singleGameState.score, 
             duration: window.singleGameState.duration,
-            userIds: window.singleGameState.userIds};
-        // fetch('/api/matches/', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify(body),
-        // })
+            userIds: window.singleGameState.userIds
+        };
         console.log("body=", body);
+        requestAddMatch(body);
+        
     }
     // fetch the game result to backend and update game state?
 }
@@ -165,6 +202,17 @@ function updateStateFetch(startTime, gameCount){
 
 window.startGame = (aiNum) => {
     const {gameType, ai, matchNumber} = gameTypeSelector();
+    if (GameType::Cup == gameType){
+        let body = {
+            "name": window.tournamentState.name,
+            "userIds": [
+                String(window.tournamentState.matches[0].player1),
+                String(window.tournamentState.matches[0].player2),
+                String(window.tournamentState.matches[1].player1),
+                String(window.tournamentState.matches[1].player2)
+            ]
+        requestAddCup(body);
+    }
     console.log("gameType=", gameType, "ai=", ai, "matchNumber=", matchNumber);
     console.log("state of game", window.singleGameState);
 

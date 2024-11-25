@@ -23,17 +23,18 @@ window.state = {
 window.tournamentState = {
     // exactly 4, could require to match loggedin
     players: [
-        {"name": "", "winrate": 0.0, status: "online"},
-        {"name": "", "winrate": 0.0, status: "online"},
-        {"name": "", "winrate": 0.0, status: "online"},
-        {"name": "", "winrate": 0.0, status: "online"}
+        {"name": "", "winrate": 0.0, status: "online", "id": "3"},
+        {"name": "", "winrate": 0.0, status: "online", "id": "4"},
+        {"name": "", "winrate": 0.0, status: "online", "id": "5"},
+        {"name": "", "winrate": 0.0, status: "online", "id": "6"}
     ],
     status: "",
-    name: "",
+    name: "My first tournament",
+    userIds: ["3", "4", "5", "6"],
     matches: [
-        {"player1": "1", "player2": "2", "status": 1, "score": ""},
-        {"player1": "3", "player2": "4", "status": 1, "score": ""},
-        {"player1": "playerID", "player2": 2, "status": 0, "score": ""},
+        {"player1": "3", "player2": "4"},  // , "status": 0, "score": "" , "id": 1
+        {"player1": "5", "player2": "6"},  //, "status": 0, "score": "" , "id": 2
+        //{"player1": "playerID", "player2": 2, "status": 0, "score": ""},
     ]
 }
 
@@ -57,10 +58,10 @@ window.ai_id = 1
 // }
 
  window.singleGameState = {   // for 4 player game
-    player1: "id1", 
-    player2: "id2",
-    player3: "id3",
-    player4: "id4",
+    player1: "3", 
+    player2: "4",
+    player3: "5",
+    player4: "6",
     score: "0:0",
     duration: 0
     //"status": "0",
