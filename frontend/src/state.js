@@ -28,18 +28,19 @@ window.tournamentState = {
         {"name": "", "winrate": 0.0, status: "online", "id": "5"},
         {"name": "", "winrate": 0.0, status: "online", "id": "6"}
     ],
-    status: "",
+    "winner": null,
     name: "My first tournament",
     userIds: ["3", "4", "5", "6"],
-    matches: [
-        {"player1": "3", "player2": "4"},  // , "status": 0, "score": "" , "id": 1
-        {"player1": "5", "player2": "6"},  //, "status": 0, "score": "" , "id": 2
-        //{"player1": "playerID", "player2": 2, "status": 0, "score": ""},
+    data: null,  //data to be tacken from backend
+    matches:[
+        {"player1": "3", "player2": "4",  "status": 0}, // "score": "" , "id": 1
+        {"player1": "5", "player2": "6",  "status": 0}, //"score": "" , "id": 2
+         //{"player1": "playerID", "player2": 2, "status": 0, "score": ""},
     ]
 }
 
 window.ai_id = 1
-// window.singleGameState = {}  //for tournament
+window.singleGameState = {}  //for tournament
 
 // window.singleGameState = {   //for single game
 //     player1: "id1",
@@ -57,15 +58,15 @@ window.ai_id = 1
 //     //"status": "0",
 // }
 
- window.singleGameState = {   // for 4 player game
-    player1: "3", 
-    player2: "4",
-    player3: "5",
-    player4: "6",
-    score: "0:0",
-    duration: 0
-    //"status": "0",
-}
+//  window.singleGameState = {   // for 4 player game  // this is working example
+//     player1: "3", 
+//     player2: "4",
+//     player3: "5",
+//     player4: "6",
+//     score: "0:0",
+//     duration: 0
+//     //"status": "0",
+// }
 
 let userinfo = {
     allMatches: [

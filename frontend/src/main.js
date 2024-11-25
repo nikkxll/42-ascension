@@ -152,26 +152,7 @@ const requestAddMatch = async (data) => {
     }
   }
 
-  const requestAddCup = async (data) => {
-    try {
-        const response = await fetch("/api/tournaments/", {
-            method: "POST",
-            body: JSON.stringify(data)
-        })
-        console.log("response=", response);
-        //if (!response.ok)
-        //    throw new Error("HTTP error, status = " + response.status);
-        const json = await response.json().then(
-            data => {
-                console.log(data);
-                return data;
-            }
-        );
 
-    } catch (error) {
-      console.error(error.message);
-    }
-  }
 
 function updateStateFetch(startTime, gameCount){
     console.log("Game ended", gameCount);
@@ -199,10 +180,31 @@ function updateStateFetch(startTime, gameCount){
     // fetch the game result to backend and update game state?
 }
 
+const requestAddCup = async (data) => {
+    try {
+        const response = await fetch("/api/tournaments/", {
+            method: "POST",
+            body: JSON.stringify(data)
+        })
+        console.log("response=", response);
+        //if (!response.ok)
+        //    throw new Error("HTTP error, status = " + response.status);
+        const json = await response.json().then(
+            data => {
+                console.log(data);
+                return data;
+            }
+        );
+
+    } catch (error) {
+      console.error(error.message);
+    }
+}
 
 window.startGame = (aiNum) => {
     const {gameType, ai, matchNumber} = gameTypeSelector();
-    if (GameType::Cup == gameType){
+    if (GameType.Cup == gameType)
+    {
         let body = {
             "name": window.tournamentState.name,
             "userIds": [
@@ -211,6 +213,7 @@ window.startGame = (aiNum) => {
                 String(window.tournamentState.matches[1].player1),
                 String(window.tournamentState.matches[1].player2)
             ]
+        }
         requestAddCup(body);
     }
     console.log("gameType=", gameType, "ai=", ai, "matchNumber=", matchNumber);
