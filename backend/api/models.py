@@ -158,7 +158,7 @@ class Match(models.Model):
     # BUG HERE:
     def __str__(self):
         is_match_of_4 = self.player3 and self.player4
-        return f"Match {self.player1.user.username}{' and ' + self.player2.user.username if is_match_of_4 else ''} vs {self.player3.user.username + 'and ' + self.player4.user.username if is_match_of_4 else self.player2.user.username}"
+        return f"Match {self.player1.user.username}{' and ' + self.player2.user.username if is_match_of_4 else ''} vs {self.player3.user.username + ' and ' + self.player4.user.username if is_match_of_4 else self.player2.user.username}"
 
 
 class Friendship(models.Model):
