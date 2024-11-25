@@ -445,9 +445,10 @@ def manage_tournaments(request):
 
 # Get last 5 tournaments
 def get_tournaments(request):
+    last = int(request.GET.get('last') or 5)
     tournaments = (
         Tournament.objects.all()
-        .order_by("-id")[:5]
+        .order_by("-id")[:last]
         .select_related("winner")  # Fetch the winner Player object with the Tournament
         .prefetch_related(
             "participants__player",  # Prefetch Player objects from TournamentParticipant
@@ -698,7 +699,7 @@ def manage_tournament_match(request, id=None):
 def manage_matches(request):
     try:
         if request.method == "GET":
-            matches = get_matches()
+            matches = get_matches(request)
             return JsonResponse(
                 {
                     "ok": True,
@@ -723,8 +724,9 @@ def manage_matches(request):
     return JsonResponse({"ok": False, "error": "Invalid request method"}, status=405)
 
 
-def get_matches():
-    matches = Match.objects.all().order_by("-id")[:20]
+def get_matches(request):
+    last = int(request.GET.get('last') or 20)
+    matches = Match.objects.exclude(score__isnull=True).order_by("-id")[:last]
     return [form_match_json(match) for match in matches]
 
 

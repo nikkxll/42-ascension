@@ -349,11 +349,15 @@ Several users can be logged in at the same time. Each session is stored in cooki
 }
 ```
 
-#### Get 5 Last Tournaments
+#### Get Last Tournaments
 
 - **Endpoint**: `GET /api/tournaments/`
 
-- **Description**: Respond with array of 5 last tournaments which have `id`, `name`, `winner` object (which represents a tournament winner with its tournament `id`, `username`, `displayName`, `avatarUrl`, `status`), `createdAt`, `matches` array of objects with a match `id`, `score`, `duration`, `createdAt` and `players` array of objects (which have the same structure as `winner` in `tournament` object). No authentication required.
+- **Description**: Responds with array of 5 last tournaments by default which have `id`, `name`, `winner` object (which represents a tournament winner with its tournament `id`, `username`, `displayName`, `avatarUrl`, `status`), `createdAt`, `matches` array of objects with a match `id`, `score`, `duration`, `createdAt` and `players` array of objects (which have the same structure as `winner` in `tournament` object). No authentication required.
+
+- **Query Parameters**:
+
+	- `last` **(optional)**: Specifies the number of tournaments to return. Must be a positive integer. If not provided, defaults to 5. Example: `GET /api/tournaments/?last=10`.
 
 - **Example Response**:
 
@@ -612,11 +616,15 @@ Several users can be logged in at the same time. Each session is stored in cooki
 
 ### Matches Management
 
-#### Get 20 Last Matches
+#### Get Last Matches
 
 - **Endpoint**: `GET /api/matches/`
 
-- **Description**: Responds with array of 20 last `matches` in array of objects with a match `id`, `score`, `duration`, `createdAt` and `players` array of objects (which have the same structure as `winner` in `tournament` object). No authentication required.
+- **Description**: Responds with array of 10 last `matches` in array of objects with a match `id`, `score`, `duration`, `createdAt` and `players` array of objects (which have the same structure as `winner` in `tournament` object). No authentication required.
+
+- **Query Parameters**:
+
+	- `last` **(optional)**: Specifies the number of matches to return. Must be a positive integer. If not provided, defaults to 10. Example: `GET /api/tournaments/?last=10`.
 
 - **Example Response**:
 
