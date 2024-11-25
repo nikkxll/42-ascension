@@ -84,25 +84,49 @@ class Match(models.Model):
         on_delete=models.SET_NULL,
         related_name="matches",
         null=True,
-        blank=True
+        blank=True,
     )  # Tournament the match is part of
     player1 = models.ForeignKey(
-        Player, on_delete=models.SET_NULL, null=True, related_name="player1_matches", default=None
+        Player,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="player1_matches",
+        default=None,
     )
     player2 = models.ForeignKey(
-        Player, on_delete=models.SET_NULL, null=True, related_name="player2_matches", default=None
+        Player,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="player2_matches",
+        default=None,
     )
     player3 = models.ForeignKey(
-        Player, on_delete=models.SET_NULL, null=True, related_name="player3_matches", default=None
+        Player,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="player3_matches",
+        default=None,
     )
     player4 = models.ForeignKey(
-        Player, on_delete=models.SET_NULL, null=True, related_name="player4_matches", default=None
+        Player,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="player4_matches",
+        default=None,
     )
     winner1 = models.ForeignKey(
-        Player, on_delete=models.SET_NULL, null=True, related_name="winner1_matches", default=None
+        Player,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="winner1_matches",
+        default=None,
     )
     winner2 = models.ForeignKey(
-        Player, on_delete=models.SET_NULL, null=True, related_name="winner2_matches", default=None
+        Player,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="winner2_matches",
+        default=None,
     )
     # round_stage = models.CharField(
     #     max_length=2, choices=ROUND_CHOICES, null=True, blank=True
@@ -114,7 +138,7 @@ class Match(models.Model):
         null=True,
         blank=True,
         related_name="loser1_matches",
-        default=None
+        default=None,
     )
     loser2 = models.ForeignKey(
         Player,
@@ -122,7 +146,7 @@ class Match(models.Model):
         null=True,
         blank=True,
         related_name="loser2_matches",
-        default=None
+        default=None,
     )
     # status = models.CharField(
     #     max_length=20, choices=MATCH_STATUS_CHOICES, default="scheduled"
@@ -131,9 +155,10 @@ class Match(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    # BUG HERE:
     def __str__(self):
         is_match_of_4 = self.player3 and self.player4
-        return f"Match {self.player1}{' and ' + self.player2 if is_match_of_4 else ''} vs {self.player3 + 'and ' + self.player4 if is_match_of_4 else self.player2}"
+        return f"Match {self.player1.user.username}{' and ' + self.player2.user.username if is_match_of_4 else ''} vs {self.player3.user.username + 'and ' + self.player4.user.username if is_match_of_4 else self.player2.user.username}"
 
 
 class Friendship(models.Model):
