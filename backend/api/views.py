@@ -802,11 +802,13 @@ def create_match(request, id = None):
     # if (response := check_required_fields(data, ["score"])) is not None:
     #     return response
 
-    score = data.get("score")
+    match = Match()
 
     step = 2 if user_ids_count == 2 else 1
     offset = 0
+    score = data.get("score")
     if score:
+        match.score = score
         if not check_score_format(score):
             raise BadRequest("Invalid score format. Example format: '11:2'")
         score_arr = score.split(":")
@@ -814,7 +816,6 @@ def create_match(request, id = None):
         offset = 0 if is_winners_first else 2
         MODULO_DIV = 4
 
-    match = Match()
     duration_seconds = data.get("duration")
     if duration_seconds:
         match.duration = timedelta(seconds=int(duration_seconds))
