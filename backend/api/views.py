@@ -496,7 +496,7 @@ def form_match_json(match):
             for key in PLAYER_KEYS
             if (player := getattr(match, key, None))
         ],
-        "score": match.score,
+        "score": match.score.split(":") if match.score else None,
         "duration": int(match.duration.total_seconds()) if match.duration else None,
         "createdAt": match.created_at.isoformat(),
     }
@@ -569,8 +569,6 @@ def get_current_sessions_tournament(request):
                     status=400,
                 )
             players = Player.objects.filter(user__id__in=found_session_ids)
-            # print("players")
-            # print(players)
             tournaments = (
                 Tournament.objects.annotate(
                     player_count=Count(
@@ -582,8 +580,6 @@ def get_current_sessions_tournament(request):
                 )
                 # .distinct()  # Avoid duplicates
             )
-            # print("tournaments")
-            # print(tournaments)
 
             if tournaments.exists():
                 # Return the first matching tournament (or adjust logic for multiple)
@@ -648,9 +644,8 @@ def create_tournament(request):
                 {"ok": False, "error": "Player ID is required", "statusCode": 400},
                 status=400,
             )
-        # print("user_id", user_id)
+
         player = get_player_by_user_id(user_id)
-        # print("player", player)
         TournamentParticipant.objects.create(
             tournament=tournament, player=player, order=index
         )
@@ -725,8 +720,10 @@ def manage_matches(request):
 
 
 def get_matches(request):
+    finished = request.GET.get('finished', 'true')
+    finished = finished.lower() == 'true'
     last = int(request.GET.get('last') or 20)
-    matches = Match.objects.exclude(score__isnull=True).order_by("-id")[:last]
+    matches = Match.objects.exclude(score__isnull=finished).order_by("-id")[:last]
     return [form_match_json(match) for match in matches]
 
 
@@ -779,10 +776,10 @@ def check_sessions(request, ids):
     #     print(id)
     if len(ids) != 2 and len(ids) != 4:
         raise BadRequest(f"Expected at least 2 or 4 ids and got {len(ids)}")
-    found_sessions_keys = ["session_" + id for id in ids if id != AI_ID]
+    found_sessions_keys = ["session_" + str(id) for id in ids if id != AI_ID]
     # Get corresponding values from cookies
     sessions_values_ids = [
-        str(decrypt_session_value(value)["id"])
+        decrypt_session_value(value)["id"]
         for key, value in request.COOKIES.items()
         if key in found_sessions_keys
     ]
@@ -806,8 +803,9 @@ def check_sessions(request, ids):
 
 
 def check_score_format(score):
-    pattern = r"^\d+:\d+$"
-    if re.match(pattern, score):
+    # pattern = r"^\d+:\d+$"
+    # if re.match(pattern, score):
+    if (len(score) == 2) and (score[0].isdigit() and score[1].isdigit()):
         return True
     return False
 
@@ -836,11 +834,10 @@ def create_match(request, id=None):
     offset = 0
     score = data.get("score")
     if score:
-        match.score = score
         if not check_score_format(score):
-            raise BadRequest("Invalid score format. Example format: '11:2'")
-        score_arr = score.split(":")
-        is_winners_first = True if score_arr[0] > score_arr[1] else False
+            raise BadRequest("Invalid score format. Example format: [11, 2]")
+        match.score = ":".join(score)
+        is_winners_first = True if score[0] > score[1] else False
         offset = 0 if is_winners_first else 2
         MODULO_DIV = 4
 
@@ -957,11 +954,10 @@ def update_match(request, id):
     if score:
         if not check_score_format(score):
             raise BadRequest("Invalid score format. Example format: '11:2'")
-        score_arr = score.split(":")
-        is_winners_first = True if score_arr[0] > score_arr[1] else False
+        is_winners_first = True if score[0] > score[1] else False
         offset = 0 if is_winners_first else 2
         MODULO_DIV = 4
-        match.score = score
+        match.score = ":".join(score)
         for index, user_id in enumerate(user_ids):
             # Set winner1, winner2, loser1, loser2 (leaving winner2 and loser2 empty if 2 players)
             match.__setattr__(
