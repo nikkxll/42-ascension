@@ -86,6 +86,49 @@ When we refer to `id`, it is always id of the built-in Django User model.
 }
 ```
 
+#### Get Current Players (Users from the Sessions)
+
+- **Endpoint**: `GET /api/players/current/`
+
+- **Description**: Fetch the details of the logged in players. Returned ids are user ids.
+
+- **Example Response**:
+```
+{
+	"ok": true,
+	"message": "Players successfully listed!",
+	"data": {
+		"players": [
+			{
+				"id": 5,
+				"username": "paul",
+				"displayName": "Paul",
+				"avatarUrl": "/media/avatars/fallback.png",
+				"status": "Offline",
+				"createdAt": "2024-11-24T18:37:06.543396+00:00"
+			},
+			{
+				"id": 3,
+				"username": "tony",
+				"displayName": null,
+				"avatarUrl": "/media/avatars/fallback.png",
+				"status": "Offline",
+				"createdAt": "2024-11-24T18:37:02.210328+00:00"
+			},
+			{
+				"id": 4,
+				"username": "mary",
+				"displayName": "Mary",
+				"avatarUrl": "/media/avatars/fallback.png",
+				"status": "Offline",
+				"createdAt": "2024-11-24T18:37:04.732933+00:00"
+			}
+		]
+	},
+	"statusCode": 200
+}
+```
+
 #### Create a New User
 
 - **Endpoint**: `POST /api/players/`

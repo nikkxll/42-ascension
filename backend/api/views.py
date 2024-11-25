@@ -78,6 +78,26 @@ def check_status(player):
     return "Online"
 
 
+def get_current_players(request):
+    try:
+        found_session_ids = find_ids_from_sessions(request)
+        players = players = Player.objects.filter(user__id__in=found_session_ids)
+        players_data = [form_player_json(player) for player in players]
+        return JsonResponse(
+            {
+                "ok": True,
+                "message": "Current players successfully listed!",
+                "data": {"players": players_data},
+                "statusCode": 200,
+            },
+            status=200,
+        )
+    except Exception as e:
+        return JsonResponse(
+            {"ok": False, "error": str(e), "statusCode": 500}, status=500
+        )
+
+
 @session_authenticated_logged_in
 def get_players(request):
     players = Player.objects.all()
@@ -522,15 +542,20 @@ def get_tournament(request, id):
     )
 
 
+def find_ids_from_sessions(request):
+    found_session_ids = [
+        int(decrypt_session_value(value)["id"])
+        for key, value in request.COOKIES.items()
+        if key.startswith("session_")
+    ]
+    return found_session_ids
+
+
 @csrf_exempt
 def get_current_sessions_tournament(request):
     try:
         if request.method == "GET":
-            found_session_ids = [
-                int(decrypt_session_value(value)["id"])
-                for key, value in request.COOKIES.items()
-                if key.startswith("session_")
-            ]
+            found_session_ids = find_ids_from_sessions(request)
             if len(found_session_ids) == 3:
                 found_session_ids.append(1)
             if len(found_session_ids) != 4:
@@ -644,8 +669,9 @@ def create_tournament(request):
         status=201,
     )
 
+
 @csrf_exempt
-def manage_tournament_match(request, id = None):
+def manage_tournament_match(request, id=None):
     try:
         if request.method == "POST":
             return create_match(request, id)
@@ -784,7 +810,7 @@ def check_score_format(score):
     return False
 
 
-def create_match(request, id = None):
+def create_match(request, id=None):
     if not request.body:
         raise BadRequest("No data provided")
     data = json.loads(request.body)
