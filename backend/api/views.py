@@ -720,10 +720,13 @@ def manage_matches(request):
 
 
 def get_matches(request):
-    finished = request.GET.get('finished', 'true')
+    finished = request.GET.get('finished', "true")
     finished = finished.lower() == 'true'
     last = int(request.GET.get('last') or 20)
-    matches = Match.objects.exclude(score__isnull=finished).order_by("-id")[:last]
+    if finished:
+        matches = Match.objects.exclude(score__isnull=True).order_by("-id")[:last]
+    else:
+        matches = Match.objects.all().order_by("-id")[:last]
     return [form_match_json(match) for match in matches]
 
 
@@ -805,7 +808,7 @@ def check_sessions(request, ids):
 def check_score_format(score):
     # pattern = r"^\d+:\d+$"
     # if re.match(pattern, score):
-    if (len(score) == 2):  # and (score[0].isdigit() and score[1].isdigit()):
+    if isinstance(score, list) and len(score) == 2 and all(isinstance(part, int) for part in score):
         return True
     return False
 
@@ -836,7 +839,8 @@ def create_match(request, id=None):
     if score:
         if not check_score_format(score):
             raise BadRequest("Invalid score format. Example format: [11, 2]")
-        match.score = ":".join(score)
+        match.score = ":".join([str(num) for num in score])
+        print("match score: ", match.score)
         is_winners_first = True if score[0] > score[1] else False
         offset = 0 if is_winners_first else 2
         MODULO_DIV = 4
@@ -957,7 +961,7 @@ def update_match(request, id):
         is_winners_first = True if score[0] > score[1] else False
         offset = 0 if is_winners_first else 2
         MODULO_DIV = 4
-        match.score = ":".join(score)
+        match.score = ":".join([str(num) for num in score])
         for index, user_id in enumerate(user_ids):
             # Set winner1, winner2, loser1, loser2 (leaving winner2 and loser2 empty if 2 players)
             match.__setattr__(
