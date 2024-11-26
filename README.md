@@ -353,7 +353,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 
 - **Endpoint**: `GET /api/tournaments/`
 
-- **Description**: Responds with array of 5 last tournaments by default which have `id`, `name`, `winner` object (which represents a tournament winner with its tournament `id`, `username`, `displayName`, `avatarUrl`, `status`), `createdAt`, `matches` array of objects with a match `id`, `score`, `duration`, `createdAt` and `players` array of objects (which have the same structure as `winner` in `tournament` object). No authentication required.
+- **Description**: Responds with array of 5 last tournaments by default which have `id`, `name`, `winner` object (which represents a tournament winner with its tournament `id`, `username`, `displayName`, `avatarUrl`, `status`), `createdAt`, `matches` array of objects with a match `id`, `score`, `duration`, `createdAt` and `players` array of objects (which have the same structure as `winner` in `tournament` object). `winner`, `duration`, `score` will be `null` if not updated later with update final match or update match by id. No authentication required.
 
 - **Query Parameters**:
 
@@ -400,7 +400,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 								"createdAt": "2024-10-17T16:33:38.597270+00:00"
 							}
 						],
-						"score": "2:11",
+						"score": [2, 11],
 						"duration": 6541,
 						"createdAt": "2024-11-24T02:00:33.653346+00:00"
 					},
@@ -424,7 +424,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 								"createdAt": "2024-10-17T16:33:38.597270+00:00"
 							}
 						],
-						"score": "7:11",
+						"score": [7, 11],
 						"duration": 12003,
 						"createdAt": "2024-11-24T02:00:13.770529+00:00"
 					},
@@ -448,7 +448,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 								"createdAt": "2024-10-17T16:33:38.597270+00:00"
 							}
 						],
-						"score": "11:0",
+						"score": [11, 0],
 						"duration": 5000,
 						"createdAt": "2024-11-24T02:00:13.774048+00:00"
 					}
@@ -602,7 +602,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 							"createdAt": "2024-10-17T16:33:38.597270+00:00"
 						}
 					],
-					"score": "2:11",
+					"score": [2, 11],
 					"duration": null,
 					"createdAt": "2024-11-24T01:36:24.249875+00:00"
 				}
@@ -620,7 +620,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 
 - **Endpoint**: `GET /api/matches/`
 
-- **Description**: Responds with array of 10 last `matches` in array of objects with a match `id`, `score`, `duration`, `createdAt` and `players` array of objects (which have the same structure as `winner` in `tournament` object). No authentication required.
+- **Description**: By default, responds with array of 10 last `matches` in array of objects with a match `id`, `score`, `duration`, `createdAt` and `players` array of objects (which have the same structure as `winner` in `tournament` object). `score`, `duration` are initially `null` if not set. No authentication required.
 
 - **Query Parameters**:
 
@@ -656,7 +656,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 						"createdAt": "2024-10-17T16:33:38.597270+00:00"
 					}
 				],
-				"score": "2:11",
+				"score": [2, 11],
 				"duration": null,
 				"createdAt": "2024-11-24T02:00:33.653346+00:00"
 			},
@@ -680,7 +680,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 						"createdAt": "2024-10-17T16:33:38.597270+00:00"
 					}
 				],
-				"score": "11:0",
+				"score": [11, 0],
 				"duration": 5000,
 				"createdAt": "2024-11-24T02:00:13.774048+00:00"
 			},
@@ -704,7 +704,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 						"createdAt": "2024-10-17T16:33:38.597270+00:00"
 					}
 				],
-				"score": "7:11",
+				"score": [7, 11],
 				"duration": null,
 				"createdAt": "2024-11-24T02:00:13.770529+00:00"
 			}
@@ -753,7 +753,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 						"createdAt": "2024-11-24T01:36:14.914430+00:00"
 					}
 				],
-				"score": "2:11",
+				"score": [2, 11],
 				"duration": null,
 				"createdAt": "2024-11-24T02:00:33.653346+00:00"
 			},
@@ -777,7 +777,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 						"createdAt": "2024-11-24T01:36:08.718477+00:00"
 					}
 				],
-				"score": "7:11",
+				"score": [7, 11],
 				"duration": null,
 				"createdAt": "2024-11-24T02:00:13.770529+00:00"
 			},
@@ -825,7 +825,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 						"createdAt": "2024-11-24T01:36:08.718477+00:00"
 					}
 				],
-				"score": "2:11",
+				"score": [2, 11],
 				"duration": null,
 				"createdAt": "2024-11-24T01:36:24.249875+00:00"
 			}
@@ -839,7 +839,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 
 - **Endpoint**: `POST /api/tournaments/{id}/matches/`
 
-- **Description**: Create a final match on the tournament with `id`. A final match can be created only for 2 players. If the AI Player is in the match, the id of `ai_user` must be passed in `userIds` array. Example of `score: [11, 4]`, `duration: 3000`. `duration` is passed in seconds as a string. The First and second matches for tournaments are always created with the tournament creation. For all other users, logged in session is required. AI Player does not need a session.
+- **Description**: Create a final match on the tournament with `id`. A final match can be created only for 2 players. If the AI Player is in the match, the id of `ai_user` must be passed in `userIds` array. Example of `score: [11, 4]`, `duration: 3000`. `duration` is passed in seconds as a number. The First and second matches for tournaments are always created with the tournament creation. For all other users, logged in session is required. AI Player does not need a session.
 
 - **Request Body**:
 
@@ -862,7 +862,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 
 - **Endpoint**: `POST /api/matches/`
 
-- **Description**: Create a new match. A match can be created only for 2 or 4 players. If the AI Player is in the match, the id of `ai_user` must be passed in `userIds` array. For 2 x 2 match, players with first two ids will be in the team 1 and players with the last 2 ids in array will be in the team 2. Example of `score: [11, 4]`, `duration: 3000`. `duration` is passed in seconds as a string. For all other users, logged in session is required. AI Player does not need a session.
+- **Description**: Create a new match. A match can be created only for 2 or 4 players. If the AI Player is in the match, the id of `ai_user` must be passed in `userIds` array. For 2 x 2 match, players with first two ids will be in the team 1 and players with the last 2 ids in array will be in the team 2. Example of `score: [11, 4]`, `duration: 3000`. `duration` is passed in seconds as a number. For all other users, logged in session is required. AI Player does not need a session.
 
 - **Request Body**:
 
