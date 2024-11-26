@@ -5,6 +5,7 @@ import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import * as state from "./state.js";
 
 
+
 const ballAccelerationCoef = 1.0  // 1.5
 const ballSpeedLimit = 1000;
 // initial speed of the ball
@@ -75,16 +76,185 @@ function setCameraAside(camera) {
     camera.position.y =  - camera.position.z * Math.tan(camera.rotation.x);
 }
 
-// function sleep(ms) {
-//     return new Promise(resolve => setTimeout(resolve, ms));
-// }
+// update each outer box height based on sin to create a wave effect
+let updateOuterBoxes = (element, row) => {
+    element.forEach((box, index) => {
+        box.box.scale.z = (Math.sin(Date.now() / 700 + index / 2 + row) + 2) / 1.5;
+        box.box.position.z = -1 + box.box.scale.z / 2;
+        box.out.scale.z = box.box.scale.z;
+        box.out.position.z = box.box.position.z;
+    });
+};
 
-// ai = 2 two AIs: AI vs god level AI
-// ai = 1 one AI vs human
-// ai = 0 two humans
-// (to be implemented) ai = -2 four humans
-window.startGame = (ai) => {
-    console.log("game is started. window.singleGameState=", window.singleGameState);
+const GameType = {
+    Duo: 0,
+    Cup: 1,
+    Quatro: 2
+};
+function gameTypeSelector(){
+    let ai = 0;
+    let matchNumber = 0;
+    if (
+        window.singleGameState && 
+        typeof window.singleGameState === "object" &&
+        Object.keys(window.singleGameState).length === 0
+    ) {
+        // if (window.tournamentState 
+        //     && window.tournamentState.matches 
+        //     && window.tournamentState.matches.length > 0
+        if (window.tournamentState.matches[0].status == 0)
+            matchNumber = 0;
+        else if (window.tournamentState.matches[1].status == 0)
+            matchNumber = 1;
+        else if (window.tournamentState.matches[2].status == 0)
+            matchNumber = 2;
+        let match = window.tournamentState.matches[matchNumber];
+        if (match.player1 == window.ai_id || match.player2 == window.ai_id)
+            ai = 1;
+        return {gameType: GameType.Cup, ai, matchNumber};
+    }
+    else if (window.singleGameState.player3 && window.singleGameState.player4) {
+        ai = -2;
+        return {gameType: GameType.Quatro, ai, matchNumber: 0};
+    }
+    if (window.singleGameState.player1 === window.ai_id || window.singleGameState.player2 === window.ai_id)
+        ai = 1;
+    return {gameType: GameType.Duo, ai, matchNumber: 0};
+}
+
+
+
+const requestAddMatch = async (data) => {
+    try {
+        const response = await fetch("/api/matches/", {
+            method: "POST",
+            body: JSON.stringify(data)
+        })
+        console.log("response=", response);
+        //if (!response.ok)
+        //    throw new Error("HTTP error, status = " + response.status);
+        const json = await response.json().then(
+            data => {
+                console.log(data);
+                return data;
+            }
+        );
+
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+
+
+
+function updateStateFetch(startTime, gameCount){
+    console.log("Game ended", gameCount);
+    const {gameType, ai, matchNumber} = gameTypeSelector();
+    if (GameType.Cup != gameType){
+        window.singleGameState.score = gameCount;
+        window.singleGameState.duration = Math.trunc((Date.now() - startTime) / 1000);
+        //strings
+        //String(gameCount[0]) + ":" + String(gameCount[1]);
+        // window.singleGameState.userIds = [
+        //     String(window.singleGameState.player1),
+        //     String(window.singleGameState.player2)]
+        // if (GameType.Quatro == gameType){
+        //     window.singleGameState.userIds.push(String(window.singleGameState.player3));
+        //     window.singleGameState.userIds.push(String(window.singleGameState.player4)); 
+        // }
+        //numbers
+        // window.singleGameState.userIds = [
+        //         window.singleGameState.player1,
+        //         window.singleGameState.player2]
+        // if (GameType.Quatro == gameType){
+        //     window.singleGameState.userIds.push(
+        //         window.singleGameState.player3,
+        //         window.singleGameState.player4
+        //     ); 
+        // }
+        //window.singleGameState.duration = String(Math.floor((Date.now() - startTime) / 1000));
+        console.log("state after update", window.singleGameState);
+        let body = {
+            score: window.singleGameState.score, 
+            duration: window.singleGameState.duration,
+            userIds: window.singleGameState.userIds
+        };
+        console.log("body=", body);
+        requestAddMatch(body);
+        
+    }
+    // fetch the game result to backend and update game state?
+}
+
+const requestAddCup = async (data) => {
+    try {
+        const response = await fetch("/api/tournaments/", {
+            method: "POST",
+            body: JSON.stringify(data)
+        })
+        console.log("response=", response);
+        //if (!response.ok)
+        //    throw new Error("HTTP error, status = " + response.status);
+        const json = await response.json().then(
+            data => {
+                console.log(data);
+                window.tournamentState.data = data.data;
+                console.log("tournamentState=", window.tournamentState);
+                return data;
+            }
+        );
+
+    } catch (error) {
+      console.error(error.message);
+    }
+}
+
+const requestPatchMatch = async (id, data) => {
+    try {
+        const response = await fetch("/api/matches/" + id + "/", {
+            method: "POST",
+            body: JSON.stringify(data)
+        })
+        console.log("response=", response);
+        //if (!response.ok)
+        //    throw new Error("HTTP error, status = " + response.status);
+        const json = await response.json().then(
+            data => {
+                console.log(data);
+                window.tournamentState.data = data.data;
+                console.log("tournamentState=", window.tournamentState);
+                return data;
+            }
+        );
+
+    } catch (error) {
+      console.error(error.message);
+    }
+}
+
+window.startGame = (aiNum) => {
+    const {gameType, ai, matchNumber} = gameTypeSelector();
+    console.log("gameType=", gameType, "ai=", ai, "matchNumber=", matchNumber);
+    console.log("state of game", window.singleGameState);
+    if (GameType.Cup == gameType) // create tournament
+    {
+        let body = {
+            "name": window.tournamentState.name,
+            // "userIds": [
+            //     String(window.tournamentState.matches[0].player1),
+            //     String(window.tournamentState.matches[0].player2),
+            //     String(window.tournamentState.matches[1].player1),
+            //     String(window.tournamentState.matches[1].player2)
+            "userIds": [
+                window.tournamentState.matches[0].player1,
+                window.tournamentState.matches[0].player2,
+                window.tournamentState.matches[1].player1,
+                window.tournamentState.matches[1].player2
+            ]
+        }
+        requestAddCup(body);
+    }
+
     let isPaused = false;
     const maxScore = 5;
     const playerSpeed = 17;  // 17 12
@@ -119,6 +289,12 @@ window.startGame = (ai) => {
     const material = new THREE.LineBasicMaterial({ color: 0xffffff }); // Red color
     const testline = new THREE.Line(geometry, material);
     scene.add(testline);
+    const points2 = [];
+    points2.push(new THREE.Vector3(-width/2, hight/2, 0)); // Start point
+    points2.push(new THREE.Vector3(-width/2, -hight/2, 0)); // End point
+    const geometry2 = new THREE.BufferGeometry().setFromPoints(points2);
+    const testline2 = new THREE.Line(geometry2, material);
+    scene.add(testline2);
 
     // players geometry and material is shared so we create it once
     const playergeometry = new THREE.BoxGeometry(0.5, 4, 1);
@@ -163,13 +339,11 @@ window.startGame = (ai) => {
 
     // for case of  4 players we create the other two
     // create separate material and geometry for the ball2 and register it
-    const playergeometry2 = new THREE.BoxGeometry(0.5, 4, 1);
-    let player2Edge = new THREE.EdgesGeometry(playergeometry2);
     const playermaterial2 = new THREE.MeshBasicMaterial({ color: 0x32495E }); //rgba(50, 73, 94, 1) corresponds to #32495E in hex.
-    const player3mesh = new THREE.Mesh(playergeometry2, playermaterial2);
-    const player4mesh = new THREE.Mesh(playergeometry2, playermaterial2);
-    const player3outline = new THREE.LineSegments(player2Edge, new THREE.LineBasicMaterial({color: 0x000000}));
-    const player4outline = new THREE.LineSegments(player2Edge, new THREE.LineBasicMaterial({color: 0x000000}));
+    const player3mesh = new THREE.Mesh(playergeometry, playermaterial2);
+    const player4mesh = new THREE.Mesh(playergeometry, playermaterial2);
+    const player3outline = new THREE.LineSegments(edge, new THREE.LineBasicMaterial({color: 0x000000}));
+    const player4outline = new THREE.LineSegments(edge, new THREE.LineBasicMaterial({color: 0x000000}));
 
     const player3 = new THREE.Group();
     const player4 = new THREE.Group();
@@ -198,7 +372,7 @@ window.startGame = (ai) => {
     ball2.speed = ballStartSpeed;
 
     // we add the players 3 and 5 and ball2 to the scene only if it is a 4 player game
-    if (ai == -2){
+    if (GameType.Quatro == gameType){
         // Add the groups to the scene
         scene.add(player3);
         scene.add(player4);
@@ -209,9 +383,9 @@ window.startGame = (ai) => {
         ball2.velocity =  new THREE.Vector3(0, 0, 0);
 
         player3.position.x = -width / 2;
-        player3.position.y = hight / 4;
+        player3.position.y = -hight / 4;
         player4.position.x = width / 2;
-        player4.position.y = hight / 4;
+        player4.position.y = -hight / 4;
 
         startAngle = getRandom(-1, 1)
         ball2.velocity = {x: Math.cos(startAngle) * ballStartSpeed, y: Math.sin(startAngle) * ballStartSpeed, z: 0}
@@ -277,8 +451,12 @@ window.startGame = (ai) => {
 
     function setup() {
         // move the players to their starting position from <0,0,0>
-        player1.position.x = width / 2
-        player2.position.x = -width / 2
+        player1.position.x = width / 2;
+        player2.position.x = -width / 2;
+        if (GameType.Quatro == gameType){
+            player1.position.y = hight / 4;
+            player2.position.y = hight / 4;
+        }
 
 
         // use the same geometry for all outer boxes
@@ -350,17 +528,16 @@ window.startGame = (ai) => {
             document.getElementById("gameWindow").removeChild(renderer.domElement);
             document.removeEventListener("keydown", keyDownAction);
             document.removeEventListener("keyup", keyUpAction);
-            console.log("game terminated", window.singleGameState);
-            gotoHome();
-            // if (window.singleGameState.size > 0){
-            //     //updateGameState();
-            //     console.log("return to main");
-            // }
-            // else {
-            //     //updateTouramentState();
-            //     console.log("return to tournament");
-            // }
-            return 1;
+            console.log("game terminated, singleGameState=", window.singleGameState);
+            if (GameType.Cup == gameType){
+                goToTournament();
+                console.log("Game of tournament is over");
+            }
+            else {
+                goToHome();
+                console.log("Game of single game or 2x2 game is over");
+            }
+            return 0;
         }
         else if (code == 32 && Math.max(...gameCount) < maxScore){ // space
             if (!isPaused){
@@ -496,22 +673,14 @@ window.startGame = (ai) => {
         if (!(ball.hitRacketFlag == 0 && (ball.position.x > width / 2  || ball.position.x < - width / 2)))
             return;
         if (ball.position.x > 0)
-            gameCount[1] += 1
-        else
             gameCount[0] += 1
-        updateScore(gameCount[1] + " : " + gameCount[0]);
+        else
+            gameCount[1] += 1
+        updateScore(gameCount[0] + " : " + gameCount[1]);
         ball.position.set(0, 0, 0)
         let startAngle = getRandom(-1, 1)
         ball.velocity = {x: Math.cos(startAngle) * Math.sign(ball.velocity.x) * ballStartSpeed, y: Math.sin(startAngle) * Math.sign(ball.velocity.y) * ballStartSpeed}
         deltaTimeAi = 2;
-    }
-
-    function updateGameState(){
-        console.log("updateGameState", window.singleGameState);
-        window.singleGameState.player1_score = gameCount[0];
-        window.singleGameState.player2_score = gameCount[1];
-        window.singleGameState.match_time = Date.now() - startTime
-        console.log(window.singleGameState);
     }
 
     /* ----- loop setup ----- */
@@ -540,19 +709,17 @@ window.startGame = (ai) => {
             }
             if (Math.max(...gameCount) >= maxScore){
                 isPaused = true;
-                console.log("Game ended", gameCount);
-                updateScore("Score: " + gameCount[1] + " : " + gameCount[0] + ". Game ended!");
+                updateScore("Score: " + gameCount[0] + " : " + gameCount[1] + ". Game ended!");
                 score3dObj.position.set(-7, 7, -2); 
                 render();
-                updateGameState();
-                // fetch the game result to backend and update game state?
+                updateStateFetch(startTime, gameCount);
                 return;
             }
             keyEventHandler() // check for key presses
             // move the players with deltatime
             player1.position.y += player1Velocity * delta
             player2.position.y += player2Velocity * delta
-            if (ai == -2){
+            if (GameType.Quatro == gameType){
                 player3.position.y += player3Velocity * delta
                 player4.position.y += player4Velocity * delta
             }
@@ -561,7 +728,7 @@ window.startGame = (ai) => {
             checkPlayerPositionY(player1, -playerMaxY, playerMaxY)
             checkPlayerPositionY(player2, -playerMaxY, playerMaxY)
             checkBallPositionY(ball1, -hight/2, hight/2)
-            if (ai == -2){
+            if (GameType.Quatro == gameType){
                 checkPlayerPositionY(player3, -playerMaxY, playerMaxY)
                 checkPlayerPositionY(player4, -playerMaxY, playerMaxY)
                 checkBallPositionY(ball2, -hight/2, hight/2)
@@ -570,7 +737,7 @@ window.startGame = (ai) => {
             ball1.hitRacketFlag = 0
             checkRacketHitBall(ball1, player1)
             checkRacketHitBall(ball1, player2)
-            if (ai == -2){
+            if (GameType.Quatro == gameType){
                 checkRacketHitBall(ball1, player3)
                 checkRacketHitBall(ball1, player4)
                 ball2.hitRacketFlag = 0
@@ -584,20 +751,12 @@ window.startGame = (ai) => {
             ball1.position.x += ball1.velocity.x * delta
             ball1.position.y += ball1.velocity.y * delta
             countGameScore(ball1, gameCount)
-            if (ai == -2){
+            if (GameType.Quatro == gameType){
                 ball2.position.x += ball2.velocity.x * delta
                 ball2.position.y += ball2.velocity.y * delta
                 countGameScore(ball2, gameCount)
             }
-            // update each outer box height based on sin to create a wave effect
-            outerboxes.forEach((element, row) => {
-                element.forEach((box, index) => {
-                    box.box.scale.z = (Math.sin(Date.now() / 700 + index / 2 + row) + 2) / 1.5
-                    box.box.position.z = -1 + box.box.scale.z / 2
-                    box.out.scale.z = (Math.sin(Date.now() / 700 + index / 2 + row) + 2) / 1.5
-                    box.out.position.z = -1 + box.out.scale.z / 2
-                });
-            });
+            outerboxes.forEach(updateOuterBoxes);
             render();
             // if we have multiple frames it skips to the most recent one
             delta = delta % interval;
@@ -610,9 +769,7 @@ window.startGame = (ai) => {
     document.addEventListener("keydown", keyDownAction, false)
     document.addEventListener("keyup", keyUpAction, false)
 
-
     /* ----- Main logic ----- */
-
     setup()
     loop()
 
