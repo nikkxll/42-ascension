@@ -445,9 +445,10 @@ def manage_tournaments(request):
 
 # Get last 5 tournaments
 def get_tournaments(request):
+    last = int(request.GET.get('last') or 5)
     tournaments = (
         Tournament.objects.all()
-        .order_by("-id")[:5]
+        .order_by("-id")[:last]
         .select_related("winner")  # Fetch the winner Player object with the Tournament
         .prefetch_related(
             "participants__player",  # Prefetch Player objects from TournamentParticipant
@@ -495,7 +496,7 @@ def form_match_json(match):
             for key in PLAYER_KEYS
             if (player := getattr(match, key, None))
         ],
-        "score": match.score,
+        "score": match.score.split(":") if match.score else None,
         "duration": int(match.duration.total_seconds()) if match.duration else None,
         "createdAt": match.created_at.isoformat(),
     }
@@ -544,7 +545,7 @@ def get_tournament(request, id):
 
 def find_ids_from_sessions(request):
     found_session_ids = [
-        int(decrypt_session_value(value)["id"])
+        decrypt_session_value(value)["id"]
         for key, value in request.COOKIES.items()
         if key.startswith("session_")
     ]
@@ -568,8 +569,6 @@ def get_current_sessions_tournament(request):
                     status=400,
                 )
             players = Player.objects.filter(user__id__in=found_session_ids)
-            # print("players")
-            # print(players)
             tournaments = (
                 Tournament.objects.annotate(
                     player_count=Count(
@@ -581,8 +580,6 @@ def get_current_sessions_tournament(request):
                 )
                 # .distinct()  # Avoid duplicates
             )
-            # print("tournaments")
-            # print(tournaments)
 
             if tournaments.exists():
                 # Return the first matching tournament (or adjust logic for multiple)
@@ -647,9 +644,8 @@ def create_tournament(request):
                 {"ok": False, "error": "Player ID is required", "statusCode": 400},
                 status=400,
             )
-        # print("user_id", user_id)
+
         player = get_player_by_user_id(user_id)
-        # print("player", player)
         TournamentParticipant.objects.create(
             tournament=tournament, player=player, order=index
         )
@@ -698,7 +694,7 @@ def manage_tournament_match(request, id=None):
 def manage_matches(request):
     try:
         if request.method == "GET":
-            matches = get_matches()
+            matches = get_matches(request)
             return JsonResponse(
                 {
                     "ok": True,
@@ -723,8 +719,11 @@ def manage_matches(request):
     return JsonResponse({"ok": False, "error": "Invalid request method"}, status=405)
 
 
-def get_matches():
-    matches = Match.objects.all().order_by("-id")[:20]
+def get_matches(request):
+    finished = request.GET.get('finished', 'true')
+    finished = finished.lower() == 'true'
+    last = int(request.GET.get('last') or 20)
+    matches = Match.objects.exclude(score__isnull=finished).order_by("-id")[:last]
     return [form_match_json(match) for match in matches]
 
 
@@ -770,17 +769,17 @@ def get_player_matches(request, id):
 # Still the AI_ID should be provided in ids argument
 def check_sessions(request, ids):
     # Filter out None values
-    ids = [str(id) for id in ids if id is not None]
+    ids = [id for id in ids if id is not None]
 
     # print("ids")
     # for id in ids:
     #     print(id)
     if len(ids) != 2 and len(ids) != 4:
         raise BadRequest(f"Expected at least 2 or 4 ids and got {len(ids)}")
-    found_sessions_keys = ["session_" + id for id in ids if id != AI_ID]
+    found_sessions_keys = ["session_" + str(id) for id in ids if id != AI_ID]
     # Get corresponding values from cookies
     sessions_values_ids = [
-        str(decrypt_session_value(value)["id"])
+        decrypt_session_value(value)["id"]
         for key, value in request.COOKIES.items()
         if key in found_sessions_keys
     ]
@@ -804,8 +803,9 @@ def check_sessions(request, ids):
 
 
 def check_score_format(score):
-    pattern = r"^\d+:\d+$"
-    if re.match(pattern, score):
+    # pattern = r"^\d+:\d+$"
+    # if re.match(pattern, score):
+    if (len(score) == 2) and (score[0].isdigit() and score[1].isdigit()):
         return True
     return False
 
@@ -834,17 +834,16 @@ def create_match(request, id=None):
     offset = 0
     score = data.get("score")
     if score:
-        match.score = score
         if not check_score_format(score):
-            raise BadRequest("Invalid score format. Example format: '11:2'")
-        score_arr = score.split(":")
-        is_winners_first = True if score_arr[0] > score_arr[1] else False
+            raise BadRequest("Invalid score format. Example format: [11, 2]")
+        match.score = ":".join(score)
+        is_winners_first = True if score[0] > score[1] else False
         offset = 0 if is_winners_first else 2
         MODULO_DIV = 4
 
     duration_seconds = data.get("duration")
     if duration_seconds:
-        match.duration = timedelta(seconds=int(duration_seconds))
+        match.duration = timedelta(seconds=duration_seconds)
     tournament_id = id
     tournament = None
     if tournament_id:
@@ -864,8 +863,8 @@ def create_match(request, id=None):
             # print("tournament_match.player2.user.id")
             # print(tournament_match.player2.user.id)
             if not (
-                str(tournament_match.player1.user.id) in user_ids
-                or str(tournament_match.player2.user.id) in user_ids
+                tournament_match.player1.user.id in user_ids
+                or tournament_match.player2.user.id in user_ids
             ):
                 raise BadRequest("Players from semifinals must be in finals")
         match.tournament = Tournament.objects.get(id=tournament_id)
@@ -947,7 +946,7 @@ def update_match(request, id):
 
     duration_seconds = data.get("duration")
     if duration_seconds:
-        match.duration = timedelta(seconds=int(duration_seconds))
+        match.duration = timedelta(seconds=duration_seconds)
 
     score = data.get("score")
     step = 2 if user_ids_count == 2 else 1
@@ -955,11 +954,10 @@ def update_match(request, id):
     if score:
         if not check_score_format(score):
             raise BadRequest("Invalid score format. Example format: '11:2'")
-        score_arr = score.split(":")
-        is_winners_first = True if score_arr[0] > score_arr[1] else False
+        is_winners_first = True if score[0] > score[1] else False
         offset = 0 if is_winners_first else 2
         MODULO_DIV = 4
-        match.score = score
+        match.score = ":".join(score)
         for index, user_id in enumerate(user_ids):
             # Set winner1, winner2, loser1, loser2 (leaving winner2 and loser2 empty if 2 players)
             match.__setattr__(

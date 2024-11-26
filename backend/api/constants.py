@@ -34,4 +34,4 @@ PLAYER_KEYS = ["player1", "player2", "player3", "player4"]
 WINNER_LOSER_KEYS = ["winner1", "winner2", "loser1", "loser2"]
 
 # AI Player User ID
-AI_ID = "1"
+AI_ID = 1
