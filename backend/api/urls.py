@@ -4,6 +4,7 @@ from . import views
 urlpatterns = [
     path("csrf/", views.get_csrf_token, name="csrf"),
     path("players/", views.manage_players, name="manage_players"),
+    path("players/current/", views.get_current_players, name="get_current_players"),
     path("players/<int:id>/", views.manage_player, name="manage_player"),
     path('players/<int:id>/avatar/', views.upload_avatar, name='upload_avatar'),
     path('players/<int:id>/stats/', views.get_player_stats, name='get_player_stats'),
