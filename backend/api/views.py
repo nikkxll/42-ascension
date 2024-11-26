@@ -221,7 +221,12 @@ def custom_logout(request, id):
         if session_key in request.COOKIES:
             # Create a response object
             response = JsonResponse(
-                {"ok": True, "message": f"Logged out id:{id}", "statusCode": 200}
+                {
+                    "ok": True,
+                    "data": {"id": id},
+                    "message": f"Logged out id:{id}",
+                    "statusCode": 200,
+                }
             )
             # Delete the session cookie by setting it to an empty value and an expired date
             response.delete_cookie(session_key)
@@ -445,7 +450,7 @@ def manage_tournaments(request):
 
 # Get last 5 tournaments
 def get_tournaments(request):
-    last = int(request.GET.get('last') or 5)
+    last = int(request.GET.get("last") or 5)
     tournaments = (
         Tournament.objects.all()
         .order_by("-id")[:last]
@@ -720,9 +725,9 @@ def manage_matches(request):
 
 
 def get_matches(request):
-    finished = request.GET.get('finished', "true")
-    finished = finished.lower() == 'true'
-    last = int(request.GET.get('last') or 20)
+    finished = request.GET.get("finished", "true")
+    finished = finished.lower() == "true"
+    last = int(request.GET.get("last") or 20)
     if finished:
         matches = Match.objects.exclude(score__isnull=True).order_by("-id")[:last]
     else:
@@ -808,7 +813,11 @@ def check_sessions(request, ids):
 def check_score_format(score):
     # pattern = r"^\d+:\d+$"
     # if re.match(pattern, score):
-    if isinstance(score, list) and len(score) == 2 and all(isinstance(part, int) for part in score):
+    if (
+        isinstance(score, list)
+        and len(score) == 2
+        and all(isinstance(part, int) for part in score)
+    ):
         return True
     return False
 
