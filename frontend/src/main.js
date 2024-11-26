@@ -76,14 +76,15 @@ function setCameraAside(camera) {
     camera.position.y =  - camera.position.z * Math.tan(camera.rotation.x);
 }
 
-// function sleep(ms) {
-//     return new Promise(resolve => setTimeout(resolve, ms));
-// }
-
-// ai = 2 two AIs: AI vs god level AI
-// ai = 1 one AI vs human
-// ai = 0 two humans
-// (to be implemented) ai = -2 four humans
+// update each outer box height based on sin to create a wave effect
+let updateOuterBoxes = (element, row) => {
+    element.forEach((box, index) => {
+        box.box.scale.z = (Math.sin(Date.now() / 700 + index / 2 + row) + 2) / 1.5;
+        box.box.position.z = -1 + box.box.scale.z / 2;
+        box.out.scale.z = box.box.scale.z;
+        box.out.position.z = box.box.position.z;
+    });
+};
 
 const GameType = {
     Duo: 0,
@@ -121,15 +122,7 @@ function gameTypeSelector(){
     return {gameType: GameType.Duo, ai, matchNumber: 0};
 }
 
-// update each outer box height based on sin to create a wave effect
-let updateOuterBoxes = (element, row) => {
-    element.forEach((box, index) => {
-        box.box.scale.z = (Math.sin(Date.now() / 700 + index / 2 + row) + 2) / 1.5;
-        box.box.position.z = -1 + box.box.scale.z / 2;
-        box.out.scale.z = box.box.scale.z;
-        box.out.position.z = box.box.position.z;
-    });
-};
+
 
 const requestAddMatch = async (data) => {
     try {
@@ -158,15 +151,28 @@ function updateStateFetch(startTime, gameCount){
     console.log("Game ended", gameCount);
     const {gameType, ai, matchNumber} = gameTypeSelector();
     if (GameType.Cup != gameType){
-        window.singleGameState.score = String(gameCount[0]) + ":" + String(gameCount[1]);
-        window.singleGameState.userIds = [
-            String(window.singleGameState.player1),
-            String(window.singleGameState.player2)]
-        if (GameType.Quatro == gameType){
-            window.singleGameState.userIds.push(String(window.singleGameState.player3));
-            window.singleGameState.userIds.push(String(window.singleGameState.player4)); 
-        }
-        window.singleGameState.duration = String(Math.floor((Date.now() - startTime) / 1000));
+        window.singleGameState.score = gameCount;
+        window.singleGameState.duration = Math.trunc((Date.now() - startTime) / 1000);
+        //strings
+        //String(gameCount[0]) + ":" + String(gameCount[1]);
+        // window.singleGameState.userIds = [
+        //     String(window.singleGameState.player1),
+        //     String(window.singleGameState.player2)]
+        // if (GameType.Quatro == gameType){
+        //     window.singleGameState.userIds.push(String(window.singleGameState.player3));
+        //     window.singleGameState.userIds.push(String(window.singleGameState.player4)); 
+        // }
+        //numbers
+        // window.singleGameState.userIds = [
+        //         window.singleGameState.player1,
+        //         window.singleGameState.player2]
+        // if (GameType.Quatro == gameType){
+        //     window.singleGameState.userIds.push(
+        //         window.singleGameState.player3,
+        //         window.singleGameState.player4
+        //     ); 
+        // }
+        //window.singleGameState.duration = String(Math.floor((Date.now() - startTime) / 1000));
         console.log("state after update", window.singleGameState);
         let body = {
             score: window.singleGameState.score, 
@@ -228,21 +234,26 @@ const requestPatchMatch = async (id, data) => {
 
 window.startGame = (aiNum) => {
     const {gameType, ai, matchNumber} = gameTypeSelector();
-    if (GameType.Cup == gameType)
+    console.log("gameType=", gameType, "ai=", ai, "matchNumber=", matchNumber);
+    console.log("state of game", window.singleGameState);
+    if (GameType.Cup == gameType) // create tournament
     {
         let body = {
             "name": window.tournamentState.name,
+            // "userIds": [
+            //     String(window.tournamentState.matches[0].player1),
+            //     String(window.tournamentState.matches[0].player2),
+            //     String(window.tournamentState.matches[1].player1),
+            //     String(window.tournamentState.matches[1].player2)
             "userIds": [
-                String(window.tournamentState.matches[0].player1),
-                String(window.tournamentState.matches[0].player2),
-                String(window.tournamentState.matches[1].player1),
-                String(window.tournamentState.matches[1].player2)
+                window.tournamentState.matches[0].player1,
+                window.tournamentState.matches[0].player2,
+                window.tournamentState.matches[1].player1,
+                window.tournamentState.matches[1].player2
             ]
         }
         requestAddCup(body);
     }
-    console.log("gameType=", gameType, "ai=", ai, "matchNumber=", matchNumber);
-    console.log("state of game", window.singleGameState);
 
     let isPaused = false;
     const maxScore = 5;

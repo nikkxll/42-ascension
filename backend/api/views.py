@@ -805,7 +805,7 @@ def check_sessions(request, ids):
 def check_score_format(score):
     # pattern = r"^\d+:\d+$"
     # if re.match(pattern, score):
-    if (len(score) == 2) and (score[0].isdigit() and score[1].isdigit()):
+    if (len(score) == 2):  # and (score[0].isdigit() and score[1].isdigit()):
         return True
     return False
 
