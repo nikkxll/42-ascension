@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
-import * as state from "./state.js";
+//import * as state from "./state.js";
 
 
 
@@ -233,6 +233,7 @@ const requestPatchMatch = async (id, data) => {
 }
 
 window.startGame = (aiNum) => {
+    console.log("Start game state of game", state.singleGameState);
     const {gameType, ai, matchNumber} = gameTypeSelector();
     console.log("gameType=", gameType, "ai=", ai, "matchNumber=", matchNumber);
     console.log("state of game", window.singleGameState);

@@ -38,17 +38,17 @@ window.tournamentState = {
 }
 
 window.ai_id = 1
-window.singleGameState = {}  //for tournament
+//window.singleGameState = {}  //for tournament
 
-// window.singleGameState = {   // for 4 player game  // this is working example
-//     "userIds": [3, 4, 5, 6],     //  [left, left, right, right]
-//     player1: 3, 
-//     player2: 4,
-//     player3: 5,
-//     player4: 6
-//    // score: "0:0",
-//    // duration: 0
-// }
+window.singleGameState = {   // for 4 player game  // this is working example
+    "userIds": [3, 4, 5, 6],     //  [left, left, right, right]
+    player1: 3, 
+    player2: 4,
+    player3: 5,
+    player4: 6
+   // score: "0:0",
+   // duration: 0
+}
 
 
 // window.singleGameState = {   //for single game
