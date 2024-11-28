@@ -1069,6 +1069,39 @@
     <script>
 
       /* Collection of all the buttons that transition the views */
+      /* adding history, that is stored in the urlparameters */
+      const views = {
+        "signup": goToSignup,
+        "signin": goToSignin,
+        "lobby": goToLobby,
+        "matchView": goToMatchView,
+        "home": goToHome,
+        "gamestart": goToGameStart,
+        "tournament": goToTournament,
+        "profile": goToProfile,
+        "homenavigation": goToHomeNavigation,
+        "settingsnavigation": goToSettingsNavigation,
+        "aboutnavigation": goToAboutNavigation,
+      }
+
+      window.addEventListener("popstate", (e) => 
+      {
+        if (history.state == null)
+          history.replaceState({"view": "home"})
+        views[history.state["view"]]()
+
+      })
+
+      const updateHistory = (f) => {
+        Object.entries(views).forEach((key) => {
+          if (key[1] == f)
+          {
+            history.pushState({"view": key[0]}, "")
+            console.log(key[0]);
+          }
+        })
+      }
+
       /* home screen transitions */
       
       const homeLeft = document.getElementsByClassName("homeLeft")[0];
@@ -1078,34 +1111,6 @@
       const signin = document.getElementsByClassName("signin")[0];
 
       const matchView = document.getElementsByClassName("matchView")[0];
-
-      function goToSignup() {
-        homeLeft.style.display = "none";
-        signin.style.display = "none";
-        signup.style.display = "block";
-      }
-
-      function goToSignin() {
-        homeLeft.style.display = "none";
-        signin.style.display = "block";
-        signup.style.display = "none";
-      }
-
-      function goToLobby() {
-        homeLeft.style.display = "grid";
-        signin.style.display = "none";
-        signup.style.display = "none";
-      }
-
-      function goToMatchView() {
-        matchView.style.display = "block";
-        homeRight.style.display = "none";
-      }
-
-      function goToHomeRight() {
-        matchView.style.display = "none";
-        homeRight.style.display = "grid";
-      }
 
       /* section transitions */
       const lobby = document.getElementById("lobby");
@@ -1134,7 +1139,46 @@
       const generateSFButton = document.getElementById("generateSF");
       const startFirstSemifinalButton = document.getElementById("startFirstSF");
 
-      function goToHome() {
+      function goToSignup() {
+        goToHomeNoHistory()
+        homeLeft.style.display = "none";
+        signin.style.display = "none";
+        signup.style.display = "block";
+        updateHistory(goToSignup)
+      }
+
+      function goToSignin() {
+        goToHomeNoHistory()
+        homeLeft.style.display = "none";
+        signin.style.display = "block";
+        signup.style.display = "none";
+        updateHistory(goToSignin)
+      }
+
+      function goToLobby() {
+        goToHomeNoHistory()
+        homeLeft.style.display = "grid";
+        signin.style.display = "none";
+        signup.style.display = "none";
+        updateHistory(goToLobby)
+      }
+
+      function goToMatchView() {
+        goToHomeNoHistory()
+        matchView.style.display = "block";
+        homeRight.style.display = "none";
+        updateHistory(goToMatchView)
+      }
+
+      function goToHomeRight() {
+        goToHomeNoHistory()
+        matchView.style.display = "none";
+        homeRight.style.display = "grid";
+        updateHistory(goToHomeRight)
+      }
+
+      function goToHomeNoHistory()
+      {
         lobby.style.display = "block";
         gameStart.style.display = "none";
         singleGameSettings.style.display = "none";
@@ -1142,7 +1186,12 @@
         profile.style.display = "none";
         tournamentSetup.style.display = "none";
         overlay.style.display = "none";
+      }
+
+      function goToHome() {
+        goToHomeNoHistory()
         resetAll();
+        updateHistory(goToHome)
       }
 
       function runGame() {
@@ -1152,6 +1201,7 @@
         profile.style.display = "none";
         tournamentSetup.style.display = "none";
         overlay.style.display = "none";
+        updateHistory(runGame)
       }
 
       function goToSingleGameSettings() {
@@ -1168,6 +1218,7 @@
         profile.style.display = "none";
         overlay.style.display = "none";
         otherGameStart.style.display = "none";
+        updateHistory(goToGameStart)
       }
 
       function goToTournament() {
@@ -1184,6 +1235,7 @@
           card.classList.remove("selected");
           card.classList.remove("shaded");
         });
+        updateHistory(goToTournament)
       }
 
       function goToProfile() {
@@ -1191,6 +1243,7 @@
         gameStart.style.display = "none";
         tournament.style.display = "none";
         profile.style.display = "block";
+        updateHistory(goToProfile)
       }
 
       function goTo2v2GameStart() {
@@ -1204,16 +1257,19 @@
       function goToHomeNavigation() {
         homeLeft.style.display = "grid";
         homeRight.style.display = "grid";
+        updateHistory(goToHomeNavigation)
       }
 
       function goToAboutNavigation() {
         homeLeft.style.display = "none";
         homeRight.style.display = "none";
+        updateHistory(goToAboutNavigation)
       }
 
       function goToSettingsNavigation() {
         homeLeft.style.display = "none";
         homeRight.style.display = "none";
+        updateHistory(goToSettingsNavigation)
       }
 
       function openTournamentSetupBox() {
