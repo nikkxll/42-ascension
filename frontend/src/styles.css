@@ -309,7 +309,7 @@ section {
   justify-content: center;
   max-width: 100%;
   height: 0px;
-  margin: 29px 0 0;
+  margin: 118px 0 0;
   border: 1px solid rgba(255, 255, 255, 0.5);
 }
 .oauth-logo {
@@ -321,7 +321,7 @@ section {
 }
 .prompt-not-a-member {
   display: flex;
-  margin: 18px auto 130px;
+  margin: 18px auto 180px;
   width: 317px;
   max-width: 100%;
   gap: 20px;
@@ -399,6 +399,7 @@ section {
   padding: 5px 62px 5px;
   margin: 0 auto 0;
   width: 75%;
+  transition: box-shadow 0.3s, transform 0.3s;
 }
 
 .logout-button {
@@ -409,8 +410,17 @@ section {
   cursor: pointer;
   font: inherit;
   padding: 5px 62px 5px;
-  margin: 18px auto 39px;
+  margin: 21px auto 0;
   width: 75%;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+
+.profile-button:hover {
+  transform: translateY(-3px);
+}
+
+.logout-button:hover {
+  transform: translateY(-3px);
 }
 
 /* Creation of any kind of game */
