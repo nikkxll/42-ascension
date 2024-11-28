@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
-//import * as state from "./state.js";
+//import * as statejs from "./state.js";
 
 
 
@@ -232,6 +232,14 @@ const requestPatchMatch = async (id, data) => {
     }
 }
 
+const removeGameWindow = (game) => {
+    cancelAnimationFrame(game.animationId);
+    document.getElementById("gameWindow").style.display = "none";
+    document.getElementById("gameWindow").removeChild(game.renderer.domElement);
+    document.removeEventListener("keydown", game.keyDownAction);
+    document.removeEventListener("keyup", game.keyUpAction);
+}
+
 window.startGame = (aiNum) => {
     console.log("Start game state of game", state.singleGameState);
     const {gameType, ai, matchNumber} = gameTypeSelector();
@@ -256,6 +264,13 @@ window.startGame = (aiNum) => {
         requestAddCup(body);
     }
 
+    
+    window.gameStoped = false;
+    let game = {  // this is the game object that will be used to accumulate all the game data.
+        keyDownAction: null, 
+        keyUpAction: null, 
+        renderer: null, 
+        animationId: null} //, gameCount , ai, gameType, matchNumber};
     let isPaused = false;
     const maxScore = 5;
     const playerSpeed = 17;  // 17 12
@@ -269,12 +284,12 @@ window.startGame = (aiNum) => {
     setCameraTop(camera)
     //setCameraAside(camera)
 
-    const renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth * 0.96, window.innerHeight * 0.96);
+    game.renderer = new THREE.WebGLRenderer();
+    game.renderer.setSize(window.innerWidth * 0.96, window.innerHeight * 0.96);
 
     // needs to be a game screen that we overlay and make visible
     //document.getElementById("gameWindow").innerHTML = "";
-    document.getElementById("gameWindow").appendChild(renderer.domElement);
+    document.getElementById("gameWindow").appendChild(game.renderer.domElement);
     //document.getElementById("gameStartButton").disabled = true;
 
     // Add lights to the scene for score visibility
@@ -507,6 +522,8 @@ window.startGame = (aiNum) => {
         })
     }
 
+
+
     const pressedKeys = new Set();
     const isPressed = (key) => pressedKeys.has(key);
     const isPressedByChar = (char) => isPressed(char.charCodeAt(0));
@@ -514,8 +531,7 @@ window.startGame = (aiNum) => {
 
     // function registered as an event listener to keydown events
     // 38 = ArrowUp, 40 = ArrowDown, 87 = w, 83 = s
-    
-    function keyDownAction(event) {
+    game.keyDownAction = (event) => {
         let code = event.which;
         if (code == 32){ // space = 32
             //event.preventDefault();
@@ -524,11 +540,7 @@ window.startGame = (aiNum) => {
             pressedKeys.add(code);
         if (isPressed(27) && (isPaused || Math.max(...gameCount) >= maxScore)){ // 27 = escape
             console.log("Esc is pressed, game to be terminated.");
-            cancelAnimationFrame(animationId);
-            document.getElementById("gameWindow").style.display = "none";
-            document.getElementById("gameWindow").removeChild(renderer.domElement);
-            document.removeEventListener("keydown", keyDownAction);
-            document.removeEventListener("keyup", keyUpAction);
+            removeGameWindow(game);
             console.log("game terminated, singleGameState=", window.singleGameState);
             if (GameType.Cup == gameType){
                 goToTournament();
@@ -565,7 +577,7 @@ window.startGame = (aiNum) => {
         }
         return 0;
     }
-    function keyUpAction(event) {
+    game.keyUpAction = (event) => {
         pressedKeys.delete(event.which);
     }
     function keyEventHandler() {
@@ -577,7 +589,7 @@ window.startGame = (aiNum) => {
     
     // util function
     var render = function() {
-        renderer.render(scene, camera);
+        game.renderer.render(scene, camera);
     };
 
     // AI Algo part
@@ -685,7 +697,7 @@ window.startGame = (aiNum) => {
     }
 
     /* ----- loop setup ----- */
-    let animationId = null;
+    //let animationId = null;
     // start a clock
     let clock = new THREE.Clock();
     const startTime = new Date();
@@ -700,14 +712,18 @@ window.startGame = (aiNum) => {
 
     //console.log("player1 scale=", player1.scale.y, "ball scale=", ball1.scale.y)
     function loop() {
-        if (!isPaused && ai >= 1)
+        if (ai >= 1 && !isPaused && !window.gameStoped)
             runAi()
-        animationId = requestAnimationFrame(loop);
+        game.animationId = requestAnimationFrame(loop);
         // if its time to draw a new frame
+        if (window.gameStoped){
+            console.log("Game Terminatated by pressing Back buttom.");
+            removeGameWindow(game);
+            return;
+        }
         if (delta > interval){
-            if (isPaused){
+            if (isPaused)
                 return;
-            }
             if (Math.max(...gameCount) >= maxScore){
                 isPaused = true;
                 updateScore("Score: " + gameCount[0] + " : " + gameCount[1] + ". Game ended!");
@@ -767,8 +783,8 @@ window.startGame = (aiNum) => {
     }
 
     // allows keydown and keyup to move player
-    document.addEventListener("keydown", keyDownAction, false)
-    document.addEventListener("keyup", keyUpAction, false)
+    document.addEventListener("keydown", game.keyDownAction, false)
+    document.addEventListener("keyup", game.keyUpAction, false)
 
     /* ----- Main logic ----- */
     setup()

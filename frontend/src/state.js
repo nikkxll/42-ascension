@@ -20,6 +20,7 @@ window.state = {
         {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""}
     ]
 }
+window.gameStoped = true;
 window.tournamentState = {
     "name": "tournament 3",
     "userIds": [3, 4, 5, 6],
