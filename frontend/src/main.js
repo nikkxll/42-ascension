@@ -117,7 +117,8 @@ function gameTypeSelector(){
         ai = -2;
         return {gameType: GameType.Quatro, ai, matchNumber: 0};
     }
-    if (window.singleGameState.player1 === window.ai_id || window.singleGameState.player2 === window.ai_id)
+    //if (window.singleGameState.player1 === window.ai_id || window.singleGameState.player2 === window.ai_id)
+    if (window.singleGameState.userIds.length == 2)
         ai = 1;
     return {gameType: GameType.Duo, ai, matchNumber: 0};
 }
