@@ -1089,7 +1089,7 @@
         if (history.state == null)
           history.replaceState({"view": "home"})
         views[history.state["view"]]()
-        gameStoped = true;
+        window.gameStoped = true;
       })
 
       const updateHistory = (f) => {
