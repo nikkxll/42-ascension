@@ -102,12 +102,13 @@ function gameTypeSelector(){
         // if (window.tournamentState 
         //     && window.tournamentState.matches 
         //     && window.tournamentState.matches.length > 0
-        if (window.tournamentState.matches[0].status == 0)
-            matchNumber = 0;
-        else if (window.tournamentState.matches[1].status == 0)
-            matchNumber = 1;
-        else if (window.tournamentState.matches[2].status == 0)
-            matchNumber = 2;
+        matchNumber = 0;
+        // if (window.tournamentState.matches[0].status == 0)
+        //     matchNumber = 0;
+        // else if (window.tournamentState.matches[1].status == 0)
+        //     matchNumber = 1;
+        // else if (window.tournamentState.matches[2].status == 0)
+        //     matchNumber = 2;
         let match = window.tournamentState.matches[matchNumber];
         if (match.player1 == window.ai_id || match.player2 == window.ai_id)
             ai = 1;
@@ -123,28 +124,24 @@ function gameTypeSelector(){
     return {gameType: GameType.Duo, ai, matchNumber: 0};
 }
 
-
-
 const requestAddMatch = async (data) => {
     try {
         const response = await fetch("/api/matches/", {
             method: "POST",
-            body: JSON.stringify(data)
-        })
-        console.log("response=", response);
-        //if (!response.ok)
-        //    throw new Error("HTTP error, status = " + response.status);
-        const json = await response.json().then(
-            data => {
-                console.log(data);
-                return data;
-            }
-        );
-
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error, status = ${response.status}`);
+        }
+        const json = await response.json();
+        console.log("Server Response Data:", json);
+        return json;
     } catch (error) {
-      console.error(error.message);
+        console.error("Request failed:", error.message);
+        //throw error;
     }
-  }
+};
 
 
 
@@ -154,15 +151,6 @@ function updateStateFetch(startTime, gameCount){
     if (GameType.Cup != gameType){
         window.singleGameState.score = gameCount;
         window.singleGameState.duration = Math.trunc((Date.now() - startTime) / 1000);
-        //strings
-        //String(gameCount[0]) + ":" + String(gameCount[1]);
-        // window.singleGameState.userIds = [
-        //     String(window.singleGameState.player1),
-        //     String(window.singleGameState.player2)]
-        // if (GameType.Quatro == gameType){
-        //     window.singleGameState.userIds.push(String(window.singleGameState.player3));
-        //     window.singleGameState.userIds.push(String(window.singleGameState.player4)); 
-        // }
         //numbers
         // window.singleGameState.userIds = [
         //         window.singleGameState.player1,
@@ -248,19 +236,18 @@ window.startGame = (aiNum) => {
     console.log("state of game", window.singleGameState);
     if (GameType.Cup == gameType) // create tournament
     {
-        let body = {
-            "name": window.tournamentState.name,
-            // "userIds": [
-            //     String(window.tournamentState.matches[0].player1),
-            //     String(window.tournamentState.matches[0].player2),
-            //     String(window.tournamentState.matches[1].player1),
-            //     String(window.tournamentState.matches[1].player2)
-            "userIds": [
+        let userIds = window.tournamentState.userIds;
+        if (!userIds){  //this is old format to be removed
+            userIds = [
                 window.tournamentState.matches[0].player1,
                 window.tournamentState.matches[0].player2,
                 window.tournamentState.matches[1].player1,
                 window.tournamentState.matches[1].player2
-            ]
+            ];
+        }
+        let body = {
+            "name": window.tournamentState.name,
+            "userIds": userIds
         }
         requestAddCup(body);
     }
@@ -271,7 +258,9 @@ window.startGame = (aiNum) => {
         keyDownAction: null, 
         keyUpAction: null, 
         renderer: null, 
-        animationId: null} //, gameCount , ai, gameType, matchNumber};
+        animationId: null,
+        startTime: new Date(), 
+        count: [0, 0]} //, gameCount , ai, gameType, matchNumber};
     let isPaused = false;
     const maxScore = 5;
     const playerSpeed = 17;  // 17 12
@@ -539,7 +528,7 @@ window.startGame = (aiNum) => {
         }
         if (!pressedKeys.has(code))
             pressedKeys.add(code);
-        if (isPressed(27) && (isPaused || Math.max(...gameCount) >= maxScore)){ // 27 = escape
+        if (isPressed(27) && (isPaused || Math.max(...game.count) >= maxScore)){ // 27 = escape
             console.log("Esc is pressed, game to be terminated.");
             removeGameWindow(game);
             console.log("game terminated, singleGameState=", window.singleGameState);
@@ -553,7 +542,7 @@ window.startGame = (aiNum) => {
             }
             return 0;
         }
-        else if (code == 32 && Math.max(...gameCount) < maxScore){ // space
+        else if (code == 32 && Math.max(...game.count) < maxScore){ // space
             if (!isPaused){
                 pause3dObj.position.z = -5
                 render();
@@ -683,14 +672,14 @@ window.startGame = (aiNum) => {
     }
  
     // check for goals and just reset position: subject to change
-    function countGameScore(ball, gameCount){
+    function countGameScore(ball, count){
         if (!(ball.hitRacketFlag == 0 && (ball.position.x > width / 2  || ball.position.x < - width / 2)))
             return;
         if (ball.position.x > 0)
-            gameCount[0] += 1
+            count[0] += 1
         else
-            gameCount[1] += 1
-        updateScore(gameCount[0] + " : " + gameCount[1]);
+            count[1] += 1
+        updateScore(count[0] + " : " + count[1]);
         ball.position.set(0, 0, 0)
         let startAngle = getRandom(-1, 1)
         ball.velocity = {x: Math.cos(startAngle) * Math.sign(ball.velocity.x) * ballStartSpeed, y: Math.sin(startAngle) * Math.sign(ball.velocity.y) * ballStartSpeed}
@@ -701,14 +690,12 @@ window.startGame = (aiNum) => {
     //let animationId = null;
     // start a clock
     let clock = new THREE.Clock();
-    const startTime = new Date();
     // keep track of deltatime since last frame
     let delta = 0;
     // 75 max fps
     let interval = 1 / 75;
 
     let playerMaxY = hight / 2 - 1.5;
-    let gameCount = [0, 0];
    
 
     //console.log("player1 scale=", player1.scale.y, "ball scale=", ball1.scale.y)
@@ -725,12 +712,12 @@ window.startGame = (aiNum) => {
         if (delta > interval){
             if (isPaused)
                 return;
-            if (Math.max(...gameCount) >= maxScore){
+            if (Math.max(...game.count) >= maxScore){
                 isPaused = true;
-                updateScore("Score: " + gameCount[0] + " : " + gameCount[1] + ". Game ended!");
+                updateScore("Score: " + game.count[0] + " : " + game.count[1] + ". Game ended!");
                 score3dObj.position.set(-7, 7, -2); 
                 render();
-                updateStateFetch(startTime, gameCount);
+                updateStateFetch(game.startTime, game.count);
                 return;
             }
             keyEventHandler() // check for key presses
@@ -768,11 +755,11 @@ window.startGame = (aiNum) => {
             // move the balls to new position
             ball1.position.x += ball1.velocity.x * delta
             ball1.position.y += ball1.velocity.y * delta
-            countGameScore(ball1, gameCount)
+            countGameScore(ball1, game.count)
             if (GameType.Quatro == gameType){
                 ball2.position.x += ball2.velocity.x * delta
                 ball2.position.y += ball2.velocity.y * delta
-                countGameScore(ball2, gameCount)
+                countGameScore(ball2, game.count)
             }
             outerboxes.forEach(updateOuterBoxes);
             render();
