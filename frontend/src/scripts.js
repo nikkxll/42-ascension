@@ -33,6 +33,14 @@ const requestLoginButton = async () => {
   );
 };
 
+const clearAuthInputs = () => {
+  document.getElementById('signInUsername').value = '';
+  document.getElementById('signInPassword').value = '';
+  document.getElementById('displayName').value = '';
+  document.getElementById('signUpUsername').value = '';
+  document.getElementById('signUpPassword').value = '';
+};
+
 const requestLogin = async (_username, _password) => {
   try {
     const response = await fetch("/api/auth/login/", {
@@ -43,17 +51,20 @@ const requestLogin = async (_username, _password) => {
       }),
     });
     if (!response.ok) {
+      console.log(response);
       throw new Error("Failed to sign in");
     }
 
     const json = await response.json();
     window["loggedinUsers"][json.data.id] = json.data;
     window["loggedinUsersIds"].push(json.data.id);
+    clearAuthInputs();
     updateLoggedinUsers();
     goToLobby();
     renderPlayerPanels();
   } catch (error) {
     console.error(error.message);
+    clearAuthInputs();
   }
 };
 
