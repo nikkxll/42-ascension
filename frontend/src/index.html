@@ -573,7 +573,7 @@
           aria-label="Enter the tournament name"
         />
       </div>
-      <div class="tournament-setup-header-container">
+      <!-- <div class="tournament-setup-header-container">
         <h1 class="tournament-setup-header">Add users to the tournament</h1>
       </div>
       <div class="tournament-setup-grid">
@@ -621,12 +621,12 @@
             <h3 class="tournament-setup-player-name">TestUserName4</h3>
           </article>
         </div>
-      </div>
+      </div> -->
       <div class="tournament-setup-buttons selection">
         <button
           class="tournament-setup-buttons button back"
           tabindex="0"
-          onclick="goToHome()"
+          onclick="goToLobby()"
         >
           Back
         </button>
@@ -649,7 +649,7 @@
     <div class="tournament-main" id="tournament">
       <div class="tournament-top">
         <div class="tournament-top-left">
-          <div class="tournament-name">
+          <div class="tournament-name" id="tournamentTitle">
             <h1 class="tournament-name-text">Transcendence Cup 2024</h1>
           </div>
           <div class="tournament-grid"></div>
@@ -659,13 +659,19 @@
 
           <!-- Tournament SF1 -->
 
-          <div class="tournament-match-container" id="firstSemifinalContent"></div>
+          <div
+            class="tournament-match-container"
+            id="firstSemifinalContent"
+          ></div>
 
           <h2 class="tournament-round h2" id="secondSemifinal">Semifinal 2</h2>
 
           <!-- Tournament SF2 -->
 
-          <div class="tournament-match-container" id="secondSemifinalContent"></div>
+          <div
+            class="tournament-match-container"
+            id="secondSemifinalContent"
+          ></div>
 
           <!-- Footer buttons -->
 
@@ -676,15 +682,15 @@
         <button
           class="tournament-buttons button back-to-menu"
           tabindex="0"
-          onclick="goToHome()"
+          onclick="goToLobby()"
         >
           Back to menu
         </button>
         <button
           class="tournament-buttons button generate"
           tabindex="0"
-          onclick="generateSemifinals()"
           id="generateSF"
+          onclick="generateSemifinals()"
         >
           Generate bracket
         </button>
@@ -1007,7 +1013,6 @@
       // }
     </script>
     <script>
-
       /* Single game players pick */
 
       document.addEventListener("DOMContentLoaded", function () {
@@ -1159,7 +1164,6 @@
       });
     </script>
     <script>
-
       /* Tournament creation */
 
       function createTournament() {
@@ -1170,6 +1174,7 @@
         const secondSemifinalContent = document.getElementById(
           "secondSemifinalContent"
         );
+        const tournamentTitle = document.getElementById("tournamentTitle");
 
         function getPlayers() {
           const players =
@@ -1187,6 +1192,11 @@
             return [];
           }
           return players;
+        }
+
+        function getTournamentName() {
+          const tournamentNameInput = document.getElementById("tournamentName");
+          return tournamentNameInput.value.trim();
         }
 
         function generatePlayerCards(players) {
@@ -1228,6 +1238,12 @@
           return filledPlayers;
         }
 
+        function addLabelsToPlayers(players) {
+          players.forEach((player, index) => {
+            player.label = `Player ${index + 1}`;
+          });
+        }
+
         function shuffle(array) {
           for (let i = array.length - 1; i > 0; i--) {
             const randomIndex = Math.floor(Math.random() * (i + 1));
@@ -1242,7 +1258,7 @@
               <img loading="lazy" src="${
                 player1.avatar || "./assets/default_avatar.png"
               }" alt="Player avatar" class="tournament-match-avatar" />
-              <h3 class="game-player-name tournament">${player1.username}</h3>
+              <h3 class="game-player-name tournament">${player1.label}</h3>
             </div>
             <h2 class="tournament-match-left-score">-</h2>
             <img class="tournament-match-vs-logo" src="./assets/vs_logo.png" alt="Versus logo" />
@@ -1251,18 +1267,38 @@
               <img loading="lazy" src="${
                 player2.avatar || "./assets/default_avatar.png"
               }" alt="Player avatar" class="tournament-match-avatar" />
-              <h3 class="game-player-name tournament">${player2.username}</h3>
+              <h3 class="game-player-name tournament">${player2.label}</h3>
             </div>
           </div>
         `;
         }
 
+        function generateTitle(title) {
+          return `
+            <h1 class="tournament-name-text">${title}</h1>
+          `;
+        }
+
         function generateSemifinals(filledPlayers) {
           shuffle(filledPlayers);
           const [player1, player2, player3, player4] = filledPlayers;
+          const tournamentName = getTournamentName();
+
+          window.tournamentState.userIds = window.tournamentState.userIds || [];
+          window.tournamentState.name = tournamentName;
+
+          window.tournamentState.userIds.push(
+            player1.id,
+            player2.id,
+            player3.id,
+            player4.id
+          );
 
           firstSemifinalContent.innerHTML = "";
           secondSemifinalContent.innerHTML = "";
+          tournamentTitle.innerHTML = generateTitle(
+            window.tournamentState.name
+          );
 
           firstSemifinalContent.innerHTML = `
           <h1 class="tournament-match-title">Semifinal 1</h1>
@@ -1276,8 +1312,10 @@
         }
 
         const players = getPlayers();
+        
         if (players.length > 0) {
           const filledPlayers = generatePlayerCards(players);
+          addLabelsToPlayers(filledPlayers);
           generateSemifinals(filledPlayers);
         }
       }

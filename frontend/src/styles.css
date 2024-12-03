@@ -971,10 +971,10 @@ section {
 .tournament-setup {
   position: absolute;
   left: 31.6vw;
-  top: 21vh;
+  top: 39vh;
   display: none;
-  width: 629px;
-  height: 496px;
+  width: 600px;
+  height: 190px;
   flex-direction: column;
   background-color: rgba(18, 16, 16, 1);
   border-radius: 20px;
