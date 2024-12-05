@@ -34,6 +34,75 @@ body {
   height: 76.1%;
   /* display: none; */
 }
+
+.profileLeft {
+  position: absolute;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  display: flex;
+  /* display: none; */
+  align-items: center;
+  justify-content: space-around;
+}
+
+.profileRight {
+  position: absolute;
+  display: flex;
+  left:50vw;
+  column-gap: 0%;
+  height: 100%;
+  width: 50%;
+  align-items: center;
+  justify-content: space-around;
+}
+.carousel {
+  text-align: center;
+  display: inline-block;
+  width: 80%;
+  height: 80%;
+}
+
+.carousel-item {
+  display: inline-block;
+  border-radius: 45px;
+  background-color: rgba(18, 16, 16, 0.25);
+  backdrop-filter: blur(5px);
+  padding: 22px 52px 22px;
+  border: 1px solid #a7a7a7;
+  width: 70%;
+  height: 100%;
+  margin-left: 15%;
+}
+.carousel-title {
+  margin-top: -56px;
+}
+
+.carousel-inner {
+  height: 100%;
+}
+
+#person {
+  text-align: center;
+  display: inline-block;
+  width: 50%;
+  height: 80%;
+  border-radius: 45px;
+  background-color: rgba(18, 16, 16, 0.25);
+  backdrop-filter: blur(5px);
+  padding: 22px 52px 22px;
+  border: 1px solid #a7a7a7;
+}
+
+#person-avatar {
+  width: 12vw;
+  height: 12vw;
+  border-radius: 10vw;
+  border: 3px solid #a7a7a7;
+  margin-bottom: 10%;
+}
+
+
 section {
   height: 100%;
 }
@@ -182,9 +251,12 @@ section {
   grid-template-columns: 100%;
   grid-template-rows: 31% 31% 31%;
 }
-.profile {
-  width: 99%;
-  height: 99%;
+#profile {
+  top: 0;
+  left:0;
+  z-index: 2;
+  width: 100vw;
+  position: absolute;
 }
 
 /* Sign in and Sign up forms */
