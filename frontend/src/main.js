@@ -89,7 +89,7 @@ let updateOuterBoxes = (element, row) => {
 const GameType = {
     Duo: 0,
     Cup: 1,
-    Quatro: 2
+    Quatro: 2,
     AiAi: 3
 };
 function gameTypeSelector(){
