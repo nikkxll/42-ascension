@@ -161,12 +161,25 @@ def create_player(request):
 @csrf_exempt
 def custom_login(request):
     try:
-        if not request.body:
-            raise BadRequest("No data provided")
         if request.method == "POST":
+            if not request.body:
+                raise BadRequest("No data provided")
             data = json.loads(request.body)
             username = data.get("username")
             password = data.get("password")
+
+            for cookie_key, session in request.COOKIES.items():
+                if cookie_key.startswith("session_"):
+                    session_data = decrypt_session_value(session)
+                    if session_data.get("username") == username:
+                        return JsonResponse(
+                            {
+                                "ok": False,
+                                "error": "Already logged in",
+                                "statusCode": 400,
+                            },
+                            status=400,
+                        )
 
             # Authenticate the user
             user = authenticate(request, username=username, password=password)
@@ -221,7 +234,12 @@ def custom_logout(request, id):
         if session_key in request.COOKIES:
             # Create a response object
             response = JsonResponse(
-                {"ok": True, "message": f"Logged out id:{id}", "statusCode": 200}
+                {
+                    "ok": True,
+                    "data": {"id": id},
+                    "message": f"Logged out id:{id}",
+                    "statusCode": 200,
+                }
             )
             # Delete the session cookie by setting it to an empty value and an expired date
             response.delete_cookie(session_key)
@@ -445,7 +463,7 @@ def manage_tournaments(request):
 
 # Get last 5 tournaments
 def get_tournaments(request):
-    last = int(request.GET.get('last') or 5)
+    last = int(request.GET.get("last") or 5)
     tournaments = (
         Tournament.objects.all()
         .order_by("-id")[:last]
@@ -480,7 +498,6 @@ def form_tournament_json(tournament):
         "id": tournament.id,
         "name": tournament.name,
         "winner": form_player_json(tournament.winner),
-        # "status": tournament.status,
         "createdAt": tournament.created_at.isoformat(),
         "matches": [form_match_json(match) for match in tournament.matches.all()],
     }
@@ -578,7 +595,6 @@ def get_current_sessions_tournament(request):
                     player_count=len(players),  # Ensure the number of players matches
                     participants__player__in=players,  # Ensure all the players are in
                 )
-                # .distinct()  # Avoid duplicates
             )
 
             if tournaments.exists():
@@ -720,9 +736,9 @@ def manage_matches(request):
 
 
 def get_matches(request):
-    finished = request.GET.get('finished', "true")
-    finished = finished.lower() == 'true'
-    last = int(request.GET.get('last') or 20)
+    finished = request.GET.get("finished", "true")
+    finished = finished.lower() == "true"
+    last = int(request.GET.get("last") or 20)
     if finished:
         matches = Match.objects.exclude(score__isnull=True).order_by("-id")[:last]
     else:
@@ -774,9 +790,6 @@ def check_sessions(request, ids):
     # Filter out None values
     ids = [id for id in ids if id is not None]
 
-    # print("ids")
-    # for id in ids:
-    #     print(id)
     if len(ids) != 2 and len(ids) != 4:
         raise BadRequest(f"Expected at least 2 or 4 ids and got {len(ids)}")
     found_sessions_keys = ["session_" + str(id) for id in ids if id != AI_ID]
@@ -789,26 +802,17 @@ def check_sessions(request, ids):
     if AI_ID in ids:
         sessions_values_ids.append(AI_ID)
 
-    # print("found_sessions_keys")
-    # for found_sessions_key in found_sessions_keys:
-    #     print(found_sessions_key)
-    # print("sessions_values_ids")
-    # for sessions_values_id in sessions_values_ids:
-    #     print(sessions_values_id)
-
-    # print("key, value")
-    # for key, value in request.COOKIES.items():
-    #     print(key, value)
-
     if all(id in sessions_values_ids for id in ids):
         return True
     return False
 
 
 def check_score_format(score):
-    # pattern = r"^\d+:\d+$"
-    # if re.match(pattern, score):
-    if isinstance(score, list) and len(score) == 2 and all(isinstance(part, int) for part in score):
+    if (
+        isinstance(score, list)
+        and len(score) == 2
+        and all(isinstance(part, int) for part in score)
+    ):
         return True
     return False
 
@@ -827,9 +831,6 @@ def create_match(request, id=None):
     user_ids_count = len(user_ids)
     if user_ids_count != 4 and user_ids_count != 2:
         raise BadRequest("Match can be created only for 2 or 4 players")
-
-    # if (response := check_required_fields(data, ["score"])) is not None:
-    #     return response
 
     match = Match()
 
@@ -860,12 +861,6 @@ def create_match(request, id=None):
             raise BadRequest("Tournament already has 3 matches")
         # Check if players are in different semifinals matches
         for tournament_match in tournament_matches:
-            # print("user_ids")
-            # print(user_ids)
-            # print("tournament_match.player1.user.id")
-            # print(tournament_match.player1.user.id)
-            # print("tournament_match.player2.user.id")
-            # print(tournament_match.player2.user.id)
             if not (
                 tournament_match.player1.user.id in user_ids
                 or tournament_match.player2.user.id in user_ids
@@ -944,9 +939,6 @@ def update_match(request, id):
             {"ok": False, "error": "Sessions not verified", "statusCode": 400},
             status=400,
         )
-
-    # if (response := check_required_fields(data, ["score"])) is not None:
-    #     return response
 
     duration_seconds = data.get("duration")
     if duration_seconds:
@@ -1160,9 +1152,6 @@ def manage_friend_request(request, id):
             is_pending_first_second = (
                 id > friend_id and friendship.status == "pending_first_second"
             )
-            # print("id: ", id, "friend_id: ", friend_id, "friendship.status: ", friendship.status )
-            # print (is_pending_second_first, is_pending_first_second)
-            # print (action == "approve" and (is_pending_second_first or is_pending_first_second))
             message = ""
             if action == "approve" and (
                 is_pending_second_first or is_pending_first_second
