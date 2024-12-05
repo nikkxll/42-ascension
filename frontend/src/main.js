@@ -90,6 +90,7 @@ const GameType = {
     Duo: 0,
     Cup: 1,
     Quatro: 2
+    AiAi: 3
 };
 function gameTypeSelector(){
     let ai = 0;
@@ -114,14 +115,25 @@ function gameTypeSelector(){
             ai = 1;
         return {gameType: GameType.Cup, ai, matchNumber};
     }
-    else if (window.singleGameState.player3 && window.singleGameState.player4) {
+    //else if (window.singleGameState.player3 && window.singleGameState.player4) {
+    let ids = window.singleGameState.userIds
+    if (ids.length == 4){
         ai = -2;
         return {gameType: GameType.Quatro, ai, matchNumber: 0};
     }
-    //if (window.singleGameState.player1 === window.ai_id || window.singleGameState.player2 === window.ai_id)
-    if (window.singleGameState.userIds.length == 2)
-        ai = 1;
-    return {gameType: GameType.Duo, ai, matchNumber: 0};
+    else if (ids.length == 2){
+        if (ids[1] == window.ai_id || ids[0] == window.ai_id)
+            ai = 1;
+        if (ids[0] == window.ai_id){
+            window.singleGameState.userIds[1] = window.ai_id;
+            window.singleGameState.userIds[0] = ids[1];
+        }
+        return {gameType: GameType.Duo, ai, matchNumber: 0};
+    }
+    else if (ids.length == 0){
+        ai = 2;
+        return {gameType: GameType.AiAi, ai, matchNumber: 0};
+    }
 }
 
 const requestAddMatch = async (data) => {
