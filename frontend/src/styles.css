@@ -870,7 +870,10 @@ section {
 }
 
 .single-game-top {
+  width: 100vw;
+  height: 82vh;
   display: flex;
+  align-items: center;
   flex-direction: row;
 }
 
@@ -968,10 +971,10 @@ section {
 .tournament-setup {
   position: absolute;
   left: 31.6vw;
-  top: 21vh;
+  top: 39vh;
   display: none;
-  width: 629px;
-  height: 496px;
+  width: 600px;
+  height: 190px;
   flex-direction: column;
   background-color: rgba(18, 16, 16, 1);
   border-radius: 20px;
@@ -1059,7 +1062,7 @@ section {
 
 .tournament-main {
   position: absolute;
-  top: 5vh;
+  top: 2vh;
   left: 0;
   width: 100vw;
   height: 99.5vh;
@@ -1122,33 +1125,45 @@ section {
 .tournament-grid > div {
   width: 400px;
 }
-.tournament-setup-buttons.generate {
+.tournament-buttons {
+  display: flex;
+  flex-direction: row;
+  border-radius: 20px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font: 400 26px Acme, sans-serif;
+  padding: 12px 84px 12px;
+  margin: 0px auto 32px;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+.tournament-buttons.generate {
   display: block;
   background-color: rgba(50, 73, 94, 0.8);
   justify-content: center;
   padding-top: 1%;
   padding-bottom: 1%;
-  font-size: 30px;
+  font-size: 26px;
   transition: box-shadow 0.3s, transform 0.3s;
 }
-.tournament-setup-buttons.lobby {
-  margin: 34px auto;
+.tournament-buttons.lobby {
+  margin: 24px auto 2%;
 }
-.tournament-setup-buttons.back-to-menu {
+.tournament-buttons.back-to-menu {
   background-color: rgba(255, 0, 0, 0.25);
   justify-content: center;
   padding-top: 1%;
   padding-bottom: 1%;
-  font-size: 30px;
+  font-size: 26px;
   transition: box-shadow 0.3s, transform 0.3s;
 }
-.tournament-setup-buttons.start-sf-1 {
+.tournament-buttons.start-sf-1 {
   display: none;
   background-color: rgba(4, 255, 0, 0.25);
   justify-content: center;
   padding-top: 1%;
   padding-bottom: 1%;
-  font-size: 30px;
+  font-size: 26px;
   transition: box-shadow 0.3s, transform 0.3s;
 }
 .tournament-setup-buttons.generate:hover {

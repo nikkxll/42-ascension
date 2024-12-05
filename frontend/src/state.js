@@ -22,8 +22,8 @@ window.state = {
 }
 window.gameStoped = true;
 window.tournamentState = {
-    "name": "tournament 3",
-    "userIds": [3, 4, 5, 6],
+    "name": "",
+    "userIds": [],
     //"data": null,  //data to be added and taken from backend . 
     // players: [
     //     {"name": "", "winrate": 0.0, status: "online", "id": "3"},
@@ -31,15 +31,15 @@ window.tournamentState = {
     //     {"name": "", "winrate": 0.0, status: "online", "id": "5"},
     //     {"name": "", "winrate": 0.0, status: "online", "id": "6"}
     // ],
-    // matches: [
-    //     {"player1": 3, "player2": 4,  "status": 0}, // "score": "" , "id": 1
-    //     {"player1": 5, "player2": 6,  "status": 0}, //"score": "" , "id": 2
-    //      //{"player1": "playerID", "player2": 2, "status": 0, "score": ""},
-    // ]
+    matches: [
+        {"player1": 3, "player2": 4,  "status": 0}, // "score": "" , "id": 1
+        {"player1": 5, "player2": 6,  "status": 0}, //"score": "" , "id": 2
+         {"player1": "playerID", "player2": 2, "status": 0, "score": ""},
+    ]
 }
 
 window.ai_id = 1
-//window.singleGameState = {}  //for tournament
+window.singleGameState = {}  //for tournament
 
 // window.singleGameState = {   // for 4 player game  // this is working example
 //     "userIds": [3, 4, 5, 6],     //  [left, left, right, right]
@@ -52,9 +52,9 @@ window.ai_id = 1
 // }
 
 
-window.singleGameState = {   //for single 1x1 game
-    "userIds": [3, 4],     //  [left, right]  but AI will play right side in both cases: [playerID,AI_ID] and [AI_ID, playerID]. 
-}
+// window.singleGameState = {   //for single 1x1 game
+//     "userIds": [3, 4],     //  [left, right]  but AI will play right side in both cases: [playerID,AI_ID] and [AI_ID, playerID]. 
+// }
 
 // window.singleGameState = {   //for single game with ai
 //     player1: "id1",
