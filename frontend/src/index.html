@@ -14,6 +14,18 @@
     />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="./styles.css" rel="stylesheet" />
+	<script type="importmap">
+		{
+		  "imports": {
+			"three": "https://cdn.jsdelivr.net/npm/three@v0.149.0/build/three.module.js",
+			"three/addons/": "https://cdn.jsdelivr.net/npm/three@v0.149.0/examples/jsm/"
+		  }
+		}
+	  </script>
+	  <script type="module" src="./base.js"></script>
+	  <script type="module" src="./main.js"></script>
+	  <script type="module" src="./js/recentMatches.js"></script>
+	  <script src="./scripts.js"></script>
     <style>
       #enviroment {
         position: absolute;
@@ -804,7 +816,7 @@
 
       function goToHome() {
         goToHomeNoHistory();
-        resetAll();
+        // resetAll();
         updateHistory(goToHome);
       }
 
@@ -928,14 +940,6 @@
         });
       });
     </script>
-    <script type="importmap">
-      {
-        "imports": {
-          "three": "https://cdn.jsdelivr.net/npm/three@v0.149.0/build/three.module.js",
-          "three/addons/": "https://cdn.jsdelivr.net/npm/three@v0.149.0/examples/jsm/"
-        }
-      }
-    </script>
     <script>
       /* Players selector for tournament pre-setup */
 
@@ -969,10 +973,6 @@
         });
       });
     </script>
-    <script type="module" src="./base.js"></script>
-    <script type="module" src="./main.js"></script>
-    <script type="module" src="./js/recentMatches.js"></script>
-    <script src="./scripts.js"></script>
     <script>
       /* Game start */
 
@@ -1003,16 +1003,7 @@
     <script>
       /* Single game players pick */
 
-      document.addEventListener("DOMContentLoaded", function () {
-        const leftGrid = document.querySelector(".single-game-grid-left");
-        const rightGrid = document.querySelector(".single-game-grid-right");
-        const startButton = document.querySelector(
-          ".single-game-buttons.start"
-        );
-        let leftSelectedIndex = null;
-        let playersSelected = 0;
-
-        function updateStartButton() {
+	  function updateStartButton() {
           startButton.disabled = playersSelected !== 2;
           startButton.style.opacity = playersSelected === 2 ? "1" : "0.5";
           startButton.style.cursor =
@@ -1036,6 +1027,15 @@
           });
           updateStartButton();
         }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const leftGrid = document.querySelector(".single-game-grid-left");
+        const rightGrid = document.querySelector(".single-game-grid-right");
+        const startButton = document.querySelector(
+          ".single-game-buttons.start"
+        );
+        let leftSelectedIndex = null;
+        let playersSelected = 0;
 
         function randomizeChoice(leftPlayers, rightPlayers) {
           resetAll(leftPlayers, rightPlayers);
@@ -1150,148 +1150,6 @@
         observer.observe(leftGrid, { childList: true, subtree: true });
         observer.observe(rightGrid, { childList: true, subtree: true });
       });
-    </script>
-    <script>
-      // Logging in and signing up
-
-	document.addEventListener("DOMContentLoaded", async () => {
-		try {
-			const response = await fetch("/api/players/current/",
-				{
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json"
-				}}
-			);
-			if (!response.ok) {
-				throw new Error("Failed to get logged in user");
-			}
-			const {data} = await response.json();
-			window.state.loggedInUsers = data?.players;
-			console.log("state: ",window.state.loggedInUsers);
-			renderPlayerPanels();
-		} catch (error) {
-			console.error(error.message);
-		}
-	});
-
-      const requestSignUp = async () => {
-        const username = document.getElementById("signUpUsername").value;
-        const password = document.getElementById("signUpPassword").value;
-        try {
-          //const response = await fetch("https://localhost:8443/api/players/", {
-          const response = await fetch("/api/players/", {
-            method: "POST",
-            body: JSON.stringify({
-              username,
-              password,
-              displayName: document.getElementById("displayName").value,
-            }),
-          });
-          if (!response.ok) {
-            throw new Error("Failed to sign up");
-          }
-          const json = await response
-            .json()
-            .then(requestLogin(username, password));
-          // printLoggedinUsers()
-        } catch (error) {
-          console.error(error.message);
-        }
-      };
-
-      const printLoggedinUsers = () => {
-        console.log(window.state.loggedInUsers);
-      };
-
-      const requestLoginButton = async () => {
-        await requestLogin(
-          document.getElementById("signInUsername").value,
-          document.getElementById("signInPassword").value
-        );
-      };
-
-      const requestLogin = async (_username, _password) => {
-        try {
-          const response = await fetch("/api/auth/login/", {
-            method: "POST",
-            body: JSON.stringify({
-              username: _username,
-              password: _password,
-            }),
-          });
-          if (!response.ok) {
-            throw new Error("Failed to sign in");
-          }
-
-          const json = await response.json();
-		  window.state.loggedInUsers.push(json.data);
-          printLoggedinUsers();
-          goToLobby();
-          renderPlayerPanels();
-        } catch (error) {
-          console.error(error.message);
-        }
-      };
-    </script>
-    <script>
-      function renderPlayerPanels() {
-		const container = document.getElementById("player-panels-container");
-        container.innerHTML = "";
-		console.log(window.state.loggedInUsers);
-        const users = window.state.loggedInUsers.map((user, index) => {
-			let panelContent = `
-                <div class="player-brief-info-panel">
-					<div class="profile-avatar">
-                    <img
-                      loading="lazy"
-                      src="${user.avatarUrl || "./assets/default_avatar.png"}"
-                      alt="User profile avatar"
-                    />
-					</div>
-                    <h2 class="username">${
-                      user.displayName || user.username
-                    }</h2>
-                    <button class="profile-button" tabindex="0">Profile</button>
-                    <button class="logout-button" tabindex="0" onclick="logoutPlayer(${index})">Log out</button>
-                </div>
-            `;
-          container.innerHTML += panelContent;
-		});
-
-        for (let i = users.length; i < 4; i++) {
-          const addPlayerPanel = `
-            <div class="player-brief-info-panel">
-                <h1 class="auth-title">Add player</h1>
-                <button onclick="goToSignup()" class="auth-button" type="button">
-                    Sign up
-                </button>
-                <button onclick="goToSignin()" class="auth-button" type="button">
-                    Sign in
-                </button>
-            </div>
-        `;
-          container.innerHTML += addPlayerPanel;
-        }
-      }
-
-      const logoutPlayer = async (index) => {
-        const userId = window.state.loggedInUsers[index].id;
-        try {
-          const response = await fetch(`/api/auth/logout/${userId}/`, {
-            method: "POST"
-          });
-          
-          if (!response.ok) {
-            throw new Error("Failed to log out");
-          }
-
-          window.state.loggedInUsers.splice(index, 1);
-          renderPlayerPanels();
-        } catch (error) {
-          console.error(error.message);
-        }
-      }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   </body>

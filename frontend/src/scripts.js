@@ -1,32 +1,52 @@
-window["loggedinUsers"] = {};
-window["loggedinUsersIds"] = [];
-
 // --- Authorization part ---
+document.addEventListener("DOMContentLoaded", async () => {
+	try {
+		const response = await fetch("/api/players/current/",
+			{
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json"
+			}}
+		);
+		if (!response.ok) {
+			throw new Error("Failed to get logged in user");
+		}
+		const {data} = await response.json();
+		window.state.loggedInUsers = data?.players;
+		console.log("state: ",window.state.loggedInUsers);
+		renderPlayerPanels();
+	} catch (error) {
+		console.error(error.message);
+	}
+});
+
 
 const requestSignUp = async () => {
-  const username = document.getElementById("signUpUsername").value;
-  const password = document.getElementById("signUpPassword").value;
-  try {
-    const response = await fetch("/api/players/", {
-      method: "POST",
-      body: JSON.stringify({
-        username,
-        password,
-        displayName: document.getElementById("displayName").value,
-      }),
-    });
-    if (!response.ok) {
-      throw new Error("Failed to sign up");
-    }
-    const json = await response.json().then(requestLogin(username, password));
-  } catch (error) {
-    console.error(error.message);
-  }
-};
+	const username = document.getElementById("signUpUsername").value;
+	const password = document.getElementById("signUpPassword").value;
+	try {
+	  const response = await fetch("/api/players/", {
+		method: "POST",
+		body: JSON.stringify({
+		  username,
+		  password,
+		  displayName: document.getElementById("displayName").value,
+		}),
+	  });
+	  if (!response.ok) {
+		throw new Error("Failed to sign up");
+	  }
+	  const json = await response
+		.json()
+		.then(requestLogin(username, password));
+	} catch (error) {
+	  console.error(error.message);
+	}
+  };
 
-const updateLoggedinUsers = () => {
-  console.log(window["loggedinUsers"][window["loggedinUsersIds"][0]]);
-};
+  const printLoggedinUsers = () => {
+	console.log(window.state.loggedInUsers);
+  };
 
 const requestLoginButton = async () => {
   await requestLogin(
@@ -44,100 +64,94 @@ const clearAuthInputs = () => {
 };
 
 const requestLogin = async (_username, _password) => {
-  try {
-    const response = await fetch("/api/auth/login/", {
-      method: "POST",
-      body: JSON.stringify({
-        username: _username,
-        password: _password,
-      }),
-    });
-    if (!response.ok) {
-      console.log(response);
-      throw new Error("Failed to sign in");
-    }
+	try {
+	  const response = await fetch("/api/auth/login/", {
+		method: "POST",
+		body: JSON.stringify({
+		  username: _username,
+		  password: _password,
+		}),
+	  });
+	  if (!response.ok) {
+		throw new Error("Failed to sign in");
+	  }
 
-    const json = await response.json();
-    window["loggedinUsers"][json.data.id] = json.data;
-    window["loggedinUsersIds"].push(json.data.id);
-    clearAuthInputs();
-    updateLoggedinUsers();
-    goToLobby();
-    renderPlayerPanels();
-  } catch (error) {
-    console.error(error.message);
-    clearAuthInputs();
-  }
-};
+	  const json = await response.json();
+	  window.state.loggedInUsers.push(json.data);
+	  clearAuthInputs(); 
+	  printLoggedinUsers();
+	  goToLobby();
+	  renderPlayerPanels();
+	} catch (error) {
+	  console.error(error.message);
+	  clearAuthInputs();
+	}
+  };
 
 const logoutPlayer = async (index) => {
-  const userId = window["loggedinUsersIds"][index];
-  try {
-    const response = await fetch(`/api/auth/logout/${userId}/`, {
-      method: "POST",
-    });
+	const userId = window.state.loggedInUsers[index].id;
+	try {
+	  const response = await fetch(`/api/auth/logout/${userId}/`, {
+		method: "POST"
+	  });
+	  
+	  if (!response.ok) {
+		throw new Error("Failed to log out");
+	  }
 
-    if (!response.ok) {
-      throw new Error("Failed to log out");
-    }
-
-    window["loggedinUsersIds"].splice(index, 1);
-    renderPlayerPanels();
-  } catch (error) {
-    console.error(error.message);
-  }
-};
+	  window.state.loggedInUsers.splice(index, 1);
+	  renderPlayerPanels();
+	} catch (error) {
+	  console.error(error.message);
+	}
+}
 
 // --- Rendering player mini profile blocks for home page lobby ---
 
 function renderPlayerPanels() {
-  const users = window["loggedinUsersIds"].map(
-    (id) => window["loggedinUsers"][id]
-  );
+	const container = document.getElementById("player-panels-container");
+	container.innerHTML = "";
+	console.log(window.state.loggedInUsers);
+	const users = window.state.loggedInUsers.map((user, index) => {
+		let panelContent = `
+			<div class="player-brief-info-panel">
+				<div class="profile-avatar">
+				<img
+				  loading="lazy"
+				  src="${user.avatarUrl || "./assets/default_avatar.png"}"
+				  alt="User profile avatar"
+				/>
+				</div>
+				<h2 class="username">${
+				  user.displayName || user.username
+				}</h2>
+				<button class="profile-button" tabindex="0">Profile</button>
+				<button class="logout-button" tabindex="0" onclick="logoutPlayer(${index})">Log out</button>
+			</div>
+		`;
+	  container.innerHTML += panelContent;
+	});
 
-  const container = document.getElementById("player-panels-container");
-  container.innerHTML = "";
-
-  users.forEach((user, index) => {
-    let panelContent;
-    panelContent = `
-          <div class="player-brief-info-panel">
-              <img
-                loading="lazy"
-                src="${user.avatar || "./assets/default_avatar.png"}"
-                class="profile-avatar"
-                alt="User profile avatar"
-              />
-              <h2 class="username">${user.username || `User${index + 1}`}</h2>
-              <button class="profile-button" tabindex="0">Profile</button>
-              <button class="logout-button" tabindex="0" onclick="logoutPlayer(${index})">Log out</button>
-          </div>
-      `;
-    container.innerHTML += panelContent;
-  });
-
-  for (let i = users.length; i < 4; i++) {
-    const addPlayerPanel = `
-      <div class="player-brief-info-panel">
-          <h1 class="auth-title">Add player</h1>
-          <button onclick="goToSignup()" class="auth-button" type="button">
-              Sign up
-          </button>
-          <button onclick="goToSignin()" class="auth-button" type="button">
-              Sign in
-          </button>
-      </div>
-  `;
-    container.innerHTML += addPlayerPanel;
-  }
+	for (let i = users.length; i < 4; i++) {
+	  const addPlayerPanel = `
+		<div class="player-brief-info-panel">
+			<h1 class="auth-title">Add player</h1>
+			<button onclick="goToSignup()" class="auth-button" type="button">
+				Sign up
+			</button>
+			<button onclick="goToSignin()" class="auth-button" type="button">
+				Sign in
+			</button>
+		</div>
+	`;
+	  container.innerHTML += addPlayerPanel;
+	}
 }
 
 // --- Rendering single game lobby ---
 
 function renderGameStart() {
-  const players = window["loggedinUsersIds"].map(
-    (id) => window["loggedinUsers"][id]
-  );
+  const players = window.state.loggedInUsers;
 
   if (players.length < 1) {
     console.error(
@@ -204,8 +218,6 @@ function renderGameStart() {
   gameStartSection.style.display = "block";
 }
 
-renderPlayerPanels();
-
 // --- Creating tournament lobby ---
 
 function createTournament() {
@@ -215,10 +227,7 @@ function createTournament() {
   const tournamentTitle = document.getElementById("tournamentTitle");
 
   function getPlayers() {
-    const players =
-      window["loggedinUsersIds"]?.map(
-        (id) => window["loggedinUsers"][id]
-      ) || [];
+    const players = window.state.loggedinUsers;
     if (players.length < 3) {
       console.error(
         "Error: At least three users must be logged in to start the tournament."
