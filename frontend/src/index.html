@@ -12,6 +12,7 @@
       href="https://fonts.googleapis.com/css2?family=Acme&display=swap"
       rel="stylesheet"
     />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="./styles.css" rel="stylesheet" />
     <style>
       #enviroment {
@@ -22,7 +23,7 @@
         height: 100vh;
         padding: 0;
       }
-      #gameWindow {
+      /* #gameWindow {
         width: 96vw;
         height: 96vh;
         position: absolute;
@@ -32,7 +33,7 @@
         background: #ffffff;
         border: 2px solid white;
         box-sizing: content-box;
-      }
+      } */
     </style>
   </head>
 
@@ -47,7 +48,7 @@
   <body>
     <!-- Header -->
 
-    <section id="lobby">
+    <section id="lobby" style="display: none">
       <div class="navigation-header-container" id="header">
         <div class="navigation-header-wrapper">
           <div class="navigation-header-logo">
@@ -79,48 +80,11 @@
 
       <!-- Add player boxes -->
 
-      <div class="homeLeft half" id="player-panels-container">
-        <!-- <div class="player-brief-info-panel">
-          <h1 class="auth-title">Add player</h1>
-          <button onclick="goToSignup()" class="auth-button" type="button">
-            Sign up
-          </button>
-          <button onclick="goToSignin()" class="auth-button" type="button">
-            Sign in
-          </button>
-        </div>
-        <div class="player-brief-info-panel">
-          <h1 class="auth-title">Add player</h1>
-          <button onclick="goToSignup()" class="auth-button" type="button">
-            Sign up
-          </button>
-          <button onclick="goToSignin()" class="auth-button" type="button">
-            Sign in
-          </button>
-        </div>
-        <div class="player-brief-info-panel">
-          <h1 class="auth-title">Add player</h1>
-          <button onclick="goToSignup()" class="auth-button" type="button">
-            Sign up
-          </button>
-          <button onclick="goToSignin()" class="auth-button" type="button">
-            Sign in
-          </button>
-        </div>
-        <div class="player-brief-info-panel">
-          <h1 class="auth-title">Add player</h1>
-          <button onclick="goToSignup()" class="auth-button" type="button">
-            Sign up
-          </button>
-          <button onclick="goToSignin()" class="auth-button" type="button">
-            Sign in
-          </button>
-        </div> -->
-      </div>
+      <div class="homeLeft half" id="player-panels-container"></div>
 
       <!-- Recent matches -->
 
-      <div class="homeRight half">
+      <div class="homeRight half" >
         <div class="matches-container">
           <div class="matches-card">
             <h2 class="matches-title">Recent matches</h2>
@@ -180,7 +144,7 @@
 
         <div class="buttonContainer">
           <button
-            onclick="goToSingleGameSettings()"
+            onclick="goToGameStart()"
             class="create-action"
             tabindex="0"
             aria-label="Create Single Game"
@@ -407,134 +371,12 @@
       </div>
     </section>
 
-    <!-- Single game settings window -->
-
-    <div class="add-ai-main-container" id="singleGameSettings">
-      <div class="add-ai-top-part">
-        <h2 class="add-ai-header">Add AI to the lobby</h2>
-        <div class="add-ai-checkbox">
-          <div class="add-ai-checkbox-space">
-            <input type="checkbox" />
-            <span class="add-ai-header">Yes</span>
-          </div>
-          <div class="add-ai-checkbox-space">
-            <input type="checkbox" />
-            <span class="add-ai-header">No</span>
-          </div>
-        </div>
-        <div class="add-ai-tooltip">
-          <img
-            src="./assets/question_mark.png"
-            alt="settings"
-            class="settings-icon"
-          />
-          <span class="add-ai-tooltiptext"
-            >In order to play with AI you need to add it to the lobby. To do so
-            you have to have 3 players at max.</span
-          >
-        </div>
-      </div>
-      <div class="add-ai-buttons">
-        <button class="add-ai-button back" tabindex="0" onclick="goToHome()">
-          Back
-        </button>
-        <button
-          class="add-ai-button continue"
-          tabindex="0"
-          onclick="goToGameStart()"
-        >
-          Continue
-        </button>
-      </div>
-    </div>
-
     <!-- Single game -->
 
     <section style="display: none" id="gameStart">
       <div class="single-game-lobby">
         <div class="single-game-top">
-          <div class="single-game-grid-left">
-            <div class="game-player-card">
-              <article class="game-player-card-inner-single">
-                <h2 class="game-player-number">Player 1</h2>
-                <img
-                  loading="lazy"
-                  src="./assets/default_avatar.png"
-                  alt="Player avatar"
-                  class="game-player-avatar"
-                />
-                <h3 class="game-player-name">Vladimir</h3>
-                <div class="game-player-stats-container">
-                  <p class="game-player-statistics-param">Games played</p>
-                  <p class="game-player-statistics-param-number">15</p>
-                </div>
-                <div class="game-player-win-rate-container">
-                  <p class="game-player-statistics-param">Win rate</p>
-                  <p class="game-player-statistics-param-number last">80.3 %</p>
-                </div>
-              </article>
-            </div>
-            <div class="game-player-card">
-              <article class="game-player-card-inner-single">
-                <h2 class="game-player-number">Player 2</h2>
-                <img
-                  loading="lazy"
-                  src="./assets/default_avatar.png"
-                  alt="Player avatar"
-                  class="game-player-avatar"
-                />
-                <h3 class="game-player-name">Max</h3>
-                <div class="game-player-stats-container">
-                  <p class="game-player-statistics-param">Games played</p>
-                  <p class="game-player-statistics-param-number">6</p>
-                </div>
-                <div class="game-player-win-rate-container">
-                  <p class="game-player-statistics-param">Win rate</p>
-                  <p class="game-player-statistics-param-number last">66.6 %</p>
-                </div>
-              </article>
-            </div>
-            <div class="game-player-card">
-              <article class="game-player-card-inner-single">
-                <h2 class="game-player-number">Player 3</h2>
-                <img
-                  loading="lazy"
-                  src="./assets/default_avatar.png"
-                  alt="Player avatar"
-                  class="game-player-avatar"
-                />
-                <h3 class="game-player-name">Robert</h3>
-                <div class="game-player-stats-container">
-                  <p class="game-player-statistics-param">Games played</p>
-                  <p class="game-player-statistics-param-number">100</p>
-                </div>
-                <div class="game-player-win-rate-container">
-                  <p class="game-player-statistics-param">Win rate</p>
-                  <p class="game-player-statistics-param-number last">99 %</p>
-                </div>
-              </article>
-            </div>
-            <div class="game-player-card">
-              <article class="game-player-card-inner-single">
-                <h2 class="game-player-number">Player 4</h2>
-                <img
-                  loading="lazy"
-                  src="./assets/default_avatar.png"
-                  alt="Player avatar"
-                  class="game-player-avatar"
-                />
-                <h3 class="game-player-name">Vladimir</h3>
-                <div class="game-player-stats-container">
-                  <p class="game-player-statistics-param">Games played</p>
-                  <p class="game-player-statistics-param-number">15</p>
-                </div>
-                <div class="game-player-win-rate-container">
-                  <p class="game-player-statistics-param">Win rate</p>
-                  <p class="game-player-statistics-param-number last">80.3 %</p>
-                </div>
-              </article>
-            </div>
-          </div>
+          <div class="single-game-grid-left"></div>
           <div class="single-game-vs-logo">
             <img
               class="single-game-vs-logo-props"
@@ -542,88 +384,7 @@
               alt="Versus logo"
             />
           </div>
-          <div class="single-game-grid-right">
-            <div class="game-player-card">
-              <article class="game-player-card-inner-single">
-                <h2 class="game-player-number">Player 1</h2>
-                <img
-                  loading="lazy"
-                  src="./assets/default_avatar.png"
-                  alt="Player avatar"
-                  class="game-player-avatar"
-                />
-                <h3 class="game-player-name">Vladimir</h3>
-                <div class="game-player-stats-container">
-                  <p class="game-player-statistics-param">Games played</p>
-                  <p class="game-player-statistics-param-number">15</p>
-                </div>
-                <div class="game-player-win-rate-container">
-                  <p class="game-player-statistics-param">Win rate</p>
-                  <p class="game-player-statistics-param-number last">80.3 %</p>
-                </div>
-              </article>
-            </div>
-            <div class="game-player-card">
-              <article class="game-player-card-inner-single">
-                <h2 class="game-player-number">Player 2</h2>
-                <img
-                  loading="lazy"
-                  src="./assets/default_avatar.png"
-                  alt="Player avatar"
-                  class="game-player-avatar"
-                />
-                <h3 class="game-player-name">Max</h3>
-                <div class="game-player-stats-container">
-                  <p class="game-player-statistics-param">Games played</p>
-                  <p class="game-player-statistics-param-number">6</p>
-                </div>
-                <div class="game-player-win-rate-container">
-                  <p class="game-player-statistics-param">Win rate</p>
-                  <p class="game-player-statistics-param-number last">66.6 %</p>
-                </div>
-              </article>
-            </div>
-            <div class="game-player-card">
-              <article class="game-player-card-inner-single">
-                <h2 class="game-player-number">Player 3</h2>
-                <img
-                  loading="lazy"
-                  src="./assets/default_avatar.png"
-                  alt="Player avatar"
-                  class="game-player-avatar"
-                />
-                <h3 class="game-player-name">Robert</h3>
-                <div class="game-player-stats-container">
-                  <p class="game-player-statistics-param">Games played</p>
-                  <p class="game-player-statistics-param-number">100</p>
-                </div>
-                <div class="game-player-win-rate-container">
-                  <p class="game-player-statistics-param">Win rate</p>
-                  <p class="game-player-statistics-param-number last">99 %</p>
-                </div>
-              </article>
-            </div>
-            <div class="game-player-card">
-              <article class="game-player-card-inner-single">
-                <h2 class="game-player-number">Player 4</h2>
-                <img
-                  loading="lazy"
-                  src="./assets/default_avatar.png"
-                  alt="Player avatar"
-                  class="game-player-avatar"
-                />
-                <h3 class="game-player-name">Vladimir</h3>
-                <div class="game-player-stats-container">
-                  <p class="game-player-statistics-param">Games played</p>
-                  <p class="game-player-statistics-param-number">15</p>
-                </div>
-                <div class="game-player-win-rate-container">
-                  <p class="game-player-statistics-param">Win rate</p>
-                  <p class="game-player-statistics-param-number last">80.3 %</p>
-                </div>
-              </article>
-            </div>
-          </div>
+          <div class="single-game-grid-right"></div>
         </div>
         <div class="single-game-bottom">
           <button
@@ -743,10 +504,40 @@
 
     <!-- Profile window (WIP) -->
 
-    <section style="display: none" id="profile">
-      <div class="profile box">
-        profile
-        <button onclick="goToHome()">go back</button>
+    <section id="profile">
+      <div class="profile-box box">
+        <div class="profileLeft">
+          <div id="person">
+            <img id="person-avatar" alt="avatar" src="https://neweralive.na/wp-content/uploads/2024/06/lloyd-sikeba.jpg">
+            <h1 id="person-name">Blake</h1>
+            <p id="person-stats">stats go here with history</p>
+          </div>
+        </div>
+        <div class="profileRight">
+          <div id="carouselExampleFade" class="carousel slide carousel-fade">
+            <h1 class="carousel-title">Friends</h1>
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                a
+              </div>
+              <div class="carousel-item">
+                b
+              </div>
+              <div class="carousel-item">
+                c
+              </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+        </div>
+        <button onclick="goToHome()" style="z-index: 3; position: absolute;">go back</button>
       </div>
     </section>
 
@@ -762,7 +553,7 @@
           aria-label="Enter the tournament name"
         />
       </div>
-      <div class="tournament-setup-header-container">
+      <!-- <div class="tournament-setup-header-container">
         <h1 class="tournament-setup-header">Add users to the tournament</h1>
       </div>
       <div class="tournament-setup-grid">
@@ -810,12 +601,12 @@
             <h3 class="tournament-setup-player-name">TestUserName4</h3>
           </article>
         </div>
-      </div>
+      </div> -->
       <div class="tournament-setup-buttons selection">
         <button
           class="tournament-setup-buttons button back"
           tabindex="0"
-          onclick="goToHome()"
+          onclick="goToLobby()"
         >
           Back
         </button>
@@ -838,170 +629,54 @@
     <div class="tournament-main" id="tournament">
       <div class="tournament-top">
         <div class="tournament-top-left">
-          <div class="tournament-name">
+          <div class="tournament-name" id="tournamentTitle">
             <h1 class="tournament-name-text">Transcendence Cup 2024</h1>
           </div>
-          <div class="tournament-grid">
-            <div class="game-player-card">
-              <article class="tournament-game-player-card-inner">
-                <h2 class="game-player-number">Player 1</h2>
-                <img
-                  loading="lazy"
-                  src="./assets/default_avatar.png"
-                  alt="Player avatar"
-                  class="game-player-avatar"
-                />
-                <h3 class="game-player-name">Vladimir</h3>
-                <div class="game-player-win-rate-container">
-                  <p class="game-player-statistics-param">Win rate</p>
-                  <p class="game-player-statistics-param-number last">80.3 %</p>
-                </div>
-              </article>
-            </div>
-            <div class="game-player-card">
-              <article class="tournament-game-player-card-inner">
-                <h2 class="game-player-number">Player 2</h2>
-                <img
-                  loading="lazy"
-                  src="./assets/default_avatar.png"
-                  alt="Player avatar"
-                  class="game-player-avatar"
-                />
-                <h3 class="game-player-name">Max</h3>
-                <div class="game-player-win-rate-container">
-                  <p class="game-player-statistics-param">Win rate</p>
-                  <p class="game-player-statistics-param-number last">66.6 %</p>
-                </div>
-              </article>
-            </div>
-            <div class="game-player-card">
-              <article class="tournament-game-player-card-inner">
-                <h2 class="game-player-number">Player 3</h2>
-                <img
-                  loading="lazy"
-                  src="./assets/default_avatar.png"
-                  alt="Player avatar"
-                  class="game-player-avatar"
-                />
-                <h3 class="game-player-name">TestUser</h3>
-                <div class="game-player-win-rate-container">
-                  <p class="game-player-statistics-param">Win rate</p>
-                  <p class="game-player-statistics-param-number last">100 %</p>
-                </div>
-              </article>
-            </div>
-            <div class="game-player-card">
-              <article class="tournament-game-player-card-inner">
-                <h2 class="game-player-number">Player 4</h2>
-                <img
-                  loading="lazy"
-                  src="./assets/default_avatar.png"
-                  alt="Player avatar"
-                  class="game-player-avatar"
-                />
-                <h3 class="game-player-name">NewUser</h3>
-                <div class="game-player-win-rate-container">
-                  <p class="game-player-statistics-param">Win rate</p>
-                  <p class="game-player-statistics-param-number last">-</p>
-                </div>
-              </article>
-            </div>
-          </div>
+          <div class="tournament-grid"></div>
         </div>
         <div class="tournament-top-right">
           <h2 class="tournament-round h2" id="firstSemifinal">Semifinal 1</h2>
 
           <!-- Tournament SF1 -->
 
-          <div class="tournament-match-container" id="firstSemifinalContent">
-            <h1 class="tournament-match-title">Semifinal 1</h1>
-            <div class="tournament-match-players">
-              <div class="tournament-match-player-info-left">
-                <img
-                  loading="lazy"
-                  src="./assets/default_avatar.png"
-                  alt="Player avatar"
-                  class="tournament-match-avatar"
-                />
-                <h3 class="game-player-name tournament">Player 2</h3>
-              </div>
-              <h2 class="tournament-match-left-score">-</h2>
-              <img
-                class="tournament-match-vs-logo"
-                src="./assets/vs_logo.png"
-                alt="Versus logo"
-              />
-              <h2 class="tournament-match-right-score">-</h2>
-              <div class="tournament-match-player-info-right">
-                <img
-                  loading="lazy"
-                  src="./assets/default_avatar.png"
-                  alt="Player avatar"
-                  class="tournament-match-avatar"
-                />
-                <h3 class="game-player-name tournament">Player 3</h3>
-              </div>
-            </div>
-          </div>
+          <div
+            class="tournament-match-container"
+            id="firstSemifinalContent"
+          ></div>
 
           <h2 class="tournament-round h2" id="secondSemifinal">Semifinal 2</h2>
 
           <!-- Tournament SF2 -->
 
-          <div class="tournament-match-container" id="secondSemifinalContent">
-            <h1 class="tournament-match-title">Semifinal 2</h1>
-            <div class="tournament-match-players">
-              <div class="tournament-match-player-info-left">
-                <img
-                  loading="lazy"
-                  src="./assets/default_avatar.png"
-                  alt="Player avatar"
-                  class="tournament-match-avatar"
-                />
-                <h3 class="game-player-name tournament">Player 4</h3>
-              </div>
-              <h2 class="tournament-match-left-score">-</h2>
-              <img
-                class="tournament-match-vs-logo"
-                src="./assets/vs_logo.png"
-                alt="Versus logo"
-              />
-              <h2 class="tournament-match-right-score">-</h2>
-              <div class="tournament-match-player-info-right">
-                <img
-                  loading="lazy"
-                  src="./assets/default_avatar.png"
-                  alt="Player avatar"
-                  class="tournament-match-avatar"
-                />
-                <h3 class="game-player-name tournament">Player 1</h3>
-              </div>
-            </div>
-          </div>
+          <div
+            class="tournament-match-container"
+            id="secondSemifinalContent"
+          ></div>
 
           <!-- Footer buttons -->
 
           <h2 class="tournament-round h2" id="final">Final</h2>
         </div>
       </div>
-      <div class="tournament-setup-buttons lobby">
+      <div class="tournament-buttons lobby">
         <button
-          class="tournament-setup-buttons button back-to-menu"
+          class="tournament-buttons button back-to-menu"
           tabindex="0"
-          onclick="goToHome()"
+          id="backToMenu"
+          onclick="goToLobby()"
         >
           Back to menu
         </button>
         <button
-          class="tournament-setup-buttons button generate"
+          class="tournament-buttons button generate"
           tabindex="0"
-          onclick="generateSemifinals()"
           id="generateSF"
+          onclick="showSemiFinalButton()"
         >
           Generate bracket
         </button>
         <button
-          class="tournament-setup-buttons button start-sf-1"
+          class="tournament-buttons button start-sf-1"
           tabindex="0"
           id="startFirstSF"
           onclick="startOff()"
@@ -1015,36 +690,32 @@
       /* Collection of all the buttons that transition the views */
       /* adding history, that is stored in the urlparameters */
       const views = {
-        "signup": goToSignup,
-        "signin": goToSignin,
-        "lobby": goToLobby,
-        "matchView": goToMatchView,
-        "home": goToHome,
-        "gamestart": goToGameStart,
-        "tournament": goToTournament,
-        "profile": goToProfile,
-        "homenavigation": goToHomeNavigation,
-        "settingsnavigation": goToSettingsNavigation,
-        "aboutnavigation": goToAboutNavigation,
-      }
+        signup: goToSignup,
+        signin: goToSignin,
+        lobby: goToLobby,
+        matchView: goToMatchView,
+        home: goToHome,
+        gamestart: goToGameStart,
+        tournament: goToTournament,
+        profile: goToProfile,
+        homenavigation: goToHomeNavigation,
+        settingsnavigation: goToSettingsNavigation,
+        aboutnavigation: goToAboutNavigation,
+      };
 
-      window.addEventListener("popstate", (e) => 
-      {
-        if (history.state == null)
-          history.replaceState({"view": "home"})
-        views[history.state["view"]]()
-
-      })
+      window.addEventListener("popstate", (e) => {
+        if (history.state == null) history.replaceState({ view: "home" });
+        views[history.state["view"]]();
+      });
 
       const updateHistory = (f) => {
         Object.entries(views).forEach((key) => {
-          if (key[1] == f)
-          {
-            history.pushState({"view": key[0]}, "")
+          if (key[1] == f) {
+            history.pushState({ view: key[0] }, "");
             console.log(key[0]);
           }
-        })
-      }
+        });
+      };
 
       /* home screen transitions */
 
@@ -1059,7 +730,7 @@
       /* section transitions */
       const lobby = document.getElementById("lobby");
       const gameStart = document.getElementById("gameStart");
-      const singleGameSettings = document.getElementById("singleGameSettings");
+      // const singleGameSettings = document.getElementById("singleGameSettings");
       const tournament = document.getElementById("tournament");
       const profile = document.getElementById("profile");
       const tournamentSetup = document.getElementById("tournamentSetup");
@@ -1084,48 +755,47 @@
       const startFirstSemifinalButton = document.getElementById("startFirstSF");
 
       function goToSignup() {
-        goToHomeNoHistory()
+        goToHomeNoHistory();
         homeLeft.style.display = "none";
         signin.style.display = "none";
         signup.style.display = "block";
-        updateHistory(goToSignup)
+        updateHistory(goToSignup);
       }
 
       function goToSignin() {
-        goToHomeNoHistory()
+        goToHomeNoHistory();
         homeLeft.style.display = "none";
         signin.style.display = "block";
         signup.style.display = "none";
-        updateHistory(goToSignin)
+        updateHistory(goToSignin);
       }
 
       function goToLobby() {
-        goToHomeNoHistory()
+        goToHomeNoHistory();
         homeLeft.style.display = "grid";
         signin.style.display = "none";
         signup.style.display = "none";
-        updateHistory(goToLobby)
+        updateHistory(goToLobby);
       }
 
       function goToMatchView() {
-        goToHomeNoHistory()
+        goToHomeNoHistory();
         matchView.style.display = "block";
         homeRight.style.display = "none";
-        updateHistory(goToMatchView)
+        updateHistory(goToMatchView);
       }
 
       function goToHomeRight() {
-        goToHomeNoHistory()
+        goToHomeNoHistory();
         matchView.style.display = "none";
         homeRight.style.display = "grid";
-        updateHistory(goToHomeRight)
+        updateHistory(goToHomeRight);
       }
 
-      function goToHomeNoHistory()
-      {
+      function goToHomeNoHistory() {
         lobby.style.display = "block";
         gameStart.style.display = "none";
-        singleGameSettings.style.display = "none";
+        // singleGameSettings.style.display = "none";
         tournament.style.display = "none";
         profile.style.display = "none";
         tournamentSetup.style.display = "none";
@@ -1133,9 +803,9 @@
       }
 
       function goToHome() {
-        goToHomeNoHistory()
+        goToHomeNoHistory();
         resetAll();
-        updateHistory(goToHome)
+        updateHistory(goToHome);
       }
 
       function runGame() {
@@ -1145,24 +815,25 @@
         profile.style.display = "none";
         tournamentSetup.style.display = "none";
         overlay.style.display = "none";
-        updateHistory(runGame)
+        updateHistory(runGame);
       }
 
-      function goToSingleGameSettings() {
-        singleGameSettings.style.display = "block";
-        overlay.style.display = "block";
-        overlay.style.pointerEvents = "auto";
-      }
+      // function goToSingleGameSettings() {
+      //   singleGameSettings.style.display = "block";
+      //   overlay.style.display = "block";
+      //   overlay.style.pointerEvents = "auto";
+      // }
 
       function goToGameStart() {
         lobby.style.display = "none";
         gameStart.style.display = "block";
         tournament.style.display = "none";
-        singleGameSettings.style.display = "none";
+        // singleGameSettings.style.display = "none";
         profile.style.display = "none";
         overlay.style.display = "none";
         otherGameStart.style.display = "none";
-        updateHistory(goToGameStart)
+        renderGameStart();
+        updateHistory(goToGameStart);
       }
 
       function goToTournament() {
@@ -1172,14 +843,20 @@
         profile.style.display = "none";
         tournamentSetup.style.display = "none";
         tournament.style.display = "block";
+        generateSFButton.style.display = "block";
+        startFirstSemifinalButton.style.display = "none";
+        firstSemifinal.style.display = "flex";
+        secondSemifinal.style.display = "flex";
+        firstSemifinalContent.style.display = "none";
+        secondSemifinalContent.style.display = "none";
+        createTournament();
+        // const cards = document.querySelectorAll(".game-player-card-inner");
 
-        const cards = document.querySelectorAll(".game-player-card-inner");
-
-        cards.forEach((card) => {
-          card.classList.remove("selected");
-          card.classList.remove("shaded");
-        });
-        updateHistory(goToTournament)
+        // cards.forEach((card) => {
+        //   card.classList.remove("selected");
+        //   card.classList.remove("shaded");
+        // });
+        updateHistory(goToTournament);
       }
 
       function goToProfile() {
@@ -1187,7 +864,7 @@
         gameStart.style.display = "none";
         tournament.style.display = "none";
         profile.style.display = "block";
-        updateHistory(goToProfile)
+        updateHistory(goToProfile);
       }
 
       function goTo2v2GameStart() {
@@ -1201,19 +878,25 @@
       function goToHomeNavigation() {
         homeLeft.style.display = "grid";
         homeRight.style.display = "grid";
-        updateHistory(goToHomeNavigation)
+        updateHistory(goToHomeNavigation);
       }
 
       function goToAboutNavigation() {
         homeLeft.style.display = "none";
         homeRight.style.display = "none";
-        updateHistory(goToAboutNavigation)
+        signin.style.display = "none";
+        signup.style.display = "none";
+        matchView.style.display = "none";
+        updateHistory(goToAboutNavigation);
       }
 
       function goToSettingsNavigation() {
         homeLeft.style.display = "none";
         homeRight.style.display = "none";
-        updateHistory(goToSettingsNavigation)
+        signin.style.display = "none";
+        signup.style.display = "none";
+        matchView.style.display = "none";
+        updateHistory(goToSettingsNavigation);
       }
 
       function openTournamentSetupBox() {
@@ -1222,7 +905,7 @@
         overlay.style.pointerEvents = "auto";
       }
 
-      function generateSemifinals() {
+      function showSemiFinalButton() {
         firstSemifinal.style.display = "none";
         secondSemifinal.style.display = "none";
         firstSemifinalContent.style.display = "block";
@@ -1289,6 +972,7 @@
     <script type="module" src="./base.js"></script>
     <script type="module" src="./main.js"></script>
     <script type="module" src="./js/recentMatches.js"></script>
+    <script src="./scripts.js"></script>
     <script>
       /* Game start */
 
@@ -1317,22 +1001,17 @@
       // }
     </script>
     <script>
-      /* Single game lobby interaction */
+      /* Single game players pick */
 
       document.addEventListener("DOMContentLoaded", function () {
-        const leftPlayers = document.querySelectorAll(
-          ".single-game-grid-left .game-player-card-inner-single"
-        );
-        const rightPlayers = document.querySelectorAll(
-          ".single-game-grid-right .game-player-card-inner-single"
-        );
+        const leftGrid = document.querySelector(".single-game-grid-left");
+        const rightGrid = document.querySelector(".single-game-grid-right");
         const startButton = document.querySelector(
           ".single-game-buttons.start"
         );
         let leftSelectedIndex = null;
         let playersSelected = 0;
 
-        // Updates the start button based on the selected players
         function updateStartButton() {
           startButton.disabled = playersSelected !== 2;
           startButton.style.opacity = playersSelected === 2 ? "1" : "0.5";
@@ -1341,7 +1020,7 @@
         }
 
         // Reset all selections
-        window.resetAll = function () {
+        function resetAll(leftPlayers, rightPlayers) {
           playersSelected = 0;
           leftSelectedIndex = null;
           leftPlayers.forEach((p) => {
@@ -1356,118 +1035,120 @@
             );
           });
           updateStartButton();
-        };
+        }
 
-        window.randomizeChoice = function () {
-          resetAll();
+        function randomizeChoice(leftPlayers, rightPlayers) {
+          resetAll(leftPlayers, rightPlayers);
 
-          // Randomly select left player
+          // Randomly select a left player
           const randomLeftIndex = Math.floor(
             Math.random() * leftPlayers.length
           );
-          const leftPlayerEvent = new Event("click");
-          leftPlayers[randomLeftIndex].dispatchEvent(leftPlayerEvent);
+          leftPlayers[randomLeftIndex].click();
 
-          // Get available right players based on left selection
-          const availableRightPlayers = Array.from(rightPlayers).filter(
-            (player) => player.classList.contains("player-selectable")
+          // Randomly select an available right player
+          const availableRightPlayers = rightPlayers.filter((p) =>
+            p.classList.contains("player-selectable")
           );
-
-          // Randomly select right player
-          const randomRightIndex = Math.floor(
-            Math.random() * availableRightPlayers.length
-          );
-          const rightPlayerEvent = new Event("click");
-          setTimeout(() => {
-            availableRightPlayers[randomRightIndex].dispatchEvent(
-              rightPlayerEvent
+          if (availableRightPlayers.length > 0) {
+            const randomRightIndex = Math.floor(
+              Math.random() * availableRightPlayers.length
             );
-            updateStartButton();
-          }, 500);
-        };
+            availableRightPlayers[randomRightIndex].click();
+          }
+        }
 
-        leftPlayers.forEach((player, index) => {
-          player.classList.add("player-selectable");
+        // Add event listeners for left players
+        function attachLeftPlayerListeners(leftPlayers, rightPlayers) {
+          leftPlayers.forEach((player, index) => {
+            player.classList.add("player-selectable");
 
-          player.addEventListener("click", () => {
-            if (playersSelected >= 2) return;
+            player.addEventListener("click", () => {
+              if (playersSelected >= 2) return;
 
-            leftPlayers.forEach((p) => {
-              p.classList.add("player-disabled");
-              p.classList.remove("player-selected");
+              // Disable all left players initially
+              leftPlayers.forEach((p) => {
+                p.classList.add("player-disabled");
+                p.classList.remove("player-selected");
+              });
+
+              // Select the clicked player
+              player.classList.remove("player-disabled");
+              player.classList.add("player-selected");
+              leftSelectedIndex = index;
+              if (playersSelected === 0) playersSelected++;
+
+              // Enable or disable right players based on selection
+              rightPlayers.forEach((rightPlayer, rightIndex) => {
+                rightPlayer.classList.remove(
+                  "player-disabled",
+                  "player-selectable",
+                  "player-selected"
+                );
+
+                // Enable only appropriate right players
+                if (rightIndex !== index) {
+                  rightPlayer.classList.add("player-selectable");
+                } else {
+                  rightPlayer.classList.add("player-disabled");
+                }
+              });
+
+              updateStartButton();
             });
+          });
+        }
 
-            // Enable selected player
-            player.classList.remove("player-disabled");
-            player.classList.add("player-selected");
-            leftSelectedIndex = index;
-            if (playersSelected === 0) playersSelected++;
-            updateStartButton();
+        // Add event listeners for right players
+        function attachRightPlayerListeners(rightPlayers) {
+          rightPlayers.forEach((player) => {
+            player.addEventListener("click", () => {
+              if (
+                leftSelectedIndex !== null &&
+                player.classList.contains("player-selectable") &&
+                playersSelected < 2
+              ) {
+                playersSelected++;
+                rightPlayers.forEach((p) => {
+                  p.classList.remove("player-selectable");
+                  p.classList.add("player-disabled");
+                });
 
-            // Handle right side based on selected player
-            rightPlayers.forEach((rightPlayer, rightIndex) => {
-              rightPlayer.classList.remove(
-                "player-disabled",
-                "player-selectable",
-                "player-selected"
-              );
-
-              switch (index) {
-                case 0:
-                  if (rightIndex > 0) {
-                    rightPlayer.classList.add("player-selectable");
-                  } else {
-                    rightPlayer.classList.add("player-disabled");
-                  }
-                  break;
-                case 1:
-                  if (rightIndex !== 1) {
-                    rightPlayer.classList.add("player-selectable");
-                  } else {
-                    rightPlayer.classList.add("player-disabled");
-                  }
-                  break;
-                case 2:
-                  if (rightIndex !== 2) {
-                    rightPlayer.classList.add("player-selectable");
-                  } else {
-                    rightPlayer.classList.add("player-disabled");
-                  }
-                  break;
-                case 3:
-                  if (rightIndex !== 3) {
-                    rightPlayer.classList.add("player-selectable");
-                  } else {
-                    rightPlayer.classList.add("player-disabled");
-                  }
-                  break;
+                player.classList.remove("player-disabled");
+                player.classList.add("player-selected");
+                updateStartButton();
               }
             });
           });
+        }
+
+        // Observe for changes in player cards dynamically
+        const observer = new MutationObserver(() => {
+          const leftPlayers = Array.from(
+            leftGrid.querySelectorAll(".game-player-card-inner-single")
+          );
+          const rightPlayers = Array.from(
+            rightGrid.querySelectorAll(".game-player-card-inner-single")
+          );
+
+          if (leftPlayers.length > 0 && rightPlayers.length > 0) {
+            // observer.disconnect();
+            attachLeftPlayerListeners(leftPlayers, rightPlayers);
+            attachRightPlayerListeners(rightPlayers);
+
+            // Allow external reset/randomization to function
+            window.resetAll = () => resetAll(leftPlayers, rightPlayers);
+            window.randomizeChoice = () =>
+              randomizeChoice(leftPlayers, rightPlayers);
+
+            // Initialize the start button state
+            updateStartButton();
+          }
         });
 
-        rightPlayers.forEach((player) => {
-          player.addEventListener("click", () => {
-            if (
-              leftSelectedIndex !== null &&
-              player.classList.contains("player-selectable") &&
-              playersSelected < 2
-            ) {
-              playersSelected++;
-              rightPlayers.forEach((p) => {
-                p.classList.remove("player-selectable");
-                p.classList.add("player-disabled");
-              });
-
-              player.classList.remove("player-disabled");
-              player.classList.add("player-selected");
-              updateStartButton();
-            }
-          });
-        });
-
-        // Initialize start button
-        updateStartButton();
+        // Start observing the grids for changes
+        observer.observe(leftGrid, { childList: true, subtree: true });
+        observer.observe(rightGrid, { childList: true, subtree: true });
       });
     </script>
     <script>
@@ -1494,8 +1175,6 @@
 		}
 	});
 
-    //   window["loggedinUsers"] = {};
-    //   window["loggedinUsersIds"] = [];
       const requestSignUp = async () => {
         const username = document.getElementById("signUpUsername").value;
         const password = document.getElementById("signUpPassword").value;
@@ -1546,8 +1225,6 @@
           }
 
           const json = await response.json();
-        //   window["loggedinUsers"][json.data.id] = json.data;
-        //   window["loggedinUsersIds"].push(json.data.id);
 		  window.state.loggedInUsers.push(json.data);
           printLoggedinUsers();
           goToLobby();
@@ -1615,8 +1292,7 @@
           console.error(error.message);
         }
       }
-
-    //   renderPlayerPanels();
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   </body>
 </html>

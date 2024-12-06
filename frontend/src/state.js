@@ -13,8 +13,8 @@ window.state = {
 }
 
 window.tournamentState = {
-    "name": "tournament 3",
-    "userIds": [3, 4, 5, 6],
+    "name": "",
+    "userIds": [],
     //"data": null,  //data to be added and taken from backend . 
     // players: [
     //     {"name": "", "winrate": 0.0, status: "online", "id": "3"},
@@ -25,7 +25,7 @@ window.tournamentState = {
     matches: [
         {"player1": 3, "player2": 4,  "status": 0}, // "score": "" , "id": 1
         {"player1": 5, "player2": 6,  "status": 0}, //"score": "" , "id": 2
-         //{"player1": "playerID", "player2": 2, "status": 0, "score": ""},
+         {"player1": "playerID", "player2": 2, "status": 0, "score": ""},
     ]
 }
 
