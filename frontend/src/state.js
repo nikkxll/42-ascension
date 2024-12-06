@@ -1,17 +1,8 @@
 window.state = {
     // max size 4
-    loggedInUsers: [
-        {"displayname": "", "avatar": "", "id": "", "gamesPlayed": 0, "winrate": 0.0},
-        {"displayname": "", "avatar": "", "id": "", "gamesPlayed": 0, "winrate": 0.0},
-        {"displayname": "", "avatar": "", "id": "", "gamesPlayed": 0, "winrate": 0.0}
-    ],
+    loggedInUsers: [],
     // max 5
-    recentMatches: [
-        {"winner": "", "loser": "", "score": "11:2"},
-        {"winner": "", "loser": "", "score": "11:2"},
-        {"winner": "", "loser": "", "score": "11:2"},
-        {"winner": "", "loser": "", "score": "11:2"}
-    ],
+    recentMatches: [],
     // max 5
     tournaments: [ 
         {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""},
@@ -20,6 +11,7 @@ window.state = {
         {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""}
     ]
 }
+
 window.tournamentState = {
     "name": "tournament 3",
     "userIds": [3, 4, 5, 6],

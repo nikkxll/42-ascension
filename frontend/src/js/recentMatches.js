@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 function renderRecentMatches() {
 	const data = window.state.recentMatches
+	console.log(data);
 	const matchList = document.querySelector(".match-results");
 	matchList.innerHTML = "";
 
@@ -18,7 +19,7 @@ function renderRecentMatches() {
 		if (match.score !== null) {
 			isWinner1 = match.score[0] > match.score[1];
 		}
-		matchScore = match.score ? match.score[0] + ":" + match.score[1] : "0:0";
+		const matchScore = match.score ? match.score[0] + ":" + match.score[1] : "0:0";
 		newDiv.innerHTML = `
 			<li class="match-result">
 			<p onclick="goToMatchView()" class="match-link">

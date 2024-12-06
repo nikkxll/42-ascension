@@ -126,57 +126,6 @@
             <h2 class="matches-title">Recent matches</h2>
             <article class="matches-list">
               <ul class="match-results">
-                <li class="match-result">
-                  <p onclick="goToMatchView()" class="match-link">
-                    <span class="winner-name">Vladimir</span> beat Max [11 : 0]
-                  </p>
-                </li>
-                <li class="match-result">
-                  <p onclick="goToMatchView()" class="match-link">
-                    <span class="winner-name">Max</span> beat Alex [11 : 6]
-                  </p>
-                </li>
-                <li class="match-result">
-                  <p onclick="goToMatchView()" class="match-link">
-                    <span class="winner-name">Leo</span> beat Robert [12 : 10]
-                  </p>
-                </li>
-                <li class="match-result">
-                  <p onclick="goToMatchView()" class="match-link">
-                    <span class="winner-name">Max</span> beat Robert [11 : 1]
-                  </p>
-                </li>
-                <li class="match-result">
-                  <p onclick="goToMatchView()" class="match-link">
-                    <span class="winner-name">David</span> beat Max [11 : 8]
-                  </p>
-                </li>
-                <li class="match-result match-result-large">
-                  <p onclick="goToMatchView()" class="match-link">
-                    <span class="winner-name">David</span> beat Vladimir [14 :
-                    12]
-                  </p>
-                </li>
-                <li class="match-result">
-                  <p onclick="goToMatchView()" class="match-link">
-                    <span class="winner-name">David</span> beat Max [11 : 7]
-                  </p>
-                </li>
-                <li class="match-result">
-                  <p onclick="goToMatchView()" class="match-link">
-                    <span class="winner-name">David</span> beat Max [11 : 7]
-                  </p>
-                </li>
-                <li class="match-result">
-                  <p onclick="goToMatchView()" class="match-link">
-                    <span class="winner-name">David</span> beat Max [11 : 7]
-                  </p>
-                </li>
-                <li class="match-result">
-                  <p onclick="goToMatchView()" class="match-link">
-                    <span class="winner-name">David</span> beat Max [11 : 7]
-                  </p>
-                </li>
               </ul>
             </article>
             <div
@@ -1339,6 +1288,7 @@
     </script>
     <script type="module" src="./base.js"></script>
     <script type="module" src="./main.js"></script>
+    <script type="module" src="./js/recentMatches.js"></script>
     <script>
       /* Game start */
 
@@ -1523,8 +1473,29 @@
     <script>
       // Logging in and signing up
 
-      window["loggedinUsers"] = {};
-      window["loggedinUsersIds"] = [];
+	document.addEventListener("DOMContentLoaded", async () => {
+		try {
+			const response = await fetch("/api/players/current/",
+				{
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json"
+				}}
+			);
+			if (!response.ok) {
+				throw new Error("Failed to get logged in user");
+			}
+			const {data} = await response.json();
+			window.state.loggedInUsers = data?.players;
+			console.log("state: ",window.state.loggedInUsers);
+			renderPlayerPanels();
+		} catch (error) {
+			console.error(error.message);
+		}
+	});
+
+    //   window["loggedinUsers"] = {};
+    //   window["loggedinUsersIds"] = [];
       const requestSignUp = async () => {
         const username = document.getElementById("signUpUsername").value;
         const password = document.getElementById("signUpPassword").value;
@@ -1544,14 +1515,14 @@
           const json = await response
             .json()
             .then(requestLogin(username, password));
-          // updateLoggedinUsers()
+          // printLoggedinUsers()
         } catch (error) {
           console.error(error.message);
         }
       };
 
-      const updateLoggedinUsers = () => {
-        console.log(window["loggedinUsers"][window["loggedinUsersIds"][0]]);
+      const printLoggedinUsers = () => {
+        console.log(window.state.loggedInUsers);
       };
 
       const requestLoginButton = async () => {
@@ -1575,9 +1546,10 @@
           }
 
           const json = await response.json();
-          window["loggedinUsers"][json.data.id] = json.data;
-          window["loggedinUsersIds"].push(json.data.id);
-          updateLoggedinUsers();
+        //   window["loggedinUsers"][json.data.id] = json.data;
+        //   window["loggedinUsersIds"].push(json.data.id);
+		  window.state.loggedInUsers.push(json.data);
+          printLoggedinUsers();
           goToLobby();
           renderPlayerPanels();
         } catch (error) {
@@ -1587,32 +1559,28 @@
     </script>
     <script>
       function renderPlayerPanels() {
-        const users = window["loggedinUsersIds"].map(
-          (id) => window["loggedinUsers"][id]
-        );
-        // console.log(users);
-        const container = document.getElementById("player-panels-container");
+		const container = document.getElementById("player-panels-container");
         container.innerHTML = "";
-
-        users.forEach((user, index) => {
-          let panelContent;
-          panelContent = `
+		console.log(window.state.loggedInUsers);
+        const users = window.state.loggedInUsers.map((user, index) => {
+			let panelContent = `
                 <div class="player-brief-info-panel">
+					<div class="profile-avatar">
                     <img
                       loading="lazy"
-                      src="${user.avatar || "./assets/default_avatar.png"}"
-                      class="profile-avatar"
+                      src="${user.avatarUrl || "./assets/default_avatar.png"}"
                       alt="User profile avatar"
                     />
+					</div>
                     <h2 class="username">${
-                      user.username || `User${index + 1}`
+                      user.displayName || user.username
                     }</h2>
                     <button class="profile-button" tabindex="0">Profile</button>
                     <button class="logout-button" tabindex="0" onclick="logoutPlayer(${index})">Log out</button>
                 </div>
             `;
           container.innerHTML += panelContent;
-        });
+		});
 
         for (let i = users.length; i < 4; i++) {
           const addPlayerPanel = `
@@ -1631,7 +1599,7 @@
       }
 
       const logoutPlayer = async (index) => {
-        const userId = window["loggedinUsersIds"][index];
+        const userId = window.state.loggedInUsers[index].id;
         try {
           const response = await fetch(`/api/auth/logout/${userId}/`, {
             method: "POST"
@@ -1641,14 +1609,14 @@
             throw new Error("Failed to log out");
           }
 
-          window["loggedinUsersIds"].splice(index, 1);
+          window.state.loggedInUsers.splice(index, 1);
           renderPlayerPanels();
         } catch (error) {
           console.error(error.message);
         }
       }
 
-      renderPlayerPanels();
+    //   renderPlayerPanels();
     </script>
   </body>
 </html>
