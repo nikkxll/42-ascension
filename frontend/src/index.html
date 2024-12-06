@@ -1,203 +1,1654 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>Ascension</title>
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-		<style>
-			body { color:white; margin: 0; width: 100vw; height: 100vh; overflow: hidden;}
-			.box {
-				/* From https://css.glass */
-				background: rgba(255, 255, 255, 0.2);
-				border-radius: 16px;
-				box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-				backdrop-filter: blur(5px);
-				-webkit-backdrop-filter: blur(5px);
-				border: 1px solid rgba(255, 255, 255, 0.3);
-				position: absolute; 
-				text-align: center;
-				vertical-align: middle;
-				padding: 1%;
-				box-sizing: border-box;
-				margin: 1% 1%;
-			}
-			#enviroment {
-				position: absolute;
-				top: 0;
-				left: 0;
-				width: 100vw;
-				height: 100vh;
-				padding: 0;
-			}
-			#userInfo {
-			}
-			#gameSetup {
-				top: 10%;
-				right: 0;
-				width: 25vw;
-				height: 45vh;
-			}
-			#aboutProject {
-				bottom: 10%;
-				right: 0;
-				width: 25vw;
-				height: 30vh;
-				overflow-y: scroll;
-			}
-			#signin {
-				width: 30vw;
-				height: 50vh;
-				position: absolute;
-				top: 25%;
-				left: 35%;
-				background-color: rgba(83, 83, 83, 0.5);
-				display: none;
-			}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Keania One"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Acme&display=swap"
+      rel="stylesheet"
+    />
+    <link href="./styles.css" rel="stylesheet" />
+    <style>
+      #enviroment {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        padding: 0;
+      }
+      #gameWindow {
+        width: 96vw;
+        height: 96vh;
+        position: absolute;
+        top: 2vh;
+        left: 2vw;
+        display: none;
+        background: #ffffff;
+        border: 2px solid white;
+        box-sizing: content-box;
+      }
+    </style>
+  </head>
 
-			.fold {
-				width: 30vw;
-				height: 100vh;
-				background-color: rgba(255, 255, 255, 0.8);
-				position: absolute;
-				top:0;
-				left: 0;
-			}
-			#openside {
-				position: absolute;
-				top: 50%;
-				left: 30vw;
-				font-size: large;
-			}
+  <!-- Animated background -->
 
-			#gameWindow {
-				width: 96vw;
-				height: 96vh;
-				position: absolute;
-				top: 2vh;
-				left: 2vw;
-				display: none;
-				background: #ffffff;
-				border: 2px solid white;
-				box-sizing: content-box;
-			}
-			</style>
-	</head>
-	<body>
-		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script> -->
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-		<div id="enviroment">
-		</div>
-		<div class="fold" id="userInfo">
-			userinfo with selectable dashboard that folds out for signin
-			<p>Username</p>
-			<div style="display: inline-block; width: 40%; background-color: blue; height: 30%; color: white; margin: 3px">dashboard 1</div>
-			<div style="display: inline-block; width: 40%; background-color: blue; height: 30%; color: white; margin: 3px">dashboard 2</div>
-			<div style="display: inline-block; width: 40%; background-color: blue; height: 30%; color: white; margin: 3px">dashboard 3</div>
-			<div style="display: inline-block; width: 40%; background-color: blue; height: 30%; color: white; margin: 3px">dashboard 4</div>
-			<br>
-			<button type="button" class="btn btn-dark">Add Player + </button>
-		</div>
-		<button id="openside" class="btn btn-dark" onclick="toggleSide()"><</button>
-		<div class="box" id="gameSetup">
-			big settings page with color, tournaments and other misc settings. you can select the users to play here
-			<button class="btn btn-light" id="gameStartButton" onclick="startOff()">	
-				Start Game!
-			</button>
-		</div>
-		<div class="box" id="aboutProject">
-			<div>
-				<h2>modules</h2>
-				<ul>
-					<li>backend</li>
-					<li>database</li>
-					<li>frontend</li>
-					<li>3d game</li>
-					<li>42 auth</li>
-					<li>user management</li>
-					<li>user history</li>
-				</ul>
-			</div>
-			<div>
-				<h2>team:</h2>
-				<ul>
-					<li>person 1</li>
-					<li>person 2</li>
-					<li>person 3</li>
-				</ul>
-			</div>
-		</div>
+  <div id="enviroment"></div>
 
-		<div id="signin">
-			<h2>sign in</h2>
-			<form action="POST">
-				<input type="text" placeholder="email">
-				<input type="password" placeholder="password">
-			</form>
-			<button>42 redirect that will maybe work</button>
-			<button>register to the page</button>
-		</div>
+  <!-- Game window -->
 
-		<div id="gameWindow"></div>
+  <div id="gameWindow"></div>
 
-        <script type="importmap">
-            {
-                "imports": {
-                "three": "https://cdn.jsdelivr.net/npm/three@v0.149.0/build/three.module.js",
-                "three/addons/": "https://cdn.jsdelivr.net/npm/three@v0.149.0/examples/jsm/"
-                }
+  <body>
+    <!-- Header -->
+
+    <section id="lobby">
+      <div class="navigation-header-container" id="header">
+        <div class="navigation-header-wrapper">
+          <div class="navigation-header-logo">
+            <h1 class="navigation-header-logo-text">P</h1>
+            <img
+              loading="lazy"
+              src="./assets/app_logo.png"
+              alt="App Logo"
+              class="app-logo"
+            />
+            <h1 class="navigation-header-logo-text">NG</h1>
+          </div>
+          <div class="navigation-header-content">
+            <p class="navigation-header-item" onclick="goToHomeNavigation()">
+              HOME
+            </p>
+            <p class="navigation-header-item" onclick="goToAboutNavigation()">
+              ABOUT
+            </p>
+            <p
+              class="navigation-header-item"
+              onclick="goToSettingsNavigation()"
+            >
+              SETTINGS
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add player boxes -->
+
+      <div class="homeLeft half" id="player-panels-container">
+        <!-- <div class="player-brief-info-panel">
+          <h1 class="auth-title">Add player</h1>
+          <button onclick="goToSignup()" class="auth-button" type="button">
+            Sign up
+          </button>
+          <button onclick="goToSignin()" class="auth-button" type="button">
+            Sign in
+          </button>
+        </div>
+        <div class="player-brief-info-panel">
+          <h1 class="auth-title">Add player</h1>
+          <button onclick="goToSignup()" class="auth-button" type="button">
+            Sign up
+          </button>
+          <button onclick="goToSignin()" class="auth-button" type="button">
+            Sign in
+          </button>
+        </div>
+        <div class="player-brief-info-panel">
+          <h1 class="auth-title">Add player</h1>
+          <button onclick="goToSignup()" class="auth-button" type="button">
+            Sign up
+          </button>
+          <button onclick="goToSignin()" class="auth-button" type="button">
+            Sign in
+          </button>
+        </div>
+        <div class="player-brief-info-panel">
+          <h1 class="auth-title">Add player</h1>
+          <button onclick="goToSignup()" class="auth-button" type="button">
+            Sign up
+          </button>
+          <button onclick="goToSignin()" class="auth-button" type="button">
+            Sign in
+          </button>
+        </div> -->
+      </div>
+
+      <!-- Recent matches -->
+
+      <div class="homeRight half">
+        <div class="matches-container">
+          <div class="matches-card">
+            <h2 class="matches-title">Recent matches</h2>
+            <article class="matches-list">
+              <ul class="match-results">
+                <li class="match-result">
+                  <p onclick="goToMatchView()" class="match-link">
+                    <span class="winner-name">Vladimir</span> beat Max [11 : 0]
+                  </p>
+                </li>
+                <li class="match-result">
+                  <p onclick="goToMatchView()" class="match-link">
+                    <span class="winner-name">Max</span> beat Alex [11 : 6]
+                  </p>
+                </li>
+                <li class="match-result">
+                  <p onclick="goToMatchView()" class="match-link">
+                    <span class="winner-name">Leo</span> beat Robert [12 : 10]
+                  </p>
+                </li>
+                <li class="match-result">
+                  <p onclick="goToMatchView()" class="match-link">
+                    <span class="winner-name">Max</span> beat Robert [11 : 1]
+                  </p>
+                </li>
+                <li class="match-result">
+                  <p onclick="goToMatchView()" class="match-link">
+                    <span class="winner-name">David</span> beat Max [11 : 8]
+                  </p>
+                </li>
+                <li class="match-result match-result-large">
+                  <p onclick="goToMatchView()" class="match-link">
+                    <span class="winner-name">David</span> beat Vladimir [14 :
+                    12]
+                  </p>
+                </li>
+                <li class="match-result">
+                  <p onclick="goToMatchView()" class="match-link">
+                    <span class="winner-name">David</span> beat Max [11 : 7]
+                  </p>
+                </li>
+                <li class="match-result">
+                  <p onclick="goToMatchView()" class="match-link">
+                    <span class="winner-name">David</span> beat Max [11 : 7]
+                  </p>
+                </li>
+                <li class="match-result">
+                  <p onclick="goToMatchView()" class="match-link">
+                    <span class="winner-name">David</span> beat Max [11 : 7]
+                  </p>
+                </li>
+                <li class="match-result">
+                  <p onclick="goToMatchView()" class="match-link">
+                    <span class="winner-name">David</span> beat Max [11 : 7]
+                  </p>
+                </li>
+              </ul>
+            </article>
+            <div
+              class="matches-scrollbar"
+              role="scrollbar"
+              aria-orientation="vertical"
+            ></div>
+          </div>
+        </div>
+
+        <!-- Tournaments info -->
+
+        <div class="tournament-container">
+          <article class="tournament-card">
+            <h2 class="tournament-title">Tournaments</h2>
+            <div class="tournament-content">
+              <a href="#">
+                <img
+                  loading="lazy"
+                  src="./assets/left_triangle_arrow.svg"
+                  alt=""
+                  class="tournament-icon"
+                />
+              </a>
+              <div class="tournament-details">
+                <a href="#" class="tournament-link"> Transcendence Cup 2024 </a>
+                <br />
+                Status: <span class="status-completed">completed</span>
+                <br />
+                Winner: Max
+                <br />
+                Runner-up: Alex
+                <br />
+                Created: <span class="date-text">25/02/2024</span>
+                <br />
+                Ended: <span class="date-text">27/02/2024</span>
+                <br />
+              </div>
+              <a href="#">
+                <img
+                  loading="lazy"
+                  src="./assets/right_triangle_arrow.svg"
+                  alt=""
+                  class="tournament-icon"
+                />
+              </a>
+            </div>
+          </article>
+        </div>
+
+        <!-- Game creation buttons -->
+
+        <div class="buttonContainer">
+          <button
+            onclick="goToSingleGameSettings()"
+            class="create-action"
+            tabindex="0"
+            aria-label="Create Single Game"
+          >
+            CREATE SINGLE GAME
+          </button>
+          <button
+            onclick="openTournamentSetupBox()"
+            class="create-action"
+            tabindex="0"
+            aria-label="Create Single Game"
+          >
+            CREATE TOURNAMENT
+          </button>
+          <button
+            onclick=""
+            class="create-action"
+            tabindex="0"
+            aria-label="Create Single Game"
+          >
+            CREATE 4-PONG TOURNAMENT
+          </button>
+        </div>
+      </div>
+
+      <!-- Sign in -->
+
+      <div class="signin box">
+        <div class="register-container">
+          <form class="register-form-wrapper">
+            <header class="header-container">
+              <p onclick="goToLobby()" class="animation">
+                <img src="./assets/back_arrow.svg" alt="" />
+              </p>
+              <h1 class="title">Sign in</h1>
+            </header>
+
+            <input
+              type="text"
+              id="signInUsername"
+              class="form-input"
+              placeholder="username"
+            />
+
+            <input
+              type="password"
+              id="signInPassword"
+              class="form-input"
+              placeholder="password"
+            />
+
+            <div class="button-wrapper">
+              <button
+                type="button"
+                class="submit-button"
+                onclick="requestLoginButton()"
+              >
+                Sign in
+              </button>
+            </div>
+
+            <div class="prompt-not-a-member">
+              <span class="prompt-text">Not a member yet?</span>
+              <a href="#" class="reg-link" onclick="goToSignup()">Sign up</a>
+            </div>
+
+            <hr class="divider" />
+
+            <div class="prompt-oauth">
+              <span class="prompt-text">Sign in with 42 account</span>
+            </div>
+
+            <a href="#" class="oauth-logo">
+              <img
+                src="./assets/42_api_logo.png"
+                alt="42 Logo"
+                class="oauth-logo"
+              />
+            </a>
+          </form>
+        </div>
+      </div>
+
+      <!-- Sign-up -->
+
+      <div class="signup box">
+        <div class="register-container">
+          <form class="register-form-wrapper">
+            <header class="header-container">
+              <p onclick="goToLobby()" class="animation">
+                <img src="./assets/back_arrow.svg" alt="" />
+              </p>
+              <h1 class="title">Sign up</h1>
+            </header>
+
+            <input
+              type="text"
+              id="displayName"
+              class="form-input"
+              placeholder="display name"
+            />
+
+            <input
+              type="text"
+              id="signUpUsername"
+              class="form-input"
+              placeholder="username"
+            />
+
+            <input
+              type="password"
+              id="signUpPassword"
+              class="form-input"
+              placeholder="password"
+            />
+
+            <div class="button-wrapper">
+              <button
+                type="button"
+                class="submit-button"
+                onclick="requestSignUp()"
+              >
+                Sign up
+              </button>
+            </div>
+
+            <div class="prompt">
+              <span class="prompt-text">Already have an account?</span>
+              <a href="#" class="reg-link" onclick="goToSignin()">Sign in</a>
+            </div>
+
+            <hr class="divider" />
+
+            <div class="prompt-oauth">
+              <span class="prompt-text">Sign up with 42 account</span>
+            </div>
+
+            <a href="#" class="oauth-logo">
+              <img
+                src="./assets/42_api_logo.png"
+                alt="42 Logo"
+                class="oauth-logo"
+              />
+            </a>
+          </form>
+        </div>
+      </div>
+
+      <!-- Recent matches detailed stats -->
+
+      <div class="matchView box half">
+        <div class="match-stats">
+          <div class="match-stats-header">
+            <header class="match-stats-header-wrapper">
+              <p onclick="goToHomeRight()" class="animation">
+                <img src="./assets/back_arrow.svg" alt="" />
+              </p>
+              <h1 class="match-stats-title-top">Match statistics</h1>
+            </header>
+          </div>
+          <div class="match-stats-result">
+            <div class="match-stats-text-format">
+              <span>Vladimir</span>
+              <span>11</span>
+            </div>
+            <div class="match-stats-text-format">
+              <span>Max</span>
+              <span>0</span>
+            </div>
+          </div>
+          <div class="match-stats-result match-stats-time-info">
+            <div class="match-stats-text-format">
+              <span>Match time:</span>
+              <span>05m 26sec</span>
+            </div>
+            <div class="match-stats-text-format">
+              <span>Date:</span>
+              <span>10/05/2024</span>
+            </div>
+          </div>
+          <div class="match-stats-header-no-arrow">
+            <h1 class="match-stats-title">H2H</h1>
+          </div>
+          <div class="match-stats-result">
+            <div class="match-stats-text-format">
+              <span>Vladimir</span>
+              <span class="match-stats-match-score">7:4</span>
+              <span>Max</span>
+            </div>
+          </div>
+          <div class="match-stats-header-no-arrow">
+            <h1 class="match-stats-title">H2H matches</h1>
+          </div>
+          <div class="match-stats-scroll-container">
+            <ul class="match-stats-list">
+              <li class="match-stats-text-format">
+                <span>Vladimir</span>
+                <span class="match-stats-match-score">11:2</span>
+                <span>Max</span>
+              </li>
+              <li class="match-stats-text-format">
+                <span>Max</span>
+                <span class="match-stats-match-score">9:11</span>
+                <span>Vladimir</span>
+              </li>
+              <li class="match-stats-text-format">
+                <span>Vladimir</span>
+                <span class="match-stats-match-score">4:11</span>
+                <span>Max</span>
+              </li>
+              <li class="match-stats-text-format">
+                <span>Vladimir</span>
+                <span class="match-stats-match-score">13:11</span>
+                <span>Max</span>
+              </li>
+              <li class="match-stats-text-format">
+                <span>Max</span>
+                <span class="match-stats-match-score">10:12</span>
+                <span>Vladimir</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Single game settings window -->
+
+    <div class="add-ai-main-container" id="singleGameSettings">
+      <div class="add-ai-top-part">
+        <h2 class="add-ai-header">Add AI to the lobby</h2>
+        <div class="add-ai-checkbox">
+          <div class="add-ai-checkbox-space">
+            <input type="checkbox" />
+            <span class="add-ai-header">Yes</span>
+          </div>
+          <div class="add-ai-checkbox-space">
+            <input type="checkbox" />
+            <span class="add-ai-header">No</span>
+          </div>
+        </div>
+        <div class="add-ai-tooltip">
+          <img
+            src="./assets/question_mark.png"
+            alt="settings"
+            class="settings-icon"
+          />
+          <span class="add-ai-tooltiptext"
+            >In order to play with AI you need to add it to the lobby. To do so
+            you have to have 3 players at max.</span
+          >
+        </div>
+      </div>
+      <div class="add-ai-buttons">
+        <button class="add-ai-button back" tabindex="0" onclick="goToHome()">
+          Back
+        </button>
+        <button
+          class="add-ai-button continue"
+          tabindex="0"
+          onclick="goToGameStart()"
+        >
+          Continue
+        </button>
+      </div>
+    </div>
+
+    <!-- Single game -->
+
+    <section style="display: none" id="gameStart">
+      <div class="single-game-lobby">
+        <div class="single-game-top">
+          <div class="single-game-grid-left">
+            <div class="game-player-card">
+              <article class="game-player-card-inner-single">
+                <h2 class="game-player-number">Player 1</h2>
+                <img
+                  loading="lazy"
+                  src="./assets/default_avatar.png"
+                  alt="Player avatar"
+                  class="game-player-avatar"
+                />
+                <h3 class="game-player-name">Vladimir</h3>
+                <div class="game-player-stats-container">
+                  <p class="game-player-statistics-param">Games played</p>
+                  <p class="game-player-statistics-param-number">15</p>
+                </div>
+                <div class="game-player-win-rate-container">
+                  <p class="game-player-statistics-param">Win rate</p>
+                  <p class="game-player-statistics-param-number last">80.3 %</p>
+                </div>
+              </article>
+            </div>
+            <div class="game-player-card">
+              <article class="game-player-card-inner-single">
+                <h2 class="game-player-number">Player 2</h2>
+                <img
+                  loading="lazy"
+                  src="./assets/default_avatar.png"
+                  alt="Player avatar"
+                  class="game-player-avatar"
+                />
+                <h3 class="game-player-name">Max</h3>
+                <div class="game-player-stats-container">
+                  <p class="game-player-statistics-param">Games played</p>
+                  <p class="game-player-statistics-param-number">6</p>
+                </div>
+                <div class="game-player-win-rate-container">
+                  <p class="game-player-statistics-param">Win rate</p>
+                  <p class="game-player-statistics-param-number last">66.6 %</p>
+                </div>
+              </article>
+            </div>
+            <div class="game-player-card">
+              <article class="game-player-card-inner-single">
+                <h2 class="game-player-number">Player 3</h2>
+                <img
+                  loading="lazy"
+                  src="./assets/default_avatar.png"
+                  alt="Player avatar"
+                  class="game-player-avatar"
+                />
+                <h3 class="game-player-name">Robert</h3>
+                <div class="game-player-stats-container">
+                  <p class="game-player-statistics-param">Games played</p>
+                  <p class="game-player-statistics-param-number">100</p>
+                </div>
+                <div class="game-player-win-rate-container">
+                  <p class="game-player-statistics-param">Win rate</p>
+                  <p class="game-player-statistics-param-number last">99 %</p>
+                </div>
+              </article>
+            </div>
+            <div class="game-player-card">
+              <article class="game-player-card-inner-single">
+                <h2 class="game-player-number">Player 4</h2>
+                <img
+                  loading="lazy"
+                  src="./assets/default_avatar.png"
+                  alt="Player avatar"
+                  class="game-player-avatar"
+                />
+                <h3 class="game-player-name">Vladimir</h3>
+                <div class="game-player-stats-container">
+                  <p class="game-player-statistics-param">Games played</p>
+                  <p class="game-player-statistics-param-number">15</p>
+                </div>
+                <div class="game-player-win-rate-container">
+                  <p class="game-player-statistics-param">Win rate</p>
+                  <p class="game-player-statistics-param-number last">80.3 %</p>
+                </div>
+              </article>
+            </div>
+          </div>
+          <div class="single-game-vs-logo">
+            <img
+              class="single-game-vs-logo-props"
+              src="./assets/vs_logo.png"
+              alt="Versus logo"
+            />
+          </div>
+          <div class="single-game-grid-right">
+            <div class="game-player-card">
+              <article class="game-player-card-inner-single">
+                <h2 class="game-player-number">Player 1</h2>
+                <img
+                  loading="lazy"
+                  src="./assets/default_avatar.png"
+                  alt="Player avatar"
+                  class="game-player-avatar"
+                />
+                <h3 class="game-player-name">Vladimir</h3>
+                <div class="game-player-stats-container">
+                  <p class="game-player-statistics-param">Games played</p>
+                  <p class="game-player-statistics-param-number">15</p>
+                </div>
+                <div class="game-player-win-rate-container">
+                  <p class="game-player-statistics-param">Win rate</p>
+                  <p class="game-player-statistics-param-number last">80.3 %</p>
+                </div>
+              </article>
+            </div>
+            <div class="game-player-card">
+              <article class="game-player-card-inner-single">
+                <h2 class="game-player-number">Player 2</h2>
+                <img
+                  loading="lazy"
+                  src="./assets/default_avatar.png"
+                  alt="Player avatar"
+                  class="game-player-avatar"
+                />
+                <h3 class="game-player-name">Max</h3>
+                <div class="game-player-stats-container">
+                  <p class="game-player-statistics-param">Games played</p>
+                  <p class="game-player-statistics-param-number">6</p>
+                </div>
+                <div class="game-player-win-rate-container">
+                  <p class="game-player-statistics-param">Win rate</p>
+                  <p class="game-player-statistics-param-number last">66.6 %</p>
+                </div>
+              </article>
+            </div>
+            <div class="game-player-card">
+              <article class="game-player-card-inner-single">
+                <h2 class="game-player-number">Player 3</h2>
+                <img
+                  loading="lazy"
+                  src="./assets/default_avatar.png"
+                  alt="Player avatar"
+                  class="game-player-avatar"
+                />
+                <h3 class="game-player-name">Robert</h3>
+                <div class="game-player-stats-container">
+                  <p class="game-player-statistics-param">Games played</p>
+                  <p class="game-player-statistics-param-number">100</p>
+                </div>
+                <div class="game-player-win-rate-container">
+                  <p class="game-player-statistics-param">Win rate</p>
+                  <p class="game-player-statistics-param-number last">99 %</p>
+                </div>
+              </article>
+            </div>
+            <div class="game-player-card">
+              <article class="game-player-card-inner-single">
+                <h2 class="game-player-number">Player 4</h2>
+                <img
+                  loading="lazy"
+                  src="./assets/default_avatar.png"
+                  alt="Player avatar"
+                  class="game-player-avatar"
+                />
+                <h3 class="game-player-name">Vladimir</h3>
+                <div class="game-player-stats-container">
+                  <p class="game-player-statistics-param">Games played</p>
+                  <p class="game-player-statistics-param-number">15</p>
+                </div>
+                <div class="game-player-win-rate-container">
+                  <p class="game-player-statistics-param">Win rate</p>
+                  <p class="game-player-statistics-param-number last">80.3 %</p>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+        <div class="single-game-bottom">
+          <button
+            class="single-game-buttons back"
+            tabindex="0"
+            onclick="goToHome()"
+          >
+            Back to menu
+          </button>
+          <button
+            class="single-game-buttons clear-selection"
+            tabindex="0"
+            onclick="resetAll()"
+          >
+            Clear selection
+          </button>
+          <button
+            class="single-game-buttons randomize"
+            tabindex="0"
+            onclick="randomizeChoice()"
+          >
+            Randomize
+          </button>
+          <button
+            class="single-game-buttons start"
+            tabindex="0"
+            onclick="startOff()"
+          >
+            Start match
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Container for 2v2 game -->
+
+    <section style="display: none" id="2v2GameStart">
+      <div class="gameStartView">
+        <div class="gameStartPlayer box">
+          <div class="gameStartSelectable">
+            <img
+              src="./assets/default_avatar.png"
+              alt="default_avatar"
+              class="gameStartPlayerAvatar"
+            />
+            <h2 class="gameStartPlayerDisplayName">Test1</h2>
+          </div>
+        </div>
+        <div class="gameStartPlayer box">
+          <div class="gameStartSelectable">
+            <img
+              src="./assets/default_avatar.png"
+              alt="default_avatar"
+              class="gameStartPlayerAvatar"
+            />
+            <h2 class="gameStartPlayerDisplayName">Test1</h2>
+          </div>
+        </div>
+        <div class="gameStartPlayer box">
+          <div class="gameStartSelectable">
+            <img
+              src="./assets/default_avatar.png"
+              alt="default_avatar"
+              class="gameStartPlayerAvatar"
+            />
+            <h2 class="gameStartPlayerDisplayName">Test1</h2>
+          </div>
+        </div>
+        <img class="vsImage" src="./assets/vs_logo.png" />
+        <div class="gameStartPlayer box">
+          <div class="gameStartSelectable">
+            <img
+              src="./assets/default_avatar.png"
+              alt="default_avatar"
+              class="gameStartPlayerAvatar"
+            />
+            <h2 class="gameStartPlayerDisplayName">Test1</h2>
+          </div>
+        </div>
+        <div class="gameStartPlayer box">
+          <div class="gameStartSelectable">
+            <img
+              src="./assets/default_avatar.png"
+              alt="default_avatar"
+              class="gameStartPlayerAvatar"
+            />
+            <h2 class="gameStartPlayerDisplayName">Test1</h2>
+          </div>
+        </div>
+        <div class="gameStartPlayer box">
+          <div class="gameStartSelectable">
+            <img
+              src="./assets/default_avatar.png"
+              alt="default_avatar"
+              class="gameStartPlayerAvatar"
+            />
+            <h2 class="gameStartPlayerDisplayName">Test1</h2>
+          </div>
+        </div>
+        <div class="gameStartPlayer box">
+          <div class="gameStartSelectable">
+            <img
+              src="./assets/default_avatar.png"
+              alt="default_avatar"
+              class="gameStartPlayerAvatar"
+            />
+            <h2 class="gameStartPlayerDisplayName">Test1</h2>
+          </div>
+        </div>
+      </div>
+      <div class="gameButtonContainer">
+        <button onclick="goToHome()">Go back</button>
+        <button>Randomize</button>
+        <button onclick="">Start game</button>
+      </div>
+    </section>
+
+    <!-- Profile window (WIP) -->
+
+    <section style="display: none" id="profile">
+      <div class="profile box">
+        profile
+        <button onclick="goToHome()">go back</button>
+      </div>
+    </section>
+
+    <!-- Tournament pop up window setup -->
+
+    <div class="tournament-setup" id="tournamentSetup">
+      <div class="tournament-setup-name">
+        <input
+          type="text"
+          id="tournamentName"
+          class="tournament-setup-name-input"
+          placeholder="Enter the tournament name"
+          aria-label="Enter the tournament name"
+        />
+      </div>
+      <div class="tournament-setup-header-container">
+        <h1 class="tournament-setup-header">Add users to the tournament</h1>
+      </div>
+      <div class="tournament-setup-grid">
+        <div class="game-player-card tournament">
+          <article class="game-player-card-inner">
+            <img
+              loading="lazy"
+              src="./assets/default_avatar.png"
+              alt="Player avatar"
+              class="tournament-setup-avatar"
+            />
+            <h3 class="tournament-setup-player-name">TestUserName1</h3>
+          </article>
+        </div>
+        <div class="game-player-card tournament">
+          <article class="game-player-card-inner">
+            <img
+              loading="lazy"
+              src="./assets/default_avatar.png"
+              alt="Player avatar"
+              class="tournament-setup-avatar"
+            />
+            <h3 class="tournament-setup-player-name">TestUserName2</h3>
+          </article>
+        </div>
+        <div class="game-player-card tournament">
+          <article class="game-player-card-inner">
+            <img
+              loading="lazy"
+              src="./assets/default_avatar.png"
+              alt="Player avatar"
+              class="tournament-setup-avatar"
+            />
+            <h3 class="tournament-setup-player-name">TestUserName3</h3>
+          </article>
+        </div>
+        <div class="game-player-card tournament">
+          <article class="game-player-card-inner">
+            <img
+              loading="lazy"
+              src="./assets/default_avatar.png"
+              alt="Player avatar"
+              class="tournament-setup-avatar"
+            />
+            <h3 class="tournament-setup-player-name">TestUserName4</h3>
+          </article>
+        </div>
+      </div>
+      <div class="tournament-setup-buttons selection">
+        <button
+          class="tournament-setup-buttons button back"
+          tabindex="0"
+          onclick="goToHome()"
+        >
+          Back
+        </button>
+        <button
+          class="tournament-setup-buttons button continue"
+          tabindex="0"
+          onclick="goToTournament()"
+        >
+          Continue
+        </button>
+      </div>
+    </div>
+
+    <!-- Overlay to protect background buttons from accident push -->
+
+    <div id="overlay"></div>
+
+    <!-- Tournament main container -->
+
+    <div class="tournament-main" id="tournament">
+      <div class="tournament-top">
+        <div class="tournament-top-left">
+          <div class="tournament-name">
+            <h1 class="tournament-name-text">Transcendence Cup 2024</h1>
+          </div>
+          <div class="tournament-grid">
+            <div class="game-player-card">
+              <article class="tournament-game-player-card-inner">
+                <h2 class="game-player-number">Player 1</h2>
+                <img
+                  loading="lazy"
+                  src="./assets/default_avatar.png"
+                  alt="Player avatar"
+                  class="game-player-avatar"
+                />
+                <h3 class="game-player-name">Vladimir</h3>
+                <div class="game-player-win-rate-container">
+                  <p class="game-player-statistics-param">Win rate</p>
+                  <p class="game-player-statistics-param-number last">80.3 %</p>
+                </div>
+              </article>
+            </div>
+            <div class="game-player-card">
+              <article class="tournament-game-player-card-inner">
+                <h2 class="game-player-number">Player 2</h2>
+                <img
+                  loading="lazy"
+                  src="./assets/default_avatar.png"
+                  alt="Player avatar"
+                  class="game-player-avatar"
+                />
+                <h3 class="game-player-name">Max</h3>
+                <div class="game-player-win-rate-container">
+                  <p class="game-player-statistics-param">Win rate</p>
+                  <p class="game-player-statistics-param-number last">66.6 %</p>
+                </div>
+              </article>
+            </div>
+            <div class="game-player-card">
+              <article class="tournament-game-player-card-inner">
+                <h2 class="game-player-number">Player 3</h2>
+                <img
+                  loading="lazy"
+                  src="./assets/default_avatar.png"
+                  alt="Player avatar"
+                  class="game-player-avatar"
+                />
+                <h3 class="game-player-name">TestUser</h3>
+                <div class="game-player-win-rate-container">
+                  <p class="game-player-statistics-param">Win rate</p>
+                  <p class="game-player-statistics-param-number last">100 %</p>
+                </div>
+              </article>
+            </div>
+            <div class="game-player-card">
+              <article class="tournament-game-player-card-inner">
+                <h2 class="game-player-number">Player 4</h2>
+                <img
+                  loading="lazy"
+                  src="./assets/default_avatar.png"
+                  alt="Player avatar"
+                  class="game-player-avatar"
+                />
+                <h3 class="game-player-name">NewUser</h3>
+                <div class="game-player-win-rate-container">
+                  <p class="game-player-statistics-param">Win rate</p>
+                  <p class="game-player-statistics-param-number last">-</p>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+        <div class="tournament-top-right">
+          <h2 class="tournament-round h2" id="firstSemifinal">Semifinal 1</h2>
+
+          <!-- Tournament SF1 -->
+
+          <div class="tournament-match-container" id="firstSemifinalContent">
+            <h1 class="tournament-match-title">Semifinal 1</h1>
+            <div class="tournament-match-players">
+              <div class="tournament-match-player-info-left">
+                <img
+                  loading="lazy"
+                  src="./assets/default_avatar.png"
+                  alt="Player avatar"
+                  class="tournament-match-avatar"
+                />
+                <h3 class="game-player-name tournament">Player 2</h3>
+              </div>
+              <h2 class="tournament-match-left-score">-</h2>
+              <img
+                class="tournament-match-vs-logo"
+                src="./assets/vs_logo.png"
+                alt="Versus logo"
+              />
+              <h2 class="tournament-match-right-score">-</h2>
+              <div class="tournament-match-player-info-right">
+                <img
+                  loading="lazy"
+                  src="./assets/default_avatar.png"
+                  alt="Player avatar"
+                  class="tournament-match-avatar"
+                />
+                <h3 class="game-player-name tournament">Player 3</h3>
+              </div>
+            </div>
+          </div>
+
+          <h2 class="tournament-round h2" id="secondSemifinal">Semifinal 2</h2>
+
+          <!-- Tournament SF2 -->
+
+          <div class="tournament-match-container" id="secondSemifinalContent">
+            <h1 class="tournament-match-title">Semifinal 2</h1>
+            <div class="tournament-match-players">
+              <div class="tournament-match-player-info-left">
+                <img
+                  loading="lazy"
+                  src="./assets/default_avatar.png"
+                  alt="Player avatar"
+                  class="tournament-match-avatar"
+                />
+                <h3 class="game-player-name tournament">Player 4</h3>
+              </div>
+              <h2 class="tournament-match-left-score">-</h2>
+              <img
+                class="tournament-match-vs-logo"
+                src="./assets/vs_logo.png"
+                alt="Versus logo"
+              />
+              <h2 class="tournament-match-right-score">-</h2>
+              <div class="tournament-match-player-info-right">
+                <img
+                  loading="lazy"
+                  src="./assets/default_avatar.png"
+                  alt="Player avatar"
+                  class="tournament-match-avatar"
+                />
+                <h3 class="game-player-name tournament">Player 1</h3>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer buttons -->
+
+          <h2 class="tournament-round h2" id="final">Final</h2>
+        </div>
+      </div>
+      <div class="tournament-setup-buttons lobby">
+        <button
+          class="tournament-setup-buttons button back-to-menu"
+          tabindex="0"
+          onclick="goToHome()"
+        >
+          Back to menu
+        </button>
+        <button
+          class="tournament-setup-buttons button generate"
+          tabindex="0"
+          onclick="generateSemifinals()"
+          id="generateSF"
+        >
+          Generate bracket
+        </button>
+        <button
+          class="tournament-setup-buttons button start-sf-1"
+          tabindex="0"
+          id="startFirstSF"
+          onclick="startOff()"
+        >
+          Start first SF
+        </button>
+      </div>
+    </div>
+
+    <script>
+      /* Collection of all the buttons that transition the views */
+      /* adding history, that is stored in the urlparameters */
+      const views = {
+        "signup": goToSignup,
+        "signin": goToSignin,
+        "lobby": goToLobby,
+        "matchView": goToMatchView,
+        "home": goToHome,
+        "gamestart": goToGameStart,
+        "tournament": goToTournament,
+        "profile": goToProfile,
+        "homenavigation": goToHomeNavigation,
+        "settingsnavigation": goToSettingsNavigation,
+        "aboutnavigation": goToAboutNavigation,
+      }
+
+      window.addEventListener("popstate", (e) => 
+      {
+        if (history.state == null)
+          history.replaceState({"view": "home"})
+        views[history.state["view"]]()
+
+      })
+
+      const updateHistory = (f) => {
+        Object.entries(views).forEach((key) => {
+          if (key[1] == f)
+          {
+            history.pushState({"view": key[0]}, "")
+            console.log(key[0]);
+          }
+        })
+      }
+
+      /* home screen transitions */
+
+      const homeLeft = document.getElementsByClassName("homeLeft")[0];
+      const homeRight = document.getElementsByClassName("homeRight")[0];
+
+      const signup = document.getElementsByClassName("signup")[0];
+      const signin = document.getElementsByClassName("signin")[0];
+
+      const matchView = document.getElementsByClassName("matchView")[0];
+
+      /* section transitions */
+      const lobby = document.getElementById("lobby");
+      const gameStart = document.getElementById("gameStart");
+      const singleGameSettings = document.getElementById("singleGameSettings");
+      const tournament = document.getElementById("tournament");
+      const profile = document.getElementById("profile");
+      const tournamentSetup = document.getElementById("tournamentSetup");
+      const otherGameStart = document.getElementById("2v2GameStart");
+
+      const header = document.getElementById("header");
+
+      /* overlay to protect background buttons from being accidentally clicked */
+      const overlay = document.getElementById("overlay");
+
+      /* tournament transitions */
+      const firstSemifinal = document.getElementById("firstSemifinal");
+      const secondSemifinal = document.getElementById("secondSemifinal");
+      const firstSemifinalContent = document.getElementById(
+        "firstSemifinalContent"
+      );
+      const secondSemifinalContent = document.getElementById(
+        "secondSemifinalContent"
+      );
+      const final = document.getElementById("final");
+      const generateSFButton = document.getElementById("generateSF");
+      const startFirstSemifinalButton = document.getElementById("startFirstSF");
+
+      function goToSignup() {
+        goToHomeNoHistory()
+        homeLeft.style.display = "none";
+        signin.style.display = "none";
+        signup.style.display = "block";
+        updateHistory(goToSignup)
+      }
+
+      function goToSignin() {
+        goToHomeNoHistory()
+        homeLeft.style.display = "none";
+        signin.style.display = "block";
+        signup.style.display = "none";
+        updateHistory(goToSignin)
+      }
+
+      function goToLobby() {
+        goToHomeNoHistory()
+        homeLeft.style.display = "grid";
+        signin.style.display = "none";
+        signup.style.display = "none";
+        updateHistory(goToLobby)
+      }
+
+      function goToMatchView() {
+        goToHomeNoHistory()
+        matchView.style.display = "block";
+        homeRight.style.display = "none";
+        updateHistory(goToMatchView)
+      }
+
+      function goToHomeRight() {
+        goToHomeNoHistory()
+        matchView.style.display = "none";
+        homeRight.style.display = "grid";
+        updateHistory(goToHomeRight)
+      }
+
+      function goToHomeNoHistory()
+      {
+        lobby.style.display = "block";
+        gameStart.style.display = "none";
+        singleGameSettings.style.display = "none";
+        tournament.style.display = "none";
+        profile.style.display = "none";
+        tournamentSetup.style.display = "none";
+        overlay.style.display = "none";
+      }
+
+      function goToHome() {
+        goToHomeNoHistory()
+        resetAll();
+        updateHistory(goToHome)
+      }
+
+      function runGame() {
+        lobby.style.display = "none";
+        gameStart.style.display = "none";
+        tournament.style.display = "none";
+        profile.style.display = "none";
+        tournamentSetup.style.display = "none";
+        overlay.style.display = "none";
+        updateHistory(runGame)
+      }
+
+      function goToSingleGameSettings() {
+        singleGameSettings.style.display = "block";
+        overlay.style.display = "block";
+        overlay.style.pointerEvents = "auto";
+      }
+
+      function goToGameStart() {
+        lobby.style.display = "none";
+        gameStart.style.display = "block";
+        tournament.style.display = "none";
+        singleGameSettings.style.display = "none";
+        profile.style.display = "none";
+        overlay.style.display = "none";
+        otherGameStart.style.display = "none";
+        updateHistory(goToGameStart)
+      }
+
+      function goToTournament() {
+        lobby.style.display = "none";
+        gameStart.style.display = "none";
+        overlay.style.display = "none";
+        profile.style.display = "none";
+        tournamentSetup.style.display = "none";
+        tournament.style.display = "block";
+
+        const cards = document.querySelectorAll(".game-player-card-inner");
+
+        cards.forEach((card) => {
+          card.classList.remove("selected");
+          card.classList.remove("shaded");
+        });
+        updateHistory(goToTournament)
+      }
+
+      function goToProfile() {
+        lobby.style.display = "none";
+        gameStart.style.display = "none";
+        tournament.style.display = "none";
+        profile.style.display = "block";
+        updateHistory(goToProfile)
+      }
+
+      function goTo2v2GameStart() {
+        lobby.style.display = "none";
+        gameStart.style.display = "none";
+        tournament.style.display = "none";
+        profile.style.display = "none";
+        otherGameStart.style.display = "block";
+      }
+
+      function goToHomeNavigation() {
+        homeLeft.style.display = "grid";
+        homeRight.style.display = "grid";
+        updateHistory(goToHomeNavigation)
+      }
+
+      function goToAboutNavigation() {
+        homeLeft.style.display = "none";
+        homeRight.style.display = "none";
+        updateHistory(goToAboutNavigation)
+      }
+
+      function goToSettingsNavigation() {
+        homeLeft.style.display = "none";
+        homeRight.style.display = "none";
+        updateHistory(goToSettingsNavigation)
+      }
+
+      function openTournamentSetupBox() {
+        tournamentSetup.style.display = "block";
+        overlay.style.display = "block";
+        overlay.style.pointerEvents = "auto";
+      }
+
+      function generateSemifinals() {
+        firstSemifinal.style.display = "none";
+        secondSemifinal.style.display = "none";
+        firstSemifinalContent.style.display = "block";
+        secondSemifinalContent.style.display = "block";
+        generateSFButton.style.display = "none";
+        startFirstSemifinalButton.style.display = "block";
+      }
+
+      window.addEventListener("DOMContentLoaded", () => {
+        const navItems = document.querySelectorAll(".navigation-header-item");
+        navItems[0].classList.add("active");
+      });
+
+      document.querySelectorAll(".navigation-header-item").forEach((item) => {
+        item.addEventListener("click", () => {
+          document.querySelectorAll(".navigation-header-item").forEach((i) => {
+            i.classList.remove("active");
+          });
+          item.classList.add("active");
+        });
+      });
+    </script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@v0.149.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@v0.149.0/examples/jsm/"
+        }
+      }
+    </script>
+    <script>
+      /* Players selector for tournament pre-setup */
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const cards = document.querySelectorAll(".game-player-card-inner");
+
+        cards.forEach((card) => {
+          card.addEventListener("click", () => {
+            if (card.classList.contains("selected")) {
+              card.classList.remove("selected");
+            } else {
+              card.classList.add("selected");
             }
-        </script>
-		<script type="module" src="/base.js"></script>
-		<!-- <script type="module" src="/state.js"></script> -->
-		<script src="./state.js"></script>
-		<script type="module" src="/main.js"></script>
-		<script>
-			let isOpen = true
-			let openable = document.getElementById("userInfo")
-			let opener = document.getElementById("openside")
-			let toggleSide = () => {
-				console.log("here")
-				isOpen = !isOpen
-				if (isOpen)
-				{
-					opener.innerText = "<"
-					opener.style.left = window.innerWidth * 0.3 + "px"
-					openable.style.width = window.innerWidth * 0.3 + "px"
-					openable.style.display = 'block'
-				}
-				else
-				{
-					opener.innerText = ">"
-					opener.style.left = 0
-					openable.style.width = 0
-					openable.style.display = 'none'
-				}
-			}
-		</script>
-		<script>
-			let gameWindow = document.getElementById("gameWindow")
-			function  startOff() {
-				//const newElement = gameWindow.cloneNode(true); // Clone the element
-				//gameWindow.parentNode.replaceChild(newElement, gameWindow); // Replace it
-				//gameWindow.innerHTML = "";
-				gameWindow.style.display = "block"
-				// ai = 2 two AIs: AI vs god level AI
-				// ai = 1 one AI vs human
-				// ai = 0 two humans
-				// ai = -2 four humans
-				let result = startGame(-2)
-				console.log("index.html result from startGame=", result)
-				document.getElementById("gameStartButton").blur()
-				//document.getElementById("gameStartButton").disabled = true;
-				//gameWindow.style.display = "none"
-			}
 
-			// function resetGameState() {
-			// 	// Add code here to reset game variables, clear game window, etc.
-			// 	 // Example: clearing game content
-			// 	 gameWindow.innerHTML = "";
-			// }
-		</script>
-	</body>
+            const anySelected = Array.from(cards).some((c) =>
+              c.classList.contains("selected")
+            );
+
+            cards.forEach((c) => {
+              if (anySelected) {
+                if (c.classList.contains("selected")) {
+                  c.classList.remove("shaded");
+                } else {
+                  c.classList.add("shaded");
+                }
+              } else {
+                c.classList.remove("shaded");
+              }
+            });
+          });
+        });
+      });
+    </script>
+    <script type="module" src="./base.js"></script>
+    <script type="module" src="./main.js"></script>
+    <script>
+      /* Game start */
+
+      let gameWindow = document.getElementById("gameWindow");
+      function startOff() {
+        //const newElement = gameWindow.cloneNode(true); // Clone the element
+        //gameWindow.parentNode.replaceChild(newElement, gameWindow); // Replace it
+        //gameWindow.innerHTML = "";
+        gameWindow.style.display = "block";
+        runGame();
+        // ai = 2 two AIs: AI vs god level AI
+        // ai = 1 one AI vs human
+        // ai = 0 two humans
+        // ai = -2 four humans
+        let result = startGame(0);
+        console.log("index.html result from startGame=", result);
+        //document.getElementById("gameStartButton").blur();
+        //document.getElementById("gameStartButton").disabled = true;
+        //gameWindow.style.display = "none"
+      }
+
+      // function resetGameState() {
+      // 	// Add code here to reset game variables, clear game window, etc.
+      // 	 // Example: clearing game content
+      // 	 gameWindow.innerHTML = "";
+      // }
+    </script>
+    <script>
+      /* Single game lobby interaction */
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const leftPlayers = document.querySelectorAll(
+          ".single-game-grid-left .game-player-card-inner-single"
+        );
+        const rightPlayers = document.querySelectorAll(
+          ".single-game-grid-right .game-player-card-inner-single"
+        );
+        const startButton = document.querySelector(
+          ".single-game-buttons.start"
+        );
+        let leftSelectedIndex = null;
+        let playersSelected = 0;
+
+        // Updates the start button based on the selected players
+        function updateStartButton() {
+          startButton.disabled = playersSelected !== 2;
+          startButton.style.opacity = playersSelected === 2 ? "1" : "0.5";
+          startButton.style.cursor =
+            playersSelected === 2 ? "pointer" : "not-allowed";
+        }
+
+        // Reset all selections
+        window.resetAll = function () {
+          playersSelected = 0;
+          leftSelectedIndex = null;
+          leftPlayers.forEach((p) => {
+            p.classList.remove("player-disabled", "player-selected");
+            p.classList.add("player-selectable");
+          });
+          rightPlayers.forEach((p) => {
+            p.classList.remove(
+              "player-disabled",
+              "player-selected",
+              "player-selectable"
+            );
+          });
+          updateStartButton();
+        };
+
+        window.randomizeChoice = function () {
+          resetAll();
+
+          // Randomly select left player
+          const randomLeftIndex = Math.floor(
+            Math.random() * leftPlayers.length
+          );
+          const leftPlayerEvent = new Event("click");
+          leftPlayers[randomLeftIndex].dispatchEvent(leftPlayerEvent);
+
+          // Get available right players based on left selection
+          const availableRightPlayers = Array.from(rightPlayers).filter(
+            (player) => player.classList.contains("player-selectable")
+          );
+
+          // Randomly select right player
+          const randomRightIndex = Math.floor(
+            Math.random() * availableRightPlayers.length
+          );
+          const rightPlayerEvent = new Event("click");
+          setTimeout(() => {
+            availableRightPlayers[randomRightIndex].dispatchEvent(
+              rightPlayerEvent
+            );
+            updateStartButton();
+          }, 500);
+        };
+
+        leftPlayers.forEach((player, index) => {
+          player.classList.add("player-selectable");
+
+          player.addEventListener("click", () => {
+            if (playersSelected >= 2) return;
+
+            leftPlayers.forEach((p) => {
+              p.classList.add("player-disabled");
+              p.classList.remove("player-selected");
+            });
+
+            // Enable selected player
+            player.classList.remove("player-disabled");
+            player.classList.add("player-selected");
+            leftSelectedIndex = index;
+            if (playersSelected === 0) playersSelected++;
+            updateStartButton();
+
+            // Handle right side based on selected player
+            rightPlayers.forEach((rightPlayer, rightIndex) => {
+              rightPlayer.classList.remove(
+                "player-disabled",
+                "player-selectable",
+                "player-selected"
+              );
+
+              switch (index) {
+                case 0:
+                  if (rightIndex > 0) {
+                    rightPlayer.classList.add("player-selectable");
+                  } else {
+                    rightPlayer.classList.add("player-disabled");
+                  }
+                  break;
+                case 1:
+                  if (rightIndex !== 1) {
+                    rightPlayer.classList.add("player-selectable");
+                  } else {
+                    rightPlayer.classList.add("player-disabled");
+                  }
+                  break;
+                case 2:
+                  if (rightIndex !== 2) {
+                    rightPlayer.classList.add("player-selectable");
+                  } else {
+                    rightPlayer.classList.add("player-disabled");
+                  }
+                  break;
+                case 3:
+                  if (rightIndex !== 3) {
+                    rightPlayer.classList.add("player-selectable");
+                  } else {
+                    rightPlayer.classList.add("player-disabled");
+                  }
+                  break;
+              }
+            });
+          });
+        });
+
+        rightPlayers.forEach((player) => {
+          player.addEventListener("click", () => {
+            if (
+              leftSelectedIndex !== null &&
+              player.classList.contains("player-selectable") &&
+              playersSelected < 2
+            ) {
+              playersSelected++;
+              rightPlayers.forEach((p) => {
+                p.classList.remove("player-selectable");
+                p.classList.add("player-disabled");
+              });
+
+              player.classList.remove("player-disabled");
+              player.classList.add("player-selected");
+              updateStartButton();
+            }
+          });
+        });
+
+        // Initialize start button
+        updateStartButton();
+      });
+    </script>
+    <script>
+      // Logging in and signing up
+
+      window["loggedinUsers"] = {};
+      window["loggedinUsersIds"] = [];
+      const requestSignUp = async () => {
+        const username = document.getElementById("signUpUsername").value;
+        const password = document.getElementById("signUpPassword").value;
+        try {
+          //const response = await fetch("https://localhost:8443/api/players/", {
+          const response = await fetch("/api/players/", {
+            method: "POST",
+            body: JSON.stringify({
+              username,
+              password,
+              displayName: document.getElementById("displayName").value,
+            }),
+          });
+          if (!response.ok) {
+            throw new Error("Failed to sign up");
+          }
+          const json = await response
+            .json()
+            .then(requestLogin(username, password));
+          // updateLoggedinUsers()
+        } catch (error) {
+          console.error(error.message);
+        }
+      };
+
+      const updateLoggedinUsers = () => {
+        console.log(window["loggedinUsers"][window["loggedinUsersIds"][0]]);
+      };
+
+      const requestLoginButton = async () => {
+        await requestLogin(
+          document.getElementById("signInUsername").value,
+          document.getElementById("signInPassword").value
+        );
+      };
+
+      const requestLogin = async (_username, _password) => {
+        try {
+          const response = await fetch("/api/auth/login/", {
+            method: "POST",
+            body: JSON.stringify({
+              username: _username,
+              password: _password,
+            }),
+          });
+          if (!response.ok) {
+            throw new Error("Failed to sign in");
+          }
+
+          const json = await response.json();
+          window["loggedinUsers"][json.data.id] = json.data;
+          window["loggedinUsersIds"].push(json.data.id);
+          updateLoggedinUsers();
+          goToLobby();
+          renderPlayerPanels();
+        } catch (error) {
+          console.error(error.message);
+        }
+      };
+    </script>
+    <script>
+      function renderPlayerPanels() {
+        const users = window["loggedinUsersIds"].map(
+          (id) => window["loggedinUsers"][id]
+        );
+        // console.log(users);
+        const container = document.getElementById("player-panels-container");
+        container.innerHTML = "";
+
+        users.forEach((user, index) => {
+          let panelContent;
+          panelContent = `
+                <div class="player-brief-info-panel">
+                    <img
+                      loading="lazy"
+                      src="${user.avatar || "./assets/default_avatar.png"}"
+                      class="profile-avatar"
+                      alt="User profile avatar"
+                    />
+                    <h2 class="username">${
+                      user.username || `User${index + 1}`
+                    }</h2>
+                    <button class="profile-button" tabindex="0">Profile</button>
+                    <button class="logout-button" tabindex="0" onclick="logoutPlayer(${index})">Log out</button>
+                </div>
+            `;
+          container.innerHTML += panelContent;
+        });
+
+        for (let i = users.length; i < 4; i++) {
+          const addPlayerPanel = `
+            <div class="player-brief-info-panel">
+                <h1 class="auth-title">Add player</h1>
+                <button onclick="goToSignup()" class="auth-button" type="button">
+                    Sign up
+                </button>
+                <button onclick="goToSignin()" class="auth-button" type="button">
+                    Sign in
+                </button>
+            </div>
+        `;
+          container.innerHTML += addPlayerPanel;
+        }
+      }
+
+      const logoutPlayer = async (index) => {
+        const userId = window["loggedinUsersIds"][index];
+        try {
+          const response = await fetch(`/api/auth/logout/${userId}/`, {
+            method: "POST"
+          });
+          
+          if (!response.ok) {
+            throw new Error("Failed to log out");
+          }
+
+          window["loggedinUsersIds"].splice(index, 1);
+          renderPlayerPanels();
+        } catch (error) {
+          console.error(error.message);
+        }
+      }
+
+      renderPlayerPanels();
+    </script>
+  </body>
 </html>
