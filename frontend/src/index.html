@@ -674,7 +674,7 @@
           <div class="tournament-grid"></div>
         </div>
         <div class="tournament-top-right">
-          <h2 class="tournament-round h2" id="firstSemifinal">Semifinal 1</h2>
+          <!-- <h2 class="tournament-round h2" id="firstSemifinal">Semifinal 1</h2> -->
 
           <!-- Tournament SF1 -->
 
@@ -683,7 +683,7 @@
             id="firstSemifinalContent"
           ></div>
 
-          <h2 class="tournament-round h2" id="secondSemifinal">Semifinal 2</h2>
+          <!-- <h2 class="tournament-round h2" id="secondSemifinal">Semifinal 2</h2> -->
 
           <!-- Tournament SF2 -->
 
@@ -706,14 +706,14 @@
         >
           Back to menu
         </button>
-        <button
+        <!-- <button
           class="tournament-buttons button generate"
           tabindex="0"
           id="generateSF"
           onclick="showSemiFinalButton()"
         >
           Generate bracket
-        </button>
+        </button> -->
         <button
           class="tournament-buttons button start-sf-1"
           tabindex="0"
@@ -790,7 +790,7 @@
         "secondSemifinalContent"
       );
       const final = document.getElementById("final");
-      const generateSFButton = document.getElementById("generateSF");
+      // const generateSFButton = document.getElementById("generateSF");
       const startFirstSemifinalButton = document.getElementById("startFirstSF");
 
       function goToSignup() {
@@ -882,12 +882,13 @@
         profile.style.display = "none";
         tournamentSetup.style.display = "none";
         tournament.style.display = "block";
-        generateSFButton.style.display = "block";
+        // generateSFButton.style.display = "block";
         startFirstSemifinalButton.style.display = "none";
-        firstSemifinal.style.display = "flex";
-        secondSemifinal.style.display = "flex";
-        firstSemifinalContent.style.display = "none";
-        secondSemifinalContent.style.display = "none";
+        // firstSemifinal.style.display = "flex";
+        // secondSemifinal.style.display = "flex";
+        firstSemifinalContent.style.display = "flex";
+        secondSemifinalContent.style.display = "flex";
+        startFirstSemifinalButton.style.display = "block";
         createTournament();
         // const cards = document.querySelectorAll(".game-player-card-inner");
 
@@ -944,14 +945,14 @@
         overlay.style.pointerEvents = "auto";
       }
 
-      function showSemiFinalButton() {
-        firstSemifinal.style.display = "none";
-        secondSemifinal.style.display = "none";
-        firstSemifinalContent.style.display = "block";
-        secondSemifinalContent.style.display = "block";
-        generateSFButton.style.display = "none";
-        startFirstSemifinalButton.style.display = "block";
-      }
+      // function showSemiFinalButton() {
+      //   firstSemifinal.style.display = "none";
+      //   secondSemifinal.style.display = "none";
+      //   firstSemifinalContent.style.display = "block";
+      //   secondSemifinalContent.style.display = "block";
+      //   generateSFButton.style.display = "none";
+      //   startFirstSemifinalButton.style.display = "block";
+      // }
 
       window.addEventListener("DOMContentLoaded", () => {
         const navItems = document.querySelectorAll(".navigation-header-item");

@@ -112,7 +112,7 @@ function createTournament() {
   function generateSemifinals(filledPlayers) {
     shuffle(filledPlayers);
     const [player1, player2, player3, player4] = filledPlayers;
-
+    
     window.tournamentState.userIds = [];
     window.tournamentState.userIds.push(
       player1.id,
@@ -120,23 +120,22 @@ function createTournament() {
       player3.id,
       player4.id
     );
-
+    
     firstSemifinalContent.innerHTML = "";
     secondSemifinalContent.innerHTML = "";
-
+    
     firstSemifinalContent.innerHTML = `
-        <h1 class="tournament-match-title">Semifinal 1</h1>
-        ${generateMatchContent(player1, player2)}
-      `;
-
+    <h1 class="tournament-match-title">Semifinal 1</h1>
+    ${generateMatchContent(player1, player2)}
+    `;
+    
     secondSemifinalContent.innerHTML = `
-        <h1 class="tournament-match-title">Semifinal 2</h1>
-        ${generateMatchContent(player3, player4)}
-      `;
+    <h1 class="tournament-match-title" >Semifinal 2</h1>
+    ${generateMatchContent(player3, player4)}
+    `;
   }
 
   const players = getPlayers();
-  const generateSFButton = document.getElementById("generateSF");
 
   if (players.length > 0) {
     const filledPlayers = generatePlayerCards(players);
@@ -147,11 +146,7 @@ function createTournament() {
     window.tournamentState.name = tournamentName;
     tournamentTitle.innerHTML = generateTitle(window.tournamentState.name);
 
-    // Bind the click event of the "Generate bracket" button
-    generateSFButton.addEventListener("click", function () {
-      generateSemifinals(filledPlayers);
-      console.log(window.tournamentState);
-    });
+    generateSemifinals(filledPlayers);
   }
 
   // Reset tournament state on "Back to menu"
