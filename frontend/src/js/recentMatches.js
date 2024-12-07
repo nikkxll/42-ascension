@@ -1,12 +1,6 @@
-console.log("Fetch recent matches script loaded");
-document.addEventListener("DOMContentLoaded", async () => {
-	await renderRecentMatches();
-});
-
 async function renderRecentMatches() {
 	window.state.recentMatches = await fetchRecentMatches();
 	const data = window.state.recentMatches;
-	console.log(data);
 	const matchList = document.querySelector(".match-results");
 	matchList.innerHTML = "";
 

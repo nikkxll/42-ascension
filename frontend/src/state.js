@@ -5,10 +5,10 @@ window.state = {
     recentMatches: [],
     // max 5
     tournaments: [ 
-        {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""},
-        {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""},
-        {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""},
-        {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""}
+        // {"name": "1", "status": "1", "winner": "1", "runnerUp": "1", "created": "1", "ended": "1"},
+        // {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""},
+        // {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""},
+        // {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""}
     ]
 }
 

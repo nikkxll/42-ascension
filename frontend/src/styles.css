@@ -680,6 +680,10 @@ section {
   color: #00ff37;
 }
 
+.status-pending {
+  color: #ffb700;
+}
+
 .date-text {
   font-size: 22px;
 }
