@@ -592,6 +592,18 @@ section {
   margin: 0 auto 0;
   cursor: pointer;
   transition: box-shadow 0.3s, transform 0.3s;
+  display: flex;
+  gap: 10px;
+}
+
+.match-link > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.player-small-text {
+	font-size: 20px;
 }
 
 .match-link:hover {
