@@ -1229,6 +1229,7 @@
           });
           
           if (!response.ok) {
+            goToHome()
             throw new Error("Failed to get user matches");
           }
           const json = await response.json()
@@ -1257,6 +1258,7 @@
           });
           
           if (!response.ok) {
+            goToHome()
             throw new Error("Failed to get potential friends");
           }
 
@@ -1265,6 +1267,7 @@
           });
           
           if (!response.ok) {
+            goToHome()
             throw new Error("Failed to get actual friends");
           }
 

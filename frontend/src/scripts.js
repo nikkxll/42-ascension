@@ -109,7 +109,7 @@ function renderPlayerPanels() {
                 alt="User profile avatar"
               />
               <h2 class="username">${user.username || `User${index + 1}`}</h2>
-              <button class="profile-button" tabindex="0">Profile</button>
+              <button class="profile-button" tabindex="0" onclick="updateToProfile(${index})">Profile</button>
               <button class="logout-button" tabindex="0" onclick="logoutPlayer(${index})">Log out</button>
           </div>
       `;
