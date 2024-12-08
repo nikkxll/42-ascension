@@ -1,29 +1,22 @@
 window.state = {
     // max size 4
-    loggedInUsers: [
-        {"displayname": "", "avatar": "", "id": "", "gamesPlayed": 0, "winrate": 0.0},
-        {"displayname": "", "avatar": "", "id": "", "gamesPlayed": 0, "winrate": 0.0},
-        {"displayname": "", "avatar": "", "id": "", "gamesPlayed": 0, "winrate": 0.0}
-    ],
+    loggedInUsers: [],
     // max 5
-    recentMatches: [
-        {"winner": "", "loser": "", "score": "11:2"},
-        {"winner": "", "loser": "", "score": "11:2"},
-        {"winner": "", "loser": "", "score": "11:2"},
-        {"winner": "", "loser": "", "score": "11:2"}
-    ],
+    recentMatches: [],
     // max 5
     tournaments: [ 
-        {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""},
-        {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""},
-        {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""},
-        {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""}
+        // {"name": "1", "status": "1", "winner": "1", "runnerUp": "1", "created": "1", "ended": "1"},
+        // {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""},
+        // {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""},
+        // {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""}
     ]
 }
+
 window.gameStoped = true;
+
 window.tournamentState = {
-    "name": "tournament 3",
-    "userIds": [3, 4, 5, 6],
+    "name": "",
+    "userIds": [],
     //"data": null,  //data to be added and taken from backend . 
     // players: [
     //     {"name": "", "winrate": 0.0, status: "online", "id": "3"},
@@ -31,11 +24,11 @@ window.tournamentState = {
     //     {"name": "", "winrate": 0.0, status: "online", "id": "5"},
     //     {"name": "", "winrate": 0.0, status: "online", "id": "6"}
     // ],
-    // matches: [
-    //     {"player1": 3, "player2": 4,  "status": 0}, // "score": "" , "id": 1
-    //     {"player1": 5, "player2": 6,  "status": 0}, //"score": "" , "id": 2
-    //      //{"player1": "playerID", "player2": 2, "status": 0, "score": ""},
-    // ]
+    matches: [
+        {"player1": 3, "player2": 4,  "status": 0}, // "score": "" , "id": 1
+        {"player1": 5, "player2": 6,  "status": 0}, //"score": "" , "id": 2
+         {"player1": "playerID", "player2": 2, "status": 0, "score": ""},
+    ]
 }
 
 window.ai_id = 1
