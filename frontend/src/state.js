@@ -12,6 +12,8 @@ window.state = {
     ]
 }
 
+window.gameStoped = true;
+
 window.tournamentState = {
     "name": "",
     "userIds": [],
@@ -30,7 +32,7 @@ window.tournamentState = {
 }
 
 window.ai_id = 1
-window.singleGameState = {}  //for tournament
+//window.singleGameState = {}  //for tournament
 
 // window.singleGameState = {   // for 4 player game  // this is working example
 //     "userIds": [3, 4, 5, 6],     //  [left, left, right, right]
@@ -43,13 +45,9 @@ window.singleGameState = {}  //for tournament
 // }
 
 
-// window.singleGameState = {   //for single game
-//     player1: "id1",
-//     player2: "id2",
-//     score: "0:0",
-//     duration: 0
-//     //"status": "0",
-// }
+window.singleGameState = {   //for single 1x1 game
+    "userIds": [3, 4],     //  [left, right]  but AI will play right side in both cases: [playerID,AI_ID] and [AI_ID, playerID]. 
+}
 
 // window.singleGameState = {   //for single game with ai
 //     player1: "id1",

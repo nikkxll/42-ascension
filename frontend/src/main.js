@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
-import * as state from "./state.js";
+//import * as statejs from "./state.js";
 
 
 
@@ -89,7 +89,8 @@ let updateOuterBoxes = (element, row) => {
 const GameType = {
     Duo: 0,
     Cup: 1,
-    Quatro: 2
+    Quatro: 2,
+    AiAi: 3
 };
 function gameTypeSelector(){
     let ai = 0;
@@ -102,48 +103,57 @@ function gameTypeSelector(){
         // if (window.tournamentState 
         //     && window.tournamentState.matches 
         //     && window.tournamentState.matches.length > 0
-        if (window.tournamentState.matches[0].status == 0)
-            matchNumber = 0;
-        else if (window.tournamentState.matches[1].status == 0)
-            matchNumber = 1;
-        else if (window.tournamentState.matches[2].status == 0)
-            matchNumber = 2;
+        matchNumber = 0;
+        // if (window.tournamentState.matches[0].status == 0)
+        //     matchNumber = 0;
+        // else if (window.tournamentState.matches[1].status == 0)
+        //     matchNumber = 1;
+        // else if (window.tournamentState.matches[2].status == 0)
+        //     matchNumber = 2;
         let match = window.tournamentState.matches[matchNumber];
         if (match.player1 == window.ai_id || match.player2 == window.ai_id)
             ai = 1;
         return {gameType: GameType.Cup, ai, matchNumber};
     }
-    else if (window.singleGameState.player3 && window.singleGameState.player4) {
+    //else if (window.singleGameState.player3 && window.singleGameState.player4) {
+    let ids = window.singleGameState.userIds
+    if (ids.length == 4){
         ai = -2;
         return {gameType: GameType.Quatro, ai, matchNumber: 0};
     }
-    if (window.singleGameState.player1 === window.ai_id || window.singleGameState.player2 === window.ai_id)
-        ai = 1;
-    return {gameType: GameType.Duo, ai, matchNumber: 0};
+    else if (ids.length == 2){
+        if (ids[1] == window.ai_id || ids[0] == window.ai_id)
+            ai = 1;
+        if (ids[0] == window.ai_id){
+            window.singleGameState.userIds[1] = window.ai_id;
+            window.singleGameState.userIds[0] = ids[1];
+        }
+        return {gameType: GameType.Duo, ai, matchNumber: 0};
+    }
+    else if (ids.length == 0){
+        ai = 2;
+        return {gameType: GameType.AiAi, ai, matchNumber: 0};
+    }
 }
-
-
 
 const requestAddMatch = async (data) => {
     try {
         const response = await fetch("/api/matches/", {
             method: "POST",
-            body: JSON.stringify(data)
-        })
-        console.log("response=", response);
-        //if (!response.ok)
-        //    throw new Error("HTTP error, status = " + response.status);
-        const json = await response.json().then(
-            data => {
-                console.log(data);
-                return data;
-            }
-        );
-
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error, status = ${response.status}`);
+        }
+        const json = await response.json();
+        console.log("Server Response Data:", json);
+        return json;
     } catch (error) {
-      console.error(error.message);
+        console.error("Request failed:", error.message);
+        //throw error;
     }
-  }
+};
 
 
 
@@ -153,15 +163,6 @@ function updateStateFetch(startTime, gameCount){
     if (GameType.Cup != gameType){
         window.singleGameState.score = gameCount;
         window.singleGameState.duration = Math.trunc((Date.now() - startTime) / 1000);
-        //strings
-        //String(gameCount[0]) + ":" + String(gameCount[1]);
-        // window.singleGameState.userIds = [
-        //     String(window.singleGameState.player1),
-        //     String(window.singleGameState.player2)]
-        // if (GameType.Quatro == gameType){
-        //     window.singleGameState.userIds.push(String(window.singleGameState.player3));
-        //     window.singleGameState.userIds.push(String(window.singleGameState.player4)); 
-        // }
         //numbers
         // window.singleGameState.userIds = [
         //         window.singleGameState.player1,
@@ -232,29 +233,46 @@ const requestPatchMatch = async (id, data) => {
     }
 }
 
+const removeGameWindow = (game) => {
+    cancelAnimationFrame(game.animationId);
+    document.getElementById("gameWindow").style.display = "none";
+    document.getElementById("gameWindow").removeChild(game.renderer.domElement);
+    document.removeEventListener("keydown", game.keyDownAction);
+    document.removeEventListener("keyup", game.keyUpAction);
+}
+
 window.startGame = (aiNum) => {
+    console.log("Start game state of game", state.singleGameState);
     const {gameType, ai, matchNumber} = gameTypeSelector();
     console.log("gameType=", gameType, "ai=", ai, "matchNumber=", matchNumber);
     console.log("state of game", window.singleGameState);
     if (GameType.Cup == gameType) // create tournament
     {
-        let body = {
-            "name": window.tournamentState.name,
-            // "userIds": [
-            //     String(window.tournamentState.matches[0].player1),
-            //     String(window.tournamentState.matches[0].player2),
-            //     String(window.tournamentState.matches[1].player1),
-            //     String(window.tournamentState.matches[1].player2)
-            "userIds": [
+        let userIds = window.tournamentState.userIds;
+        if (!userIds){  //this is old format to be removed
+            userIds = [
                 window.tournamentState.matches[0].player1,
                 window.tournamentState.matches[0].player2,
                 window.tournamentState.matches[1].player1,
                 window.tournamentState.matches[1].player2
-            ]
+            ];
+        }
+        let body = {
+            "name": window.tournamentState.name,
+            "userIds": userIds
         }
         requestAddCup(body);
     }
 
+    
+    window.gameStoped = false;
+    let game = {  // this is the game object that will be used to accumulate all the game data.
+        keyDownAction: null, 
+        keyUpAction: null, 
+        renderer: null, 
+        animationId: null,
+        startTime: new Date(), 
+        count: [0, 0]} //, gameCount , ai, gameType, matchNumber};
     let isPaused = false;
     const maxScore = 5;
     const playerSpeed = 17;  // 17 12
@@ -268,12 +286,12 @@ window.startGame = (aiNum) => {
     setCameraTop(camera)
     //setCameraAside(camera)
 
-    const renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth * 0.96, window.innerHeight * 0.96);
+    game.renderer = new THREE.WebGLRenderer();
+    game.renderer.setSize(window.innerWidth * 0.96, window.innerHeight * 0.96);
 
     // needs to be a game screen that we overlay and make visible
     //document.getElementById("gameWindow").innerHTML = "";
-    document.getElementById("gameWindow").appendChild(renderer.domElement);
+    document.getElementById("gameWindow").appendChild(game.renderer.domElement);
     //document.getElementById("gameStartButton").disabled = true;
 
     // Add lights to the scene for score visibility
@@ -506,6 +524,8 @@ window.startGame = (aiNum) => {
         })
     }
 
+
+
     const pressedKeys = new Set();
     const isPressed = (key) => pressedKeys.has(key);
     const isPressedByChar = (char) => isPressed(char.charCodeAt(0));
@@ -513,21 +533,16 @@ window.startGame = (aiNum) => {
 
     // function registered as an event listener to keydown events
     // 38 = ArrowUp, 40 = ArrowDown, 87 = w, 83 = s
-    
-    function keyDownAction(event) {
+    game.keyDownAction = (event) => {
         let code = event.which;
         if (code == 32){ // space = 32
             //event.preventDefault();
         }
         if (!pressedKeys.has(code))
             pressedKeys.add(code);
-        if (isPressed(27) && (isPaused || Math.max(...gameCount) >= maxScore)){ // 27 = escape
+        if (isPressed(27) && (isPaused || Math.max(...game.count) >= maxScore)){ // 27 = escape
             console.log("Esc is pressed, game to be terminated.");
-            cancelAnimationFrame(animationId);
-            document.getElementById("gameWindow").style.display = "none";
-            document.getElementById("gameWindow").removeChild(renderer.domElement);
-            document.removeEventListener("keydown", keyDownAction);
-            document.removeEventListener("keyup", keyUpAction);
+            removeGameWindow(game);
             console.log("game terminated, singleGameState=", window.singleGameState);
             if (GameType.Cup == gameType){
                 goToTournament();
@@ -539,7 +554,7 @@ window.startGame = (aiNum) => {
             }
             return 0;
         }
-        else if (code == 32 && Math.max(...gameCount) < maxScore){ // space
+        else if (code == 32 && Math.max(...game.count) < maxScore){ // space
             if (!isPaused){
                 pause3dObj.position.z = -5
                 render();
@@ -564,7 +579,7 @@ window.startGame = (aiNum) => {
         }
         return 0;
     }
-    function keyUpAction(event) {
+    game.keyUpAction = (event) => {
         pressedKeys.delete(event.which);
     }
     function keyEventHandler() {
@@ -576,7 +591,7 @@ window.startGame = (aiNum) => {
     
     // util function
     var render = function() {
-        renderer.render(scene, camera);
+        game.renderer.render(scene, camera);
     };
 
     // AI Algo part
@@ -669,14 +684,14 @@ window.startGame = (aiNum) => {
     }
  
     // check for goals and just reset position: subject to change
-    function countGameScore(ball, gameCount){
+    function countGameScore(ball, count){
         if (!(ball.hitRacketFlag == 0 && (ball.position.x > width / 2  || ball.position.x < - width / 2)))
             return;
         if (ball.position.x > 0)
-            gameCount[0] += 1
+            count[0] += 1
         else
-            gameCount[1] += 1
-        updateScore(gameCount[0] + " : " + gameCount[1]);
+            count[1] += 1
+        updateScore(count[0] + " : " + count[1]);
         ball.position.set(0, 0, 0)
         let startAngle = getRandom(-1, 1)
         ball.velocity = {x: Math.cos(startAngle) * Math.sign(ball.velocity.x) * ballStartSpeed, y: Math.sin(startAngle) * Math.sign(ball.velocity.y) * ballStartSpeed}
@@ -684,35 +699,37 @@ window.startGame = (aiNum) => {
     }
 
     /* ----- loop setup ----- */
-    let animationId = null;
+    //let animationId = null;
     // start a clock
     let clock = new THREE.Clock();
-    const startTime = new Date();
     // keep track of deltatime since last frame
     let delta = 0;
     // 75 max fps
     let interval = 1 / 75;
 
     let playerMaxY = hight / 2 - 1.5;
-    let gameCount = [0, 0];
    
 
     //console.log("player1 scale=", player1.scale.y, "ball scale=", ball1.scale.y)
     function loop() {
-        if (!isPaused && ai >= 1)
+        if (ai >= 1 && !isPaused && !window.gameStoped)
             runAi()
-        animationId = requestAnimationFrame(loop);
+        game.animationId = requestAnimationFrame(loop);
         // if its time to draw a new frame
+        if (window.gameStoped){
+            console.log("Game Terminatated by pressing Back buttom.");
+            removeGameWindow(game);
+            return;
+        }
         if (delta > interval){
-            if (isPaused){
+            if (isPaused)
                 return;
-            }
-            if (Math.max(...gameCount) >= maxScore){
+            if (Math.max(...game.count) >= maxScore){
                 isPaused = true;
-                updateScore("Score: " + gameCount[0] + " : " + gameCount[1] + ". Game ended!");
+                updateScore("Score: " + game.count[0] + " : " + game.count[1] + ". Game ended!");
                 score3dObj.position.set(-7, 7, -2); 
                 render();
-                updateStateFetch(startTime, gameCount);
+                updateStateFetch(game.startTime, game.count);
                 return;
             }
             keyEventHandler() // check for key presses
@@ -750,11 +767,11 @@ window.startGame = (aiNum) => {
             // move the balls to new position
             ball1.position.x += ball1.velocity.x * delta
             ball1.position.y += ball1.velocity.y * delta
-            countGameScore(ball1, gameCount)
+            countGameScore(ball1, game.count)
             if (GameType.Quatro == gameType){
                 ball2.position.x += ball2.velocity.x * delta
                 ball2.position.y += ball2.velocity.y * delta
-                countGameScore(ball2, gameCount)
+                countGameScore(ball2, game.count)
             }
             outerboxes.forEach(updateOuterBoxes);
             render();
@@ -766,8 +783,8 @@ window.startGame = (aiNum) => {
     }
 
     // allows keydown and keyup to move player
-    document.addEventListener("keydown", keyDownAction, false)
-    document.addEventListener("keyup", keyUpAction, false)
+    document.addEventListener("keydown", game.keyDownAction, false)
+    document.addEventListener("keyup", game.keyUpAction, false)
 
     /* ----- Main logic ----- */
     setup()
