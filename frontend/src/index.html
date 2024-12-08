@@ -567,7 +567,7 @@
         <div class="profileRight">
           <div id="carouselExampleFade" class="carousel slide carousel-fade">
             <h1 class="carousel-title">Friends</h1>
-            <div class="carousel-inner">
+            <div class="carousel-inner" id="friends">
               <div class="carousel-item active">
                 a
               </div>
@@ -1216,6 +1216,9 @@
           if (!response.ok) {
             throw new Error("Failed to get user info");
           }
+          const json = await response.json()
+          document.getElementById("person-avatar").src = json.data.avatarUrl || "./assets/default_avatar.png"
+          document.getElementById("person-name").innerText = json.data.displayName
         } catch (error) {
           console.error(error.message);
         }
@@ -1227,6 +1230,22 @@
           
           if (!response.ok) {
             throw new Error("Failed to get user matches");
+          }
+          const json = await response.json()
+          const matches = document.getElementById("person-stats")
+          if (json.data.matches.length == 0)
+            matches.innerText = "No Matches yet"
+          else
+          {
+            matches.innerHTML = ""
+            json.data.matches.forEach((match) => {
+              let content = `
+              <div>
+                ${match.players[0].username} : ${match.players[1].username} - ${match.score}
+              </div>
+              `
+              matches.innerHTML += content
+            })
           }
         } catch (error) {
           console.error(error.message);
@@ -1240,7 +1259,39 @@
           if (!response.ok) {
             throw new Error("Failed to get potential friends");
           }
+
+          const friendsRequest = await fetch(`/api/players/${userId}/friends/`, {
+            method: "GET"
+          });
           
+          if (!response.ok) {
+            throw new Error("Failed to get actual friends");
+          }
+
+          const friends = await friendsRequest.json()
+
+          const json = await response.json()
+          const players = document.getElementById("friends")
+          if (json.data.players.length == 0)
+            matches.innerText = "Noone else exists"
+          else
+          {
+            players.innerHTML = ""
+            json.data.players.forEach((player, index) => {
+              let friend_marker = friends.data.friends.find((friend) => friend.id == player.id)
+              let content = `
+              <div class="carousel-item ${index == 0 ? "active" : ""}">
+                <img class="friend-avatar" src="${player.avatarUrl || "./assets/default_avatar.png"}">
+                <h1 class="friend-name">${player.displayName || player.username}</h1>
+                <div class="friend-status">
+                  ${friend_marker ? "Status: " + friend_marker.status  : "<button onclick='requestFriendship(" + player.id + ")'>Request Friendship</button>"}
+                </div>
+              </div>
+              `
+              if (player.id != userId)
+                players.innerHTML += content
+            })
+          }
         } catch (error) {
           console.error(error.message);
         }
