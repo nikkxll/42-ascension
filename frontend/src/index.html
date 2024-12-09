@@ -272,6 +272,7 @@
                 src="./assets/42_api_logo.png"
                 alt="42 Logo"
                 class="oauth-logo"
+                onclick="open42Auth()"
               />
             </a>
           </form>
@@ -471,84 +472,49 @@
 
     <!-- Container for 2v2 game -->
 
-    <section style="display: none" id="2v2GameStart">
-      <div class="gameStartView">
-        <div class="gameStartPlayer box">
-          <div class="gameStartSelectable">
+    <section style="display: none" id="gameStart2v2">
+      <div class="single-game-lobby">
+        <div class="single-game-top">
+          <div class="single-game-grid-left" id="double-game-grid-left"></div>
+          <div class="single-game-vs-logo">
             <img
-              src="./assets/default_avatar.png"
-              alt="default_avatar"
-              class="gameStartPlayerAvatar"
+              class="single-game-vs-logo-props"
+              src="./assets/vs_logo.png"
+              alt="Versus logo"
             />
-            <h2 class="gameStartPlayerDisplayName">Test1</h2>
           </div>
+          <div class="single-game-grid-right" id="double-game-grid-right"></div>
         </div>
-        <div class="gameStartPlayer box">
-          <div class="gameStartSelectable">
-            <img
-              src="./assets/default_avatar.png"
-              alt="default_avatar"
-              class="gameStartPlayerAvatar"
-            />
-            <h2 class="gameStartPlayerDisplayName">Test1</h2>
-          </div>
+        <div class="single-game-bottom">
+          <button
+            class="single-game-buttons back"
+            tabindex="0"
+            onclick="goToHome()"
+          >
+            Back to menu
+          </button>
+          <button
+            class="single-game-buttons clear-selection"
+            tabindex="0"
+            onclick="resetAll()"
+          >
+            Clear selection
+          </button>
+          <button
+            class="single-game-buttons randomize"
+            tabindex="0"
+            onclick="randomizeChoice2v2()"
+          >
+            Randomize
+          </button>
+          <button
+            class="single-game-buttons start"
+            tabindex="0"
+            onclick="startOff()"
+          >
+            Start match
+          </button>
         </div>
-        <div class="gameStartPlayer box">
-          <div class="gameStartSelectable">
-            <img
-              src="./assets/default_avatar.png"
-              alt="default_avatar"
-              class="gameStartPlayerAvatar"
-            />
-            <h2 class="gameStartPlayerDisplayName">Test1</h2>
-          </div>
-        </div>
-        <img class="vsImage" src="./assets/vs_logo.png" />
-        <div class="gameStartPlayer box">
-          <div class="gameStartSelectable">
-            <img
-              src="./assets/default_avatar.png"
-              alt="default_avatar"
-              class="gameStartPlayerAvatar"
-            />
-            <h2 class="gameStartPlayerDisplayName">Test1</h2>
-          </div>
-        </div>
-        <div class="gameStartPlayer box">
-          <div class="gameStartSelectable">
-            <img
-              src="./assets/default_avatar.png"
-              alt="default_avatar"
-              class="gameStartPlayerAvatar"
-            />
-            <h2 class="gameStartPlayerDisplayName">Test1</h2>
-          </div>
-        </div>
-        <div class="gameStartPlayer box">
-          <div class="gameStartSelectable">
-            <img
-              src="./assets/default_avatar.png"
-              alt="default_avatar"
-              class="gameStartPlayerAvatar"
-            />
-            <h2 class="gameStartPlayerDisplayName">Test1</h2>
-          </div>
-        </div>
-        <div class="gameStartPlayer box">
-          <div class="gameStartSelectable">
-            <img
-              src="./assets/default_avatar.png"
-              alt="default_avatar"
-              class="gameStartPlayerAvatar"
-            />
-            <h2 class="gameStartPlayerDisplayName">Test1</h2>
-          </div>
-        </div>
-      </div>
-      <div class="gameButtonContainer">
-        <button onclick="goToHome()">Go back</button>
-        <button>Randomize</button>
-        <button onclick="">Start game</button>
       </div>
     </section>
 
@@ -1042,6 +1008,8 @@
       document.addEventListener("DOMContentLoaded", function () {
         const leftGrid = document.querySelector(".single-game-grid-left");
         const rightGrid = document.querySelector(".single-game-grid-right");
+        const leftGrid2v2 = document.querySelector("#double-game-grid-left");
+        const rightGrid2v2 = document.querySelector("#double-game-grid-right");
         const startButton = document.querySelector(
           ".single-game-buttons.start"
         );
@@ -1160,6 +1128,89 @@
 
         // Observe for changes in player cards dynamically
         const observer = new MutationObserver(() => {
+          const leftPlayers = Array.from(
+            leftGrid.querySelectorAll(".game-player-card-inner-single")
+          );
+          const rightPlayers = Array.from(
+            rightGrid.querySelectorAll(".game-player-card-inner-single")
+          );
+
+          if (leftPlayers.length > 0 && rightPlayers.length > 0) {
+            // observer.disconnect();
+            attachLeftPlayerListeners(leftPlayers, rightPlayers);
+            attachRightPlayerListeners(rightPlayers);
+
+            // Allow external reset/randomization to function
+            window.resetAll = () => resetAll(leftPlayers, rightPlayers);
+            window.randomizeChoice = () =>
+              randomizeChoice(leftPlayers, rightPlayers);
+
+            // Initialize the start button state
+            updateStartButton();
+          }
+        });
+
+        function randomizeChoice2v2(leftPlayers, rightPlayers) {
+          resetAll(leftPlayers, rightPlayers);
+
+          // Randomly select a left player
+          const randomLeftIndex = Math.floor(
+            Math.random() * leftPlayers.length
+          );
+          leftPlayers[randomLeftIndex].click();
+
+          const randomLeftOtherIndex = Math.floor(
+            (randomLeftIndex + Math.random() * (leftPlayers.length - 1) + 1) % leftPlayers.length
+          );
+          leftPlayers[randomLeftOtherIndex].click();
+
+          // Randomly select an available right player
+          rightPlayers.forEach((p, index) => {
+            if (p.classList.contains("player-selectable"))
+              rightPlayers[index].click();
+          });
+        }
+
+        function attachLeftPlayerListeners2v2(leftPlayers, rightPlayers) {
+          leftPlayers.forEach((player, index) => {
+            player.classList.add("player-selectable");
+
+            player.addEventListener("click", () => {
+              if (leftPlayersSelected >= 2) return;
+
+              // Disable all left players initially
+              leftPlayers.forEach((p) => {
+                p.classList.add("player-disabled");
+                p.classList.remove("player-selected");
+              });
+
+              // Select the clicked player
+              player.classList.remove("player-disabled");
+              player.classList.add("player-selected");
+              leftSelected[leftPlayersSelected] = index;
+              leftPlayersSelected++;
+
+              // Enable or disable right players based on selection
+              rightPlayers.forEach((rightPlayer, rightIndex) => {
+                rightPlayer.classList.remove(
+                  "player-disabled",
+                  "player-selectable",
+                  "player-selected"
+                );
+
+                // Enable only appropriate right players
+                if (!leftSelected.contains(rightIndex)) {
+                  rightPlayer.classList.add("player-selectable");
+                } else {
+                  rightPlayer.classList.add("player-disabled");
+                }
+              });
+              updateStartButton();
+            });
+          });
+        }
+        // Observe for changes in player cards dynamically
+        const observer2v2 = new MutationObserver(() => {
           const leftPlayers = Array.from(
             leftGrid.querySelectorAll(".game-player-card-inner-single")
           );
@@ -1323,6 +1374,23 @@
         console.log(window.currentUserID)
         await updateToProfile(window.currentUserID)
       }
+    </script>
+    <script>
+      function open42Auth() {
+            // Popup window configuration
+            const width = 600;
+            const height = 700;
+            const left = (window.innerWidth - width) / 2;
+            const top = (window.innerHeight - height) / 2;
+
+            // Open popup to your Django redirect view
+            const popup = window.open(
+                'https://localhost:8443/api/oauth/redirect',  // This should match your Django URL pattern
+                '42 Authorization',
+            );
+      }
+            
+
     </script>
   </body>
 </html>

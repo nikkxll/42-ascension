@@ -1230,6 +1230,8 @@ def oauth_redirect(request):
 def oauth_callback(request):
 
     if request.method == "GET":
+        user = {}
+        player = {}
         # state = request.GET.get('state')
         code = request.GET.get("code")
         if not code:
@@ -1247,14 +1249,25 @@ def oauth_callback(request):
             player = Player.objects.create(
                 user=user, display_name=user_data["displayname"]
             )
-
-            # Return success response
-            file_path = os.path.join(os.path.dirname(__file__), "callback.html")
-            file = open(file_path, "r")
-            html_content = file.read()
-            return HttpResponse(html_content)
-        except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
+        except IntegrityError:
+            # Create the user
+            user = User.objects.filter(username=user_data["login"])
+            # Create the player with the associated user
+        # Create a unique session key
+        session_key = f"session_{user.id}"
+        # Encrypt user session data
+        session_value = create_encrypted_session_value(
+            {
+                "id": user.id,
+                "username": user.username,
+                "is_authenticated": True,
+            }
+        )
+        response = HttpResponse("<html><script>window.close()</script></html>")
+        # response.set_cookie(session_key, session_value, httponly=True, secure=True) // secure will work with HTTPS only
+        response.set_cookie(session_key, session_value, httponly=True)
+        return response
+            
 
 
 def fetch_42_user_data(access_token):
