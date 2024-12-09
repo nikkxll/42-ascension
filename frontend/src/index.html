@@ -646,7 +646,7 @@
       <div class="tournament-top">
         <div class="tournament-top-left">
           <div class="tournament-name" id="tournamentTitle">
-            <h1 class="tournament-name-text">Transcendence Cup 2024</h1>
+            <!-- <h1 class="tournament-name-text">Transcendence Cup 2024</h1> -->
           </div>
           <div class="tournament-grid"></div>
         </div>
@@ -717,6 +717,7 @@
         homenavigation: goToHomeNavigation,
         settingsnavigation: goToSettingsNavigation,
         aboutnavigation: goToAboutNavigation,
+        loadedtournament: goToLoadedTournament,
       };
 
       window.addEventListener("popstate", (e) => {
@@ -875,6 +876,30 @@
         //   card.classList.remove("shaded");
         // });
         updateHistory(goToTournament);
+      }
+
+      function goToLoadedTournament(id) {
+        lobby.style.display = "none";
+        gameStart.style.display = "none";
+        overlay.style.display = "none";
+        profile.style.display = "none";
+        tournamentSetup.style.display = "none";
+        tournament.style.display = "block";
+        // generateSFButton.style.display = "block";
+        startFirstSemifinalButton.style.display = "none";
+        // firstSemifinal.style.display = "flex";
+        // secondSemifinal.style.display = "flex";
+        firstSemifinalContent.style.display = "flex";
+        secondSemifinalContent.style.display = "flex";
+        startFirstSemifinalButton.style.display = "block";
+        loadTournament(id);
+        // const cards = document.querySelectorAll(".game-player-card-inner");
+
+        // cards.forEach((card) => {
+        //   card.classList.remove("selected");
+        //   card.classList.remove("shaded");
+        // });
+        updateHistory(goToLoadedTournament);
       }
 
       function goToProfile() {
