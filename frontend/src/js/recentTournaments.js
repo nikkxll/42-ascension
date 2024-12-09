@@ -29,7 +29,7 @@ async function renderRecentTournaments() {
     tournamentField.appendChild(document.createElement("br"));
 
     tournamentField.appendChild(
-      document.createTextNode(`Winner: ${tournament.winner.displayName || "N/A"}`)
+      document.createTextNode(`Winner: ${tournament.winner?.displayName || "N/A"}`)
     );
 
     tournamentField.appendChild(document.createElement("br"));

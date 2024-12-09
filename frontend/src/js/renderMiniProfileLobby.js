@@ -11,7 +11,7 @@ function renderPlayerPanels() {
 				<div class="profile-avatar">
 				<img
 				  loading="lazy"
-				  src="${user.avatarUrl || "./assets/default_avatar.png"}"
+				  src="${user.avatarUrl || "../assets/default_avatar.png"}"
 				  alt="User profile avatar"
 				/>
 				</div>

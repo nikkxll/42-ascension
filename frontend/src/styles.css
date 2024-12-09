@@ -15,6 +15,17 @@ body {
   height: 90%;
 }
 
+h1 {
+  display: block;
+  font-size: 2em;
+  margin-block-start: 0.67em;
+  margin-block-end: 0.67em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  font-weight: bold;
+  unicode-bidi: isolate;
+}
+
 .box {
   background-color: rgba(1, 1, 1, 0.3);
   /* border: 1px solid red; */
@@ -74,6 +85,7 @@ body {
   height: 100%;
   margin-left: 15%;
 }
+
 .carousel-title {
   margin-top: -56px;
 }
@@ -302,6 +314,7 @@ section {
 .form-input {
   position: relative;
   border-radius: 20px;
+  box-sizing: content-box;
   display: flex;
   justify-content: center;
   background-color: rgba(34, 34, 34, 0.25);
@@ -673,7 +686,7 @@ section {
   text-shadow: 0 4px 4px rgba(18, 16, 16, 0.25);
   align-self: stretch;
   flex-grow: 1;
-  width: 248px;
+  width: 100%;
 }
 
 .status-completed {

@@ -14,22 +14,28 @@
     />
 
     <!-- Bootstrap parts for profile carousel -->
-    <!-- <link
+    <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
-    /> -->
+    />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
     <link href="./styles.css" rel="stylesheet" />
-    <script type="importmap">
+    <!-- <script type="importmap">
       {
         "imports": {
           "three": "https://cdn.jsdelivr.net/npm/three@v0.149.0/build/three.module.js",
           "three/addons/": "https://cdn.jsdelivr.net/npm/three@v0.149.0/examples/jsm/"
         }
       }
-    </script>
+    </script> -->
+
+
+
     <script type="module" src="./base.js"></script>
     <script type="module" src="./main.js"></script>
     <script src="./js/initialFetch.js"></script>
@@ -131,36 +137,7 @@
           <article class="tournament-card">
             <h2 class="tournament-title">Tournaments</h2>
             <div class="tournament-content">
-              <a href="#">
-                <img
-                  loading="lazy"
-                  src="./assets/left_triangle_arrow.svg"
-                  alt=""
-                  class="tournament-icon"
-                />
-              </a>
-              <div class="tournament-details">
-                <a href="#" class="tournament-link"> Transcendence Cup 2024 </a>
-                <br />
-                Status: <span class="status-completed">completed</span>
-                <br />
-                Winner: Max
-                <br />
-                Runner-up: Alex
-                <br />
-                Created: <span class="date-text">25/02/2024</span>
-                <br />
-                Ended: <span class="date-text">27/02/2024</span>
-                <br />
-              </div>
-              <a href="#">
-                <img
-                  loading="lazy"
-                  src="./assets/right_triangle_arrow.svg"
-                  alt=""
-                  class="tournament-icon"
-                />
-              </a>
+              <div class="tournament-details"></div>
             </div>
           </article>
         </div>
