@@ -559,6 +559,9 @@
         <div class="profileLeft">
           <div id="person">
             <img id="person-avatar" alt="avatar" src="https://neweralive.na/wp-content/uploads/2024/06/lloyd-sikeba.jpg">
+            <form id="newAvatarForm">
+              <input type="file" accept="jpg png" id="newAvatar">
+            </form>
             <h1 id="person-name">Blake</h1>
             <p id="person-stats">stats go here with history</p>
           </div>
@@ -1191,6 +1194,7 @@
       const updateToProfile = async (index) =>
       {
         const userId = window["loggedinUsersIds"][index];
+        window.currentUserID = index
         try {
           const response = await fetch(`/api/players/${userId}/`, {
             method: "GET"
@@ -1200,6 +1204,7 @@
             throw new Error("Failed to get user info");
           }
           const json = await response.json()
+          console.log(json.data.avatarUrl)
           document.getElementById("person-avatar").src = json.data.avatarUrl || "./assets/default_avatar.png"
           document.getElementById("person-name").innerText = json.data.displayName
         } catch (error) {
@@ -1281,8 +1286,23 @@
         } catch (error) {
           console.error(error.message);
         }
-        goToProfile();
-        updateHistory(goToProfile);
+      }
+
+      document.getElementById("newAvatar").onchange = async (e) => {
+        try{
+          const response = await fetch(`/api/players/${window["loggedinUsersIds"][window.currentUserID]}/avatar/`, {
+            method:"POST",
+            body: e.target.files[0]
+          })
+          if (!response.ok)
+            alert("Failed to upload")
+        } catch(error){
+          alert(error)
+          return;
+        }
+        alert("Succesful file upload")
+        console.log(window.currentUserID)
+        updateToProfile(window.currentUserID)
       }
     </script>
   </body>
