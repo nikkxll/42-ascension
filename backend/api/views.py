@@ -1038,6 +1038,9 @@ def get_friends(request, id):
                 "displayName": friend.display_name,
                 "status": check_status(friend),
                 "createdAt": friend.created_at.isoformat(),
+                "forMe": (friendship.status == "pending_first_second" and friend == friendship.player1) or (friendship.status == "pending_second_first" and friend == friendship.player2),
+                "forOther": (friendship.status == "pending_first_second" and friend == friendship.player2) or (friendship.status == "pending_second_first" and friend == friendship.player1),
+                "complete": friendship.status == "friends",
             }
         )
     return JsonResponse(

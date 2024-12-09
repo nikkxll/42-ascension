@@ -1270,12 +1270,31 @@
             players.innerHTML = ""
             json.data.players.forEach((player, index) => {
               let friend_marker = friends.data.friends.find((friend) => friend.id == player.id)
+              let status = "";
+
+              if (friend_marker)
+              {
+                if (friend_marker.complete)
+                  status = "Status: " + friend_marker.status
+                else if (friend_marker.forMe)
+                  status = `
+                    <button onclick='approveFriendship(${player.id})'>Approve</button>
+                    <button onclick='denyFriendship(${player.id})'>Deny</button>
+                  `
+                else if (friend_marker.forOther)
+                  status = "Waiting on approval of friendship"
+              }
+              else
+              {
+                status = "<button onclick='requestFriendship(" + player.id + ")'>Request Friendship</button>"
+              }
+
               let content = `
               <div class="carousel-item ${index == 0 ? "active" : ""}">
                 <img class="friend-avatar" src="${player.avatarUrl || "./assets/default_avatar.png"}">
                 <h1 class="friend-name">${player.displayName || player.username}</h1>
                 <div class="friend-status">
-                  ${friend_marker ? "Status: " + friend_marker.status  : "<button onclick='requestFriendship(" + player.id + ")'>Request Friendship</button>"}
+                  ${status}
                 </div>
               </div>
               `
@@ -1302,7 +1321,7 @@
         }
         alert("Succesful file upload")
         console.log(window.currentUserID)
-        updateToProfile(window.currentUserID)
+        await updateToProfile(window.currentUserID)
       }
     </script>
   </body>
