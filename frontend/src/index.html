@@ -62,18 +62,17 @@
             <h1 class="navigation-header-logo-text">NG</h1>
           </div>
           <div class="navigation-header-content">
-            <p class="navigation-header-item" onclick="goToHomeNavigation()">
+            <a class="navigation-header-item" onclick="goToHomeNavigation()">
               HOME
-            </p>
-            <p class="navigation-header-item" onclick="goToAboutNavigation()">
+            </a>
+            <a class="navigation-header-item" href="https://github.com/DaveeHorvath/ascension">
               ABOUT
-            </p>
-            <p
+            </a>
+            <a href="/admin"
               class="navigation-header-item"
-              onclick="goToSettingsNavigation()"
             >
               SETTINGS
-            </p>
+          </a>
           </div>
         </div>
       </div>
@@ -968,15 +967,6 @@
       window.addEventListener("DOMContentLoaded", () => {
         const navItems = document.querySelectorAll(".navigation-header-item");
         navItems[0].classList.add("active");
-      });
-
-      document.querySelectorAll(".navigation-header-item").forEach((item) => {
-        item.addEventListener("click", () => {
-          document.querySelectorAll(".navigation-header-item").forEach((i) => {
-            i.classList.remove("active");
-          });
-          item.classList.add("active");
-        });
       });
     </script>
     <script type="importmap">
