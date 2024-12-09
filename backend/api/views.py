@@ -1251,7 +1251,7 @@ def oauth_callback(request):
             )
         except IntegrityError:
             # Create the user
-            user = User.objects.filter(username=user_data["login"])
+            user = User.objects.filter(username=user_data["login"])[0]
             # Create the player with the associated user
         # Create a unique session key
         session_key = f"session_{user.id}"
