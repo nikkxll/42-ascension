@@ -180,7 +180,7 @@ When we refer to `id`, it is always id of the built-in Django User model.
 
 #### Upload the Users's Avatar
 
-- **Endpoint**: `PATCH /api/players/{id}/avatar/`
+- **Endpoint**: `POST /api/players/{id}/avatar/`
 
 - **Description**: Upload avatar for the user. Avatars are stored at `backend/media/avatars/`. Logged in user can only update his own avatar. Corresponding user login session is required.
 
