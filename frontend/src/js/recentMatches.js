@@ -89,9 +89,9 @@ async function renderDetailedMatchStats(matchId) {
 		const m = Math.floor((d % 3600) / 60);
 		const s = Math.floor((d % 3600) % 60);
 
-		const hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
-		const mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
-		const sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
+		const hDisplay = h > 0 ? h + " h " : "";
+		const mDisplay = m > 0 ? m + " m " : "";
+		const sDisplay = s > 0 ? s + " s" : "";
 		return hDisplay + mDisplay + sDisplay;
 	}
 
@@ -116,14 +116,28 @@ async function renderDetailedMatchStats(matchId) {
 		}
 		const { data } = await response.json();
 
-		const team1Div =	data.players.length === 2 ? 
-							`<div>${data.players[0].displayName || data.players[0].username}</div>` :
-							`<div class="player-small-text">${data.players[0].displayName || data.players[0].username}</div>
-							<div class="player-small-text">${data.players[1].displayName || data.players[1].username}</div>`;
-		const team2Div =	data.players.length === 2 ? 
-							`<div>${data.players[1].displayName || data.players[1].username}</div>` :
-							`<div class="player-small-text">${data.players[2].displayName || data.players[2].username}</div>
-							<div class="player-small-text">${data.players[3].displayName || data.players[3].username}</div>`;
+		const team1Div =
+			data.players.length === 2
+				? `<div>${
+						data.players[0].displayName || data.players[0].username
+				  }</div>`
+				: `<div class="player-small-text">${
+						data.players[0].displayName || data.players[0].username
+				  }</div>
+							<div class="player-small-text">${
+								data.players[1].displayName || data.players[1].username
+							}</div>`;
+		const team2Div =
+			data.players.length === 2
+				? `<div>${
+						data.players[1].displayName || data.players[1].username
+				  }</div>`
+				: `<div class="player-small-text">${
+						data.players[2].displayName || data.players[2].username
+				  }</div>
+							<div class="player-small-text">${
+								data.players[3].displayName || data.players[3].username
+							}</div>`;
 
 		renderElement.innerHTML = `
 			<div class="match-stats-header">
