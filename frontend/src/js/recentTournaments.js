@@ -12,16 +12,14 @@ async function renderRecentTournaments() {
   data?.tournaments?.forEach((tournament) => {
     const tournamentContainer = document.createElement("div");
     tournamentContainer.id = "tournament-" + tournament.id;
+    tournamentContainer.classList.add("tournament-block");
 
-    tournamentContainer.onclick = () => {
-      loadTournament(tournament.id);
-    };
+    tournamentContainer.addEventListener("click", () => {
+      goToLoadedTournament(tournament.id);
+    });
 
-    const title = document.createElement("a");
-    title.href = "#";
-    title.classList.add("tournament-link");
-    title.textContent = tournament.name || "Unknown Tournament";
-    tournamentContainer.appendChild(title);
+    const title = document.createTextNode(tournament.name || "Unknown Tournament");
+    tournamentContainer.appendChild(title);    
 
     tournamentContainer.appendChild(document.createElement("br"));
 

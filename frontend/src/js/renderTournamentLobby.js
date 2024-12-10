@@ -170,8 +170,6 @@ function loadTournament(tournamentId) {
   const tournaments = window.state.tournaments.tournaments;
   const tournament = tournaments.find((t) => t.id === tournamentId);
 
-  console.log('Tournament IDs:', tournaments.map(t => t.id));
-  console.log('Tournament ID to find:', tournamentId);
   console.log(tournaments);
   console.log(tournament);
 
@@ -183,6 +181,17 @@ function loadTournament(tournamentId) {
     "secondSemifinalContent"
   );
   const tournamentTitle = document.getElementById("tournamentTitle");
+  const startFirstSemifinalButton = document.getElementById("startFirstSF");
+  const startSecondSemifinalButton = document.getElementById("startSecondSF");
+  const startFinalButton = document.getElementById("startFinal");
+  const finalContent = document.getElementById("finalContent");
+  const finalDummy = document.getElementById("final");
+
+  if (!tournament?.matches[0]?.score && !tournament?.matches[1]?.score)
+    startFirstSemifinalButton.style.display = "block";
+  else if (tournament?.matches[0]?.score && !tournament?.matches[1]?.score)
+    startSecondSemifinalButton.style.display = "block";
+  else startFinalButton.style.display = "block";
 
   const neededPlayers = getNeededPlayers();
   const tournamentPlayers = getTournamentPlayers();
@@ -279,7 +288,7 @@ function loadTournament(tournamentId) {
     });
   }
 
-  function generateMatchContent(player1, player2) {
+  function generateMatchContent(player1, player2, sfCount) {
     return `
         <div class="tournament-match-players">
           <div class="tournament-match-player-info-left">
@@ -288,9 +297,43 @@ function loadTournament(tournamentId) {
             }" alt="Player avatar" class="tournament-match-avatar" />
             <h3 class="game-player-name tournament">${player1?.label}</h3>
           </div>
-          <h2 class="tournament-match-left-score">-</h2>
+          <h2 class="tournament-match-left-score">${
+            sfCount === 1
+              ? tournament?.matches[0]?.score[0]
+              : tournament?.matches[1]?.score[0]
+          }</h2>
           <img class="tournament-match-vs-logo" src="./assets/vs_logo.png" alt="Versus logo" />
-          <h2 class="tournament-match-right-score">-</h2>
+          <h2 class="tournament-match-right-score">${
+            sfCount === 1
+              ? tournament?.matches[0]?.score[1]
+              : tournament?.matches[1]?.score[1]
+          }</h2>
+          <div class="tournament-match-player-info-right">
+            <img loading="lazy" src="${
+              player2?.avatar || "./assets/default_avatar.png"
+            }" alt="Player avatar" class="tournament-match-avatar" />
+            <h3 class="game-player-name tournament">${player2?.label}</h3>
+          </div>
+        </div>
+      `;
+  }
+
+  function generateFinalContent(player1, player2) {
+    return `
+        <div class="tournament-match-players">
+          <div class="tournament-match-player-info-left">
+            <img loading="lazy" src="${
+              player1?.avatar || "./assets/default_avatar.png"
+            }" alt="Player avatar" class="tournament-match-avatar" />
+            <h3 class="game-player-name tournament">${player1?.label}</h3>
+          </div>
+          <h2 class="tournament-match-left-score">${
+            tournament?.matches[2]?.score[0] ?? "-"
+          }</h2>
+          <img class="tournament-match-vs-logo" src="./assets/vs_logo.png" alt="Versus logo" />
+          <h2 class="tournament-match-right-score">${
+            tournament?.matches[2]?.score[1] ?? "-"
+          }</h2>
           <div class="tournament-match-player-info-right">
             <img loading="lazy" src="${
               player2?.avatar || "./assets/default_avatar.png"
@@ -308,6 +351,9 @@ function loadTournament(tournamentId) {
   function generateSemifinals(filledPlayers) {
     const [player1, player2, player3, player4] = filledPlayers;
 
+    const sf1 = tournament?.matches?.[0];
+    const sf2 = tournament?.matches?.[1];
+
     window.tournamentState.userIds = [];
     window.tournamentState.userIds.push(
       player1?.id,
@@ -321,13 +367,28 @@ function loadTournament(tournamentId) {
 
     firstSemifinalContent.innerHTML = `
     <h1 class="tournament-match-title">Semifinal 1</h1>
-    ${generateMatchContent(player1, player2)}
+    ${generateMatchContent(player1, player2, 1)}
     `;
 
     secondSemifinalContent.innerHTML = `
     <h1 class="tournament-match-title" >Semifinal 2</h1>
-    ${generateMatchContent(player3, player4)}
+    ${generateMatchContent(player3, player4, 2)}
     `;
+
+    if (tournament?.matches[1]?.score) {
+      finalContent.style.display = "flex";
+      finalDummy.style.display = "none";
+      finalContent.innerHTML = `
+    <h1 class="tournament-match-title" >Final</h1>
+    ${generateFinalContent(
+      parseInt(sf1?.score[0]) > parseInt(sf1?.score[1])
+        ? sf1.players?.[0]
+        : sf1.players?.[1],
+      parseInt(sf2?.score[0]) > parseInt(sf2?.score[1])
+        ? sf2.players?.[0]
+        : sf2.players?.[1]
+    )}`;
+    }
   }
 
   const filledPlayers = generatePlayerCards(tournamentPlayers);

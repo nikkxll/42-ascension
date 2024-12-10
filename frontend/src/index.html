@@ -21,7 +21,10 @@
       crossorigin="anonymous"
     /> -->
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
     <link href="./styles.css" rel="stylesheet" />
@@ -669,6 +672,13 @@
             id="secondSemifinalContent"
           ></div>
 
+          <!-- Tournament Final -->
+
+          <div
+            class="tournament-match-container"
+            id="finalContent"
+          ></div>
+
           <!-- Footer buttons -->
 
           <h2 class="tournament-round h2" id="final">Final</h2>
@@ -698,6 +708,22 @@
           onclick="startOff()"
         >
           Start first SF
+        </button>
+        <button
+          class="tournament-buttons button start-sf-1"
+          tabindex="0"
+          id="startSecondSF"
+          onclick="startOff()"
+        >
+          Start second SF
+        </button>
+        <button
+          class="tournament-buttons button start-sf-1"
+          tabindex="0"
+          id="startFinal"
+          onclick="startOff()"
+        >
+          Start Final
         </button>
       </div>
     </div>
@@ -768,9 +794,15 @@
       const secondSemifinalContent = document.getElementById(
         "secondSemifinalContent"
       );
+      const finalContent = document.getElementById(
+        "finalContent"
+      );
       const final = document.getElementById("final");
       // const generateSFButton = document.getElementById("generateSF");
       const startFirstSemifinalButton = document.getElementById("startFirstSF");
+      const startSecondSemifinalButton =
+        document.getElementById("startSecondSF");
+      const startFinalButton = document.getElementById("startFinal");
 
       function goToSignup() {
         goToHomeNoHistory();
@@ -862,12 +894,14 @@
         tournamentSetup.style.display = "none";
         tournament.style.display = "block";
         // generateSFButton.style.display = "block";
-        startFirstSemifinalButton.style.display = "none";
         // firstSemifinal.style.display = "flex";
         // secondSemifinal.style.display = "flex";
         firstSemifinalContent.style.display = "flex";
         secondSemifinalContent.style.display = "flex";
+        finalContent.style.display = "none";
         startFirstSemifinalButton.style.display = "block";
+        startSecondSemifinalButton.style.display = "none";
+        startFinalButton.style.display = "none";
         createTournament();
         // const cards = document.querySelectorAll(".game-player-card-inner");
 
@@ -886,12 +920,14 @@
         tournamentSetup.style.display = "none";
         tournament.style.display = "block";
         // generateSFButton.style.display = "block";
-        startFirstSemifinalButton.style.display = "none";
         // firstSemifinal.style.display = "flex";
         // secondSemifinal.style.display = "flex";
         firstSemifinalContent.style.display = "flex";
         secondSemifinalContent.style.display = "flex";
-        startFirstSemifinalButton.style.display = "block";
+        finalContent.style.display = "none";
+        startFirstSemifinalButton.style.display = "none";
+        startSecondSemifinalButton.style.display = "none";
+        startFinalButton.style.display = "none";
         loadTournament(id);
         // const cards = document.querySelectorAll(".game-player-card-inner");
 
@@ -1189,6 +1225,5 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script> -->
-
   </body>
 </html>
