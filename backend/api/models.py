@@ -90,6 +90,7 @@ class Match(models.Model):
         Player,
         on_delete=models.SET_NULL,
         null=True,
+        blank=True,
         related_name="player1_matches",
         default=None,
     )
@@ -97,6 +98,7 @@ class Match(models.Model):
         Player,
         on_delete=models.SET_NULL,
         null=True,
+        blank=True,
         related_name="player2_matches",
         default=None,
     )
@@ -104,6 +106,7 @@ class Match(models.Model):
         Player,
         on_delete=models.SET_NULL,
         null=True,
+        blank=True,
         related_name="player3_matches",
         default=None,
     )
@@ -111,6 +114,7 @@ class Match(models.Model):
         Player,
         on_delete=models.SET_NULL,
         null=True,
+        blank=True,
         related_name="player4_matches",
         default=None,
     )
@@ -118,6 +122,7 @@ class Match(models.Model):
         Player,
         on_delete=models.SET_NULL,
         null=True,
+        blank=True,
         related_name="winner1_matches",
         default=None,
     )
@@ -125,12 +130,10 @@ class Match(models.Model):
         Player,
         on_delete=models.SET_NULL,
         null=True,
+        blank=True,
         related_name="winner2_matches",
         default=None,
     )
-    # round_stage = models.CharField(
-    #     max_length=2, choices=ROUND_CHOICES, null=True, blank=True
-    # )
     score = models.CharField(null=True, blank=True)
     loser1 = models.ForeignKey(
         Player,

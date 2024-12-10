@@ -37,4 +37,3 @@ let render = () => {
 }
 
 render()
-

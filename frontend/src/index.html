@@ -12,7 +12,34 @@
       href="https://fonts.googleapis.com/css2?family=Acme&display=swap"
       rel="stylesheet"
     />
+
+    <!-- Bootstrap parts for profile carousel -->
+    <!-- <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    /> -->
+
     <link href="./styles.css" rel="stylesheet" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@v0.149.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@v0.149.0/examples/jsm/"
+        }
+      }
+    </script>
+    <script type="module" src="./base.js"></script>
+    <script type="module" src="./main.js"></script>
+    <script src="./js/initialFetch.js"></script>
+    <script src="./js/renderMiniProfileLobby.js"></script>
+    <script src="./js/renderSingleGameLobby.js"></script>
+    <script src="./js/renderTournamentLobby.js"></script>
+    <script src="./js/recentMatches.js"></script>
+    <script src="./js/recentTournaments.js"></script>
+    <script src="./js/authorization.js"></script>
+    <script src="state.js"></script>
     <style>
       #enviroment {
         position: absolute;
@@ -88,59 +115,7 @@
           <div class="matches-card">
             <h2 class="matches-title">Recent matches</h2>
             <article class="matches-list">
-              <ul class="match-results">
-                <li class="match-result">
-                  <p onclick="goToMatchView()" class="match-link">
-                    <span class="winner-name">Vladimir</span> beat Max [11 : 0]
-                  </p>
-                </li>
-                <li class="match-result">
-                  <p onclick="goToMatchView()" class="match-link">
-                    <span class="winner-name">Max</span> beat Alex [11 : 6]
-                  </p>
-                </li>
-                <li class="match-result">
-                  <p onclick="goToMatchView()" class="match-link">
-                    <span class="winner-name">Leo</span> beat Robert [12 : 10]
-                  </p>
-                </li>
-                <li class="match-result">
-                  <p onclick="goToMatchView()" class="match-link">
-                    <span class="winner-name">Max</span> beat Robert [11 : 1]
-                  </p>
-                </li>
-                <li class="match-result">
-                  <p onclick="goToMatchView()" class="match-link">
-                    <span class="winner-name">David</span> beat Max [11 : 8]
-                  </p>
-                </li>
-                <li class="match-result match-result-large">
-                  <p onclick="goToMatchView()" class="match-link">
-                    <span class="winner-name">David</span> beat Vladimir [14 :
-                    12]
-                  </p>
-                </li>
-                <li class="match-result">
-                  <p onclick="goToMatchView()" class="match-link">
-                    <span class="winner-name">David</span> beat Max [11 : 7]
-                  </p>
-                </li>
-                <li class="match-result">
-                  <p onclick="goToMatchView()" class="match-link">
-                    <span class="winner-name">David</span> beat Max [11 : 7]
-                  </p>
-                </li>
-                <li class="match-result">
-                  <p onclick="goToMatchView()" class="match-link">
-                    <span class="winner-name">David</span> beat Max [11 : 7]
-                  </p>
-                </li>
-                <li class="match-result">
-                  <p onclick="goToMatchView()" class="match-link">
-                    <span class="winner-name">David</span> beat Max [11 : 7]
-                  </p>
-                </li>
-              </ul>
+              <ul class="match-results"></ul>
             </article>
             <div
               class="matches-scrollbar"
@@ -554,10 +529,56 @@
 
     <!-- Profile window (WIP) -->
 
-    <section style="display: none" id="profile">
-      <div class="profile box">
-        profile
-        <button onclick="goToHome()">go back</button>
+    <section id="profile" style="display: none">
+      <div class="profile-box box">
+        <div class="profileLeft">
+          <div id="person">
+            <img
+              id="person-avatar"
+              alt="avatar"
+              src="https://neweralive.na/wp-content/uploads/2024/06/lloyd-sikeba.jpg"
+            />
+            <h1 id="person-name">Blake</h1>
+            <p id="person-stats">stats go here with history</p>
+          </div>
+        </div>
+        <div class="profileRight">
+          <div id="carouselExampleFade" class="carousel slide carousel-fade">
+            <h1 class="carousel-title">Friends</h1>
+            <div class="carousel-inner">
+              <div class="carousel-item active">a</div>
+              <div class="carousel-item">b</div>
+              <div class="carousel-item">c</div>
+            </div>
+            <button
+              class="carousel-control-prev"
+              type="button"
+              data-bs-target="#carouselExampleFade"
+              data-bs-slide="prev"
+            >
+              <span
+                class="carousel-control-prev-icon"
+                aria-hidden="true"
+              ></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button
+              class="carousel-control-next"
+              type="button"
+              data-bs-target="#carouselExampleFade"
+              data-bs-slide="next"
+            >
+              <span
+                class="carousel-control-next-icon"
+                aria-hidden="true"
+              ></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+        </div>
+        <button onclick="goToHome()" style="z-index: 3; position: absolute">
+          go back
+        </button>
       </div>
     </section>
 
@@ -655,7 +676,7 @@
           <div class="tournament-grid"></div>
         </div>
         <div class="tournament-top-right">
-          <h2 class="tournament-round h2" id="firstSemifinal">Semifinal 1</h2>
+          <!-- <h2 class="tournament-round h2" id="firstSemifinal">Semifinal 1</h2> -->
 
           <!-- Tournament SF1 -->
 
@@ -664,7 +685,7 @@
             id="firstSemifinalContent"
           ></div>
 
-          <h2 class="tournament-round h2" id="secondSemifinal">Semifinal 2</h2>
+          <!-- <h2 class="tournament-round h2" id="secondSemifinal">Semifinal 2</h2> -->
 
           <!-- Tournament SF2 -->
 
@@ -687,14 +708,14 @@
         >
           Back to menu
         </button>
-        <button
+        <!-- <button
           class="tournament-buttons button generate"
           tabindex="0"
           id="generateSF"
           onclick="showSemiFinalButton()"
         >
           Generate bracket
-        </button>
+        </button> -->
         <button
           class="tournament-buttons button start-sf-1"
           tabindex="0"
@@ -726,6 +747,7 @@
       window.addEventListener("popstate", (e) => {
         if (history.state == null) history.replaceState({ view: "home" });
         views[history.state["view"]]();
+        window.gameStoped = true;
       });
 
       const updateHistory = (f) => {
@@ -771,7 +793,7 @@
         "secondSemifinalContent"
       );
       const final = document.getElementById("final");
-      const generateSFButton = document.getElementById("generateSF");
+      // const generateSFButton = document.getElementById("generateSF");
       const startFirstSemifinalButton = document.getElementById("startFirstSF");
 
       function goToSignup() {
@@ -824,7 +846,7 @@
 
       function goToHome() {
         goToHomeNoHistory();
-        resetAll();
+        // resetAll();
         updateHistory(goToHome);
       }
 
@@ -863,12 +885,13 @@
         profile.style.display = "none";
         tournamentSetup.style.display = "none";
         tournament.style.display = "block";
-        generateSFButton.style.display = "block";
+        // generateSFButton.style.display = "block";
         startFirstSemifinalButton.style.display = "none";
-        firstSemifinal.style.display = "flex";
-        secondSemifinal.style.display = "flex";
-        firstSemifinalContent.style.display = "none";
-        secondSemifinalContent.style.display = "none";
+        // firstSemifinal.style.display = "flex";
+        // secondSemifinal.style.display = "flex";
+        firstSemifinalContent.style.display = "flex";
+        secondSemifinalContent.style.display = "flex";
+        startFirstSemifinalButton.style.display = "block";
         createTournament();
         // const cards = document.querySelectorAll(".game-player-card-inner");
 
@@ -925,14 +948,14 @@
         overlay.style.pointerEvents = "auto";
       }
 
-      function showSemiFinalButton() {
-        firstSemifinal.style.display = "none";
-        secondSemifinal.style.display = "none";
-        firstSemifinalContent.style.display = "block";
-        secondSemifinalContent.style.display = "block";
-        generateSFButton.style.display = "none";
-        startFirstSemifinalButton.style.display = "block";
-      }
+      // function showSemiFinalButton() {
+      //   firstSemifinal.style.display = "none";
+      //   secondSemifinal.style.display = "none";
+      //   firstSemifinalContent.style.display = "block";
+      //   secondSemifinalContent.style.display = "block";
+      //   generateSFButton.style.display = "none";
+      //   startFirstSemifinalButton.style.display = "block";
+      // }
 
       window.addEventListener("DOMContentLoaded", () => {
         const navItems = document.querySelectorAll(".navigation-header-item");
@@ -947,14 +970,6 @@
           item.classList.add("active");
         });
       });
-    </script>
-    <script type="importmap">
-      {
-        "imports": {
-          "three": "https://cdn.jsdelivr.net/npm/three@v0.149.0/build/three.module.js",
-          "three/addons/": "https://cdn.jsdelivr.net/npm/three@v0.149.0/examples/jsm/"
-        }
-      }
     </script>
     <script>
       /* Players selector for tournament pre-setup */
@@ -989,10 +1004,6 @@
         });
       });
     </script>
-    <script type="module" src="./base.js"></script>
-	<script type="module" src="./state.js"></script>
-    <script type="module" src="./main.js"></script>
-    <script src="./scripts.js"></script>
     <script>
       /* Game start */
 
@@ -1171,5 +1182,13 @@
         observer.observe(rightGrid, { childList: true, subtree: true });
       });
     </script>
+
+    <!-- Bootstrap parts for profile carousel -->
+    <!-- <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script> -->
+
   </body>
 </html>

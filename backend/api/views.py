@@ -201,7 +201,7 @@ def custom_login(request):
                     {
                         "ok": True,
                         "message": f"Login successful for {username}",
-                        "data": {"id": user.id, "username": username},
+                        "data": form_player_json(user.player),
                         "statusCode": 200,
                     },
                     status=200,

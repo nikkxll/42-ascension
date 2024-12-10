@@ -1,26 +1,19 @@
 window.state = {
     // max size 4
-    loggedInUsers: [
-        {"displayname": "", "avatar": "", "id": "", "gamesPlayed": 0, "winrate": 0.0},
-        {"displayname": "", "avatar": "", "id": "", "gamesPlayed": 0, "winrate": 0.0},
-        {"displayname": "", "avatar": "", "id": "", "gamesPlayed": 0, "winrate": 0.0}
-    ],
+    loggedInUsers: [],
     // max 5
-    recentMatches: [
-        {"winner": "", "loser": "", "score": "11:2"},
-        {"winner": "", "loser": "", "score": "11:2"},
-        {"winner": "", "loser": "", "score": "11:2"},
-        {"winner": "", "loser": "", "score": "11:2"}
-    ],
+    recentMatches: [],
     // max 5
     tournaments: [ 
-        {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""},
-        {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""},
-        {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""},
-        {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""}
+        // {"name": "1", "status": "1", "winner": "1", "runnerUp": "1", "created": "1", "ended": "1"},
+        // {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""},
+        // {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""},
+        // {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""}
     ]
 }
+
 window.gameStoped = true;
+
 window.tournamentState = {
     "name": "",
     "userIds": [],
