@@ -35,6 +35,7 @@
     <script src="./js/initialFetch.js"></script>
     <script src="./js/renderMiniProfileLobby.js"></script>
     <script src="./js/renderSingleGameLobby.js"></script>
+    <script src="./js/render2v2GameLobby.js"></script>
     <script src="./js/renderTournamentLobby.js"></script>
     <script src="./js/recentMatches.js"></script>
     <script src="./js/recentTournaments.js"></script>
@@ -690,7 +691,6 @@
         </button>
       </div>
     </div>
-
     <script>
       history.replaceState({view: "lobby"}, "")
       /* Collection of all the buttons that transition the views */
@@ -811,6 +811,7 @@
         lobby.style.display = "block";
         gameStart.style.display = "none";
         // singleGameSettings.style.display = "none";
+        otherGameStart.style.display = "none"
         tournament.style.display = "none";
         profile.style.display = "none";
         tournamentSetup.style.display = "none";
@@ -889,7 +890,7 @@
         tournament.style.display = "none";
         profile.style.display = "none";
         otherGameStart.style.display = "block";
-        render2v2GameStart()
+        render2v2GameStart();
       }
 
       function goToHomeNavigation() {
@@ -993,7 +994,12 @@
         const startButton = document.querySelector(
           ".single-game-buttons.start"
         );
+        const startButton2v2 = document.querySelector(
+          ".single-game-buttons.start"
+        );
         let leftSelectedIndex = null;
+        let leftSelected = []
+        let leftPlayersSelected = 0;
         let playersSelected = 0;
 
         function updateStartButton() {
@@ -1007,6 +1013,8 @@
         function resetAll(leftPlayers, rightPlayers) {
           playersSelected = 0;
           leftSelectedIndex = null;
+          leftPlayersSelected = 0
+          leftSelected = []
           leftPlayers.forEach((p) => {
             p.classList.remove("player-disabled", "player-selected");
             p.classList.add("player-selectable");
@@ -1188,19 +1196,25 @@
             player.classList.add("player-selectable");
 
             player.addEventListener("click", () => {
-              if (leftPlayersSelected >= 2) return;
-
-              // Disable all left players initially
-              leftPlayers.forEach((p) => {
-                p.classList.add("player-disabled");
-                p.classList.remove("player-selected");
-              });
-
-              // Select the clicked player
-              player.classList.remove("player-disabled");
-              player.classList.add("player-selected");
-              leftSelected[leftPlayersSelected] = index;
-              leftPlayersSelected++;
+              if (leftSelected.includes(index)) {}
+              else if (leftPlayersSelected < 2)
+              {
+                leftSelected.push(index);
+                leftPlayersSelected++;
+                player.classList.add("player-selected")
+                player.classList.remove("player-selectable")
+              }
+              if (leftPlayersSelected == 2)
+              {
+                const allIds = window.state.loggedInUsers.map((p) => p.id)
+                leftSelected.sort()
+                window.singleGameState["userIds"] = [allIds[leftSelected[0]], allIds[leftSelected[1]]]
+                for (let i = 0; i < 4; i++)
+                {
+                  if (!leftSelected.includes(i))  
+                  window.singleGameState["userIds"].push(allIds[i])
+                }
+              }
 
               // Enable or disable right players based on selection
               rightPlayers.forEach((rightPlayer, rightIndex) => {
@@ -1211,29 +1225,40 @@
                 );
 
                 // Enable only appropriate right players
-                if (!leftSelected.contains(rightIndex)) {
+                if (!leftSelected.includes(rightIndex)) {
                   rightPlayer.classList.add("player-selectable");
+                  if (leftPlayersSelected === 2)
+                  {
+                    leftPlayers[rightIndex].classList.add("player-disabled")
+                    rightPlayer.classList.add("player-selected");
+                  }
                 } else {
                   rightPlayer.classList.add("player-disabled");
                 }
               });
-              updateStartButton();
+              updateStartButton2v2();
             });
           });
+        }
+
+        function updateStartButton2v2() {
+          startButton2v2.disabled = leftPlayersSelected !== 2;
+          startButton2v2.style.opacity = leftPlayersSelected === 2 ? "1" : "0.5";
+          startButton2v2.style.cursor =
+            leftPlayersSelected === 2 ? "pointer" : "not-allowed";
         }
         // Observe for changes in player cards dynamically
         const observer2v2 = new MutationObserver(() => {
           const leftPlayers = Array.from(
-            leftGrid.querySelectorAll(".game-player-card-inner-single")
+            leftGrid2v2.querySelectorAll(".game-player-card-inner-single")
           );
           const rightPlayers = Array.from(
-            rightGrid.querySelectorAll(".game-player-card-inner-single")
+            rightGrid2v2.querySelectorAll(".game-player-card-inner-single")
           );
 
           if (leftPlayers.length > 0 && rightPlayers.length > 0) {
             // observer.disconnect();
-            attachLeftPlayerListeners(leftPlayers, rightPlayers);
-            attachRightPlayerListeners(rightPlayers);
+            attachLeftPlayerListeners2v2(leftPlayers, rightPlayers);
 
             // Allow external reset/randomization to function
             window.resetAll = () => resetAll(leftPlayers, rightPlayers);
@@ -1248,6 +1273,8 @@
         // Start observing the grids for changes
         observer.observe(leftGrid, { childList: true, subtree: true });
         observer.observe(rightGrid, { childList: true, subtree: true });
+        observer2v2.observe(leftGrid2v2, { childList: true, subtree: true });
+        observer2v2.observe(rightGrid2v2, { childList: true, subtree: true });
       });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -1447,7 +1474,6 @@
                 '42 Authorization',
             );
       }
-            
 
     </script>
   </body>

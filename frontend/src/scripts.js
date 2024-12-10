@@ -204,38 +204,6 @@ function renderGameStart() {
   gameStartSection.style.display = "block";
 }
 
-function render2v2GameStart() {
-  console.log("here")
-  window["loggedinUsersIds"] = [2,3,4,5]
-  const players = window["loggedinUsersIds"].map(
-    (id) => window["loggedinUsers"][id]
-  );
-
-  if (players.length < 4) {
-    console.error(
-      "Error: 4 people needed for this mode"
-    );
-    alert("Error: 4 people needed for this mode");
-    goToLobby();
-    return;
-  }
-
-  const gameStartSection = document.getElementById("gameStart2v2");
-  const leftGrid = gameStartSection.querySelector("#double-game-grid-left");
-  const rightGrid = gameStartSection.querySelector("#double-game-grid-right");
-
-  leftGrid.innerHTML = "";
-  rightGrid.innerHTML = "";
-
-  players.forEach((player, index) => {
-    const cardHTML = createPlayerCard(player, index);
-    leftGrid.innerHTML += cardHTML;
-    rightGrid.innerHTML += cardHTML;
-  });
-
-  gameStartSection.style.display = "block";
-}
-
 renderPlayerPanels();
 
 // --- Creating tournament lobby ---
