@@ -210,7 +210,7 @@
             CREATE TOURNAMENT
           </button>
           <button
-            onclick=""
+            onclick="goTo2v2GameStart()"
             class="create-action"
             tabindex="0"
             aria-label="Create Single Game"
@@ -753,7 +753,7 @@
       const tournament = document.getElementById("tournament");
       const profile = document.getElementById("profile");
       const tournamentSetup = document.getElementById("tournamentSetup");
-      const otherGameStart = document.getElementById("2v2GameStart");
+      const otherGameStart = document.getElementById("gameStart2v2");
 
       const header = document.getElementById("header");
 
@@ -798,6 +798,8 @@
         signup.style.display = "none";
         matchView.style.display = "none";
         homeRight.style.display = "grid";
+        gameStart.style.display = "none"
+        otherGameStart.style.display = "none"
       }
 
       function goToMatchView() {
@@ -830,7 +832,7 @@
 
       function goToHome() {
         goToHomeNoHistory();
-        resetAll();
+        //resetAll();
         updateHistory(goToHome);
       }
 
@@ -899,6 +901,7 @@
         tournament.style.display = "none";
         profile.style.display = "none";
         otherGameStart.style.display = "block";
+        render2v2GameStart()
       }
 
       function goToHomeNavigation() {
@@ -1372,6 +1375,52 @@
         }
         alert("Succesful file upload")
         console.log(window.currentUserID)
+        await updateToProfile(window.currentUserID)
+      }
+    </script>
+    <script>
+      const requestFriendship = async (id) => {
+        try{
+          const response = await fetch(`/api/players/${window["loggedinUsersIds"][window.currentUserID]}/friends/`, {
+            method:"POST",
+            body: JSON.stringify({friendUserId: id})
+          })
+          if (!response.ok)
+            alert("Failed to send request")
+        } catch(error){
+          alert(error)
+          return;
+        }
+        await updateToProfile(window.currentUserID)
+      }
+
+      const approveFriendship = async (id) => {
+        try{
+          const response = await fetch(`/api/players/${window["loggedinUsersIds"][window.currentUserID]}/friends/manage/`, {
+            method:"POST",
+            body: JSON.stringify({friendUserId: id, action: "approve"})
+          })
+          if (!response.ok)
+            alert("Failed to approve")
+        } catch(error){
+          alert(error)
+          return;
+        }
+        await updateToProfile(window.currentUserID)
+      }
+
+      const denyFriendship = async (id) => {
+        try{
+          const response = await fetch(`/api/players/${window["loggedinUsersIds"][window.currentUserID]}/friends/manage/`, {
+            method:"POST",
+            body: JSON.stringify({friendUserId: id, action: "approve"})
+          })
+          if (!response.ok)
+            alert("Failed to deny")
+        } catch(error){
+          alert(error)
+          return;
+        }
         await updateToProfile(window.currentUserID)
       }
     </script>
