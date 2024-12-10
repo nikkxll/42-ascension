@@ -110,8 +110,10 @@ function gameTypeSelector(){
         //     matchNumber = 1;
         // else if (window.tournamentState.matches[2].status == 0)
         //     matchNumber = 2;
-        let match = window.tournamentState.matches[matchNumber];
-        if (match.player1 == window.ai_id || match.player2 == window.ai_id)
+        // let match = window.tournamentState.matches[matchNumber];
+        // if (match.player1 == window.ai_id || match.player2 == window.ai_id)
+        //     ai = 1;
+        if (window.tournamentState.userIds.includes(window.ai_id))
             ai = 1;
         return {gameType: GameType.Cup, ai, matchNumber};
     }
@@ -154,8 +156,6 @@ const requestAddMatch = async (data) => {
         //throw error;
     }
 };
-
-
 
 function updateStateFetch(startTime, gameCount){
     console.log("Game ended", gameCount);
@@ -242,21 +242,22 @@ const removeGameWindow = (game) => {
 }
 
 window.startGame = (aiNum) => {
-    console.log("Start game state of game", state.singleGameState);
+    console.log("Start game singleGameState=", window.singleGameState);
+    console.log("Start game tournamentState=", window.tournamentState);
     const {gameType, ai, matchNumber} = gameTypeSelector();
     console.log("gameType=", gameType, "ai=", ai, "matchNumber=", matchNumber);
     console.log("state of game", window.singleGameState);
     if (GameType.Cup == gameType) // create tournament
     {
         let userIds = window.tournamentState.userIds;
-        if (!userIds){  //this is old format to be removed
-            userIds = [
-                window.tournamentState.matches[0].player1,
-                window.tournamentState.matches[0].player2,
-                window.tournamentState.matches[1].player1,
-                window.tournamentState.matches[1].player2
-            ];
-        }
+        // if (!userIds){  //this is old format to be removed
+        //     userIds = [
+        //         window.tournamentState.matches[0].player1,
+        //         window.tournamentState.matches[0].player2,
+        //         window.tournamentState.matches[1].player1,
+        //         window.tournamentState.matches[1].player2
+        //     ];
+        // }
         let body = {
             "name": window.tournamentState.name,
             "userIds": userIds
