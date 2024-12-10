@@ -1078,10 +1078,21 @@
                 }
               });
               if (window.singleGameState.userIds)
-                window.singleGameState["userIds"][0] = index
-              else
-                window.singleGameState["userIds"] = [index, -1]
+              {
 
+                if (index > window.state["loggedInUsers"].length - 1)
+                  window.singleGameState["userIds"][0] = 1
+                else
+                  window.singleGameState["userIds"][0] = window.state["loggedInUsers"][index].id
+              }
+              else
+              {
+                if (index > window.state["loggedInUsers"].length - 1)
+                  window.singleGameState["userIds"] = [1, -1]
+                else
+                  window.singleGameState["userIds"] = [window.state["loggedInUsers"][index].id, -1]
+              }
+            
               updateStartButton();
             });
           });
@@ -1106,9 +1117,20 @@
                 player.classList.add("player-selected");
 
                 if (window.singleGameState.userIds)
-                  window.singleGameState["userIds"][1] = index
+              {
+
+                if (index > window.state["loggedInUsers"].length - 1)
+                  window.singleGameState["userIds"][1] = 1
                 else
-                  window.singleGameState["userIds"] = [-1, index]
+                  window.singleGameState["userIds"][1] = window.state["loggedInUsers"][index].id
+              }
+              else
+              {
+                if (index > window.state["loggedInUsers"].length - 1)
+                  window.singleGameState["userIds"] = [-1,1]
+                else
+                  window.singleGameState["userIds"] = [-1, window.state["loggedInUsers"][index].id]
+              }
 
                 updateStartButton();
               }
@@ -1234,7 +1256,7 @@
       // player profile functions
       const updateToProfile = async (index) =>
       {
-        const userId = window["loggedinUsersIds"][index];
+        const userId = window["loggedInUsers"][index];
         window.currentUserID = index
         try {
           const response = await fetch(`/api/players/${userId}/`, {
@@ -1350,7 +1372,7 @@
 
       document.getElementById("newAvatar").onchange = async (e) => {
         try{
-          const response = await fetch(`/api/players/${window["loggedinUsersIds"][window.currentUserID]}/avatar/`, {
+          const response = await fetch(`/api/players/${window.state["loggedInUsers"][window.currentUserID]}/avatar/`, {
             method:"POST",
             body: e.target.files[0]
           })
@@ -1368,7 +1390,7 @@
     <script>
       const requestFriendship = async (id) => {
         try{
-          const response = await fetch(`/api/players/${window["loggedinUsersIds"][window.currentUserID]}/friends/`, {
+          const response = await fetch(`/api/players/${window.state["loggedInUsers"][window.currentUserID]}/friends/`, {
             method:"POST",
             body: JSON.stringify({friendUserId: id})
           })
@@ -1383,7 +1405,7 @@
 
       const approveFriendship = async (id) => {
         try{
-          const response = await fetch(`/api/players/${window["loggedinUsersIds"][window.currentUserID]}/friends/manage/`, {
+          const response = await fetch(`/api/players/${window.state["loggedInUsers"][window.currentUserID]}/friends/manage/`, {
             method:"POST",
             body: JSON.stringify({friendUserId: id, action: "approve"})
           })
@@ -1398,7 +1420,7 @@
 
       const denyFriendship = async (id) => {
         try{
-          const response = await fetch(`/api/players/${window["loggedinUsersIds"][window.currentUserID]}/friends/manage/`, {
+          const response = await fetch(`/api/players/${window.state["loggedInUsers"][window.currentUserID]}/friends/manage/`, {
             method:"POST",
             body: JSON.stringify({friendUserId: id, action: "approve"})
           })
