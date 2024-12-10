@@ -616,6 +616,49 @@ Several users can be logged in at the same time. Each session is stored in cooki
 
 ### Matches Management
 
+#### Get Match by Id
+
+- **Endpoint**: `GET /api/matches/{id}/`
+
+- **Description**: Get match by `id`.
+
+- **URL Parameters**:
+
+  - `id` (integer): The ID of the tournament.
+
+- **Example Response**:
+```
+{
+	"ok": true,
+	"message": "Match successfully retrieved!",
+	"data": {
+		"id": 13,
+		"players": [
+			{
+				"id": 7,
+				"username": "tony",
+				"displayName": null,
+				"avatarUrl": "/media/avatars/7_avatar.png",
+				"status": "Offline",
+				"createdAt": "2024-11-25T23:41:15.627807+00:00"
+			},
+			{
+				"id": 8,
+				"username": "mary",
+				"displayName": "Mary",
+				"avatarUrl": "/media/avatars/fallback.png",
+				"status": "Offline",
+				"createdAt": "2024-11-25T23:41:21.599398+00:00"
+			}
+		],
+		"score": ["8", "11"],
+		"duration": 7000,
+		"createdAt": "2024-12-06T10:55:35.142715+00:00"
+	},
+	"statusCode": 200
+}
+```
+
 #### Get Last Matches
 
 - **Endpoint**: `GET /api/matches/`

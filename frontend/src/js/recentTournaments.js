@@ -18,8 +18,10 @@ async function renderRecentTournaments() {
       goToLoadedTournament(tournament.id);
     });
 
-    const title = document.createTextNode(tournament.name || "Unknown Tournament");
-    tournamentContainer.appendChild(title);    
+    const title = document.createTextNode(
+      tournament.name || "Unknown Tournament"
+    );
+    tournamentContainer.appendChild(title);
 
     tournamentContainer.appendChild(document.createElement("br"));
 
@@ -34,7 +36,9 @@ async function renderRecentTournaments() {
     tournamentContainer.appendChild(document.createElement("br"));
 
     tournamentContainer.appendChild(
-      document.createTextNode(`Winner: ${tournament.winner?.displayName || "N/A"}`)
+      document.createTextNode(
+        `Winner: ${tournament?.winner?.displayName || "N/A"}`
+      )
     );
 
     tournamentContainer.appendChild(document.createElement("br"));
