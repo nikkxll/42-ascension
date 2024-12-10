@@ -1100,6 +1100,10 @@
                   rightPlayer.classList.add("player-disabled");
                 }
               });
+              if (window.singleGameState.userIds)
+                window.singleGameState["userIds"][0] = index
+              else
+                window.singleGameState["userIds"] = [index, -1]
 
               updateStartButton();
             });
@@ -1108,7 +1112,7 @@
 
         // Add event listeners for right players
         function attachRightPlayerListeners(rightPlayers) {
-          rightPlayers.forEach((player) => {
+          rightPlayers.forEach((player, index) => {
             player.addEventListener("click", () => {
               if (
                 leftSelectedIndex !== null &&
@@ -1123,6 +1127,12 @@
 
                 player.classList.remove("player-disabled");
                 player.classList.add("player-selected");
+
+                if (window.singleGameState.userIds)
+                  window.singleGameState["userIds"][1] = index
+                else
+                  window.singleGameState["userIds"] = [-1, index]
+
                 updateStartButton();
               }
             });

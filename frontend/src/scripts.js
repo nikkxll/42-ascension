@@ -206,6 +206,7 @@ function renderGameStart() {
 
 function render2v2GameStart() {
   console.log("here")
+  window["loggedinUsersIds"] = [2,3,4,5]
   const players = window["loggedinUsersIds"].map(
     (id) => window["loggedinUsers"][id]
   );
