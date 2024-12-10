@@ -1,25 +1,19 @@
 window.state = {
     // max size 4
-    loggedInUsers: [
-        {"displayname": "", "avatar": "", "id": "", "gamesPlayed": 0, "winrate": 0.0},
-        {"displayname": "", "avatar": "", "id": "", "gamesPlayed": 0, "winrate": 0.0},
-        {"displayname": "", "avatar": "", "id": "", "gamesPlayed": 0, "winrate": 0.0}
-    ],
+    loggedInUsers: [],
     // max 5
-    recentMatches: [
-        {"winner": "", "loser": "", "score": "11:2"},
-        {"winner": "", "loser": "", "score": "11:2"},
-        {"winner": "", "loser": "", "score": "11:2"},
-        {"winner": "", "loser": "", "score": "11:2"}
-    ],
+    recentMatches: [],
     // max 5
     tournaments: [ 
-        {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""},
-        {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""},
-        {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""},
-        {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""}
+        // {"name": "1", "status": "1", "winner": "1", "runnerUp": "1", "created": "1", "ended": "1"},
+        // {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""},
+        // {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""},
+        // {"name": "", "status": "", "winner": "", "runnerUp": "", "created": "", "ended": ""}
     ]
 }
+
+window.gameStoped = true;
+
 window.tournamentState = {
     "name": "",
     "userIds": [],
@@ -38,7 +32,7 @@ window.tournamentState = {
 }
 
 window.ai_id = 1
-window.singleGameState = {}  //for tournament
+//window.singleGameState = {}  //for tournament
 
 // window.singleGameState = {   // for 4 player game  // this is working example
 //     "userIds": [3, 4, 5, 6],     //  [left, left, right, right]
@@ -51,13 +45,9 @@ window.singleGameState = {}  //for tournament
 // }
 
 
-// window.singleGameState = {   //for single game
-//     player1: "id1",
-//     player2: "id2",
-//     score: "0:0",
-//     duration: 0
-//     //"status": "0",
-// }
+window.singleGameState = {   //for single 1x1 game
+    "userIds": [3, 4],     //  [left, right]  but AI will play right side in both cases: [playerID,AI_ID] and [AI_ID, playerID]. 
+}
 
 // window.singleGameState = {   //for single game with ai
 //     player1: "id1",

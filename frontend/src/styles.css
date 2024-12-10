@@ -457,12 +457,21 @@ section {
 }
 
 .profile-avatar {
-  aspect-ratio: 0.85;
-  object-fit: contain;
-  object-position: center;
-  width: 100px;
-  align-self: center;
-  max-width: 100%;
+    display: block;
+    width: 80px;
+	height: 80px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 50%;
+    overflow: hidden;
+	align-self: center;
+}
+
+.profile-avatar img {
+	width: 100%;
+    height: 100%;
+    object-position: center;
+    object-fit: cover;
 }
 
 .username {
@@ -590,6 +599,18 @@ section {
   margin: 0 auto 0;
   cursor: pointer;
   transition: box-shadow 0.3s, transform 0.3s;
+  display: flex;
+  gap: 10px;
+}
+
+.match-link > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.player-small-text {
+	font-size: 20px;
 }
 
 .match-link:hover {
@@ -664,6 +685,10 @@ section {
 
 .status-completed {
   color: #00ff37;
+}
+
+.status-pending {
+  color: #ffb700;
 }
 
 .date-text {
