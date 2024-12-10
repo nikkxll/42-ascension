@@ -790,19 +790,6 @@ section {
   text-align: left;
 }
 
-/* .match-stats-match-score { */
-  /* position: absolute;
-  left: 50vw;
-  transform: translateX(-40%); */
-  /* text-align: center;
-}
-
-.h2h-stats-result .match-stats-text-format,
-.h2h-matches .match-stats-text-format {
-	display: grid;
-	grid-template-columns: 1fr 1fr 1fr;
-} */
-
 /* Add ai container */
 
 .add-ai-main-container {

@@ -82,75 +82,6 @@ async function fetchRecentMatches() {
 	}
 }
 
-// async function renderH2h(player1Id, player2Id) {
-// 	try {
-// 		const response = await fetch(`/api/players/${player1Id}/matches/`, {
-// 			method: "GET",
-// 			headers: {
-// 				"Content-Type": "application/json",
-// 			},
-// 		});
-// 		if (!response.ok) {
-// 			console.error(
-// 				`HTTP error getting the match stats! status: ${response.status}`
-// 			);
-// 			return null;
-// 		}
-// 		const { data } = await response.json();
-// 		const matches = data.matches?.filter((match) => {
-// 			return match.score && match.players?.length === 2;
-// 		});
-// 		console.log("matches: ", matches);
-
-// 		return `
-// 			<div class="match-stats-header-no-arrow">
-// 				<h1 class="match-stats-title">H2H</h1>
-// 			</div>
-// 			<div class="match-stats-result h2h-stats-result">
-// 				<div class="match-stats-text-format">
-// 					<span>Vladimir</span>
-// 					<span class="match-stats-match-score">7:4</span>
-// 					<span>Max</span>
-// 				</div>
-// 			</div>
-// 			<div class="match-stats-header-no-arrow">
-// 				<h1 class="match-stats-title">H2H matches</h1>
-// 			</div>
-// 			<div class="match-stats-scroll-container">
-// 				<ul class="match-stats-list h2h-matches">
-// 					<li class="match-stats-text-format">
-// 						<span>Vladimir</span>
-// 						<span class="match-stats-match-score">11:2</span>
-// 						<span>Max</span>
-// 					</li>
-// 					<li class="match-stats-text-format">
-// 						<span>Max</span>
-// 						<span class="match-stats-match-score">9:11</span>
-// 						<span>Vladimir</span>
-// 					</li>
-// 					<li class="match-stats-text-format">
-// 						<span>Vladimir</span>
-// 						<span class="match-stats-match-score">4:11</span>
-// 						<span>Max</span>
-// 					</li>
-// 					<li class="match-stats-text-format">
-// 						<span>Vladimir</span>
-// 						<span class="match-stats-match-score">13:11</span>
-// 						<span>Max</span>
-// 					</li>
-// 					<li class="match-stats-text-format">
-// 						<span>Max</span>
-// 						<span class="match-stats-match-score">10:12</span>
-// 						<span>Vladimir</span>
-// 					</li>
-// 				</ul>
-// 			</div>
-// 			`;
-// 	} catch (error) {
-// 		console.error(error);
-// 	}
-// }
-
 async function renderDetailedMatchStats(matchId) {
 	function secondsToHms(d) {
 		d = Number(d);
@@ -184,12 +115,6 @@ async function renderDetailedMatchStats(matchId) {
 			return null;
 		}
 		const { data } = await response.json();
-		console.log(data);
-
-/*		const player1Id = data.players[0].id;
-		const player2Id = data.players[1].id;
-
-		const h2hRender = await renderH2h(player1Id, player2Id);*/
 
 		const team1Div =	data.players.length === 2 ? 
 							`<div>${data.players[0].displayName || data.players[0].username}</div>` :
