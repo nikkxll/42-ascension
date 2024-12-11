@@ -33,7 +33,7 @@ ALLOWED_HOSTS = [
     os.environ.get('DJANGO_HOST')
 ]
 
-CSRF_TRUSTED_ORIGINS = ['https://localhost']
+CSRF_TRUSTED_ORIGINS = ['https://localhost', 'https://localhost:8443']
 
 
 # Application definition
@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'api'
+    'api',
 ]
 
 MIDDLEWARE = [

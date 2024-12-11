@@ -2,26 +2,40 @@ import os
 import json
 from django.contrib.auth.models import User
 from django.db import IntegrityError
-from .models import Player, Friendship
-from django.db.models import Q
-from django.views.decorators.csrf import csrf_exempt
+from .models import Player, Match, Friendship, Tournament, TournamentParticipant
+from django.db.models import Count, Q
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from django.contrib.auth import authenticate
 from .decorators import session_authenticated_logged_in, session_authenticated_id
 
-from .sessions import create_encrypted_session_value
+from .sessions import create_encrypted_session_value, decrypt_session_value
 from django.contrib.auth.hashers import make_password
 from django.core.files.base import ContentFile
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import JsonResponse
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 
 import requests
 from django.utils.crypto import get_random_string
 from urllib.parse import urlencode
 
+from django.core.exceptions import BadRequest
 
 from django.utils import timezone
 from datetime import timedelta
+
+from .constants import AI_ID, PLAYER_KEYS, WINNER_LOSER_KEYS
+
+import re
+
+
+##################################
+# CSRF
+##################################
+
+
+@ensure_csrf_cookie
+def get_csrf_token(request):
+    return JsonResponse({"message": "CSRF token set"})
 
 
 ##################################
@@ -57,26 +71,37 @@ def manage_players(request):
     )
 
 
-def checkStatus(player):
+def check_status(player):
     five_minutes_ago = timezone.now() - timedelta(minutes=5)
     if not player.last_active_at or player.last_active_at < five_minutes_ago:
         return "Offline"
     return "Online"
 
 
+def get_current_players(request):
+    try:
+        found_session_ids = find_ids_from_sessions(request)
+        players = players = Player.objects.filter(user__id__in=found_session_ids)
+        players_data = [form_player_json(player) for player in players]
+        return JsonResponse(
+            {
+                "ok": True,
+                "message": "Current players successfully listed!",
+                "data": {"players": players_data},
+                "statusCode": 200,
+            },
+            status=200,
+        )
+    except Exception as e:
+        return JsonResponse(
+            {"ok": False, "error": str(e), "statusCode": 500}, status=500
+        )
+
+
 @session_authenticated_logged_in
 def get_players(request):
     players = Player.objects.all()
-    players_data = [
-        {
-            "id": player.user.id,
-            "username": player.user.username,
-            "displayName": player.display_name,
-            "status": checkStatus(player),
-            "createdAt": player.created_at.isoformat(),  # Format datetime if needed
-        }
-        for player in players
-    ]
+    players_data = [form_player_json(player) for player in players]
     return JsonResponse(
         {
             "ok": True,
@@ -89,6 +114,8 @@ def get_players(request):
 
 
 def create_player(request):
+    if not request.body:
+        raise BadRequest("No data provided")
     data = json.loads(request.body)
     # Extract required fields from the request body
     username = data.get("username")
@@ -133,45 +160,65 @@ def create_player(request):
 
 @csrf_exempt
 def custom_login(request):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        username = data.get("username")
-        password = data.get("password")
+    try:
+        if request.method == "POST":
+            if not request.body:
+                raise BadRequest("No data provided")
+            data = json.loads(request.body)
+            username = data.get("username")
+            password = data.get("password")
 
-        # Authenticate the user
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            # Create a unique session key
-            session_key = f"session_{user.id}"
+            for cookie_key, session in request.COOKIES.items():
+                if cookie_key.startswith("session_"):
+                    session_data = decrypt_session_value(session)
+                    if session_data.get("username") == username:
+                        return JsonResponse(
+                            {
+                                "ok": False,
+                                "error": "Already logged in",
+                                "statusCode": 400,
+                            },
+                            status=400,
+                        )
 
-            # Encrypt user session data
-            session_value = create_encrypted_session_value(
-                {
-                    "id": user.id,
-                    "username": user.username,
-                    "is_authenticated": True,
-                }
-            )
+            # Authenticate the user
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                # Create a unique session key
+                session_key = f"session_{user.id}"
 
-            # Set the session in the cookies
-            response = JsonResponse(
-                {
-                    "ok": True,
-                    "message": f"Login successful for {username}",
-                    "data": {"id": user.id, "username": username},
-                    "statusCode": 200,
-                },
-                status=200,
-            )
-            # response.set_cookie(session_key, session_value, httponly=True, secure=True) // secure will work with HTTPS only
-            response.set_cookie(session_key, session_value, httponly=True)
+                # Encrypt user session data
+                session_value = create_encrypted_session_value(
+                    {
+                        "id": user.id,
+                        "username": user.username,
+                        "is_authenticated": True,
+                    }
+                )
 
-            return response
-        else:
-            return JsonResponse(
-                {"ok": False, "error": "Invalid credentials", "statusCode": 401},
-                status=401,
-            )
+                # Set the session in the cookies
+                response = JsonResponse(
+                    {
+                        "ok": True,
+                        "message": f"Login successful for {username}",
+                        "data": form_player_json(user.player),
+                        "statusCode": 200,
+                    },
+                    status=200,
+                )
+                # response.set_cookie(session_key, session_value, httponly=True, secure=True) // secure will work with HTTPS only
+                response.set_cookie(session_key, session_value, httponly=True)
+
+                return response
+            else:
+                return JsonResponse(
+                    {"ok": False, "error": "Invalid credentials", "statusCode": 401},
+                    status=401,
+                )
+    except Exception as e:
+        return JsonResponse(
+            {"ok": False, "error": str(e), "statusCode": 500}, status=500
+        )
     return JsonResponse(
         {"ok": False, "error": "Method not allowed", "statusCode": 405}, status=405
     )
@@ -187,7 +234,12 @@ def custom_logout(request, id):
         if session_key in request.COOKIES:
             # Create a response object
             response = JsonResponse(
-                {"ok": True, "message": f"Logged out id:{id}", "statusCode": 200}
+                {
+                    "ok": True,
+                    "data": {"id": id},
+                    "message": f"Logged out id:{id}",
+                    "statusCode": 200,
+                }
             )
             # Delete the session cookie by setting it to an empty value and an expired date
             response.delete_cookie(session_key)
@@ -231,11 +283,7 @@ def get_player(request, id):
     try:
         user = User.objects.get(id=id)
         player = user.player
-        player_data = {
-            "username": user.username,
-            "displayName": player.display_name,
-            "status": checkStatus(player),
-        }
+        player_data = form_player_json(player)
         return JsonResponse(
             {
                 "ok": True,
@@ -256,6 +304,8 @@ def get_player(request, id):
 def update_player(request, id):
     try:
         message = "New data was set: "
+        if not request.body:
+            raise BadRequest("No data provided")
         data = json.loads(request.body)
         new_username = data.get("username")
         new_password = data.get("password")
@@ -337,7 +387,7 @@ def upload_avatar(request, id):
                     "ok": True,
                     "message": "Avatar uploaded successfully!",
                     "data": {
-                        "avatar_url": player.avatar.url,
+                        "avatarUrl": player.avatar.url,
                     },
                     "statusCode": 200,
                 },
@@ -356,6 +406,606 @@ def upload_avatar(request, id):
     return JsonResponse(
         {"ok": False, "error": "Invalid request method", "statusCode": 405}, status=405
     )
+
+
+def get_player_stats(request, id):
+    try:
+        if request.method == "GET":
+            player = get_player_by_user_id(id)
+            wins = Match.objects.filter(Q(winner1=player) | Q(winner2=player)).count()
+            losses = Match.objects.filter(Q(winner1=player) | Q(winner2=player)).count()
+            return JsonResponse(
+                {
+                    "ok": True,
+                    "message": "Player results successfully retrieved!",
+                    "data": {
+                        "wins": wins,
+                        "losses": losses,
+                    },
+                    "statusCode": 200,
+                }
+            )
+    except ObjectDoesNotExist:
+        return JsonResponse(
+            {"ok": False, "error": "Player not found", "statusCode": 404},
+            status=404,
+        )
+    except Exception as e:
+        return JsonResponse(
+            {"ok": False, "error": str(e), "statusCode": 500}, status=500
+        )
+    return JsonResponse(
+        {"ok": False, "error": "Invalid request method", "statusCode": 405}, status=405
+    )
+
+
+##################################
+# Tournaments
+##################################
+
+
+@csrf_exempt
+def manage_tournaments(request):
+    try:
+        if request.method == "GET":
+            return get_tournaments(request)
+        if request.method == "POST":
+            return create_tournament(request)
+    except Exception as e:
+        return JsonResponse(
+            {"ok": False, "error": str(e), "statusCode": 500}, status=500
+        )
+
+    return JsonResponse(
+        {"ok": False, "error": "Invalid request method", "statusCode": 405}, status=405
+    )
+
+
+# Get last 5 tournaments
+def get_tournaments(request):
+    last = int(request.GET.get("last") or 5)
+    tournaments = (
+        Tournament.objects.all()
+        .order_by("-id")[:last]
+        .select_related("winner")  # Fetch the winner Player object with the Tournament
+        .prefetch_related(
+            "participants__player",  # Prefetch Player objects from TournamentParticipant
+            "matches__player1",  # Prefetch Player objects for match's player1
+            "matches__player2",  # Prefetch Player objects for match's player2
+            "matches__player3",  # Prefetch Player objects for match's player3
+            "matches__player4",  # Prefetch Player objects for match's player4
+            "matches__winner1",  # Prefetch Player objects for match's winner1
+            "matches__winner2",  # Prefetch Player objects for match's winner2
+            "matches__loser1",  # Prefetch Player objects for match's loser1
+            "matches__loser2",  # Prefetch Player objects for match's loser2
+        )
+    )
+
+    tournaments_data = [form_tournament_json(tournament) for tournament in tournaments]
+    return JsonResponse(
+        {
+            "ok": True,
+            "message": "Tournaments successfully listed!",
+            "data": {"tournaments": tournaments_data},
+            "statusCode": 200,
+        },
+        status=200,
+    )
+
+
+def form_tournament_json(tournament):
+    return {
+        "id": tournament.id,
+        "name": tournament.name,
+        "winner": form_player_json(tournament.winner),
+        "createdAt": tournament.created_at.isoformat(),
+        "matches": [form_match_json(match) for match in tournament.matches.all()],
+    }
+
+
+def form_match_json(match):
+    if not match:
+        return None
+    return {
+        "id": match.id,
+        "players": [
+            form_player_json(player)
+            for key in PLAYER_KEYS
+            if (player := getattr(match, key, None))
+        ],
+        "score": match.score.split(":") if match.score else None,
+        "duration": int(match.duration.total_seconds()) if match.duration else None,
+        "createdAt": match.created_at.isoformat(),
+    }
+
+
+def form_player_json(player):
+    if not player:
+        return None
+    return {
+        "id": getattr(player, "user").id,
+        "username": getattr(player, "user").username,
+        "displayName": getattr(player, "display_name", None),
+        "avatarUrl": player.avatar.url if player.avatar else None,
+        "status": check_status(player),
+        "createdAt": player.created_at.isoformat(),  # Format datetime if needed
+    }
+
+
+@csrf_exempt
+def get_tournament(request, id):
+    try:
+        if request.method == "GET":
+            tournament = Tournament.objects.get(id=id)
+            return JsonResponse(
+                {
+                    "ok": True,
+                    "message": "Tournament successfully retrieved!",
+                    "data": {"tournament": form_tournament_json(tournament)},
+                    "statusCode": 200,
+                },
+                status=200,
+            )
+    except Tournament.DoesNotExist:
+        return JsonResponse(
+            {"ok": False, "error": "Tournament not found", "statusCode": 404},
+            status=404,
+        )
+    except Exception as e:
+        return JsonResponse(
+            {"ok": False, "error": str(e), "statusCode": 500}, status=500
+        )
+    return JsonResponse(
+        {"ok": False, "error": "Invalid request method", "statusCode": 405}, status=405
+    )
+
+
+def find_ids_from_sessions(request):
+    found_session_ids = [
+        decrypt_session_value(value)["id"]
+        for key, value in request.COOKIES.items()
+        if key.startswith("session_")
+    ]
+    return found_session_ids
+
+
+@csrf_exempt
+def get_current_sessions_tournament(request):
+    try:
+        if request.method == "GET":
+            found_session_ids = find_ids_from_sessions(request)
+            if len(found_session_ids) == 3:
+                found_session_ids.append(1)
+            if len(found_session_ids) != 4:
+                return JsonResponse(
+                    {
+                        "ok": False,
+                        "error": f"Expected 4 or 3 if tournament played with AI, got {len(found_session_ids)} sessions",
+                        "statusCode": 400,
+                    },
+                    status=400,
+                )
+            players = Player.objects.filter(user__id__in=found_session_ids)
+            tournaments = Tournament.objects.annotate(
+                player_count=Count(
+                    "participants", distinct=True
+                )  # Count all participants
+            ).filter(
+                player_count=len(players),  # Ensure the number of players matches
+                participants__player__in=players,  # Ensure all the players are in
+            )
+
+            if tournaments.exists():
+                # Return the first matching tournament (or adjust logic for multiple)
+                tournament = tournaments.first()
+                return JsonResponse(
+                    {
+                        "ok": True,
+                        "message": "Tournament successfully retrieved!",
+                        "data": {"tournament": form_tournament_json(tournament)},
+                        "statusCode": 200,
+                    },
+                    status=200,
+                )
+            else:
+                return JsonResponse(
+                    {
+                        "ok": False,
+                        "error": "No tournament found for the present sessions",
+                        "statusCode": 404,
+                    },
+                    status=404,
+                )
+    except Exception as e:
+        return JsonResponse(
+            {"ok": False, "error": str(e), "statusCode": 500}, status=500
+        )
+    return JsonResponse(
+        {"ok": False, "error": "Invalid request method", "statusCode": 405}, status=405
+    )
+
+
+def create_tournament(request):
+    if not request.body:
+        raise BadRequest("No data provided")
+    data = json.loads(request.body)
+    name = data.get("name")
+    if not name:
+        return JsonResponse(
+            {"ok": False, "error": "Tournament must have a name", "statusCode": 400},
+            status=400,
+        )
+    user_ids = data.get("userIds")
+    if not user_ids or len(user_ids) != 4:
+        return JsonResponse(
+            {"ok": False, "error": "Tournament requires 4 players", "statusCode": 400},
+            status=400,
+        )
+    if not isinstance(user_ids, list):
+        return JsonResponse({"error": "Expected a JSON array."}, status=400)
+
+    if not check_sessions(request, user_ids):
+        return JsonResponse(
+            {"ok": False, "error": "Sessions not verified", "statusCode": 400},
+            status=400,
+        )
+
+    # Create a new tournament
+    tournament = Tournament.objects.create(name=name)
+    for index, user_id in enumerate(user_ids):
+        if not user_id:
+            return JsonResponse(
+                {"ok": False, "error": "Player ID is required", "statusCode": 400},
+                status=400,
+            )
+
+        player = get_player_by_user_id(user_id)
+        TournamentParticipant.objects.create(
+            tournament=tournament, player=player, order=index
+        )
+
+    for i in range(0, len(user_ids), 2):
+        player1 = get_player_by_user_id(user_ids[i])
+        player2 = get_player_by_user_id(user_ids[i + 1])
+        Match.objects.create(tournament=tournament, player1=player1, player2=player2)
+
+    return JsonResponse(
+        {
+            "ok": True,
+            "message": "Tournament successfully created!",
+            "data": form_tournament_json(tournament),
+            "statusCode": 201,
+        },
+        status=201,
+    )
+
+
+@csrf_exempt
+def manage_tournament_match(request, id=None):
+    try:
+        if request.method == "POST":
+            return create_match(request, id)
+    except BadRequest as e:
+        return JsonResponse(
+            {"ok": False, "error": str(e), "statusCode": 400}, status=400
+        )
+    except Exception as e:
+        return JsonResponse(
+            {"ok": False, "error": str(e), "statusCode": 500}, status=500
+        )
+
+    return JsonResponse(
+        {"ok": False, "error": "Invalid request method", "statusCode": 405}, status=405
+    )
+
+
+##################################
+# Matches
+##################################
+
+
+@csrf_exempt
+def manage_matches(request):
+    try:
+        if request.method == "GET":
+            matches = get_matches(request)
+            return JsonResponse(
+                {
+                    "ok": True,
+                    "message": "Matches requested sucessfully!",
+                    "data": {
+                        "matches": matches,
+                    },
+                    "statusCode": 200,
+                },
+                status=200,
+            )
+        if request.method == "POST":
+            return create_match(request)
+    except BadRequest as e:
+        return JsonResponse(
+            {"ok": False, "error": str(e), "statusCode": 400}, status=400
+        )
+    except Exception as e:
+        return JsonResponse(
+            {"ok": False, "error": str(e), "statusCode": 500}, status=500
+        )
+    return JsonResponse({"ok": False, "error": "Invalid request method"}, status=405)
+
+
+def get_matches(request):
+    finished = request.GET.get("finished", "true")
+    finished = finished.lower() == "true"
+    last = int(request.GET.get("last") or 20)
+    if finished:
+        matches = Match.objects.exclude(score__isnull=True).order_by("-id")[:last]
+    else:
+        matches = Match.objects.all().order_by("-id")[:last]
+    return [form_match_json(match) for match in matches]
+
+
+@session_authenticated_logged_in
+def get_player_matches(request, id):
+    try:
+        if request.method == "GET":
+            player = get_player_by_user_id(id)
+            matches = Match.objects.filter(
+                Q(player1=player)
+                | Q(player2=player)
+                | Q(player3=player)
+                | Q(player4=player)
+            ).order_by("-id")
+            return JsonResponse(
+                {
+                    "ok": True,
+                    "message": "Player matches successfully retrieved!",
+                    "data": {
+                        "matches": [form_match_json(match) for match in matches],
+                    },
+                    "statusCode": 200,
+                },
+                status=200,
+            )
+    except ObjectDoesNotExist:
+        return JsonResponse(
+            {"ok": False, "error": "Player not found", "statusCode": 404},
+            status=404,
+        )
+    except Exception as e:
+        return JsonResponse(
+            {"ok": False, "error": str(e), "statusCode": 500}, status=500
+        )
+    return JsonResponse(
+        {"ok": False, "error": "Invalid request method", "statusCode": 405}, status=405
+    )
+
+
+# Checks if all ids have valid session
+# If AI_ID is present, it will be added to the list of ids
+# No session checked for AI_ID
+# Still the AI_ID should be provided in ids argument
+def check_sessions(request, ids):
+    # Filter out None values
+    ids = [id for id in ids if id is not None]
+
+    if len(ids) != 2 and len(ids) != 4:
+        raise BadRequest(f"Expected at least 2 or 4 ids and got {len(ids)}")
+    found_sessions_keys = ["session_" + str(id) for id in ids if id != AI_ID]
+    # Get corresponding values from cookies
+    sessions_values_ids = [
+        decrypt_session_value(value)["id"]
+        for key, value in request.COOKIES.items()
+        if key in found_sessions_keys
+    ]
+    if AI_ID in ids:
+        sessions_values_ids.append(AI_ID)
+
+    if all(id in sessions_values_ids for id in ids):
+        return True
+    return False
+
+
+def check_score_format(score):
+    if (
+        isinstance(score, list)
+        and len(score) == 2
+        and all(isinstance(part, int) for part in score)
+    ):
+        return True
+    return False
+
+
+def create_match(request, id=None):
+    if not request.body:
+        raise BadRequest("No data provided")
+    data = json.loads(request.body)
+    user_ids = data.get("userIds")
+
+    if not check_sessions(request, user_ids):
+        return JsonResponse(
+            {"ok": False, "error": "Sessions not verified", "statusCode": 400},
+            status=400,
+        )
+    user_ids_count = len(user_ids)
+    if user_ids_count != 4 and user_ids_count != 2:
+        raise BadRequest("Match can be created only for 2 or 4 players")
+
+    match = Match()
+
+    step = 2 if user_ids_count == 2 else 1
+    offset = 0
+    score = data.get("score")
+    if score:
+        if not check_score_format(score):
+            raise BadRequest("Invalid score format. Example format: [11, 2]")
+        match.score = ":".join([str(num) for num in score])
+        print("match score: ", match.score)
+        is_winners_first = True if score[0] > score[1] else False
+        offset = 0 if is_winners_first else 2
+        MODULO_DIV = 4
+
+    duration_seconds = data.get("duration")
+    if duration_seconds:
+        match.duration = timedelta(seconds=duration_seconds)
+    tournament_id = id
+    tournament = None
+    if tournament_id:
+        tournament = Tournament.objects.get(id=tournament_id)
+        if user_ids_count != 2:
+            raise BadRequest("Match must have 2 players if it is part of a tournament")
+        # Check if the tournament does not have 3 matches already
+        tournament_matches = Match.objects.all().filter(tournament=tournament)
+        if tournament_matches.count() == 3:
+            raise BadRequest("Tournament already has 3 matches")
+        # Check if players are in different semifinals matches
+        for tournament_match in tournament_matches:
+            if not (
+                tournament_match.player1.user.id in user_ids
+                or tournament_match.player2.user.id in user_ids
+            ):
+                raise BadRequest("Players from semifinals must be in finals")
+        match.tournament = Tournament.objects.get(id=tournament_id)
+
+    for index, user_id in enumerate(user_ids):
+        # Set player1, player2, player3, player4 (leaving player 3 and player3 empty if 2 players)
+        match.__setattr__(PLAYER_KEYS[index], get_player_by_user_id(user_id))
+        # Set winner1, winner2, loser1, loser2 (leaving winner2 and loser2 empty if 2 players)
+        if score:
+            match.__setattr__(
+                WINNER_LOSER_KEYS[(index * step + offset) % MODULO_DIV],
+                get_player_by_user_id(user_id),
+            )
+
+    if tournament_id and score:
+        tournament.winner = match.winner1
+        tournament.save()
+    match.save()
+
+    return JsonResponse(
+        {
+            "ok": True,
+            "message": "Match successfully created!",
+            "data": {
+                "id": match.id,
+            },
+            "statusCode": 201,
+        },
+        status=201,
+    )
+
+
+@csrf_exempt
+def manage_match(request, id):
+    try:
+        if request.method == "GET":
+            return get_match(request, id)
+        if request.method == "PATCH":
+            return update_match(request, id)
+    except Exception as e:
+        return JsonResponse(
+            {"ok": False, "error": str(e), "statusCode": 500}, status=500
+        )
+    return JsonResponse(
+        {"ok": False, "error": "Invalid request method", "statusCode": 405}, status=405
+    )
+
+
+def get_match(request, id):
+    match = Match.objects.get(id=id)
+    return JsonResponse(
+        {
+            "ok": True,
+            "message": "Match successfully retrieved!",
+            "data": form_match_json(match),
+            "statusCode": 200,
+        },
+        status=200,
+    )
+
+
+def update_match(request, id):
+    match = Match.objects.get(id=id)
+
+    if not request.body:
+        raise BadRequest("No data provided")
+    data = json.loads(request.body)
+
+    user_ids = []
+    for key in PLAYER_KEYS:
+        player = getattr(match, key, None)  # Safely get the attribute
+        if player and player.user:  # Check that the player and user exist
+            user_ids.append(player.user.id)
+
+    user_ids_count = len(user_ids)
+    if user_ids_count != 2 and user_ids_count != 4:
+        return JsonResponse(
+            {
+                "ok": False,
+                "error": f"The match has {user_ids_count} player ids but it should have 2 or 4",
+                "statusCode": 400,
+            },
+            status=400,
+        )
+
+    if not check_sessions(request, user_ids):
+        return JsonResponse(
+            {"ok": False, "error": "Sessions not verified", "statusCode": 400},
+            status=400,
+        )
+
+    duration_seconds = data.get("duration")
+    if duration_seconds:
+        match.duration = timedelta(seconds=duration_seconds)
+
+    score = data.get("score")
+    step = 2 if user_ids_count == 2 else 1
+    offset = 0
+    if score:
+        if not check_score_format(score):
+            raise BadRequest("Invalid score format. Example format: '11:2'")
+        is_winners_first = True if score[0] > score[1] else False
+        offset = 0 if is_winners_first else 2
+        MODULO_DIV = 4
+        match.score = ":".join([str(num) for num in score])
+        for index, user_id in enumerate(user_ids):
+            # Set winner1, winner2, loser1, loser2 (leaving winner2 and loser2 empty if 2 players)
+            match.__setattr__(
+                WINNER_LOSER_KEYS[(index * step + offset) % MODULO_DIV],
+                get_player_by_user_id(user_id),
+            )
+    tournament_id = match.tournament.id if match.tournament else None
+    if tournament_id:
+        # Check if it is the final of the tournament and set the winner accordingly
+        tournament = Tournament.objects.get(id=tournament_id)
+        tournament_matches = Match.objects.all().filter(tournament=tournament)
+        if tournament_matches.count() == 3 and tournament_matches.last().id == match.id:
+            tournament.winner = match.winner1
+            tournament.save()
+    match.save()
+    return JsonResponse(
+        {
+            "ok": True,
+            "message": "Match successfully updated!",
+            "data": {
+                "id": match.id,
+            },
+            "statusCode": 201,
+        },
+        status=201,
+    )
+
+
+def get_player_by_user_id(id):
+    if id is None:
+        return None
+    try:
+        user = User.objects.get(id=id)
+        print(f"User found: {user}")
+        player = Player.objects.get(user=user)
+        print(f"User found: {player}")
+        return player
+    except ObjectDoesNotExist:
+        return None
 
 
 ##################################
@@ -399,7 +1049,7 @@ def get_friends(request, id):
                 "id": friend.user.id,
                 "username": friend.user.username,
                 "displayName": friend.display_name,
-                "status": checkStatus(friend),
+                "status": check_status(friend),
                 "createdAt": friend.created_at.isoformat(),
             }
         )
@@ -417,6 +1067,8 @@ def get_friends(request, id):
 @session_authenticated_id
 def request_friend(request, id):
     try:
+        if not request.body:
+            raise BadRequest("No data provided")
         data = json.loads(request.body)
         friend_id = int(data.get("friendUserId"))
 
@@ -474,6 +1126,8 @@ def request_friend(request, id):
 def manage_friend_request(request, id):
     try:
         if request.method == "POST":
+            if not request.body:
+                raise BadRequest("No data provided")
             data = json.loads(request.body)
             friend_id = int(data.get("friendUserId"))
             print("friend_id: ", friend_id)
@@ -511,9 +1165,6 @@ def manage_friend_request(request, id):
             is_pending_first_second = (
                 id > friend_id and friendship.status == "pending_first_second"
             )
-            # print("id: ", id, "friend_id: ", friend_id, "friendship.status: ", friendship.status )
-            # print (is_pending_second_first, is_pending_first_second)
-            # print (action == "approve" and (is_pending_second_first or is_pending_first_second))
             message = ""
             if action == "approve" and (
                 is_pending_second_first or is_pending_first_second
