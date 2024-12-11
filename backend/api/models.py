@@ -16,7 +16,7 @@ class Player(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     display_name = models.CharField(max_length=30, unique=True, blank=True, null=True)
     avatar = models.ImageField(
-        upload_to="avatars/", default="avatars/fallback.png", blank=True
+        upload_to="avatars/", default="avatars/fallback.jpg", blank=True
     )
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
