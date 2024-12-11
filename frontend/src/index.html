@@ -1400,7 +1400,7 @@
 
       document.getElementById("newAvatar").onchange = async (e) => {
         try{
-          const response = await fetch(`/api/players/${window.state["loggedInUsers"][window.currentUserID]}/avatar/`, {
+          const response = await fetch(`/api/players/${window.state["loggedInUsers"][window.currentUserID].id}/avatar/`, {
             method:"POST",
             body: e.target.files[0]
           })
