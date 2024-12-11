@@ -289,33 +289,46 @@ function loadTournament(tournamentId) {
   }
 
   function generateMatchContent(player1, player2, sfCount) {
+    const getScore = (matchIndex, scoreIndex) => {
+      const match = tournament?.matches?.[matchIndex]?.score;
+      return match ? match[scoreIndex] : "-";
+    };
+
+    const sfScores = {
+      sfOneScoreOne: getScore(0, 0),
+      sfOneScoreTwo: getScore(0, 1),
+      sfTwoScoreOne: getScore(1, 0),
+      sfTwoScoreTwo: getScore(1, 1),
+    };
+
+    const leftScore =
+      sfCount === 1 ? sfScores.sfOneScoreOne : sfScores.sfTwoScoreOne;
+    const rightScore =
+      sfCount === 1 ? sfScores.sfOneScoreTwo : sfScores.sfTwoScoreTwo;
+
+    const playerAvatar = (player) =>
+      player?.avatar || "./assets/default_avatar.png";
+    const playerLabel = (player) => player?.label || "Unknown Player";
+
     return `
-        <div class="tournament-match-players">
-          <div class="tournament-match-player-info-left">
-            <img loading="lazy" src="${
-              player1?.avatar || "./assets/default_avatar.png"
-            }" alt="Player avatar" class="tournament-match-avatar" />
-            <h3 class="game-player-name tournament">${player1?.label}</h3>
-          </div>
-          <h2 class="tournament-match-left-score">${
-            sfCount === 1
-              ? tournament?.matches[0]?.score[0]
-              : tournament?.matches[1]?.score[0]
-          }</h2>
-          <img class="tournament-match-vs-logo" src="./assets/vs_logo.png" alt="Versus logo" />
-          <h2 class="tournament-match-right-score">${
-            sfCount === 1
-              ? tournament?.matches[0]?.score[1]
-              : tournament?.matches[1]?.score[1]
-          }</h2>
-          <div class="tournament-match-player-info-right">
-            <img loading="lazy" src="${
-              player2?.avatar || "./assets/default_avatar.png"
-            }" alt="Player avatar" class="tournament-match-avatar" />
-            <h3 class="game-player-name tournament">${player2?.label}</h3>
-          </div>
+      <div class="tournament-match-players">
+        <div class="tournament-match-player-info-left">
+          <img loading="lazy" src="${playerAvatar(
+            player1
+          )}" alt="Player avatar" class="tournament-match-avatar" />
+          <h3 class="game-player-name tournament">${playerLabel(player1)}</h3>
         </div>
-      `;
+        <h2 class="tournament-match-left-score">${leftScore}</h2>
+        <img class="tournament-match-vs-logo" src="./assets/vs_logo.png" alt="Versus logo" />
+        <h2 class="tournament-match-right-score">${rightScore}</h2>
+        <div class="tournament-match-player-info-right">
+          <img loading="lazy" src="${playerAvatar(
+            player2
+          )}" alt="Player avatar" class="tournament-match-avatar" />
+          <h3 class="game-player-name tournament">${playerLabel(player2)}</h3>
+        </div>
+      </div>
+    `;
   }
 
   function generateFinalContent(player1, player2) {
