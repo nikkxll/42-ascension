@@ -394,7 +394,6 @@
             </ul>
           </div>
         </div>
-      </div>
     </section>
 
     <!-- Single game -->
@@ -510,7 +509,7 @@
         <div class="profileRight">
           <div id="carouselExampleFade" class="carousel slide carousel-fade">
             <h1 class="carousel-title">Friends</h1>
-            <div class="carousel-inner">
+            <div class="carousel-inner" id="friends">
               <div class="carousel-item active">a</div>
               <div class="carousel-item">b</div>
               <div class="carousel-item">c</div>
@@ -789,13 +788,15 @@
         otherGameStart.style.display = "none"
       }
 
-      function goToMatchView() {
+      async function goToMatchView(matchId) {
         goToHomeNoHistory();
         homeLeft.style.display = "grid";
         signin.style.display = "none";
         signup.style.display = "none";
         matchView.style.display = "block";
         homeRight.style.display = "none";
+        updateHistory(goToMatchView);
+    		await renderDetailedMatchStats(matchId);
       }
 
       function goToHomeRight() {
@@ -896,6 +897,7 @@
       function goToHomeNavigation() {
         homeLeft.style.display = "grid";
         homeRight.style.display = "grid";
+		matchView.style.display = "none";
         updateHistory(goToHomeNavigation);
       }
 
@@ -1183,12 +1185,6 @@
             (randomLeftIndex + Math.random() * (leftPlayers.length - 1) + 1) % leftPlayers.length
           );
           leftPlayers[randomLeftOtherIndex].click();
-
-          // Randomly select an available right player
-          rightPlayers.forEach((p, index) => {
-            if (p.classList.contains("player-selectable"))
-              rightPlayers[index].click();
-          });
         }
 
         function attachLeftPlayerListeners2v2(leftPlayers, rightPlayers) {
@@ -1262,8 +1258,8 @@
 
             // Allow external reset/randomization to function
             window.resetAll = () => resetAll(leftPlayers, rightPlayers);
-            window.randomizeChoice = () =>
-              randomizeChoice(leftPlayers, rightPlayers);
+            window.randomizeChoice2v2 = () =>
+              randomizeChoice2v2(leftPlayers, rightPlayers);
 
             // Initialize the start button state
             updateStartButton();
@@ -1283,7 +1279,7 @@
       // player profile functions
       const updateToProfile = async (index) =>
       {
-        const userId = window["loggedInUsers"][index];
+        const userId = window.state["loggedInUsers"][index].id;
         window.currentUserID = index
         try {
           const response = await fetch(`/api/players/${userId}/`, {
@@ -1395,11 +1391,12 @@
         } catch (error) {
           console.error(error.message);
         }
+        goToProfile()
       }
 
       document.getElementById("newAvatar").onchange = async (e) => {
         try{
-          const response = await fetch(`/api/players/${window.state["loggedInUsers"][window.currentUserID]}/avatar/`, {
+          const response = await fetch(`/api/players/${window.state["loggedInUsers"][window.currentUserID].id}/avatar/`, {
             method:"POST",
             body: e.target.files[0]
           })
@@ -1417,7 +1414,7 @@
     <script>
       const requestFriendship = async (id) => {
         try{
-          const response = await fetch(`/api/players/${window.state["loggedInUsers"][window.currentUserID]}/friends/`, {
+          const response = await fetch(`/api/players/${window.state["loggedInUsers"][window.currentUserID].id}/friends/`, {
             method:"POST",
             body: JSON.stringify({friendUserId: id})
           })
@@ -1432,7 +1429,7 @@
 
       const approveFriendship = async (id) => {
         try{
-          const response = await fetch(`/api/players/${window.state["loggedInUsers"][window.currentUserID]}/friends/manage/`, {
+          const response = await fetch(`/api/players/${window.state["loggedInUsers"][window.currentUserID].id}/friends/manage/`, {
             method:"POST",
             body: JSON.stringify({friendUserId: id, action: "approve"})
           })
@@ -1447,7 +1444,7 @@
 
       const denyFriendship = async (id) => {
         try{
-          const response = await fetch(`/api/players/${window.state["loggedInUsers"][window.currentUserID]}/friends/manage/`, {
+          const response = await fetch(`/api/players/${window.state["loggedInUsers"][window.currentUserID].id}/friends/manage/`, {
             method:"POST",
             body: JSON.stringify({friendUserId: id, action: "approve"})
           })

@@ -589,15 +589,13 @@ def get_current_sessions_tournament(request):
                     status=400,
                 )
             players = Player.objects.filter(user__id__in=found_session_ids)
-            tournaments = (
-                Tournament.objects.annotate(
-                    player_count=Count(
-                        "participants", distinct=True
-                    )  # Count all participants
-                ).filter(
-                    player_count=len(players),  # Ensure the number of players matches
-                    participants__player__in=players,  # Ensure all the players are in
-                )
+            tournaments = Tournament.objects.annotate(
+                player_count=Count(
+                    "participants", distinct=True
+                )  # Count all participants
+            ).filter(
+                player_count=len(players),  # Ensure the number of players matches
+                participants__player__in=players,  # Ensure all the players are in
             )
 
             if tournaments.exists():
@@ -900,8 +898,10 @@ def create_match(request, id=None):
 
 
 @csrf_exempt
-def manage_match_update(request, id):
+def manage_match(request, id):
     try:
+        if request.method == "GET":
+            return get_match(request, id)
         if request.method == "PATCH":
             return update_match(request, id)
     except Exception as e:
@@ -910,6 +910,19 @@ def manage_match_update(request, id):
         )
     return JsonResponse(
         {"ok": False, "error": "Invalid request method", "statusCode": 405}, status=405
+    )
+
+
+def get_match(request, id):
+    match = Match.objects.get(id=id)
+    return JsonResponse(
+        {
+            "ok": True,
+            "message": "Match successfully retrieved!",
+            "data": form_match_json(match),
+            "statusCode": 200,
+        },
+        status=200,
     )
 
 
