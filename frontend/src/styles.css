@@ -79,14 +79,14 @@ h2 {
   align-items: center;
   justify-content: space-around;
 }
-.carousel {
+#carouselExampleFade {
   text-align: center;
   display: inline-block;
   width: 80%;
   height: 80%;
 }
 
-.carousel-item {
+.carousel-item.friend {
   display: inline-block;
   border-radius: 45px;
   background-color: rgba(18, 16, 16, 0.25);

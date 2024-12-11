@@ -9,10 +9,13 @@ async function renderRecentTournaments() {
     return;
   }
 
-  data?.tournaments?.forEach((tournament) => {
+  data?.tournaments?.forEach((tournament, index) => {
     const tournamentContainer = document.createElement("div");
     tournamentContainer.id = "tournament-" + tournament.id;
     tournamentContainer.classList.add("tournament-block");
+    tournamentContainer.classList.add("carousel-item");
+    if (index == 0)
+      tournamentContainer.classList.add("active");
 
     tournamentContainer.addEventListener("click", () => {
       goToLoadedTournament(tournament.id);
