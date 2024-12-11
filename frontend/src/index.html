@@ -510,7 +510,7 @@
         <div class="profileRight">
           <div id="carouselExampleFade" class="carousel slide carousel-fade">
             <h1 class="carousel-title">Friends</h1>
-            <div class="carousel-inner">
+            <div class="carousel-inner" id="friends">
               <div class="carousel-item active">a</div>
               <div class="carousel-item">b</div>
               <div class="carousel-item">c</div>
@@ -1283,7 +1283,7 @@
       // player profile functions
       const updateToProfile = async (index) =>
       {
-        const userId = window["loggedInUsers"][index];
+        const userId = window.state["loggedInUsers"][index].id;
         window.currentUserID = index
         try {
           const response = await fetch(`/api/players/${userId}/`, {
@@ -1395,6 +1395,7 @@
         } catch (error) {
           console.error(error.message);
         }
+        goToProfile()
       }
 
       document.getElementById("newAvatar").onchange = async (e) => {
@@ -1417,7 +1418,7 @@
     <script>
       const requestFriendship = async (id) => {
         try{
-          const response = await fetch(`/api/players/${window.state["loggedInUsers"][window.currentUserID]}/friends/`, {
+          const response = await fetch(`/api/players/${window.state["loggedInUsers"][window.currentUserID].id}/friends/`, {
             method:"POST",
             body: JSON.stringify({friendUserId: id})
           })
@@ -1432,7 +1433,7 @@
 
       const approveFriendship = async (id) => {
         try{
-          const response = await fetch(`/api/players/${window.state["loggedInUsers"][window.currentUserID]}/friends/manage/`, {
+          const response = await fetch(`/api/players/${window.state["loggedInUsers"][window.currentUserID].id}/friends/manage/`, {
             method:"POST",
             body: JSON.stringify({friendUserId: id, action: "approve"})
           })
@@ -1447,7 +1448,7 @@
 
       const denyFriendship = async (id) => {
         try{
-          const response = await fetch(`/api/players/${window.state["loggedInUsers"][window.currentUserID]}/friends/manage/`, {
+          const response = await fetch(`/api/players/${window.state["loggedInUsers"][window.currentUserID].id}/friends/manage/`, {
             method:"POST",
             body: JSON.stringify({friendUserId: id, action: "approve"})
           })
