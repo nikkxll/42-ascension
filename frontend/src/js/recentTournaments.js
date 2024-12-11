@@ -14,8 +14,7 @@ async function renderRecentTournaments() {
     tournamentContainer.id = "tournament-" + tournament.id;
     tournamentContainer.classList.add("tournament-block");
     tournamentContainer.classList.add("carousel-item");
-    if (index == 0)
-      tournamentContainer.classList.add("active");
+    if (index == 0) tournamentContainer.classList.add("active");
 
     tournamentContainer.addEventListener("click", () => {
       goToLoadedTournament(tournament.id);
@@ -46,11 +45,12 @@ async function renderRecentTournaments() {
 
     tournamentContainer.appendChild(document.createElement("br"));
 
-    const runnerUp =
-      (tournament.matches[2]?.score[0] ?? 0) >
-      (tournament.matches[2]?.score[1] ?? 0)
-        ? tournament.matches[2]?.players[1]?.displayName || "N/A"
-        : tournament.matches[2]?.players[0]?.displayName || "N/A";
+    const runnerUp = !tournament.winner
+      ? "N/A"
+      : parseInt(tournament.matches[2]?.score?.[0]) ??
+        0 > parseInt(tournament.matches[2]?.score?.[1] ?? 0)
+      ? tournament.matches[2]?.players[1]?.displayName
+      : tournament.matches[2]?.players[0]?.displayName;
     tournamentContainer.appendChild(
       document.createTextNode(`Runner-up: ${runnerUp}`)
     );
@@ -68,7 +68,9 @@ async function renderRecentTournaments() {
     tournamentContainer.appendChild(document.createTextNode(`Ended: `));
     const endedDate = document.createElement("span");
     endedDate.classList.add("date-text");
-    endedDate.textContent = tournament.matches[2]?.createdAt || "N/A";
+    endedDate.textContent = (
+      tournament.matches[2]?.createdAt || "N/A"
+    ).substring(0, 10);
     tournamentContainer.appendChild(endedDate);
 
     tournamentContainer.appendChild(document.createElement("br"));

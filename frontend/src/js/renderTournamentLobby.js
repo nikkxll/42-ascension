@@ -191,7 +191,12 @@ function loadTournament(tournamentId) {
     startFirstSemifinalButton.style.display = "block";
   else if (tournament?.matches[0]?.score && !tournament?.matches[1]?.score)
     startSecondSemifinalButton.style.display = "block";
-  else startFinalButton.style.display = "block";
+  else if (
+    tournament?.matches[0]?.score &&
+    tournament?.matches[1]?.score &&
+    !tournament?.winner
+  )
+    startFinalButton.style.display = "block";
 
   const neededPlayers = getNeededPlayers();
   const tournamentPlayers = getTournamentPlayers();
@@ -206,14 +211,21 @@ function loadTournament(tournamentId) {
     const f = tournament?.winner;
 
     if (sf1?.score && sf2?.score && !f) {
-      players.push(sf1.players?.[0]?.id, sf2.players?.[1]?.id);
+      parseInt(sf1.score[0]) > parseInt(sf1.score[1])
+        ? players.push(sf1.players?.[0]?.id)
+        : players.push(sf1.players?.[1]?.id);
+      parseInt(sf2.score[0]) > parseInt(sf2.score[1])
+        ? players.push(sf2.players?.[0]?.id)
+        : players.push(sf2.players?.[1]?.id);
     } else if (sf1?.score && !f) {
       players.push(
-        sf1.score[0] > sf1.score[1]
+        parseInt(sf1.score[0]) > parseInt(sf1.score[1])
           ? sf1.players?.[0]?.id
           : sf1.players?.[1]?.id,
         ...(sf2?.players?.map((player) => player?.id) || [])
       );
+    } else if (sf1?.score && sf2?.score && f) {
+      return players;
     } else {
       players.push(
         ...(sf1?.players?.map((player) => player?.id) || []),
@@ -248,6 +260,7 @@ function loadTournament(tournamentId) {
 
   function arraysChecker(arr1, arr2) {
     const set1 = new Set(arr1);
+    console.log(arr1, arr2);
     return arr2.every((element) => set1.has(element));
   }
 
@@ -257,26 +270,32 @@ function loadTournament(tournamentId) {
     const filledPlayers = [...tournamentPlayers];
 
     filledPlayers.forEach((player, index) => {
+      const isWinner = player.id === tournament?.winner?.id;
       const playerCard = document.createElement("div");
       playerCard.className = "game-player-card";
+
       playerCard.innerHTML = `
-          <article class="tournament-game-player-card-inner">
-            <h2 class="game-player-number">Player ${index + 1}</h2>
-            <img
-              loading="lazy"
-              src="${player.avatar || "./assets/default_avatar.png"}"
-              alt="Player avatar"
-              class="game-player-avatar"
-            />
-            <h3 class="game-player-name">${player.username}</h3>
-            <div class="game-player-win-rate-container">
-              <p class="game-player-statistics-param">Win rate</p>
-              <p class="game-player-statistics-param-number last">${
-                player.winRate ?? 0
-              }</p>
-            </div>
-          </article>
-        `;
+        <article class="tournament-game-player-card-inner ${
+          isWinner ? "winner" : "normal"
+        }">
+          <h2 class="game-player-number">${
+            isWinner ? "Winner" : `Player ${index + 1}`
+          }</h2>
+          <img
+            loading="lazy"
+            src="${player.avatar || "./assets/default_avatar.png"}"
+            alt="Player avatar"
+            class="game-player-avatar"
+          />
+          <h3 class="game-player-name">${player.username}</h3>
+          <div class="game-player-win-rate-container">
+            <p class="game-player-statistics-param">Win rate</p>
+            <p class="game-player-statistics-param-number last">${
+              player.winRate ?? 0
+            }</p>
+          </div>
+        </article>
+      `;
       tournamentGrid.appendChild(playerCard);
     });
     return filledPlayers;
@@ -291,7 +310,7 @@ function loadTournament(tournamentId) {
   function generateMatchContent(player1, player2, sfCount) {
     const getScore = (matchIndex, scoreIndex) => {
       const match = tournament?.matches?.[matchIndex]?.score;
-      return match ? match[scoreIndex] : "-";
+      return match ? parseInt(match[scoreIndex]) : 0;
     };
 
     const sfScores = {
@@ -318,9 +337,21 @@ function loadTournament(tournamentId) {
           )}" alt="Player avatar" class="tournament-match-avatar" />
           <h3 class="game-player-name tournament">${playerLabel(player1)}</h3>
         </div>
-        <h2 class="tournament-match-left-score">${leftScore}</h2>
+        <h2 class="tournament-match-left-score ${
+          leftScore > rightScore
+            ? "match-winner-text"
+            : leftScore < rightScore
+            ? "match-loser-text"
+            : ""
+        }">${leftScore}</h2>
         <img class="tournament-match-vs-logo" src="./assets/vs_logo.png" alt="Versus logo" />
-        <h2 class="tournament-match-right-score">${rightScore}</h2>
+        <h2 class="tournament-match-right-score ${
+          rightScore > leftScore
+            ? "match-winner-text"
+            : rightScore < leftScore
+            ? "match-loser-text"
+            : ""
+        }"">${rightScore}</h2>
         <div class="tournament-match-player-info-right">
           <img loading="lazy" src="${playerAvatar(
             player2
@@ -332,6 +363,9 @@ function loadTournament(tournamentId) {
   }
 
   function generateFinalContent(player1, player2) {
+    const leftScore = parseInt(tournament?.matches[2]?.score?.[0] ?? 0);
+    const rightScore = parseInt(tournament?.matches[2]?.score?.[1] ?? 0);
+
     return `
         <div class="tournament-match-players">
           <div class="tournament-match-player-info-left">
@@ -340,13 +374,21 @@ function loadTournament(tournamentId) {
             }" alt="Player avatar" class="tournament-match-avatar" />
             <h3 class="game-player-name tournament">${player1?.label}</h3>
           </div>
-          <h2 class="tournament-match-left-score">${
-            tournament?.matches[2]?.score[0] ?? "-"
-          }</h2>
+          <h2 class="tournament-match-left-score ${
+            leftScore > rightScore
+              ? "match-winner-text"
+              : leftScore < rightScore
+              ? "match-loser-text"
+              : ""
+          }">${leftScore ?? 0}</h2>
           <img class="tournament-match-vs-logo" src="./assets/vs_logo.png" alt="Versus logo" />
-          <h2 class="tournament-match-right-score">${
-            tournament?.matches[2]?.score[1] ?? "-"
-          }</h2>
+          <h2 class="tournament-match-right-score ${
+            rightScore > leftScore
+              ? "match-winner-text"
+              : rightScore < leftScore
+              ? "match-loser-text"
+              : ""
+          }">${rightScore ?? 0}</h2>
           <div class="tournament-match-player-info-right">
             <img loading="lazy" src="${
               player2?.avatar || "./assets/default_avatar.png"

@@ -153,7 +153,7 @@ section {
   display: flex;
   flex-direction: column;
   width: 100%;
-  gap: 25px;
+  gap: 20px;
 }
 .signup {
   position: absolute;
@@ -1327,7 +1327,14 @@ section {
   width: 100%;
   flex-direction: column;
   align-items: center;
+}
+
+.tournament-game-player-card-inner.normal {
   border: 1px solid #a7a7a7;
+}
+
+.tournament-game-player-card-inner.winner {
+  border: 1px solid #d9cb00;
 }
 
 .tournament-match-left-score {
@@ -1338,6 +1345,14 @@ section {
 .tournament-match-right-score {
   font-size: 50px;
   margin-top: 10px;
+}
+
+.match-winner-text {
+  color: #00ff37;
+}
+
+.match-loser-text {
+  color: #ff0000;
 }
 
 /* Tournament match container */
