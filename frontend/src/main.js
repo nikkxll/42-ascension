@@ -114,17 +114,28 @@ async function gameTypeSelector(){
     // TODO = find the last match that is not finished
         let matches = window.tournamentState.data.matches;
         matchNumber = 0;
-        for (matchNumber < matches.length; matchNumber++;){
+        console.log("matches.length=", matches.length);
+        while (matchNumber < matches.length){
             console.log("matchNumber=", matchNumber, "score=", matches[matchNumber].score);
-            if (matches[matchNumber].score == null){
+            if (!matches[matchNumber].score){
                 break;
             }
+            matchNumber++;
         }
         if (matches.length == 2 && matchNumber == 2){
             console.log("TODO: fetch the last match creation.");
         }
-        console.log("Match number=", matchNumber, "to be started.");
-        ai = 0;
+        let match = window.tournamentState.data.matches[matchNumber];
+        console.log("Match number", matchNumber, "to be started.");
+        let player00 = match.players[0].id;
+        let player01 = match.players[1].id;
+        console.log("player0=", player00, "player1=", player01);
+        if (player00 == window.ai_id || player01 == window.ai_id)
+            ai = 1;
+        if (player00 == window.ai_id)
+            window.tournamentState.matchPlayerIds = [player01, player00];
+        else
+            window.tournamentState.matchPlayerIds = [player00, player01];
         return {gameType: GameType.Cup, ai, matchNumber};
     }
     //else if (window.singleGameState.player3 && window.singleGameState.player4) {
@@ -167,33 +178,33 @@ const requestAddMatch = async (data) => {
     }
 };
 
-function updateStateFetch(startTime, gameCount){
-    console.log("Game ended", gameCount);
-    const {gameType, ai, matchNumber} = gameTypeSelector();
+function updateStateFetch(startTime, gameCount, gameTypeSelectorValue){
+    console.log("updateStateFetch: Game ended", gameCount);
+    const {gameType, ai, matchNumber} = gameTypeSelectorValue;
+    let duration = Math.trunc((Date.now() - startTime) / 1000);
     if (GameType.Cup != gameType){
         window.singleGameState.score = gameCount;
-        window.singleGameState.duration = Math.trunc((Date.now() - startTime) / 1000);
-        //numbers
-        // window.singleGameState.userIds = [
-        //         window.singleGameState.player1,
-        //         window.singleGameState.player2]
-        // if (GameType.Quatro == gameType){
-        //     window.singleGameState.userIds.push(
-        //         window.singleGameState.player3,
-        //         window.singleGameState.player4
-        //     ); 
-        // }
-        //window.singleGameState.duration = String(Math.floor((Date.now() - startTime) / 1000));
-        console.log("state after update", window.singleGameState);
         let body = {
-            score: window.singleGameState.score, 
-            duration: window.singleGameState.duration,
+            score: gameCount, 
+            duration: duration,
             userIds: window.singleGameState.userIds
         };
-        console.log("body=", body);
-        requestAddMatch(body);
-        
+        console.log("Create Match body=", body);
+        requestAddMatch(body);    
     }
+    else {
+        let match = window.tournamentState.data.matches[matchNumber];
+        match.score = gameCount;
+        match.duration = duration;
+        let body = {
+            score: gameCount, 
+            duration: duration
+            //userIds: window.tournamentState.matchPlayerIds
+        };
+        console.log("Patch Match body=", body);
+        requestPatchMatch(window.tournamentState.data.matches[matchNumber].id, body);
+    }
+
     // fetch the game result to backend and update game state?
 }
 
@@ -222,16 +233,16 @@ const requestAddCup = async (data) => {
 const requestPatchMatch = async (id, data) => {
     try {
         const response = await fetch("/api/matches/" + id + "/", {
-            method: "POST",
+            method: "PATCH",
             body: JSON.stringify(data)
         })
         console.log("response=", response);
-        //if (!response.ok)
-        //    throw new Error("HTTP error, status = " + response.status);
+        if (!response.ok)
+           throw new Error("HTTP error, status = " + response.status);
         const json = await response.json().then(
             data => {
                 console.log(data);
-                window.tournamentState.data = data.data;
+        //        window.tournamentState.data = data.data;
                 console.log("tournamentState=", window.tournamentState);
                 return data;
             }
@@ -250,15 +261,11 @@ const removeGameWindow = (game) => {
     document.removeEventListener("keyup", game.keyUpAction);
 }
 
-window.startGame = (aiNum) => {
+window.startGame = async (aiNum) => {
     console.log("Starting game with SingleGameState=", window.singleGameState);
     console.log("Starting game with  tournamentState=", window.tournamentState);
-    const {gameType, ai, matchNumber} = gameTypeSelector();
+    const {gameType, ai, matchNumber} = await gameTypeSelector();
     console.log("gameType=", gameType, "ai=", ai, "matchNumber=", matchNumber);
-    if (GameType.Cup == gameType) // create tournament
-    {
-       // DO ?   
-    }
     window.gameStoped = false;
     let game = {  // this is the game object that will be used to accumulate all the game data.
         keyDownAction: null, 
@@ -266,7 +273,15 @@ window.startGame = (aiNum) => {
         renderer: null, 
         animationId: null,
         startTime: new Date(), 
-        count: [0, 0]} //, gameCount , ai, gameType, matchNumber};
+        count: [0, 0],
+        ids:[0, 0]} //, gameCount , ai, gameType, matchNumber};
+    if (GameType.Cup == gameType){
+        let match = window.tournamentState.data.matches[matchNumber];
+        console.log("Match number", matchNumber, "to be started.");
+        let player00 = match.players[0].id;
+        let player01 = match.players[1].id;
+        console.log("player0=", player00, "player1=", player01);
+    }
     let isPaused = false;
     const maxScore = 5;
     const playerSpeed = 17;  // 17 12
@@ -723,7 +738,7 @@ window.startGame = (aiNum) => {
                 updateScore("Score: " + game.count[0] + " : " + game.count[1] + ". Game ended!");
                 score3dObj.position.set(-7, 7, -2); 
                 render();
-                updateStateFetch(game.startTime, game.count);
+                updateStateFetch(game.startTime, game.count, {gameType, ai, matchNumber});
                 return;
             }
             keyEventHandler() // check for key presses
