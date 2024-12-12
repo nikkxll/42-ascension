@@ -102,6 +102,13 @@ body {
   margin-bottom: 10%;
 }
 
+.friend-avatar {
+  width: 12vw;
+  height: 12vw;
+  border-radius: 10vw;
+  border: 3px solid #a7a7a7;
+  margin-bottom: 10%;
+}
 
 section {
   height: 100%;
@@ -717,6 +724,7 @@ section {
   backdrop-filter: blur(5px);
   width: 100%;
   border: 1px solid #a7a7a7;
+  padding-bottom: 50px;
 }
 
 .match-stats-header {
@@ -787,12 +795,6 @@ section {
   flex-grow: 1;
   width: 33%;
   text-align: left;
-}
-
-.match-stats-match-score {
-  position: absolute;
-  left: 50vw;
-  transform: translateX(-40%);
 }
 
 /* Add ai container */
