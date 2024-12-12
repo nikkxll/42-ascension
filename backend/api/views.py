@@ -11,12 +11,15 @@ from .decorators import session_authenticated_logged_in, session_authenticated_i
 from .sessions import create_encrypted_session_value, decrypt_session_value
 from django.contrib.auth.hashers import make_password
 from django.core.files.base import ContentFile
+from django.core.files import File
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
+from PIL import Image
 
 import requests
 from django.utils.crypto import get_random_string
 from urllib.parse import urlencode
+import urllib.request
 
 from django.core.exceptions import BadRequest
 
@@ -1241,7 +1244,6 @@ def oauth_redirect(request):
 
 
 def oauth_callback(request):
-
     if request.method == "GET":
         user = {}
         player = {}
@@ -1263,24 +1265,31 @@ def oauth_callback(request):
                 user=user, display_name=user_data["displayname"]
             )
         except IntegrityError:
-            # Create the user
+            # Get user if already exists
             user = User.objects.filter(username=user_data["login"])[0]
-            # Create the player with the associated user
-        # Create a unique session key
-        session_key = f"session_{user.id}"
-        # Encrypt user session data
-        session_value = create_encrypted_session_value(
-            {
-                "id": user.id,
-                "username": user.username,
-                "is_authenticated": True,
-            }
-        )
+        # Create a unique session key, only if the registered user doesn't have a password set, otherwise only return the response that closes the popup
+        if user.has_usable_password() == False:
+            session_key = f"session_{user.id}"
+            # Encrypt user session data
+            session_value = create_encrypted_session_value(
+                {
+                    "id": user.id,
+                    "username": user.username,
+                    "is_authenticated": True,
+                }
+            )
+            fetch_avatar_from_42(user, user_data)
+        #close popup
         response = HttpResponse("<html><script>window.close()</script></html>")
-        # response.set_cookie(session_key, session_value, httponly=True, secure=True) // secure will work with HTTPS only
         response.set_cookie(session_key, session_value, httponly=True)
         return response
 
+def fetch_avatar_from_42(user, user_data):
+    path = os.path.join("media", "avatars", f"{user.id}_avatar.jpg")
+    try:
+        urllib.request.urlretrieve(user_data["image"]["link"], path)
+        with open(path, "rb") as file:
+            user.player.avatar.save(f"{user.id}_avatar.jpg", File(file), save=True)
 
 def fetch_42_user_data(access_token):
     api_url = os.environ.get("OAUTH_API_URL")
