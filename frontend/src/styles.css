@@ -100,6 +100,7 @@ h2 {
 
 .carousel-title {
   margin-top: -56px;
+  font-size: 52px;
 }
 
 .carousel-inner {
@@ -110,7 +111,7 @@ h2 {
   text-align: center;
   display: inline-block;
   width: 50%;
-  height: 80%;
+  height: 85%;
   border-radius: 45px;
   background-color: rgba(18, 16, 16, 0.25);
   backdrop-filter: blur(5px);
@@ -1932,6 +1933,20 @@ section {
   font-size: 28px;
   color: fff;
   margin-right: 6.5%;
+}
+
+.friend-status {
+  font-size: 24px;
+}
+
+.friend-login-status {
+  display: flex;
+  width: 15px;
+  height: 15px;
+}
+
+.friend-name {
+  font-size: 44px;
 }
 
 /* Navigation header container */

@@ -1454,7 +1454,7 @@
           const json = await response.json();
           const players = document.getElementById("friends");
           if (json.data.players.length == 0)
-            matches.innerText = "Noone else exists";
+            matches.innerText = "No one else exists";
           else {
             players.innerHTML = "";
             json.data.players.forEach((player, index) => {
@@ -1464,8 +1464,7 @@
               let status = "";
 
               if (friend_marker) {
-                if (friend_marker.complete)
-                  status = "Status: " + friend_marker.status;
+                if (friend_marker.complete) status = friend_marker.status;
                 else if (friend_marker.forMe)
                   status = `
                     <button onclick='approveFriendship(${player.id})'>Approve</button>
@@ -1480,6 +1479,8 @@
                   ")'>Request Friendship</button>";
               }
 
+              console.log(player);
+
               let content = `
               <div class="carousel-item ${index == 0 ? "active" : ""}">
                 <img class="friend-avatar" src="${
@@ -1488,8 +1489,19 @@
                 <h1 class="friend-name">${
                   player.displayName || player.username
                 }</h1>
-                <div class="friend-status">
-                  ${status}
+                <div style="display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 0.5vw;">
+                  ${
+                    friend_marker && friend_marker.complete
+                      ? `<img class="friend-login-status" src="./assets/${
+                          friend_marker.status === "Online"
+                            ? "online.png"
+                            : "offline.png"
+                        }">`
+                      : ""
+                  }
+                  <div class="friend-status">
+                    ${status}
+                  </div>
                 </div>
               </div>
               `;
