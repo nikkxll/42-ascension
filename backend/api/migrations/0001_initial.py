@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('display_name', models.CharField(blank=True, max_length=30, null=True, unique=True)),
-                ('avatar', models.ImageField(blank=True, default='avatars/fallback.png', upload_to='avatars/')),
+                ('avatar', models.ImageField(blank=True, default='avatars/fallback.jpg', upload_to='avatars/')),
                 ('created_at', models.DateTimeField(default=django.utils.timezone.now)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('last_active_at', models.DateTimeField(blank=True, null=True)),

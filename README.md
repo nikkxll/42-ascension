@@ -39,7 +39,7 @@ When we refer to `id`, it is always id of the built-in Django User model.
 				"id": 2,
 				"username": "tony",
 				"displayName": null,
-				"avatarUrl": "/media/avatars/avatar1.png",
+				"avatarUrl": "/media/avatars/avatar1.jpg",
 				"status": "Offline",
 				"createdAt": "2024-10-17T16:33:31.517579+00:00"
 			},
@@ -47,7 +47,7 @@ When we refer to `id`, it is always id of the built-in Django User model.
 				"id": 3,
 				"username": "mary",
 				"displayName": "Mary G",
-				"avatarUrl": "/media/avatars/avatar2.png",
+				"avatarUrl": "/media/avatars/avatar2.jpg",
 				"status": "Online",
 				"createdAt": "2024-10-17T16:33:38.597270+00:00"
 			}
@@ -77,7 +77,7 @@ When we refer to `id`, it is always id of the built-in Django User model.
 		"id": 3,
 		"username": "tony",
 		"displayName": null,
-		"avatarUrl": "/media/avatars/avatar.png",
+		"avatarUrl": "/media/avatars/avatar.jpg",
 		"status": "Online",
 		"createdAt": "2024-10-17T16:33:38.597270+00:00"
 
@@ -103,7 +103,7 @@ When we refer to `id`, it is always id of the built-in Django User model.
 				"id": 5,
 				"username": "paul",
 				"displayName": "Paul",
-				"avatarUrl": "/media/avatars/fallback.png",
+				"avatarUrl": "/media/avatars/fallback.jpg",
 				"status": "Offline",
 				"createdAt": "2024-11-24T18:37:06.543396+00:00"
 			},
@@ -111,7 +111,7 @@ When we refer to `id`, it is always id of the built-in Django User model.
 				"id": 3,
 				"username": "tony",
 				"displayName": null,
-				"avatarUrl": "/media/avatars/fallback.png",
+				"avatarUrl": "/media/avatars/fallback.jpg",
 				"status": "Offline",
 				"createdAt": "2024-11-24T18:37:02.210328+00:00"
 			},
@@ -119,7 +119,7 @@ When we refer to `id`, it is always id of the built-in Django User model.
 				"id": 4,
 				"username": "mary",
 				"displayName": "Mary",
-				"avatarUrl": "/media/avatars/fallback.png",
+				"avatarUrl": "/media/avatars/fallback.jpg",
 				"status": "Offline",
 				"createdAt": "2024-11-24T18:37:04.732933+00:00"
 			}
@@ -190,7 +190,7 @@ When we refer to `id`, it is always id of the built-in Django User model.
 
 - **Request Body**:
 
-  - Binary file
+  - Binary file (`.jpg`)
 
 - **Example Response**:
 
@@ -198,7 +198,7 @@ When we refer to `id`, it is always id of the built-in Django User model.
 {
 	"ok": true,
 	"message": "Avatar uploaded successfully!",
-	"data": {"avatar_url": "/media/avatars/2_avatar.png"},
+	"data": {"avatar_url": "/media/avatars/2_avatar.jpg"},
 	"statusCode": 200
 }
 ```
@@ -302,7 +302,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 						"id": 1,
 						"username": "ai_player",
 						"displayName": "AI Player",
-						"avatarUrl": "/media/avatars/fallback.png",
+						"avatarUrl": "/media/avatars/fallback.jpg",
 						"status": "Offline",
 						"createdAt": "2024-11-24T18:36:52.426637+00:00"
 					},
@@ -310,7 +310,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 						"id": 3,
 						"username": "tony",
 						"displayName": null,
-						"avatarUrl": "/media/avatars/fallback.png",
+						"avatarUrl": "/media/avatars/fallback.jpg",
 						"status": "Offline",
 						"createdAt": "2024-11-24T18:37:02.210328+00:00"
 					}
@@ -326,7 +326,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 						"id": 4,
 						"username": "mary",
 						"displayName": "Mary",
-						"avatarUrl": "/media/avatars/fallback.png",
+						"avatarUrl": "/media/avatars/fallback.jpg",
 						"status": "Offline",
 						"createdAt": "2024-11-24T18:37:04.732933+00:00"
 					},
@@ -334,7 +334,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 						"id": 5,
 						"username": "paul",
 						"displayName": "Paul",
-						"avatarUrl": "/media/avatars/fallback.png",
+						"avatarUrl": "/media/avatars/fallback.jpg",
 						"status": "Offline",
 						"createdAt": "2024-11-24T18:37:06.543396+00:00"
 					}
@@ -374,7 +374,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 					"id": 3,
 					"username": "tony",
 					"displayName": null,
-					"avatarUrl": "/media/avatars/fallback.png",
+					"avatarUrl": "/media/avatars/fallback.jpg",
 					"status": "Online",
 					"createdAt": "2024-10-17T16:33:38.597270+00:00"
 				},
@@ -387,7 +387,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 								"id": 3,
 								"username": "tony",
 								"displayName": null,
-								"avatarUrl": "/media/avatars/fallback.png",
+								"avatarUrl": "/media/avatars/fallback.jpg",
 								"status": "Online",
 								"createdAt": "2024-10-17T16:33:38.597270+00:00"
 							},
@@ -395,7 +395,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 								"id": 4,
 								"username": "mary",
 								"displayName": "Mary",
-								"avatarUrl": "/media/avatars/fallback.png",
+								"avatarUrl": "/media/avatars/fallback.jpg",
 								"status": "Online",
 								"createdAt": "2024-10-17T16:33:38.597270+00:00"
 							}
@@ -411,7 +411,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 								"id": 1,
 								"username": "ai_player",
 								"displayName": "AI Player",
-								"avatarUrl": "/media/avatars/fallback.png",
+								"avatarUrl": "/media/avatars/fallback.jpg",
 								"status": "Online",
 								"createdAt": "2024-10-17T16:33:38.597270+00:00"
 							},
@@ -419,7 +419,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 								"id": 3,
 								"username": "tony",
 								"displayName": null,
-								"avatarUrl": "/media/avatars/fallback.png",
+								"avatarUrl": "/media/avatars/fallback.jpg",
 								"status": "Online",
 								"createdAt": "2024-10-17T16:33:38.597270+00:00"
 							}
@@ -435,7 +435,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 								"id": 4,
 								"username": "mary",
 								"displayName": "Mary",
-								"avatarUrl": "/media/avatars/fallback.png",
+								"avatarUrl": "/media/avatars/fallback.jpg",
 								"status": "Online",
 								"createdAt": "2024-10-17T16:33:38.597270+00:00"
 							},
@@ -443,7 +443,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 								"id": 5,
 								"username": "paul",
 								"displayName": "Paul",
-								"avatarUrl": "/media/avatars/fallback.png",
+								"avatarUrl": "/media/avatars/fallback.jpg",
 								"status": "Online",
 								"createdAt": "2024-10-17T16:33:38.597270+00:00"
 							}
@@ -491,7 +491,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 							"id": 1,
 							"username": "ai_player",
 							"displayName": "AI Player",
-							"avatarUrl": "/media/avatars/fallback.png",
+							"avatarUrl": "/media/avatars/fallback.jpg",
 							"status": "Online",
 							"createdAt": "2024-10-17T16:33:38.597270+00:00"
 						},
@@ -499,7 +499,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 							"id": 3,
 							"username": "tony",
 							"displayName": null,
-							"avatarUrl": "/media/avatars/fallback.png",
+							"avatarUrl": "/media/avatars/fallback.jpg",
 							"status": "Online",
 							"createdAt": "2024-10-17T16:33:38.597270+00:00"
 						}
@@ -515,7 +515,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 							"id": 4,
 							"username": "mary",
 							"displayName": "Mary",
-							"avatarUrl": "/media/avatars/fallback.png",
+							"avatarUrl": "/media/avatars/fallback.jpg",
 							"status": "Online",
 							"createdAt": "2024-10-17T16:33:38.597270+00:00"
 						},
@@ -523,7 +523,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 							"id": 5,
 							"username": "paul",
 							"displayName": "Paul",
-							"avatarUrl": "/media/avatars/fallback.png",
+							"avatarUrl": "/media/avatars/fallback.jpg",
 							"status": "Online",
 							"createdAt": "2024-10-17T16:33:38.597270+00:00"
 						}
@@ -565,7 +565,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 							"id": 4,
 							"username": "mary",
 							"displayName": "Mary",
-							"avatarUrl": "/media/avatars/fallback.png",
+							"avatarUrl": "/media/avatars/fallback.jpg",
 							"status": "Online",
 							"createdAt": "2024-10-17T16:33:38.597270+00:00"
 						},
@@ -573,7 +573,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 							"id": 5,
 							"username": "paul",
 							"displayName": "Paul",
-							"avatarUrl": "/media/avatars/fallback.png",
+							"avatarUrl": "/media/avatars/fallback.jpg",
 							"status": "Online",
 							"createdAt": "2024-10-17T16:33:38.597270+00:00"
 						}
@@ -589,7 +589,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 							"id": 1,
 							"username": "ai_player",
 							"displayName": "AI Player",
-							"avatarUrl": "/media/avatars/fallback.png",
+							"avatarUrl": "/media/avatars/fallback.jpg",
 							"status": "Online",
 							"createdAt": "2024-10-17T16:33:38.597270+00:00"
 						},
@@ -597,7 +597,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 							"id": 3,
 							"username": "tony",
 							"displayName": null,
-							"avatarUrl": "/media/avatars/fallback.png",
+							"avatarUrl": "/media/avatars/fallback.jpg",
 							"status": "Online",
 							"createdAt": "2024-10-17T16:33:38.597270+00:00"
 						}
@@ -638,7 +638,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 				"id": 7,
 				"username": "tony",
 				"displayName": null,
-				"avatarUrl": "/media/avatars/7_avatar.png",
+				"avatarUrl": "/media/avatars/7_avatar.jpg",
 				"status": "Offline",
 				"createdAt": "2024-11-25T23:41:15.627807+00:00"
 			},
@@ -646,7 +646,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 				"id": 8,
 				"username": "mary",
 				"displayName": "Mary",
-				"avatarUrl": "/media/avatars/fallback.png",
+				"avatarUrl": "/media/avatars/fallback.jpg",
 				"status": "Offline",
 				"createdAt": "2024-11-25T23:41:21.599398+00:00"
 			}
@@ -686,7 +686,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 						"id": 3,
 						"username": "tony",
 						"displayName": null,
-						"avatarUrl": "/media/avatars/fallback.png",
+						"avatarUrl": "/media/avatars/fallback.jpg",
 						"status": "Online",
 						"createdAt": "2024-10-17T16:33:38.597270+00:00"
 					},
@@ -694,7 +694,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 						"id": 4,
 						"username": "mary",
 						"displayName": "Mary",
-						"avatarUrl": "/media/avatars/fallback.png",
+						"avatarUrl": "/media/avatars/fallback.jpg",
 						"status": "Online",
 						"createdAt": "2024-10-17T16:33:38.597270+00:00"
 					}
@@ -710,7 +710,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 						"id": 4,
 						"username": "mary",
 						"displayName": "Mary",
-						"avatarUrl": "/media/avatars/fallback.png",
+						"avatarUrl": "/media/avatars/fallback.jpg",
 						"status": "Online",
 						"createdAt": "2024-10-17T16:33:38.597270+00:00"
 					},
@@ -718,7 +718,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 						"id": 5,
 						"username": "paul",
 						"displayName": "Paul",
-						"avatarUrl": "/media/avatars/fallback.png",
+						"avatarUrl": "/media/avatars/fallback.jpg",
 						"status": "Online",
 						"createdAt": "2024-10-17T16:33:38.597270+00:00"
 					}
@@ -734,7 +734,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 						"id": 1,
 						"username": "ai_player",
 						"displayName": "AI Player",
-						"avatarUrl": "/media/avatars/fallback.png",
+						"avatarUrl": "/media/avatars/fallback.jpg",
 						"status": "Online",
 						"createdAt": "2024-10-17T16:33:38.597270+00:00"
 					},
@@ -742,7 +742,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 						"id": 3,
 						"username": "tony",
 						"displayName": null,
-						"avatarUrl": "/media/avatars/fallback.png",
+						"avatarUrl": "/media/avatars/fallback.jpg",
 						"status": "Online",
 						"createdAt": "2024-10-17T16:33:38.597270+00:00"
 					}
@@ -783,7 +783,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 						"id": 3,
 						"username": "tony",
 						"displayName": null,
-						"avatarUrl": "/media/avatars/fallback.png",
+						"avatarUrl": "/media/avatars/fallback.jpg",
 						"status": "Offline",
 						"createdAt": "2024-11-24T01:36:08.718477+00:00"
 					},
@@ -791,7 +791,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 						"id": 4,
 						"username": "mary",
 						"displayName": "Mary",
-						"avatarUrl": "/media/avatars/fallback.png",
+						"avatarUrl": "/media/avatars/fallback.jpg",
 						"status": "Offline",
 						"createdAt": "2024-11-24T01:36:14.914430+00:00"
 					}
@@ -807,7 +807,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 						"id": 1,
 						"username": "ai_player",
 						"displayName": "AI Player",
-						"avatarUrl": "/media/avatars/fallback.png",
+						"avatarUrl": "/media/avatars/fallback.jpg",
 						"status": "Offline",
 						"createdAt": "2024-11-24T01:35:56.052291+00:00"
 					},
@@ -815,7 +815,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 						"id": 3,
 						"username": "tony",
 						"displayName": null,
-						"avatarUrl": "/media/avatars/fallback.png",
+						"avatarUrl": "/media/avatars/fallback.jpg",
 						"status": "Offline",
 						"createdAt": "2024-11-24T01:36:08.718477+00:00"
 					}
@@ -831,7 +831,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 						"id": 1,
 						"username": "ai_player",
 						"displayName": "AI Player",
-						"avatarUrl": "/media/avatars/fallback.png",
+						"avatarUrl": "/media/avatars/fallback.jpg",
 						"status": "Offline",
 						"createdAt": "2024-11-24T01:35:56.052291+00:00"
 					},
@@ -839,7 +839,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 						"id": 3,
 						"username": "tony",
 						"displayName": null,
-						"avatarUrl": "/media/avatars/fallback.png",
+						"avatarUrl": "/media/avatars/fallback.jpg",
 						"status": "Offline",
 						"createdAt": "2024-11-24T01:36:08.718477+00:00"
 					}
@@ -855,7 +855,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 						"id": 1,
 						"username": "ai_player",
 						"displayName": "AI Player",
-						"avatarUrl": "/media/avatars/fallback.png",
+						"avatarUrl": "/media/avatars/fallback.jpg",
 						"status": "Offline",
 						"createdAt": "2024-11-24T01:35:56.052291+00:00"
 					},
@@ -863,7 +863,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 						"id": 3,
 						"username": "tony",
 						"displayName": null,
-						"avatarUrl": "/media/avatars/fallback.png",
+						"avatarUrl": "/media/avatars/fallback.jpg",
 						"status": "Offline",
 						"createdAt": "2024-11-24T01:36:08.718477+00:00"
 					}

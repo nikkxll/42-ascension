@@ -50,7 +50,7 @@ def manage_players(request):
             return get_players(request)
         except Exception as e:
             return JsonResponse(
-                {"ok": False, "error": str(e), "statusCode": 500}, status=500
+                {"ok": False, "error": str(e), "statusCode": 400}, status=400
             )
 
     if request.method == "POST":
@@ -63,7 +63,7 @@ def manage_players(request):
             )
         except Exception as e:
             return JsonResponse(
-                {"ok": False, "error": str(e), "statusCode": 500}, status=500
+                {"ok": False, "error": str(e), "statusCode": 400}, status=400
             )
 
     return JsonResponse(
@@ -94,7 +94,7 @@ def get_current_players(request):
         )
     except Exception as e:
         return JsonResponse(
-            {"ok": False, "error": str(e), "statusCode": 500}, status=500
+            {"ok": False, "error": str(e), "statusCode": 400}, status=400
         )
 
 
@@ -217,7 +217,7 @@ def custom_login(request):
                 )
     except Exception as e:
         return JsonResponse(
-            {"ok": False, "error": str(e), "statusCode": 500}, status=500
+            {"ok": False, "error": str(e), "statusCode": 400}, status=400
         )
     return JsonResponse(
         {"ok": False, "error": "Method not allowed", "statusCode": 405}, status=405
@@ -272,7 +272,7 @@ def manage_player(request, id):
             return update_player(request, id=id)
     except Exception as e:
         return JsonResponse(
-            {"ok": False, "error": str(e), "statusCode": 500}, status=500
+            {"ok": False, "error": str(e), "statusCode": 400}, status=400
         )
 
     return JsonResponse({"ok": False, "error": "Invalid request method"}, status=405)
@@ -380,7 +380,7 @@ def upload_avatar(request, id):
         try:
             user = User.objects.get(id=id)
             player = user.player
-            player.avatar.save(f"{id}_avatar.png", ContentFile(avatar), save=True)
+            player.avatar.save(f"{id}_avatar.jpg", ContentFile(avatar), save=True)
 
             return JsonResponse(
                 {
@@ -400,7 +400,7 @@ def upload_avatar(request, id):
             )
         except Exception as e:
             return JsonResponse(
-                {"ok": False, "error": str(e), "statusCode": 500}, status=500
+                {"ok": False, "error": str(e), "statusCode": 400}, status=400
             )
 
     return JsonResponse(
@@ -432,7 +432,7 @@ def get_player_stats(request, id):
         )
     except Exception as e:
         return JsonResponse(
-            {"ok": False, "error": str(e), "statusCode": 500}, status=500
+            {"ok": False, "error": str(e), "statusCode": 400}, status=400
         )
     return JsonResponse(
         {"ok": False, "error": "Invalid request method", "statusCode": 405}, status=405
@@ -453,7 +453,7 @@ def manage_tournaments(request):
             return create_tournament(request)
     except Exception as e:
         return JsonResponse(
-            {"ok": False, "error": str(e), "statusCode": 500}, status=500
+            {"ok": False, "error": str(e), "statusCode": 400}, status=400
         )
 
     return JsonResponse(
@@ -553,7 +553,7 @@ def get_tournament(request, id):
         )
     except Exception as e:
         return JsonResponse(
-            {"ok": False, "error": str(e), "statusCode": 500}, status=500
+            {"ok": False, "error": str(e), "statusCode": 400}, status=400
         )
     return JsonResponse(
         {"ok": False, "error": "Invalid request method", "statusCode": 405}, status=405
@@ -618,7 +618,7 @@ def get_current_sessions_tournament(request):
                 )
     except Exception as e:
         return JsonResponse(
-            {"ok": False, "error": str(e), "statusCode": 500}, status=500
+            {"ok": False, "error": str(e), "statusCode": 400}, status=400
         )
     return JsonResponse(
         {"ok": False, "error": "Invalid request method", "statusCode": 405}, status=405
@@ -691,7 +691,7 @@ def manage_tournament_match(request, id=None):
         )
     except Exception as e:
         return JsonResponse(
-            {"ok": False, "error": str(e), "statusCode": 500}, status=500
+            {"ok": False, "error": str(e), "statusCode": 400}, status=400
         )
 
     return JsonResponse(
@@ -728,7 +728,7 @@ def manage_matches(request):
         )
     except Exception as e:
         return JsonResponse(
-            {"ok": False, "error": str(e), "statusCode": 500}, status=500
+            {"ok": False, "error": str(e), "statusCode": 400}, status=400
         )
     return JsonResponse({"ok": False, "error": "Invalid request method"}, status=405)
 
@@ -773,7 +773,7 @@ def get_player_matches(request, id):
         )
     except Exception as e:
         return JsonResponse(
-            {"ok": False, "error": str(e), "statusCode": 500}, status=500
+            {"ok": False, "error": str(e), "statusCode": 400}, status=400
         )
     return JsonResponse(
         {"ok": False, "error": "Invalid request method", "statusCode": 405}, status=405
@@ -903,7 +903,7 @@ def manage_match(request, id):
             return update_match(request, id)
     except Exception as e:
         return JsonResponse(
-            {"ok": False, "error": str(e), "statusCode": 500}, status=500
+            {"ok": False, "error": str(e), "statusCode": 400}, status=400
         )
     return JsonResponse(
         {"ok": False, "error": "Invalid request method", "statusCode": 405}, status=405
@@ -1023,7 +1023,7 @@ def manage_friends(request, id):
         # if request.method == "DELETE":
     except Exception as e:
         return JsonResponse(
-            {"ok": False, "error": str(e), "statusCode": 500}, status=500
+            {"ok": False, "error": str(e), "statusCode": 400}, status=400
         )
 
     return JsonResponse(
@@ -1210,7 +1210,7 @@ def manage_friend_request(request, id):
         )
     except Exception as e:
         return JsonResponse(
-            {"ok": False, "error": str(e), "statusCode": 500}, status=500
+            {"ok": False, "error": str(e), "statusCode": 400}, status=400
         )
 
     return JsonResponse(
@@ -1280,7 +1280,6 @@ def oauth_callback(request):
         # response.set_cookie(session_key, session_value, httponly=True, secure=True) // secure will work with HTTPS only
         response.set_cookie(session_key, session_value, httponly=True)
         return response
-            
 
 
 def fetch_42_user_data(access_token):
