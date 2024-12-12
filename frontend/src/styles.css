@@ -62,7 +62,7 @@ h2 {
   position: absolute;
   left: 0;
   width: 50%;
-  height: 100%;
+  height: 90%;
   display: flex;
   /* display: none; */
   align-items: center;
@@ -100,6 +100,7 @@ h2 {
 
 .carousel-title {
   margin-top: -56px;
+  font-size: 52px;
 }
 
 .carousel-inner {
@@ -110,7 +111,7 @@ h2 {
   text-align: center;
   display: inline-block;
   width: 50%;
-  height: 80%;
+  height: 85%;
   border-radius: 45px;
   background-color: rgba(18, 16, 16, 0.25);
   backdrop-filter: blur(5px);
@@ -119,8 +120,8 @@ h2 {
 }
 
 #person-avatar {
-  width: 12vw;
-  height: 12vw;
+  width: 10vw;
+  height: 10vw;
   border-radius: 10vw;
   border: 3px solid #a7a7a7;
   margin-bottom: 10%;
@@ -1590,6 +1591,30 @@ section {
   color: #fff;
 }
 
+.profile-back-button {
+  position: absolute;
+  top: 90vh;
+  left: 5vw;
+  border-radius: 20px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font: 400 26px Acme, sans-serif;
+  padding: 12px 84px 12px;
+  margin: 0px auto 32px;
+  transition: box-shadow 0.3s, transform 0.3s;
+  background-color: rgba(255, 0, 0, 0.25);
+}
+
+.profile-games-list {
+  margin-top: 5%;
+  font: 400 24px Acme, sans-serif;
+  display: flex;
+  flex-direction: row;
+  gap: 3%;
+  justify-content: center;
+}
+
 /* Profile page container. Friends list */
 
 .profile-friend-list {
@@ -1908,6 +1933,20 @@ section {
   font-size: 28px;
   color: fff;
   margin-right: 6.5%;
+}
+
+.friend-status {
+  font-size: 24px;
+}
+
+.friend-login-status {
+  display: flex;
+  width: 15px;
+  height: 15px;
+}
+
+.friend-name {
+  font-size: 44px;
 }
 
 /* Navigation header container */
