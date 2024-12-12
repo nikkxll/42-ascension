@@ -110,8 +110,6 @@ async function gameTypeSelector(){
             }
             await requestAddCup(body);
         }
-
-    // TODO = find the last match that is not finished
         let matches = window.tournamentState.data.matches;
         matchNumber = 0;
         console.log("matches.length=", matches.length);
@@ -122,14 +120,14 @@ async function gameTypeSelector(){
             }
             matchNumber++;
         }
-        if (matches.length == 2 && matchNumber == 2){
-            console.log("TODO: fetch the last match creation.");
+        let player00 = window.tournamentState.userIds[0];
+        let player01 = window.tournamentState.userIds[1];
+        console.log("matchNumber=", matchNumber, "player00=", player00, "player01=", player01); 
+        if (matchNumber < 2){
+            let match = window.tournamentState.data.matches[matchNumber];
+            player00 = match.players[0].id;
+            player01 = match.players[1].id;
         }
-        let match = window.tournamentState.data.matches[matchNumber];
-        console.log("Match number", matchNumber, "to be started.");
-        let player00 = match.players[0].id;
-        let player01 = match.players[1].id;
-        console.log("player0=", player00, "player1=", player01);
         if (player00 == window.ai_id || player01 == window.ai_id)
             ai = 1;
         if (player00 == window.ai_id)
@@ -192,7 +190,7 @@ function updateStateFetch(startTime, gameCount, gameTypeSelectorValue){
         console.log("Create Match body=", body);
         requestAddMatch(body);    
     }
-    else {
+    else if (matchNumber != 2){
         let match = window.tournamentState.data.matches[matchNumber];
         match.score = gameCount;
         match.duration = duration;
@@ -203,6 +201,17 @@ function updateStateFetch(startTime, gameCount, gameTypeSelectorValue){
         };
         console.log("Patch Match body=", body);
         requestPatchMatch(window.tournamentState.data.matches[matchNumber].id, body);
+    }
+    else {
+        console.log("TODO: fetch the last match creation.");
+        let cup_id = window.tournamentState.data.id;
+        let body = {
+            score: gameCount,
+            duration: duration,
+            //TODO fix the user ids
+            userIds: [window.tournamentState.userIds[0], window.tournamentState.userIds[1]]
+        }
+            
     }
 
     // fetch the game result to backend and update game state?
@@ -253,6 +262,26 @@ const requestPatchMatch = async (id, data) => {
     }
 }
 
+const requestCupFinalMatch = async (id, data) => {
+    try {
+        const response = await fetch("/api/tournaments/"+ id + "/matches/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error, status = ${response.status}`);
+        }
+        const json = await response.json();
+        console.log("Server Response Data:", json);
+        return json;
+    } catch (error) {
+        console.error("Request failed:", error.message);
+        //throw error;
+    }
+};
+
+
 const removeGameWindow = (game) => {
     cancelAnimationFrame(game.animationId);
     document.getElementById("gameWindow").style.display = "none";
@@ -273,15 +302,16 @@ window.startGame = async (aiNum) => {
         renderer: null, 
         animationId: null,
         startTime: new Date(), 
-        count: [0, 0],
-        ids:[0, 0]} //, gameCount , ai, gameType, matchNumber};
-    if (GameType.Cup == gameType){
-        let match = window.tournamentState.data.matches[matchNumber];
-        console.log("Match number", matchNumber, "to be started.");
-        let player00 = match.players[0].id;
-        let player01 = match.players[1].id;
-        console.log("player0=", player00, "player1=", player01);
-    }
+        count: [0, 0]
+        //,ids:[0, 0]
+    } //, gameCount , ai, gameType, matchNumber};
+    // if (GameType.Cup == gameType){
+    //     let match = window.tournamentState.data.matches[matchNumber];
+    //     console.log("Match number", matchNumber, "to be started.");
+    //     let player00 = match.players[0].id;
+    //     let player01 = match.players[1].id;
+    //     console.log("player0=", player00, "player1=", player01);
+    // }
     let isPaused = false;
     const maxScore = 5;
     const playerSpeed = 17;  // 17 12
