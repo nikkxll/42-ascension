@@ -16,7 +16,7 @@ class Player(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     display_name = models.CharField(max_length=30, unique=True, blank=True, null=True)
     avatar = models.ImageField(
-        upload_to="avatars/", default="avatars/fallback.png", blank=True
+        upload_to="avatars/", default="avatars/fallback.jpg", blank=True
     )
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
@@ -157,6 +157,9 @@ class Match(models.Model):
     duration = models.DurationField(null=True, blank=True, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["created_at"]
 
     # BUG HERE:
     def __str__(self):

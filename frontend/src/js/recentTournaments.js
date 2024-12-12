@@ -9,57 +9,72 @@ async function renderRecentTournaments() {
     return;
   }
 
-  data?.tournaments?.forEach((tournament) => {
-    const title = document.createElement("a");
-    title.href = "#";
-    title.classList.add("tournament-link");
-    title.textContent = tournament.name || "Unknown Tournament";
-    tournamentField.appendChild(title);
+  data?.tournaments?.forEach((tournament, index) => {
+    const tournamentContainer = document.createElement("div");
+    tournamentContainer.id = "tournament-" + tournament.id;
+    tournamentContainer.classList.add("tournament-block");
+    tournamentContainer.classList.add("carousel-item");
+    if (index == 0) tournamentContainer.classList.add("active");
 
-    tournamentField.appendChild(document.createElement("br"));
+    tournamentContainer.addEventListener("click", () => {
+      goToLoadedTournament(tournament.id);
+    });
 
-    tournamentField.appendChild(document.createTextNode("Status: "));
+    const title = document.createTextNode(
+      tournament.name || "Unknown Tournament"
+    );
+    tournamentContainer.appendChild(title);
+
+    tournamentContainer.appendChild(document.createElement("br"));
+
+    tournamentContainer.appendChild(document.createTextNode("Status: "));
     const status = document.createElement("span");
     status.classList.add(
       tournament.winner === null ? "status-pending" : "status-completed"
     );
     status.textContent = tournament.winner ? "completed" : "in progress";
-    tournamentField.appendChild(status);
+    tournamentContainer.appendChild(status);
 
-    tournamentField.appendChild(document.createElement("br"));
+    tournamentContainer.appendChild(document.createElement("br"));
 
-    tournamentField.appendChild(
-      document.createTextNode(`Winner: ${tournament?.winner?.displayName || "N/A"}`)
+    tournamentContainer.appendChild(
+      document.createTextNode(
+        `Winner: ${tournament?.winner?.displayName || "N/A"}`
+      )
     );
 
-    tournamentField.appendChild(document.createElement("br"));
+    tournamentContainer.appendChild(document.createElement("br"));
 
-    const runnerUp =
-      (tournament.matches[2]?.score[0] ?? 0) >
-      (tournament.matches[2]?.score[1] ?? 0)
-        ? tournament.matches[2]?.players[1]?.displayName || "N/A"
-        : tournament.matches[2]?.players[0]?.displayName || "N/A";
-    tournamentField.appendChild(
+    const runnerUp = !tournament.winner
+      ? "N/A"
+      : parseInt(tournament.matches[2]?.score?.[0]) ??
+        0 > parseInt(tournament.matches[2]?.score?.[1] ?? 0)
+      ? tournament.matches[2]?.players[1]?.displayName
+      : tournament.matches[2]?.players[0]?.displayName;
+    tournamentContainer.appendChild(
       document.createTextNode(`Runner-up: ${runnerUp}`)
     );
 
-    tournamentField.appendChild(document.createElement("br"));
+    tournamentContainer.appendChild(document.createElement("br"));
 
-    tournamentField.appendChild(document.createTextNode(`Created: `));
+    tournamentContainer.appendChild(document.createTextNode(`Created: `));
     const createdDate = document.createElement("span");
     createdDate.classList.add("date-text");
     createdDate.textContent = (tournament.createdAt || "N/A").substring(0, 10);
-    tournamentField.appendChild(createdDate);
+    tournamentContainer.appendChild(createdDate);
 
-    tournamentField.appendChild(document.createElement("br"));
+    tournamentContainer.appendChild(document.createElement("br"));
 
-    tournamentField.appendChild(document.createTextNode(`Ended: `));
+    tournamentContainer.appendChild(document.createTextNode(`Ended: `));
     const endedDate = document.createElement("span");
     endedDate.classList.add("date-text");
-    endedDate.textContent = tournament.matches[2]?.createdAt || "N/A";
-    tournamentField.appendChild(endedDate);
+    endedDate.textContent = (
+      tournament.matches[2]?.createdAt || "N/A"
+    ).substring(0, 10);
+    tournamentContainer.appendChild(endedDate);
 
-    tournamentField.appendChild(document.createElement("br"));
+    tournamentContainer.appendChild(document.createElement("br"));
+    tournamentField.appendChild(tournamentContainer);
   });
 }
 
