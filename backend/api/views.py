@@ -1264,7 +1264,6 @@ def oauth_callback(request):
             player = Player.objects.create(
                 user=user, display_name=user_data["displayname"]
             )
-            fetch_avatar_from_42(user, user_data)
         except IntegrityError:
             # Get user if already exists
             user = User.objects.filter(username=user_data["login"])[0]
@@ -1279,6 +1278,7 @@ def oauth_callback(request):
                     "is_authenticated": True,
                 }
             )
+            fetch_avatar_from_42(user, user_data)
         #close popup
         response = HttpResponse("<html><script>window.close()</script></html>")
         response.set_cookie(session_key, session_value, httponly=True)
