@@ -1286,12 +1286,10 @@ def oauth_callback(request):
 
 def fetch_avatar_from_42(user, user_data):
     path = os.path.join("media", "avatars", f"{user.id}_avatar.jpg")
-    urllib.request.urlretrieve(user_data["image"]["link"], path)
-    with open(path, "rb") as file:
-        user.player.avatar.save(f"{user.id}_avatar.jpg", File(file), save=True)
-    #image = Image.open(f"{user.username}_avatar.jpg")
-    #image.save(f"/media/{user.id}_avatar.png")
-    #user.player.avatar.save(f"{user.id}_avatar.png", f"{user.username}_avatar.png", save=True)
+    try:
+        urllib.request.urlretrieve(user_data["image"]["link"], path)
+        with open(path, "rb") as file:
+            user.player.avatar.save(f"{user.id}_avatar.jpg", File(file), save=True)
 
 def fetch_42_user_data(access_token):
     api_url = os.environ.get("OAUTH_API_URL")
