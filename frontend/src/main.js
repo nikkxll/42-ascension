@@ -87,34 +87,44 @@ let updateOuterBoxes = (element, row) => {
 };
 
 const GameType = {
-    Duo: 0,
-    Cup: 1,
-    Quatro: 2,
-    AiAi: 3
+    Cup: 0,
+  //  CupMatch: 1,
+    Duo: 2,
+    Quatro: 4,
+    AiAi: 5  //this is testing mode
 };
-function gameTypeSelector(){
+async function gameTypeSelector(){
     let ai = 0;
     let matchNumber = 0;
     if (
-        window.singleGameState && 
+        window.singleGameState &&
         typeof window.singleGameState === "object" &&
         Object.keys(window.singleGameState).length === 0
     ) {
-        // if (window.tournamentState 
-        //     && window.tournamentState.matches 
-        //     && window.tournamentState.matches.length > 0
+        // if tournament is created than do the last unfinished match
+        if (!window.tournamentState.data){
+            let userIds = window.tournamentState.userIds;
+            let body = {
+                "name": window.tournamentState.name,
+                "userIds": userIds
+            }
+            await requestAddCup(body);
+        }
+
+    // TODO = find the last match that is not finished
+        let matches = window.tournamentState.data.matches;
         matchNumber = 0;
-        // if (window.tournamentState.matches[0].status == 0)
-        //     matchNumber = 0;
-        // else if (window.tournamentState.matches[1].status == 0)
-        //     matchNumber = 1;
-        // else if (window.tournamentState.matches[2].status == 0)
-        //     matchNumber = 2;
-        // let match = window.tournamentState.matches[matchNumber];
-        // if (match.player1 == window.ai_id || match.player2 == window.ai_id)
-        //     ai = 1;
-        if (window.tournamentState.userIds.includes(window.ai_id))
-            ai = 1;
+        for (matchNumber < matches.length; matchNumber++;){
+            console.log("matchNumber=", matchNumber, "score=", matches[matchNumber].score);
+            if (matches[matchNumber].score == null){
+                break;
+            }
+        }
+        if (matches.length == 2 && matchNumber == 2){
+            console.log("TODO: fetch the last match creation.");
+        }
+        console.log("Match number=", matchNumber, "to be started.");
+        ai = 0;
         return {gameType: GameType.Cup, ai, matchNumber};
     }
     //else if (window.singleGameState.player3 && window.singleGameState.player4) {
@@ -194,8 +204,8 @@ const requestAddCup = async (data) => {
             body: JSON.stringify(data)
         })
         console.log("response=", response);
-        //if (!response.ok)
-        //    throw new Error("HTTP error, status = " + response.status);
+        if (!response.ok)
+           throw new Error("HTTP error, status = " + response.status);
         const json = await response.json().then(
             data => {
                 console.log(data);
@@ -204,7 +214,6 @@ const requestAddCup = async (data) => {
                 return data;
             }
         );
-
     } catch (error) {
       console.error(error.message);
     }
@@ -242,30 +251,14 @@ const removeGameWindow = (game) => {
 }
 
 window.startGame = (aiNum) => {
-    console.log("Start game singleGameState=", window.singleGameState);
-    console.log("Start game tournamentState=", window.tournamentState);
+    console.log("Starting game with SingleGameState=", window.singleGameState);
+    console.log("Starting game with  tournamentState=", window.tournamentState);
     const {gameType, ai, matchNumber} = gameTypeSelector();
     console.log("gameType=", gameType, "ai=", ai, "matchNumber=", matchNumber);
-    console.log("state of game", window.singleGameState);
     if (GameType.Cup == gameType) // create tournament
     {
-        let userIds = window.tournamentState.userIds;
-        // if (!userIds){  //this is old format to be removed
-        //     userIds = [
-        //         window.tournamentState.matches[0].player1,
-        //         window.tournamentState.matches[0].player2,
-        //         window.tournamentState.matches[1].player1,
-        //         window.tournamentState.matches[1].player2
-        //     ];
-        // }
-        let body = {
-            "name": window.tournamentState.name,
-            "userIds": userIds
-        }
-        requestAddCup(body);
+       // DO ?   
     }
-
-    
     window.gameStoped = false;
     let game = {  // this is the game object that will be used to accumulate all the game data.
         keyDownAction: null, 
