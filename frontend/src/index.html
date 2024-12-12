@@ -99,14 +99,20 @@
             <a class="navigation-header-item" onclick="goToHomeNavigation()">
               HOME
             </a>
-            <a class="navigation-header-item" href="https://github.com/DaveeHorvath/ascension">
+            <a
+              class="navigation-header-item"
+              href="https://github.com/DaveeHorvath/ascension"
+              onclick="return confirmRedirect(event, 'You will be redirected to the Github page. Are you sure?')"
+            >
               ABOUT
             </a>
-            <a href="/admin"
+            <a
+              href="/admin"
               class="navigation-header-item"
+              onclick="return confirmRedirect(event, 'You will be redirected to the Django Admin page. Are you sure?')"
             >
               SETTINGS
-          </a>
+            </a>
           </div>
         </div>
       </div>
@@ -139,18 +145,32 @@
             <h2 class="tournament-title">Tournaments</h2>
             <div class="carousel" id="tournament-carousel">
               <div class="tournament-content carousel-inner">
-                <div class="tournament-details">
-                </div>
+                <div class="tournament-details"></div>
               </div>
-              <button class="carousel-control-prev" type="button" data-bs-target="#tournament-carousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <button
+                class="carousel-control-prev"
+                type="button"
+                data-bs-target="#tournament-carousel"
+                data-bs-slide="prev"
+              >
+                <span
+                  class="carousel-control-prev-icon"
+                  aria-hidden="true"
+                ></span>
                 <span class="visually-hidden">Previous</span>
               </button>
-              <button class="carousel-control-next" type="button" data-bs-target="#tournament-carousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <button
+                class="carousel-control-next"
+                type="button"
+                data-bs-target="#tournament-carousel"
+                data-bs-slide="next"
+              >
+                <span
+                  class="carousel-control-next-icon"
+                  aria-hidden="true"
+                ></span>
                 <span class="visually-hidden">Next</span>
               </button>
-            
             </div>
           </article>
         </div>
@@ -223,7 +243,12 @@
 
             <div class="prompt-not-a-member">
               <span class="prompt-text">Not a member yet?</span>
-              <a href="#" class="reg-link" onclick="goToSignup(); updateHistory(goToSignup);">Sign up</a>
+              <a
+                href="#"
+                class="reg-link"
+                onclick="goToSignup(); updateHistory(goToSignup);"
+                >Sign up</a
+              >
             </div>
 
             <hr class="divider" />
@@ -289,7 +314,12 @@
 
             <div class="prompt">
               <span class="prompt-text">Already have an account?</span>
-              <a href="#" class="reg-link" onclick="goToSignin(); updateHistory(goToSignin);">Sign in</a>
+              <a
+                href="#"
+                class="reg-link"
+                onclick="goToSignin(); updateHistory(goToSignin);"
+                >Sign in</a
+              >
             </div>
 
             <hr class="divider" />
@@ -384,6 +414,7 @@
             </ul>
           </div>
         </div>
+      </div>
     </section>
 
     <!-- Single game -->
@@ -484,13 +515,17 @@
 
     <!-- Profile window (WIP) -->
 
-    <section id="profile" style="display: none;">
+    <section id="profile" style="display: none">
       <div class="profile-box box">
         <div class="profileLeft">
           <div id="person">
-            <img id="person-avatar" alt="avatar" src="https://neweralive.na/wp-content/uploads/2024/06/lloyd-sikeba.jpg">
+            <img
+              id="person-avatar"
+              alt="avatar"
+              src="https://neweralive.na/wp-content/uploads/2024/06/lloyd-sikeba.jpg"
+            />
             <form id="newAvatarForm">
-              <input type="file" accept="jpg png" id="newAvatar">
+              <input type="file" accept="jpg png" id="newAvatar" />
             </form>
             <h1 id="person-name">Blake</h1>
             <p id="person-stats">stats go here with history</p>
@@ -650,10 +685,7 @@
 
           <!-- Tournament Final -->
 
-          <div
-            class="tournament-match-container"
-            id="finalContent"
-          ></div>
+          <div class="tournament-match-container" id="finalContent"></div>
 
           <!-- Footer buttons -->
 
@@ -704,7 +736,7 @@
       </div>
     </div>
     <script>
-      history.replaceState({view: "lobby"}, "")
+      history.replaceState({ view: "lobby" }, "");
       /* Collection of all the buttons that transition the views */
       /* adding history, that is stored in the urlparameters */
       const views = {
@@ -721,16 +753,15 @@
       };
 
       window.addEventListener("popstate", (e) => {
-        e.preventDefault()
-        if (e.state)
-          views[e.state["view"]]();
+        e.preventDefault();
+        if (e.state) views[e.state["view"]]();
         window.gameStoped = true;
       });
 
       const updateHistory = (f) => {
         Object.entries(views).forEach((key) => {
           if (key[1] == f) {
-            history.pushState({ view: key[0] },null, "");
+            history.pushState({ view: key[0] }, null, "");
             console.log(key[0]);
           }
         });
@@ -769,9 +800,7 @@
       const secondSemifinalContent = document.getElementById(
         "secondSemifinalContent"
       );
-      const finalContent = document.getElementById(
-        "finalContent"
-      );
+      const finalContent = document.getElementById("finalContent");
       const final = document.getElementById("final");
       // const generateSFButton = document.getElementById("generateSF");
       const startFirstSemifinalButton = document.getElementById("startFirstSF");
@@ -804,8 +833,8 @@
         signup.style.display = "none";
         matchView.style.display = "none";
         homeRight.style.display = "grid";
-        gameStart.style.display = "none"
-        otherGameStart.style.display = "none"
+        gameStart.style.display = "none";
+        otherGameStart.style.display = "none";
       }
 
       async function goToMatchView(matchId) {
@@ -816,7 +845,7 @@
         matchView.style.display = "block";
         homeRight.style.display = "none";
         updateHistory(goToMatchView);
-    		await renderDetailedMatchStats(matchId);
+        await renderDetailedMatchStats(matchId);
       }
 
       function goToHomeRight() {
@@ -832,7 +861,7 @@
         lobby.style.display = "block";
         gameStart.style.display = "none";
         // singleGameSettings.style.display = "none";
-        otherGameStart.style.display = "none"
+        otherGameStart.style.display = "none";
         tournament.style.display = "none";
         profile.style.display = "none";
         tournamentSetup.style.display = "none";
@@ -896,7 +925,6 @@
         //   card.classList.remove("selected");
         //   card.classList.remove("shaded");
         // });
-        
       }
 
       function goToLoadedTournament(id) {
@@ -930,7 +958,6 @@
         gameStart.style.display = "none";
         tournament.style.display = "none";
         profile.style.display = "block";
-
       }
 
       function goTo2v2GameStart() {
@@ -947,7 +974,7 @@
         homeRight.style.display = "grid";
         signin.style.display = "none";
         signup.style.display = "none";
-		    matchView.style.display = "none";
+        matchView.style.display = "none";
         updateHistory(goToHomeNavigation);
       }
 
@@ -1050,7 +1077,7 @@
           ".single-game-buttons.start"
         );
         let leftSelectedIndex = null;
-        let leftSelected = []
+        let leftSelected = [];
         let leftPlayersSelected = 0;
         let playersSelected = 0;
 
@@ -1065,8 +1092,8 @@
         function resetAll(leftPlayers, rightPlayers) {
           playersSelected = 0;
           leftSelectedIndex = null;
-          leftPlayersSelected = 0
-          leftSelected = []
+          leftPlayersSelected = 0;
+          leftSelected = [];
           leftPlayers.forEach((p) => {
             p.classList.remove("player-disabled", "player-selected");
             p.classList.add("player-selectable");
@@ -1137,22 +1164,22 @@
                   rightPlayer.classList.add("player-disabled");
                 }
               });
-              if (window.singleGameState.userIds)
-              {
+              if (window.singleGameState.userIds) {
+                if (index > window.state["loggedInUsers"].length - 1)
+                  window.singleGameState["userIds"][0] = 1;
+                else
+                  window.singleGameState["userIds"][0] =
+                    window.state["loggedInUsers"][index].id;
+              } else {
+                if (index > window.state["loggedInUsers"].length - 1)
+                  window.singleGameState["userIds"] = [1, -1];
+                else
+                  window.singleGameState["userIds"] = [
+                    window.state["loggedInUsers"][index].id,
+                    -1,
+                  ];
+              }
 
-                if (index > window.state["loggedInUsers"].length - 1)
-                  window.singleGameState["userIds"][0] = 1
-                else
-                  window.singleGameState["userIds"][0] = window.state["loggedInUsers"][index].id
-              }
-              else
-              {
-                if (index > window.state["loggedInUsers"].length - 1)
-                  window.singleGameState["userIds"] = [1, -1]
-                else
-                  window.singleGameState["userIds"] = [window.state["loggedInUsers"][index].id, -1]
-              }
-            
               updateStartButton();
             });
           });
@@ -1176,21 +1203,21 @@
                 player.classList.remove("player-disabled");
                 player.classList.add("player-selected");
 
-                if (window.singleGameState.userIds)
-              {
-
-                if (index > window.state["loggedInUsers"].length - 1)
-                  window.singleGameState["userIds"][1] = 1
-                else
-                  window.singleGameState["userIds"][1] = window.state["loggedInUsers"][index].id
-              }
-              else
-              {
-                if (index > window.state["loggedInUsers"].length - 1)
-                  window.singleGameState["userIds"] = [-1,1]
-                else
-                  window.singleGameState["userIds"] = [-1, window.state["loggedInUsers"][index].id]
-              }
+                if (window.singleGameState.userIds) {
+                  if (index > window.state["loggedInUsers"].length - 1)
+                    window.singleGameState["userIds"][1] = 1;
+                  else
+                    window.singleGameState["userIds"][1] =
+                      window.state["loggedInUsers"][index].id;
+                } else {
+                  if (index > window.state["loggedInUsers"].length - 1)
+                    window.singleGameState["userIds"] = [-1, 1];
+                  else
+                    window.singleGameState["userIds"] = [
+                      -1,
+                      window.state["loggedInUsers"][index].id,
+                    ];
+                }
 
                 updateStartButton();
               }
@@ -1232,7 +1259,8 @@
           leftPlayers[randomLeftIndex].click();
 
           const randomLeftOtherIndex = Math.floor(
-            (randomLeftIndex + Math.random() * (leftPlayers.length - 1) + 1) % leftPlayers.length
+            (randomLeftIndex + Math.random() * (leftPlayers.length - 1) + 1) %
+              leftPlayers.length
           );
           leftPlayers[randomLeftOtherIndex].click();
         }
@@ -1242,23 +1270,23 @@
             player.classList.add("player-selectable");
 
             player.addEventListener("click", () => {
-              if (leftSelected.includes(index)) {}
-              else if (leftPlayersSelected < 2)
-              {
+              if (leftSelected.includes(index)) {
+              } else if (leftPlayersSelected < 2) {
                 leftSelected.push(index);
                 leftPlayersSelected++;
-                player.classList.add("player-selected")
-                player.classList.remove("player-selectable")
+                player.classList.add("player-selected");
+                player.classList.remove("player-selectable");
               }
-              if (leftPlayersSelected == 2)
-              {
-                const allIds = window.state.loggedInUsers.map((p) => p.id)
-                leftSelected.sort()
-                window.singleGameState["userIds"] = [allIds[leftSelected[0]], allIds[leftSelected[1]]]
-                for (let i = 0; i < 4; i++)
-                {
-                  if (!leftSelected.includes(i))  
-                  window.singleGameState["userIds"].push(allIds[i])
+              if (leftPlayersSelected == 2) {
+                const allIds = window.state.loggedInUsers.map((p) => p.id);
+                leftSelected.sort();
+                window.singleGameState["userIds"] = [
+                  allIds[leftSelected[0]],
+                  allIds[leftSelected[1]],
+                ];
+                for (let i = 0; i < 4; i++) {
+                  if (!leftSelected.includes(i))
+                    window.singleGameState["userIds"].push(allIds[i]);
                 }
               }
 
@@ -1273,9 +1301,8 @@
                 // Enable only appropriate right players
                 if (!leftSelected.includes(rightIndex)) {
                   rightPlayer.classList.add("player-selectable");
-                  if (leftPlayersSelected === 2)
-                  {
-                    leftPlayers[rightIndex].classList.add("player-disabled")
+                  if (leftPlayersSelected === 2) {
+                    leftPlayers[rightIndex].classList.add("player-disabled");
                     rightPlayer.classList.add("player-selected");
                   }
                 } else {
@@ -1289,7 +1316,8 @@
 
         function updateStartButton2v2() {
           startButton2v2.disabled = leftPlayersSelected !== 2;
-          startButton2v2.style.opacity = leftPlayersSelected === 2 ? "1" : "0.5";
+          startButton2v2.style.opacity =
+            leftPlayersSelected === 2 ? "1" : "0.5";
           startButton2v2.style.cursor =
             leftPlayersSelected === 2 ? "pointer" : "not-allowed";
         }
@@ -1323,7 +1351,11 @@
         observer2v2.observe(rightGrid2v2, { childList: true, subtree: true });
       });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
 
     <!-- Bootstrap parts for profile carousel -->
     <!-- <script
@@ -1333,50 +1365,50 @@
     ></script> -->
     <script>
       // player profile functions
-      const updateToProfile = async (index) =>
-      {
+      const updateToProfile = async (index) => {
         const userId = window.state["loggedInUsers"][index].id;
-        window.currentUserID = index
+        window.currentUserID = index;
         try {
           const response = await fetch(`/api/players/${userId}/`, {
-            method: "GET"
+            method: "GET",
           });
-          
+
           if (!response.ok) {
             throw new Error("Failed to get user info");
           }
-          const json = await response.json()
-          console.log(json.data.avatarUrl)
-          document.getElementById("person-avatar").src = json.data.avatarUrl || "./assets/default_avatar.png"
-          document.getElementById("person-name").innerText = json.data.displayName
+          const json = await response.json();
+          console.log(json.data.avatarUrl);
+          document.getElementById("person-avatar").src =
+            json.data.avatarUrl || "./assets/default_avatar.png";
+          document.getElementById("person-name").innerText =
+            json.data.displayName;
         } catch (error) {
           console.error(error.message);
         }
 
         try {
           const response = await fetch(`/api/players/${userId}/matches`, {
-            method: "GET"
+            method: "GET",
           });
-          
+
           if (!response.ok) {
-            goToHome()
+            goToHome();
             throw new Error("Failed to get user matches");
           }
-          const json = await response.json()
-          const matches = document.getElementById("person-stats")
+          const json = await response.json();
+          const matches = document.getElementById("person-stats");
           if (json.data.matches.length == 0)
-            matches.innerText = "No Matches yet"
-          else
-          {
-            matches.innerHTML = ""
+            matches.innerText = "No Matches yet";
+          else {
+            matches.innerHTML = "";
             json.data.matches.forEach((match) => {
               let content = `
               <div>
                 ${match.players[0].username} : ${match.players[1].username} - ${match.score}
               </div>
-              `
-              matches.innerHTML += content
-            })
+              `;
+              matches.innerHTML += content;
+            });
           }
         } catch (error) {
           console.error(error.message);
@@ -1384,150 +1416,181 @@
 
         try {
           const response = await fetch(`/api/players/`, {
-            method: "GET"
+            method: "GET",
           });
-          
+
           if (!response.ok) {
-            goToHome()
+            goToHome();
             throw new Error("Failed to get potential friends");
           }
 
-          const friendsRequest = await fetch(`/api/players/${userId}/friends/`, {
-            method: "GET"
-          });
-          
+          const friendsRequest = await fetch(
+            `/api/players/${userId}/friends/`,
+            {
+              method: "GET",
+            }
+          );
+
           if (!response.ok) {
-            goToHome()
+            goToHome();
             throw new Error("Failed to get actual friends");
           }
 
-          const friends = await friendsRequest.json()
+          const friends = await friendsRequest.json();
 
-          const json = await response.json()
-          const players = document.getElementById("friends")
+          const json = await response.json();
+          const players = document.getElementById("friends");
           if (json.data.players.length == 0)
-            matches.innerText = "Noone else exists"
-          else
-          {
-            players.innerHTML = ""
+            matches.innerText = "Noone else exists";
+          else {
+            players.innerHTML = "";
             json.data.players.forEach((player, index) => {
-              let friend_marker = friends.data.friends.find((friend) => friend.id == player.id)
+              let friend_marker = friends.data.friends.find(
+                (friend) => friend.id == player.id
+              );
               let status = "";
 
-              if (friend_marker)
-              {
+              if (friend_marker) {
                 if (friend_marker.complete)
-                  status = "Status: " + friend_marker.status
+                  status = "Status: " + friend_marker.status;
                 else if (friend_marker.forMe)
                   status = `
                     <button onclick='approveFriendship(${player.id})'>Approve</button>
                     <button onclick='denyFriendship(${player.id})'>Deny</button>
-                  `
+                  `;
                 else if (friend_marker.forOther)
-                  status = "Waiting on approval of friendship"
-              }
-              else
-              {
-                status = "<button onclick='requestFriendship(" + player.id + ")'>Request Friendship</button>"
+                  status = "Waiting on approval of friendship";
+              } else {
+                status =
+                  "<button onclick='requestFriendship(" +
+                  player.id +
+                  ")'>Request Friendship</button>";
               }
 
               let content = `
               <div class="carousel-item ${index == 0 ? "active" : ""}">
-                <img class="friend-avatar" src="${player.avatarUrl || "./assets/default_avatar.png"}">
-                <h1 class="friend-name">${player.displayName || player.username}</h1>
+                <img class="friend-avatar" src="${
+                  player.avatarUrl || "./assets/default_avatar.png"
+                }">
+                <h1 class="friend-name">${
+                  player.displayName || player.username
+                }</h1>
                 <div class="friend-status">
                   ${status}
                 </div>
               </div>
-              `
-              if (player.id != userId)
-                players.innerHTML += content
-            })
+              `;
+              if (player.id != userId) players.innerHTML += content;
+            });
           }
         } catch (error) {
           console.error(error.message);
         }
-        goToProfile()
-      }
+        goToProfile();
+      };
 
       document.getElementById("newAvatar").onchange = async (e) => {
-        try{
-          const response = await fetch(`/api/players/${window.state["loggedInUsers"][window.currentUserID].id}/avatar/`, {
-            method:"POST",
-            body: e.target.files[0]
-          })
-          if (!response.ok)
-            alert("Failed to upload")
-        } catch(error){
-          alert(error)
+        try {
+          const response = await fetch(
+            `/api/players/${
+              window.state["loggedInUsers"][window.currentUserID].id
+            }/avatar/`,
+            {
+              method: "POST",
+              body: e.target.files[0],
+            }
+          );
+          if (!response.ok) alert("Failed to upload");
+        } catch (error) {
+          alert(error);
           return;
         }
-        alert("Succesful file upload")
-        console.log(window.currentUserID)
-        await updateToProfile(window.currentUserID)
-      }
+        alert("Succesful file upload");
+        console.log(window.currentUserID);
+        await updateToProfile(window.currentUserID);
+      };
     </script>
     <script>
       const requestFriendship = async (id) => {
-        try{
-          const response = await fetch(`/api/players/${window.state["loggedInUsers"][window.currentUserID].id}/friends/`, {
-            method:"POST",
-            body: JSON.stringify({friendUserId: id})
-          })
-          if (!response.ok)
-            alert("Failed to send request")
-        } catch(error){
-          alert(error)
+        try {
+          const response = await fetch(
+            `/api/players/${
+              window.state["loggedInUsers"][window.currentUserID].id
+            }/friends/`,
+            {
+              method: "POST",
+              body: JSON.stringify({ friendUserId: id }),
+            }
+          );
+          if (!response.ok) alert("Failed to send request");
+        } catch (error) {
+          alert(error);
           return;
         }
-        await updateToProfile(window.currentUserID)
-      }
+        await updateToProfile(window.currentUserID);
+      };
 
       const approveFriendship = async (id) => {
-        try{
-          const response = await fetch(`/api/players/${window.state["loggedInUsers"][window.currentUserID].id}/friends/manage/`, {
-            method:"POST",
-            body: JSON.stringify({friendUserId: id, action: "approve"})
-          })
-          if (!response.ok)
-            alert("Failed to approve")
-        } catch(error){
-          alert(error)
+        try {
+          const response = await fetch(
+            `/api/players/${
+              window.state["loggedInUsers"][window.currentUserID].id
+            }/friends/manage/`,
+            {
+              method: "POST",
+              body: JSON.stringify({ friendUserId: id, action: "approve" }),
+            }
+          );
+          if (!response.ok) alert("Failed to approve");
+        } catch (error) {
+          alert(error);
           return;
         }
-        await updateToProfile(window.currentUserID)
-      }
+        await updateToProfile(window.currentUserID);
+      };
 
       const denyFriendship = async (id) => {
-        try{
-          const response = await fetch(`/api/players/${window.state["loggedInUsers"][window.currentUserID].id}/friends/manage/`, {
-            method:"POST",
-            body: JSON.stringify({friendUserId: id, action: "approve"})
-          })
-          if (!response.ok)
-            alert("Failed to deny")
-        } catch(error){
-          alert(error)
+        try {
+          const response = await fetch(
+            `/api/players/${
+              window.state["loggedInUsers"][window.currentUserID].id
+            }/friends/manage/`,
+            {
+              method: "POST",
+              body: JSON.stringify({ friendUserId: id, action: "approve" }),
+            }
+          );
+          if (!response.ok) alert("Failed to deny");
+        } catch (error) {
+          alert(error);
           return;
         }
-        await updateToProfile(window.currentUserID)
-      }
+        await updateToProfile(window.currentUserID);
+      };
     </script>
     <script>
       function open42Auth() {
-            // Popup window configuration
-            const width = 600;
-            const height = 700;
-            const left = (window.innerWidth - width) / 2;
-            const top = (window.innerHeight - height) / 2;
+        // Popup window configuration
+        const width = 600;
+        const height = 700;
+        const left = (window.innerWidth - width) / 2;
+        const top = (window.innerHeight - height) / 2;
 
-            // Open popup to your Django redirect view
-            const popup = window.open(
-                'https://localhost:8443/api/oauth/redirect',  // This should match your Django URL pattern
-                '42 Authorization',
-            );
+        // Open popup to your Django redirect view
+        const popup = window.open(
+          "https://localhost:8443/api/oauth/redirect", // This should match your Django URL pattern
+          "42 Authorization"
+        );
       }
-
+    </script>
+    <script>
+      function confirmRedirect(event, message) {
+        if (!confirm(message)) {
+          event.preventDefault();
+          return false;
+        }
+        return true;
+      }
     </script>
   </body>
 </html>
