@@ -158,6 +158,9 @@ class Match(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ["created_at"]
+
     # BUG HERE:
     def __str__(self):
         is_match_of_4 = self.player3 and self.player4
