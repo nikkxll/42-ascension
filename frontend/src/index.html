@@ -519,6 +519,7 @@
       <div class="profile-box box">
         <div class="profileLeft">
           <div id="person">
+            <h1 id="person-name" style="font-size: 52px">Blake</h1>
             <img
               id="person-avatar"
               alt="avatar"
@@ -527,7 +528,7 @@
             <form id="newAvatarForm">
               <input type="file" accept="jpg png" id="newAvatar" />
             </form>
-            <h1 id="person-name">Blake</h1>
+            <h1>Recent matches</h1>
             <p id="person-stats">stats go here with history</p>
           </div>
         </div>
@@ -565,8 +566,8 @@
             </button>
           </div>
         </div>
-        <button onclick="goToHome()" style="z-index: 3; position: absolute">
-          go back
+        <button onclick="goToHome()" class="profile-back-button">
+          Back to menu
         </button>
       </div>
     </section>
@@ -1397,14 +1398,26 @@
           }
           const json = await response.json();
           const matches = document.getElementById("person-stats");
-          if (json.data.matches.length == 0)
+          if (json.data.matches?.length == 0)
             matches.innerText = "No Matches yet";
           else {
             matches.innerHTML = "";
-            json.data.matches.forEach((match) => {
+            console.log(json.data.matches);
+            json.data.matches?.slice(0, 5).forEach((match) => {
               let content = `
-              <div>
-                ${match.players[0].username} : ${match.players[1].username} - ${match.score}
+              <div class='profile-games-list'">
+                <div class=${
+                  parseInt(match.score[0]) > parseInt(match.score[1])
+                    ? "winner-name"
+                    : ""
+                }>${match.players[0].username}</div>
+                <div>vs</div>
+                <div class=${
+                  parseInt(match.score[1]) > parseInt(match.score[0])
+                    ? "winner-name"
+                    : ""
+                }>${match.players[1].username}</div>
+                <div>[${match.score[0]}:${match.score[1]}]</div>
               </div>
               `;
               matches.innerHTML += content;

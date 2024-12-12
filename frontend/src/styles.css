@@ -62,7 +62,7 @@ h2 {
   position: absolute;
   left: 0;
   width: 50%;
-  height: 100%;
+  height: 90%;
   display: flex;
   /* display: none; */
   align-items: center;
@@ -119,8 +119,8 @@ h2 {
 }
 
 #person-avatar {
-  width: 12vw;
-  height: 12vw;
+  width: 10vw;
+  height: 10vw;
   border-radius: 10vw;
   border: 3px solid #a7a7a7;
   margin-bottom: 10%;
@@ -1588,6 +1588,30 @@ section {
   font-family: "Acme", sans-serif;
   font-size: 22px;
   color: #fff;
+}
+
+.profile-back-button {
+  position: absolute;
+  top: 90vh;
+  left: 5vw;
+  border-radius: 20px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font: 400 26px Acme, sans-serif;
+  padding: 12px 84px 12px;
+  margin: 0px auto 32px;
+  transition: box-shadow 0.3s, transform 0.3s;
+  background-color: rgba(255, 0, 0, 0.25);
+}
+
+.profile-games-list {
+  margin-top: 5%;
+  font: 400 24px Acme, sans-serif;
+  display: flex;
+  flex-direction: row;
+  gap: 3%;
+  justify-content: center;
 }
 
 /* Profile page container. Friends list */
