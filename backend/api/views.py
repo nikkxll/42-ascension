@@ -1268,9 +1268,8 @@ def oauth_callback(request):
         except IntegrityError:
             # Get user if already exists
             user = User.objects.filter(username=user_data["login"])[0]
-        # Create a unique session key, only if the registered user doesn't have a password set
+        # Create a unique session key, only if the registered user doesn't have a password set, otherwise only return the response that closes the popup
         if user.has_usable_password() == False:
-            print("got here and authenticated session")
             session_key = f"session_{user.id}"
             # Encrypt user session data
             session_value = create_encrypted_session_value(
@@ -1280,9 +1279,9 @@ def oauth_callback(request):
                     "is_authenticated": True,
                 }
             )
+        #close popup
         response = HttpResponse("<html><script>window.close()</script></html>")
         response.set_cookie(session_key, session_value, httponly=True)
-        # response.set_cookie(session_key, session_value, httponly=True, secure=True) // secure will work with HTTPS only
         return response
 
 def fetch_avatar_from_42(user, user_data):
