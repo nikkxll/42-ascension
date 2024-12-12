@@ -15,6 +15,29 @@ body {
   height: 90%;
 }
 
+h1 {
+  display: block;
+  font-size: 2em;
+  margin-block-start: 0.67em;
+  margin-block-end: 0.67em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  font-weight: bold;
+  unicode-bidi: isolate;
+}
+
+h2 {
+  display: block;
+  font-size: 1.5em;
+  margin-block-start: 0.83em;
+  margin-block-end: 0.83em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  margin-bottom: 0.9rem;
+  font-weight: bold;
+  unicode-bidi: isolate;
+}
+
 .box {
   background-color: rgba(1, 1, 1, 0.3);
   /* border: 1px solid red; */
@@ -56,14 +79,14 @@ body {
   align-items: center;
   justify-content: space-around;
 }
-.carousel {
+#carouselExampleFade {
   text-align: center;
   display: inline-block;
   width: 80%;
   height: 80%;
 }
 
-.carousel-item {
+.carousel-item.friend {
   display: inline-block;
   border-radius: 45px;
   background-color: rgba(18, 16, 16, 0.25);
@@ -74,6 +97,7 @@ body {
   height: 100%;
   margin-left: 15%;
 }
+
 .carousel-title {
   margin-top: -56px;
 }
@@ -129,7 +153,7 @@ section {
   display: flex;
   flex-direction: column;
   width: 100%;
-  gap: 25px;
+  gap: 20px;
 }
 .signup {
   position: absolute;
@@ -309,6 +333,7 @@ section {
 .form-input {
   position: relative;
   border-radius: 20px;
+  box-sizing: content-box;
   display: flex;
   justify-content: center;
   background-color: rgba(34, 34, 34, 0.25);
@@ -656,7 +681,6 @@ section {
   align-self: center;
   font: 36px "Keania One", sans-serif;
   margin-top: 30px;
-  margin-bottom: 25px;
 }
 
 .tournament-content {
@@ -680,7 +704,7 @@ section {
   text-shadow: 0 4px 4px rgba(18, 16, 16, 0.25);
   align-self: stretch;
   flex-grow: 1;
-  width: 248px;
+  width: 100%;
 }
 
 .status-completed {
@@ -697,6 +721,17 @@ section {
 
 .tournament-link {
   color: #fff;
+}
+
+.tournament-block {
+  width: 70%;
+  margin: 0 20%;
+  cursor: pointer;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+
+.tournament-block:hover {
+  transform: translateY(-3px);
 }
 
 /* Match statistics container */
@@ -1169,7 +1204,7 @@ section {
 
 .tournament-main {
   position: absolute;
-  top: 2vh;
+  top: 6vh;
   left: 0;
   width: 100vw;
   height: 99.5vh;
@@ -1197,7 +1232,7 @@ section {
 .tournament-top-right {
   display: flex;
   flex-direction: column;
-  margin-top: 1.7%;
+  margin-top: 1.8%;
 }
 .tournament-round {
   border-radius: 45px;
@@ -1214,6 +1249,7 @@ section {
   font-family: "Keania One";
   font-size: 64px;
   padding: 7.2%;
+  width: 86.9%;
   margin: 10px 0 10px 0;
 }
 .tournament-name {
@@ -1256,7 +1292,7 @@ section {
   transition: box-shadow 0.3s, transform 0.3s;
 }
 .tournament-buttons.lobby {
-  margin: 24px auto 2%;
+  margin: 3% auto 2%;
 }
 .tournament-buttons.back-to-menu {
   background-color: rgba(255, 0, 0, 0.25);
@@ -1275,13 +1311,13 @@ section {
   font-size: 26px;
   transition: box-shadow 0.3s, transform 0.3s;
 }
-.tournament-setup-buttons.generate:hover {
+.tournament-buttons.generate:hover {
   transform: translateY(-3px);
 }
-.tournament-setup-buttons.back-to-menu:hover {
+.tournament-buttons.back-to-menu:hover {
   transform: translateY(-3px);
 }
-.tournament-setup-buttons.start-sf-1:hover {
+.tournament-buttons.start-sf-1:hover {
   transform: translateY(-3px);
 }
 .tournament-game-player-card-inner {
@@ -1291,7 +1327,32 @@ section {
   width: 100%;
   flex-direction: column;
   align-items: center;
+}
+
+.tournament-game-player-card-inner.normal {
   border: 1px solid #a7a7a7;
+}
+
+.tournament-game-player-card-inner.winner {
+  border: 1px solid #d9cb00;
+}
+
+.tournament-match-left-score {
+  font-size: 50px;
+  margin-top: 10px;
+}
+
+.tournament-match-right-score {
+  font-size: 50px;
+  margin-top: 10px;
+}
+
+.match-winner-text {
+  color: #00ff37;
+}
+
+.match-loser-text {
+  color: #ff0000;
 }
 
 /* Tournament match container */

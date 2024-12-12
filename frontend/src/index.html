@@ -21,6 +21,12 @@
       crossorigin="anonymous"
     /> -->
 
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
     <link href="./styles.css" rel="stylesheet" />
     <script type="importmap">
       {
@@ -30,6 +36,7 @@
         }
       }
     </script>
+
     <script type="module" src="./base.js"></script>
     <script type="module" src="./main.js"></script>
     <script src="./js/initialFetch.js"></script>
@@ -130,37 +137,20 @@
         <div class="tournament-container">
           <article class="tournament-card">
             <h2 class="tournament-title">Tournaments</h2>
-            <div class="tournament-content">
-              <a href="#">
-                <img
-                  loading="lazy"
-                  src="./assets/left_triangle_arrow.svg"
-                  alt=""
-                  class="tournament-icon"
-                />
-              </a>
-              <div class="tournament-details">
-                <a href="#" class="tournament-link"> Transcendence Cup 2024 </a>
-                <br />
-                Status: <span class="status-completed">completed</span>
-                <br />
-                Winner: Max
-                <br />
-                Runner-up: Alex
-                <br />
-                Created: <span class="date-text">25/02/2024</span>
-                <br />
-                Ended: <span class="date-text">27/02/2024</span>
-                <br />
+            <div class="carousel" id="tournament-carousel">
+              <div class="tournament-content carousel-inner">
+                <div class="tournament-details">
+                </div>
               </div>
-              <a href="#">
-                <img
-                  loading="lazy"
-                  src="./assets/right_triangle_arrow.svg"
-                  alt=""
-                  class="tournament-icon"
-                />
-              </a>
+              <button class="carousel-control-prev" type="button" data-bs-target="#tournament-carousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#tournament-carousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </button>
+            
             </div>
           </article>
         </div>
@@ -190,7 +180,7 @@
             tabindex="0"
             aria-label="Create Single Game"
           >
-            CREATE 4-PONG TOURNAMENT
+            CREATE 2V2 GAME
           </button>
         </div>
       </div>
@@ -510,9 +500,9 @@
           <div id="carouselExampleFade" class="carousel slide carousel-fade">
             <h1 class="carousel-title">Friends</h1>
             <div class="carousel-inner" id="friends">
-              <div class="carousel-item active">a</div>
-              <div class="carousel-item">b</div>
-              <div class="carousel-item">c</div>
+              <div class="carousel-item friend active">a</div>
+              <div class="carousel-item friend">b</div>
+              <div class="carousel-item friend">c</div>
             </div>
             <button
               class="carousel-control-prev"
@@ -635,7 +625,7 @@
       <div class="tournament-top">
         <div class="tournament-top-left">
           <div class="tournament-name" id="tournamentTitle">
-            <h1 class="tournament-name-text">Transcendence Cup 2024</h1>
+            <!-- <h1 class="tournament-name-text">Transcendence Cup 2024</h1> -->
           </div>
           <div class="tournament-grid"></div>
         </div>
@@ -656,6 +646,13 @@
           <div
             class="tournament-match-container"
             id="secondSemifinalContent"
+          ></div>
+
+          <!-- Tournament Final -->
+
+          <div
+            class="tournament-match-container"
+            id="finalContent"
           ></div>
 
           <!-- Footer buttons -->
@@ -688,6 +685,22 @@
         >
           Start first SF
         </button>
+        <button
+          class="tournament-buttons button start-sf-1"
+          tabindex="0"
+          id="startSecondSF"
+          onclick="startOff()"
+        >
+          Start second SF
+        </button>
+        <button
+          class="tournament-buttons button start-sf-1"
+          tabindex="0"
+          id="startFinal"
+          onclick="startOff()"
+        >
+          Start Final
+        </button>
       </div>
     </div>
     <script>
@@ -704,6 +717,7 @@
         tournament: goToTournament,
         profile: goToProfile,
         homenavigation: goToHomeNavigation,
+        loadedtournament: goToLoadedTournament,
       };
 
       window.addEventListener("popstate", (e) => {
@@ -755,9 +769,15 @@
       const secondSemifinalContent = document.getElementById(
         "secondSemifinalContent"
       );
+      const finalContent = document.getElementById(
+        "finalContent"
+      );
       const final = document.getElementById("final");
       // const generateSFButton = document.getElementById("generateSF");
       const startFirstSemifinalButton = document.getElementById("startFirstSF");
+      const startSecondSemifinalButton =
+        document.getElementById("startSecondSF");
+      const startFinalButton = document.getElementById("startFinal");
 
       function goToSignup() {
         goToHomeNoHistory();
@@ -861,12 +881,14 @@
         tournamentSetup.style.display = "none";
         tournament.style.display = "block";
         // generateSFButton.style.display = "block";
-        startFirstSemifinalButton.style.display = "none";
         // firstSemifinal.style.display = "flex";
         // secondSemifinal.style.display = "flex";
         firstSemifinalContent.style.display = "flex";
         secondSemifinalContent.style.display = "flex";
+        finalContent.style.display = "none";
         startFirstSemifinalButton.style.display = "block";
+        startSecondSemifinalButton.style.display = "none";
+        startFinalButton.style.display = "none";
         createTournament();
         // const cards = document.querySelectorAll(".game-player-card-inner");
 
@@ -875,6 +897,32 @@
         //   card.classList.remove("shaded");
         // });
         
+      }
+
+      function goToLoadedTournament(id) {
+        lobby.style.display = "none";
+        gameStart.style.display = "none";
+        overlay.style.display = "none";
+        profile.style.display = "none";
+        tournamentSetup.style.display = "none";
+        tournament.style.display = "block";
+        // generateSFButton.style.display = "block";
+        // firstSemifinal.style.display = "flex";
+        // secondSemifinal.style.display = "flex";
+        firstSemifinalContent.style.display = "flex";
+        secondSemifinalContent.style.display = "flex";
+        finalContent.style.display = "none";
+        startFirstSemifinalButton.style.display = "none";
+        startSecondSemifinalButton.style.display = "none";
+        startFinalButton.style.display = "none";
+        loadTournament(id);
+        // const cards = document.querySelectorAll(".game-player-card-inner");
+
+        // cards.forEach((card) => {
+        //   card.classList.remove("selected");
+        //   card.classList.remove("shaded");
+        // });
+        updateHistory(goToLoadedTournament);
       }
 
       function goToProfile() {
@@ -897,7 +945,9 @@
       function goToHomeNavigation() {
         homeLeft.style.display = "grid";
         homeRight.style.display = "grid";
-		matchView.style.display = "none";
+        signin.style.display = "none";
+        signup.style.display = "none";
+		    matchView.style.display = "none";
         updateHistory(goToHomeNavigation);
       }
 
@@ -1275,6 +1325,12 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
+    <!-- Bootstrap parts for profile carousel -->
+    <!-- <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script> -->
     <script>
       // player profile functions
       const updateToProfile = async (index) =>
