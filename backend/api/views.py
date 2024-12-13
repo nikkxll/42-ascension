@@ -1290,7 +1290,7 @@ def fetch_avatar_from_42(user, user_data):
         urllib.request.urlretrieve(user_data["image"]["link"], path)
         with open(path, "rb") as file:
             user.player.avatar.save(f"{user.id}_avatar.jpg", File(file), save=True)
-    except:
+    except requests.exceptions.RequestException as e:
         print(f"fetching avatar for id {user.id} failed")
 
 def fetch_42_user_data(access_token):
