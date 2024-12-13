@@ -252,6 +252,7 @@ function loadTournament(tournamentId) {
   function ifallLoggedIn(neededPlayers) {
     const loggedInPlayers = window.state.loggedInUsers;
     const loggedInPlayersIds = loggedInPlayers.map((player) => player.id);
+    loggedInPlayersIds.push(1);
 
     if (!arraysChecker(loggedInPlayersIds, neededPlayers)) {
       console.error(
