@@ -128,6 +128,12 @@ async function gameTypeSelector(){
             player00 = match.players[0].id;
             player01 = match.players[1].id;
         }
+        else {
+            let match = window.tournamentState.data.matches[0];
+            player00 = match.score[0] > match.score[1] ? match.players[0].id : match.players[1].id;
+            match = window.tournamentState.data.matches[1];
+            player01 = match.score[0] > match.score[1] ? match.players[0].id : match.players[1].id;
+        }
         if (player00 == window.ai_id || player01 == window.ai_id)
             ai = 1;
         if (player00 == window.ai_id)
@@ -196,8 +202,8 @@ function updateStateFetch(startTime, gameCount, gameTypeSelectorValue){
         match.duration = duration;
         let body = {
             score: gameCount, 
-            duration: duration
-            //userIds: window.tournamentState.matchPlayerIds
+            duration: duration,
+            userIds: window.tournamentState.matchPlayerIds
         };
         console.log("Patch Match body=", body);
         requestPatchMatch(window.tournamentState.data.matches[matchNumber].id, body);
@@ -208,8 +214,7 @@ function updateStateFetch(startTime, gameCount, gameTypeSelectorValue){
         let body = {
             score: gameCount,
             duration: duration,
-            //TODO fix the user ids
-            userIds: [window.tournamentState.userIds[0], window.tournamentState.userIds[1]]
+            userIds: window.tournamentState.matchPlayerIds
         }
         requestCupFinalMatch(cup_id, body);
     }
