@@ -1,7 +1,7 @@
 window.state = {
     // max size 4
     loggedInUsers: [],
-    // max 5
+    // max 
     recentMatches: [],
     // max 5
     tournaments: [ 

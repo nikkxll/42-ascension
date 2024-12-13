@@ -9,7 +9,7 @@ import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 const ballAccelerationCoef = 1.0  // 1.5
 const ballSpeedLimit = 1000;
 // initial speed of the ball
-const ballStartSpeed = 6; // 6
+const ballStartSpeed = 20; // 6
 
 function getRandom(min, max) {
     return Math.random() * (max - min) + min;
@@ -182,7 +182,7 @@ const requestAddMatch = async (data) => {
     }
 };
 
-function updateStateFetch(startTime, gameCount, gameTypeSelectorValue){
+async function updateStateFetch(startTime, gameCount, gameTypeSelectorValue){
     console.log("updateStateFetch: Game ended", gameCount);
     const {gameType, ai, matchNumber} = gameTypeSelectorValue;
     let duration = Math.trunc((Date.now() - startTime) / 1000);
@@ -194,7 +194,7 @@ function updateStateFetch(startTime, gameCount, gameTypeSelectorValue){
             userIds: window.singleGameState.userIds
         };
         console.log("Create Match body=", body);
-        requestAddMatch(body);    
+        await requestAddMatch(body);    
     }
     else if (matchNumber != 2){
         let match = window.tournamentState.data.matches[matchNumber];
@@ -206,7 +206,7 @@ function updateStateFetch(startTime, gameCount, gameTypeSelectorValue){
             userIds: window.tournamentState.matchPlayerIds
         };
         console.log("Patch Match body=", body);
-        requestPatchMatch(window.tournamentState.data.matches[matchNumber].id, body);
+        await requestPatchMatch(window.tournamentState.data.matches[matchNumber].id, body);
     }
     else {
         console.log("TODO: fetch the last match creation.");
@@ -216,7 +216,12 @@ function updateStateFetch(startTime, gameCount, gameTypeSelectorValue){
             duration: duration,
             userIds: window.tournamentState.matchPlayerIds
         }
-        requestCupFinalMatch(cup_id, body);
+        await requestCupFinalMatch(cup_id, body);
+    }
+    if (GameType.Cup == gameType){
+        window.state.tournaments = await fetchRecentTournaments();
+        const tournaments = window.state.tournaments.tournaments;
+        window.tournamentState.data = tournaments.find((t) => t.id === window.tournamentState.data.id);
     }
 
     // fetch the game result to backend and update game state?
@@ -295,6 +300,8 @@ const removeGameWindow = (game) => {
     document.removeEventListener("keyup", game.keyUpAction);
 }
 
+
+// window.state.tournaments = await fetchRecentTournaments();
 window.startGame = async () => {
     console.log("Starting game with SingleGameState=", window.singleGameState);
     console.log("Starting game with  tournamentState=", window.tournamentState);
@@ -589,7 +596,8 @@ window.startGame = async () => {
             removeGameWindow(game);
             console.log("game terminated, singleGameState=", window.singleGameState);
             if (GameType.Cup == gameType){
-                goToTournament();
+                //goToTournament();
+                goToLoadedTournament(window.tournamentState.data.id);
                 console.log("Game of tournament is over");
             }
             else {
