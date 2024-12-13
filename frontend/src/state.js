@@ -24,11 +24,11 @@ window.tournamentState = {
     //     {"name": "", "winrate": 0.0, status: "online", "id": "5"},
     //     {"name": "", "winrate": 0.0, status: "online", "id": "6"}
     // ],
-    matches: [
-        {"player1": 3, "player2": 4,  "status": 0}, // "score": "" , "id": 1
-        {"player1": 5, "player2": 6,  "status": 0}, //"score": "" , "id": 2
-         {"player1": "playerID", "player2": 2, "status": 0, "score": ""},
-    ]
+    // matches: [
+    //     {"player1": 3, "player2": 4,  "status": 0}, // "score": "" , "id": 1
+    //     {"player1": 5, "player2": 6,  "status": 0}, //"score": "" , "id": 2
+    //      {"player1": "playerID", "player2": 2, "status": 0, "score": ""},
+    // ]
 }
 
 window.ai_id = 1
