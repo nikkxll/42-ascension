@@ -146,8 +146,8 @@ async function gameTypeSelector(){
         if (ids[1] == window.ai_id || ids[0] == window.ai_id)
             ai = 1;
         if (ids[0] == window.ai_id){
-            window.singleGameState.userIds[1] = window.ai_id;
-            window.singleGameState.userIds[0] = ids[1];
+            ids[0] = ids[1];
+            ids[1] = window.ai_id;
         }
         return {gameType: GameType.Duo, ai, matchNumber: 0};
     }
@@ -211,7 +211,7 @@ function updateStateFetch(startTime, gameCount, gameTypeSelectorValue){
             //TODO fix the user ids
             userIds: [window.tournamentState.userIds[0], window.tournamentState.userIds[1]]
         }
-            
+        requestCupFinalMatch(cup_id, body);
     }
 
     // fetch the game result to backend and update game state?
@@ -290,7 +290,7 @@ const removeGameWindow = (game) => {
     document.removeEventListener("keyup", game.keyUpAction);
 }
 
-window.startGame = async (aiNum) => {
+window.startGame = async () => {
     console.log("Starting game with SingleGameState=", window.singleGameState);
     console.log("Starting game with  tournamentState=", window.tournamentState);
     const {gameType, ai, matchNumber} = await gameTypeSelector();
