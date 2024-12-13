@@ -605,7 +605,7 @@ window.startGame = async () => {
                 console.log("Game of tournament is over");
             }
             else {
-                goToHome();
+                goToLobby();
                 console.log("Game of single game or 2x2 game is over");
             }
             return 0;
