@@ -109,6 +109,7 @@ async function gameTypeSelector(){
                 "userIds": userIds
             }
             await requestAddCup(body);
+            //const tournaments = window.state.tournaments.tournaments;
         }
         let matches = window.tournamentState.data.matches;
         matchNumber = 0;
@@ -194,7 +195,8 @@ async function updateStateFetch(startTime, gameCount, gameTypeSelectorValue){
             userIds: window.singleGameState.userIds
         };
         console.log("Create Match body=", body);
-        await requestAddMatch(body);    
+        await requestAddMatch(body); 
+        window.singleGameState = {};   
     }
     else if (matchNumber != 2){
         let match = window.tournamentState.data.matches[matchNumber];
@@ -218,6 +220,7 @@ async function updateStateFetch(startTime, gameCount, gameTypeSelectorValue){
         }
         await requestCupFinalMatch(cup_id, body);
     }
+    window.state.recentMatches = await fetchRecentMatches();
     if (GameType.Cup == gameType){
         window.state.tournaments = await fetchRecentTournaments();
         const tournaments = window.state.tournaments.tournaments;
@@ -244,6 +247,7 @@ const requestAddCup = async (data) => {
                 return data;
             }
         );
+        window.state.tournaments = await fetchRecentTournaments();
     } catch (error) {
       console.error(error.message);
     }
