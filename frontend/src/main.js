@@ -9,7 +9,7 @@ import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 const ballAccelerationCoef = 1.0  // 1.5
 const ballSpeedLimit = 1000;
 // initial speed of the ball
-const ballStartSpeed = 6; // 6
+const ballStartSpeed = 20; // 6
 
 function getRandom(min, max) {
     return Math.random() * (max - min) + min;
@@ -87,32 +87,60 @@ let updateOuterBoxes = (element, row) => {
 };
 
 const GameType = {
-    Duo: 0,
-    Cup: 1,
-    Quatro: 2,
-    AiAi: 3
+    Cup: 0,
+  //  CupMatch: 1,
+    Duo: 2,
+    Quatro: 4,
+    AiAi: 5  //this is testing mode
 };
-function gameTypeSelector(){
+async function gameTypeSelector(){
     let ai = 0;
     let matchNumber = 0;
     if (
-        window.singleGameState && 
+        window.singleGameState &&
         typeof window.singleGameState === "object" &&
         Object.keys(window.singleGameState).length === 0
     ) {
-        // if (window.tournamentState 
-        //     && window.tournamentState.matches 
-        //     && window.tournamentState.matches.length > 0
+        // if tournament is created than do the last unfinished match
+        if (!window.tournamentState.data){
+            let userIds = window.tournamentState.userIds;
+            let body = {
+                "name": window.tournamentState.name,
+                "userIds": userIds
+            }
+            await requestAddCup(body);
+            //const tournaments = window.state.tournaments.tournaments;
+        }
+        let matches = window.tournamentState.data.matches;
         matchNumber = 0;
-        // if (window.tournamentState.matches[0].status == 0)
-        //     matchNumber = 0;
-        // else if (window.tournamentState.matches[1].status == 0)
-        //     matchNumber = 1;
-        // else if (window.tournamentState.matches[2].status == 0)
-        //     matchNumber = 2;
-        let match = window.tournamentState.matches[matchNumber];
-        if (match.player1 == window.ai_id || match.player2 == window.ai_id)
+        console.log("matches.length=", matches.length);
+        while (matchNumber < matches.length){
+            console.log("matchNumber=", matchNumber, "score=", matches[matchNumber].score);
+            if (!matches[matchNumber].score){
+                break;
+            }
+            matchNumber++;
+        }
+        let player00 = window.tournamentState.userIds[0];
+        let player01 = window.tournamentState.userIds[1];
+        console.log("matchNumber=", matchNumber, "player00=", player00, "player01=", player01); 
+        if (matchNumber < 2){
+            let match = window.tournamentState.data.matches[matchNumber];
+            player00 = match.players[0].id;
+            player01 = match.players[1].id;
+        }
+        else {
+            let match = window.tournamentState.data.matches[0];
+            player00 = match.score[0] > match.score[1] ? match.players[0].id : match.players[1].id;
+            match = window.tournamentState.data.matches[1];
+            player01 = match.score[0] > match.score[1] ? match.players[0].id : match.players[1].id;
+        }
+        if (player00 == window.ai_id || player01 == window.ai_id)
             ai = 1;
+        if (player00 == window.ai_id)
+            window.tournamentState.matchPlayerIds = [player01, player00];
+        else
+            window.tournamentState.matchPlayerIds = [player00, player01];
         return {gameType: GameType.Cup, ai, matchNumber};
     }
     //else if (window.singleGameState.player3 && window.singleGameState.player4) {
@@ -125,8 +153,8 @@ function gameTypeSelector(){
         if (ids[1] == window.ai_id || ids[0] == window.ai_id)
             ai = 1;
         if (ids[0] == window.ai_id){
-            window.singleGameState.userIds[1] = window.ai_id;
-            window.singleGameState.userIds[0] = ids[1];
+            ids[0] = ids[1];
+            ids[1] = window.ai_id;
         }
         return {gameType: GameType.Duo, ai, matchNumber: 0};
     }
@@ -155,35 +183,50 @@ const requestAddMatch = async (data) => {
     }
 };
 
-
-
-function updateStateFetch(startTime, gameCount){
-    console.log("Game ended", gameCount);
-    const {gameType, ai, matchNumber} = gameTypeSelector();
+async function updateStateFetch(startTime, gameCount, gameTypeSelectorValue){
+    console.log("updateStateFetch: Game ended", gameCount);
+    const {gameType, ai, matchNumber} = gameTypeSelectorValue;
+    let duration = Math.trunc((Date.now() - startTime) / 1000);
     if (GameType.Cup != gameType){
         window.singleGameState.score = gameCount;
-        window.singleGameState.duration = Math.trunc((Date.now() - startTime) / 1000);
-        //numbers
-        // window.singleGameState.userIds = [
-        //         window.singleGameState.player1,
-        //         window.singleGameState.player2]
-        // if (GameType.Quatro == gameType){
-        //     window.singleGameState.userIds.push(
-        //         window.singleGameState.player3,
-        //         window.singleGameState.player4
-        //     ); 
-        // }
-        //window.singleGameState.duration = String(Math.floor((Date.now() - startTime) / 1000));
-        console.log("state after update", window.singleGameState);
         let body = {
-            score: window.singleGameState.score, 
-            duration: window.singleGameState.duration,
+            score: gameCount, 
+            duration: duration,
             userIds: window.singleGameState.userIds
         };
-        console.log("body=", body);
-        requestAddMatch(body);
-        
+        console.log("Create Match body=", body);
+        await requestAddMatch(body); 
+        window.singleGameState = {};   
     }
+    else if (matchNumber != 2){
+        let match = window.tournamentState.data.matches[matchNumber];
+        match.score = gameCount;
+        match.duration = duration;
+        let body = {
+            score: gameCount, 
+            duration: duration,
+            userIds: window.tournamentState.matchPlayerIds
+        };
+        console.log("Patch Match body=", body);
+        await requestPatchMatch(window.tournamentState.data.matches[matchNumber].id, body);
+    }
+    else {
+        console.log("TODO: fetch the last match creation.");
+        let cup_id = window.tournamentState.data.id;
+        let body = {
+            score: gameCount,
+            duration: duration,
+            userIds: window.tournamentState.matchPlayerIds
+        }
+        await requestCupFinalMatch(cup_id, body);
+    }
+    window.state.recentMatches = await fetchRecentMatches();
+    if (GameType.Cup == gameType){
+        window.state.tournaments = await fetchRecentTournaments();
+        const tournaments = window.state.tournaments.tournaments;
+        window.tournamentState.data = tournaments.find((t) => t.id === window.tournamentState.data.id);
+    }
+
     // fetch the game result to backend and update game state?
 }
 
@@ -194,8 +237,8 @@ const requestAddCup = async (data) => {
             body: JSON.stringify(data)
         })
         console.log("response=", response);
-        //if (!response.ok)
-        //    throw new Error("HTTP error, status = " + response.status);
+        if (!response.ok)
+           throw new Error("HTTP error, status = " + response.status);
         const json = await response.json().then(
             data => {
                 console.log(data);
@@ -204,7 +247,7 @@ const requestAddCup = async (data) => {
                 return data;
             }
         );
-
+        window.state.tournaments = await fetchRecentTournaments();
     } catch (error) {
       console.error(error.message);
     }
@@ -213,16 +256,16 @@ const requestAddCup = async (data) => {
 const requestPatchMatch = async (id, data) => {
     try {
         const response = await fetch("/api/matches/" + id + "/", {
-            method: "POST",
+            method: "PATCH",
             body: JSON.stringify(data)
         })
         console.log("response=", response);
-        //if (!response.ok)
-        //    throw new Error("HTTP error, status = " + response.status);
+        if (!response.ok)
+           throw new Error("HTTP error, status = " + response.status);
         const json = await response.json().then(
             data => {
                 console.log(data);
-                window.tournamentState.data = data.data;
+        //        window.tournamentState.data = data.data;
                 console.log("tournamentState=", window.tournamentState);
                 return data;
             }
@@ -232,6 +275,26 @@ const requestPatchMatch = async (id, data) => {
       console.error(error.message);
     }
 }
+
+const requestCupFinalMatch = async (id, data) => {
+    try {
+        const response = await fetch("/api/tournaments/"+ id + "/matches/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error, status = ${response.status}`);
+        }
+        const json = await response.json();
+        console.log("Server Response Data:", json);
+        return json;
+    } catch (error) {
+        console.error("Request failed:", error.message);
+        //throw error;
+    }
+};
+
 
 const removeGameWindow = (game) => {
     cancelAnimationFrame(game.animationId);
@@ -241,30 +304,13 @@ const removeGameWindow = (game) => {
     document.removeEventListener("keyup", game.keyUpAction);
 }
 
-window.startGame = (aiNum) => {
-    console.log("Start game state of game", state.singleGameState);
-    const {gameType, ai, matchNumber} = gameTypeSelector();
-    console.log("gameType=", gameType, "ai=", ai, "matchNumber=", matchNumber);
-    console.log("state of game", window.singleGameState);
-    if (GameType.Cup == gameType) // create tournament
-    {
-        let userIds = window.tournamentState.userIds;
-        if (!userIds){  //this is old format to be removed
-            userIds = [
-                window.tournamentState.matches[0].player1,
-                window.tournamentState.matches[0].player2,
-                window.tournamentState.matches[1].player1,
-                window.tournamentState.matches[1].player2
-            ];
-        }
-        let body = {
-            "name": window.tournamentState.name,
-            "userIds": userIds
-        }
-        requestAddCup(body);
-    }
 
-    
+// window.state.tournaments = await fetchRecentTournaments();
+window.startGame = async () => {
+    console.log("Starting game with SingleGameState=", window.singleGameState);
+    console.log("Starting game with  tournamentState=", window.tournamentState);
+    const {gameType, ai, matchNumber} = await gameTypeSelector();
+    console.log("gameType=", gameType, "ai=", ai, "matchNumber=", matchNumber);
     window.gameStoped = false;
     let game = {  // this is the game object that will be used to accumulate all the game data.
         keyDownAction: null, 
@@ -272,7 +318,16 @@ window.startGame = (aiNum) => {
         renderer: null, 
         animationId: null,
         startTime: new Date(), 
-        count: [0, 0]} //, gameCount , ai, gameType, matchNumber};
+        count: [0, 0]
+        //,ids:[0, 0]
+    } //, gameCount , ai, gameType, matchNumber};
+    // if (GameType.Cup == gameType){
+    //     let match = window.tournamentState.data.matches[matchNumber];
+    //     console.log("Match number", matchNumber, "to be started.");
+    //     let player00 = match.players[0].id;
+    //     let player01 = match.players[1].id;
+    //     console.log("player0=", player00, "player1=", player01);
+    // }
     let isPaused = false;
     const maxScore = 5;
     const playerSpeed = 17;  // 17 12
@@ -545,7 +600,8 @@ window.startGame = (aiNum) => {
             removeGameWindow(game);
             console.log("game terminated, singleGameState=", window.singleGameState);
             if (GameType.Cup == gameType){
-                goToTournament();
+                //goToTournament();
+                goToLoadedTournament(window.tournamentState.data.id);
                 console.log("Game of tournament is over");
             }
             else {
@@ -729,7 +785,7 @@ window.startGame = (aiNum) => {
                 updateScore("Score: " + game.count[0] + " : " + game.count[1] + ". Game ended!");
                 score3dObj.position.set(-7, 7, -2); 
                 render();
-                updateStateFetch(game.startTime, game.count);
+                updateStateFetch(game.startTime, game.count, {gameType, ai, matchNumber});
                 return;
             }
             keyEventHandler() // check for key presses

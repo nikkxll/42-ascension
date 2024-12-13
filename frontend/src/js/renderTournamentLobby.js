@@ -48,7 +48,7 @@ function createTournament() {
       const playerCard = document.createElement("div");
       playerCard.className = "game-player-card";
       playerCard.innerHTML = `
-          <article class="tournament-game-player-card-inner">
+          <article class="tournament-game-player-card-inner normal">
             <h2 class="game-player-number">Player ${index + 1}</h2>
             <img
               loading="lazy"
@@ -169,6 +169,7 @@ function createTournament() {
 function loadTournament(tournamentId) {
   const tournaments = window.state.tournaments.tournaments;
   const tournament = tournaments.find((t) => t.id === tournamentId);
+  window.tournamentState.data = tournament;
 
   console.log(tournaments);
   console.log(tournament);
