@@ -1291,7 +1291,7 @@ def fetch_avatar_from_42(user, user_data):
         with open(path, "rb") as file:
             user.player.avatar.save(f"{user.id}_avatar.jpg", File(file), save=True)
     except requests.exceptions.RequestException as e:
-        return {"error": f"Failed to fetch user data: {str(e)}"}
+        print(f"fetching avatar for id {user.id} failed")
 
 def fetch_42_user_data(access_token):
     api_url = os.environ.get("OAUTH_API_URL")
