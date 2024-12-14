@@ -491,6 +491,7 @@
           class="tournament-setup-name-input"
           placeholder="Enter the tournament name"
           aria-label="Enter the tournament name"
+          required
         />
       </div>
       <div class="tournament-setup-buttons selection">
@@ -504,7 +505,7 @@
         <button
           class="tournament-setup-buttons button continue"
           tabindex="0"
-          onclick="goToTournament(); updateHistory('tournament');"
+          onclick="validateTournamentName(event)"
         >
           Continue
         </button>
@@ -620,9 +621,9 @@
         const popup = window.open(
           "https://localhost:8443/api/oauth/redirect", // This should match your Django URL pattern
           "42 Authorization"
-        )
-        const timer = setInterval(async () => { 
-          if(popup.closed) {
+        );
+        const timer = setInterval(async () => {
+          if (popup.closed) {
             clearInterval(timer);
             try {
               const response = await fetch("/api/players/current/", {
@@ -641,9 +642,9 @@
             } catch (error) {
               console.error(error.message);
             }
-            goToLobby()
+            goToLobby();
           }
-          }, 1000);
+        }, 1000);
       }
     </script>
     <script>
@@ -653,6 +654,22 @@
           return false;
         }
         return true;
+      }
+    </script>
+    <script>
+      function validateTournamentName(event) {
+        const tournamentInput = document.getElementById("tournamentName");
+
+        if (tournamentInput.value.trim() === "") {
+          tournamentInput.setCustomValidity("Tournament name cannot be empty.");
+          tournamentInput.reportValidity();
+          event.preventDefault();
+          return false;
+        }
+
+        tournamentInput.setCustomValidity("");
+        goToTournament();
+        updateHistory("tournament");
       }
     </script>
   </body>

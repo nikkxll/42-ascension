@@ -95,7 +95,7 @@ function goToSignin() {
   homeRight.style.display = "grid";
 }
 
-function goToLobby() {
+async function goToLobby() {
   goToHomeNoHistory();
   homeLeft.style.display = "grid";
   signin.style.display = "none";
@@ -104,6 +104,8 @@ function goToLobby() {
   homeRight.style.display = "grid";
   gameStart.style.display = "none";
   otherGameStart.style.display = "none";
+  await renderRecentMatches();
+	await renderRecentTournaments();
 }
 
 async function goToMatchView(matchId) {
@@ -234,6 +236,12 @@ function openTournamentSetupBox() {
   tournamentSetup.style.display = "block";
   overlay.style.display = "block";
   overlay.style.pointerEvents = "auto";
+}
+
+function closeTournamentSetupBox() {
+  tournamentSetup.style.display = "none";
+  overlay.style.display = "none";
+  overlay.style.pointerEvents = "none";
 }
 
 window.addEventListener("DOMContentLoaded", () => {
