@@ -16,7 +16,7 @@ function renderPlayerPanels() {
 				/>
 				</div>
 				<h2 class="username">${user.displayName || user.username}</h2>
-				<button class="profile-button" tabindex="0" onclick="updateToProfile(${index})">Profile</button>
+				<button class="profile-button" tabindex="0" onclick="updateToProfile(${index}); updateHistory('profile')">Profile</button>
 				<button class="logout-button" tabindex="0" onclick="logoutPlayer(${index})">Log out</button>
 			</div>
 		`;
@@ -27,10 +27,10 @@ function renderPlayerPanels() {
     const addPlayerPanel = `
 		<div class="player-brief-info-panel">
 			<h1 class="auth-title">Add player</h1>
-			<button onclick="goToSignup()" class="auth-button" type="button">
+			<button onclick="goToSignup(); updateHistory('signup')" class="auth-button" type="button">
 				Sign up
 			</button>
-			<button onclick="goToSignin()" class="auth-button" type="button">
+			<button onclick="goToSignin(); updateHistory('signin')" class="auth-button" type="button">
 				Sign in
 			</button>
 		</div>
