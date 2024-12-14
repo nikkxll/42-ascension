@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
+
 // Signing up a new user
 const requestSignUp = async () => {
   const username = document.getElementById("signUpUsername").value;
