@@ -18,6 +18,7 @@ async function renderRecentTournaments() {
 
     tournamentContainer.addEventListener("click", () => {
       goToLoadedTournament(tournament.id);
+      history.pushState({ view: "loadedtournament", index: tournament.id}, null, "");
     });
 
     const title = document.createTextNode(

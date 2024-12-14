@@ -160,7 +160,7 @@
 
         <div class="buttonContainer">
           <button
-            onclick="goToGameStart()"
+            onclick="goToGameStart();updateHistory('gamestart');"
             class="create-action"
             tabindex="0"
             aria-label="Create Single Game"
@@ -176,7 +176,7 @@
             CREATE TOURNAMENT
           </button>
           <button
-            onclick="goTo2v2GameStart()"
+            onclick="goTo2v2GameStart(); updateHistory('gamestart2v2')"
             class="create-action"
             tabindex="0"
             aria-label="Create Single Game"
@@ -225,9 +225,8 @@
             <div class="prompt-not-a-member">
               <span class="prompt-text">Not a member yet?</span>
               <a
-                href="#"
                 class="reg-link"
-                onclick="goToSignup(); updateHistory(goToSignup);"
+                onclick="goToSignup(); updateHistory('signup');"
                 >Sign up</a
               >
             </div>
@@ -296,9 +295,8 @@
             <div class="prompt">
               <span class="prompt-text">Already have an account?</span>
               <a
-                href="#"
                 class="reg-link"
-                onclick="goToSignin(); updateHistory(goToSignin);"
+                onclick="goToSignin(); updateHistory('signin');"
                 >Sign in</a
               >
             </div>
@@ -314,6 +312,7 @@
                 src="./assets/42_api_logo.png"
                 alt="42 Logo"
                 class="oauth-logo"
+                onclick="open42Auth()"
               />
             </a>
           </form>
@@ -346,7 +345,7 @@
           <button
             class="single-game-buttons back"
             tabindex="0"
-            onclick="goToLobby()"
+            onclick="history.back()"
           >
             Back to menu
           </button>
@@ -394,7 +393,7 @@
           <button
             class="single-game-buttons back"
             tabindex="0"
-            onclick="goToLobby()"
+            onclick="history.back()"
           >
             Back to menu
           </button>
@@ -476,7 +475,7 @@
             </button>
           </div>
         </div>
-        <button onclick="goToLobby()" class="profile-back-button">
+        <button onclick="history.back()" class="profile-back-button">
           Back to menu
         </button>
       </div>
@@ -498,14 +497,14 @@
         <button
           class="tournament-setup-buttons button back"
           tabindex="0"
-          onclick="history.back()"
+          onclick="closeTournamentSetupBox()"
         >
           Back
         </button>
         <button
           class="tournament-setup-buttons button continue"
           tabindex="0"
-          onclick="goToTournament(); updateHistory(goToTournament);"
+          onclick="goToTournament(); updateHistory('tournament');"
         >
           Continue
         </button>
@@ -610,7 +609,7 @@
     <script src="./js/profileSettings.js"></script>
     <script src="./js/profileFriendship.js"></script>
     <script>
-      function open42Auth() {
+      async function open42Auth() {
         // Popup window configuration
         const width = 600;
         const height = 700;
@@ -621,7 +620,30 @@
         const popup = window.open(
           "https://localhost:8443/api/oauth/redirect", // This should match your Django URL pattern
           "42 Authorization"
-        );
+        )
+        const timer = setInterval(async () => { 
+          if(popup.closed) {
+            clearInterval(timer);
+            try {
+              const response = await fetch("/api/players/current/", {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              });
+              if (!response.ok) {
+                throw new Error("Failed to get logged in user");
+              }
+              const { data } = await response.json();
+              window.state.loggedInUsers = data?.players;
+              console.log("state: ", window.state.loggedInUsers);
+              renderPlayerPanels();
+            } catch (error) {
+              console.error(error.message);
+            }
+            goToLobby()
+          }
+          }, 1000);
       }
     </script>
     <script>

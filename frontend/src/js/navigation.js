@@ -9,6 +9,7 @@ const views = {
   lobby: goToLobby,
   matchView: goToMatchView,
   gamestart: goToGameStart,
+  gamestart2v2: goTo2v2GameStart,
   tournament: goToTournament,
   profile: goToProfile,
   homenavigation: goToHomeNavigation,
@@ -17,13 +18,19 @@ const views = {
 
 window.addEventListener("popstate", (e) => {
   e.preventDefault();
-  if (e.state) views[e.state["view"]]();
+  if (e.state) 
+  {
+    if (e.state['index'])
+      views[e.state["view"]](e.state['index']);
+    else
+      views[e.state["view"]]();
+  }
   window.gameStoped = true;
 });
 
 const updateHistory = (f) => {
   Object.entries(views).forEach((key) => {
-    if (key[1] == f) {
+    if (key[0] == f) {
       history.pushState({ view: key[0] }, null, "");
       console.log(key[0]);
     }
@@ -147,7 +154,6 @@ function goToGameStart() {
   overlay.style.display = "none";
   otherGameStart.style.display = "none";
   renderGameStart();
-  updateHistory(goToGameStart);
 }
 
 function goToTournament() {
