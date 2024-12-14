@@ -48,8 +48,8 @@ async function renderRecentTournaments() {
 
     const runnerUp = !tournament.winner
       ? "N/A"
-      : parseInt(tournament.matches[2]?.score?.[0]) ??
-        0 > parseInt(tournament.matches[2]?.score?.[1] ?? 0)
+      : parseInt(tournament.matches[2]?.score?.[0]) >
+        parseInt(tournament.matches[2]?.score?.[1])
       ? tournament.matches[2]?.players[1]?.displayName
       : tournament.matches[2]?.players[0]?.displayName;
     tournamentContainer.appendChild(

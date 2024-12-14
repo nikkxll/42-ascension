@@ -443,16 +443,25 @@ function loadTournament(tournamentId) {
     if (tournament?.matches[1]?.score) {
       finalContent.style.display = "flex";
       finalDummy.style.display = "none";
+
+      let firstFinalist =
+        parseInt(sf1?.score[0]) > parseInt(sf1?.score[1])
+          ? sf1.players?.[0]
+          : sf1.players?.[1];
+      let secondFinalist =
+        parseInt(sf2?.score[0]) > parseInt(sf2?.score[1])
+          ? sf2.players?.[0]
+          : sf2.players?.[1];
+
+      if (firstFinalist.username === "ai_player") {
+        let temp = firstFinalist;
+        firstFinalist = secondFinalist;
+        secondFinalist = temp;
+      }
+
       finalContent.innerHTML = `
     <h1 class="tournament-match-title" >Final</h1>
-    ${generateFinalContent(
-      parseInt(sf1?.score[0]) > parseInt(sf1?.score[1])
-        ? sf1.players?.[0]
-        : sf1.players?.[1],
-      parseInt(sf2?.score[0]) > parseInt(sf2?.score[1])
-        ? sf2.players?.[0]
-        : sf2.players?.[1]
-    )}`;
+    ${generateFinalContent(firstFinalist, secondFinalist)}`;
     }
   }
 
