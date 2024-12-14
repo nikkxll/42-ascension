@@ -206,36 +206,33 @@ function loadTournament(tournamentId) {
 
   function getNeededPlayers() {
     const players = [];
-    
+
     const semiFinal1 = tournament?.matches?.[0];
     const semiFinal2 = tournament?.matches?.[1];
     const finalWinner = tournament?.winner;
-  
+
     const getWinningPlayerId = (match) => {
       const [score1, score2] = match.score.map((score) => parseInt(score, 10));
       return score1 > score2 ? match.players?.[0]?.id : match.players?.[1]?.id;
     };
-  
+
     if (semiFinal1?.score && semiFinal2?.score && !finalWinner) {
       players.push(getWinningPlayerId(semiFinal1));
       players.push(getWinningPlayerId(semiFinal2));
-    }
-    else if (semiFinal1?.score && !finalWinner) {
+    } else if (semiFinal1?.score && !finalWinner) {
       players.push(
         getWinningPlayerId(semiFinal1),
         ...(semiFinal2?.players?.map((player) => player?.id) || [])
       );
-    }
-    else if (semiFinal1?.score && semiFinal2?.score && finalWinner) {
+    } else if (semiFinal1?.score && semiFinal2?.score && finalWinner) {
       return players;
-    }
-    else {
+    } else {
       players.push(
         ...(semiFinal1?.players?.map((player) => player?.id) || []),
         ...(semiFinal2?.players?.map((player) => player?.id) || [])
       );
     }
-  
+
     return players;
   }
 
@@ -438,16 +435,25 @@ function loadTournament(tournamentId) {
     if (tournament?.matches[1]?.score) {
       finalContent.style.display = "flex";
       finalDummy.style.display = "none";
+
+      let firstFinalist =
+        parseInt(sf1?.score[0]) > parseInt(sf1?.score[1])
+          ? sf1.players?.[0]
+          : sf1.players?.[1];
+      let secondFinalist =
+        parseInt(sf2?.score[0]) > parseInt(sf2?.score[1])
+          ? sf2.players?.[0]
+          : sf2.players?.[1];
+
+      if (firstFinalist.username === "ai_player") {
+        let temp = firstFinalist;
+        firstFinalist = secondFinalist;
+        secondFinalist = temp;
+      }
+
       finalContent.innerHTML = `
     <h1 class="tournament-match-title" >Final</h1>
-    ${generateFinalContent(
-      parseInt(sf1?.score[0]) > parseInt(sf1?.score[1])
-        ? sf1.players?.[0]
-        : sf1.players?.[1],
-      parseInt(sf2?.score[0]) > parseInt(sf2?.score[1])
-        ? sf2.players?.[0]
-        : sf2.players?.[1]
-    )}`;
+    ${generateFinalContent(firstFinalist, secondFinalist)}`;
     }
   }
 
