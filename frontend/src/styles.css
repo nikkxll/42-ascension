@@ -1312,6 +1312,15 @@ section {
   font-size: 26px;
   transition: box-shadow 0.3s, transform 0.3s;
 }
+.tournament-buttons.tournament-results {
+  display: none;
+  background-color: rgba(255, 230, 0, 0.35);
+  justify-content: center;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  font-size: 26px;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
 .tournament-buttons.generate:hover {
   transform: translateY(-3px);
 }
@@ -1319,6 +1328,9 @@ section {
   transform: translateY(-3px);
 }
 .tournament-buttons.start-sf-1:hover {
+  transform: translateY(-3px);
+}
+.tournament-buttons.tournament-results:hover {
   transform: translateY(-3px);
 }
 .tournament-game-player-card-inner {

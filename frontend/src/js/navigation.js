@@ -67,6 +67,8 @@ const final = document.getElementById("final");
 const startFirstSemifinalButton = document.getElementById("startFirstSF");
 const startSecondSemifinalButton = document.getElementById("startSecondSF");
 const startFinalButton = document.getElementById("startFinal");
+const tournamentResults = document.getElementById("tournamentResults");
+const tournamentStatistics = document.getElementById("tournamentStatistics");
 
 function goToSignup() {
   goToHomeNoHistory();
@@ -161,6 +163,8 @@ function goToTournament() {
   startFirstSemifinalButton.style.display = "block";
   startSecondSemifinalButton.style.display = "none";
   startFinalButton.style.display = "none";
+  tournamentResults.style.display = "none";
+  tournamentStatistics.style.display = "none";
 
   createTournament();
 }
@@ -178,9 +182,31 @@ function goToLoadedTournament(id) {
   startFirstSemifinalButton.style.display = "none";
   startSecondSemifinalButton.style.display = "none";
   startFinalButton.style.display = "none";
+  tournamentResults.style.display = "none";
+  tournamentStatistics.style.display = "none";
 
   loadTournament(id);
   updateHistory(goToLoadedTournament);
+}
+
+function goToTournamentStats(id) {
+  lobby.style.display = "none";
+  gameStart.style.display = "none";
+  overlay.style.display = "none";
+  profile.style.display = "none";
+  tournamentSetup.style.display = "none";
+  tournament.style.display = "block";
+  firstSemifinalContent.style.display = "flex";
+  secondSemifinalContent.style.display = "flex";
+  finalContent.style.display = "none";
+  startFirstSemifinalButton.style.display = "none";
+  startSecondSemifinalButton.style.display = "none";
+  startFinalButton.style.display = "none";
+  tournamentResults.style.display = "none";
+  tournamentStatistics.style.display = "block";
+
+  loadTournament(id);
+  // updateHistory(goToLoadedTournament);
 }
 
 function goToProfile() {

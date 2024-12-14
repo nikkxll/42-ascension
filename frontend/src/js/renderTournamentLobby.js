@@ -185,6 +185,7 @@ function loadTournament(tournamentId) {
   const startFirstSemifinalButton = document.getElementById("startFirstSF");
   const startSecondSemifinalButton = document.getElementById("startSecondSF");
   const startFinalButton = document.getElementById("startFinal");
+  const tournamentResults = document.getElementById("tournamentResults");
   const finalContent = document.getElementById("finalContent");
   const finalDummy = document.getElementById("final");
 
@@ -197,7 +198,11 @@ function loadTournament(tournamentId) {
     tournament?.matches[1]?.score &&
     !tournament?.winner
   )
-    startFinalButton.style.display = "block";
+  startFinalButton.style.display = "block";
+
+  if (tournament?.winner) {
+    tournamentResults.style.display = "block";
+  }
 
   const neededPlayers = getNeededPlayers();
   const tournamentPlayers = getTournamentPlayers();

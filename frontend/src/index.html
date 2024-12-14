@@ -525,7 +525,6 @@
           <div class="tournament-grid"></div>
         </div>
         <div class="tournament-top-right">
-
           <!-- Tournament SF1 -->
 
           <div
@@ -582,8 +581,48 @@
         >
           Start Final
         </button>
+        <button
+          class="tournament-buttons button tournament-results"
+          tabindex="0"
+          id="tournamentResults"
+          onclick="goToTournamentStats()"
+        >
+          Results
+        </button>
       </div>
     </div>
+
+    <!-- Tournament statistics -->
+
+    <div class="tournament-statistics" id="tournamentStatistics">
+      <div class="tournament-statistics-header">
+        <header class="tournament-statistics-header-wrapper">
+          <a href="#" class="logo">
+            <img src="../src/assets/back_arrow.svg" alt="" />
+          </a>
+          <h1 class="tournament-statistics-title">Transcendence Cup 2024</h1>
+        </header>
+      </div>
+      <div class="tournament-statistics-result">
+        <div class="tournament-statistics-text-format">
+          <span>Total points :</span>
+          <span>64</span>
+        </div>
+        <div class="tournament-statistics-text-format">
+          <span>Average time per point :</span>
+          <span>7 seconds</span>
+        </div>
+        <div class="tournament-statistics-text-format">
+          <span>Fastest match :</span>
+          <span>1 min 54 sec</span>
+        </div>
+        <div class="tournament-statistics-text-format last">
+          <span>Overall time in game :</span>
+          <span>9 min 12 sec</span>
+        </div>
+      </div>
+    </div>
+
     <script src="./js/navigation.js"></script>
     <script src="./js/gameStart.js"></script>
     <script src="./js/gamePlayersSelector.js"></script>
