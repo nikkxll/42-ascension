@@ -37,13 +37,13 @@ const updateToProfile = async (index) => {
         let content = `
           <div class='profile-games-list'">
             <div class=${
-              parseInt(match.score[0]) > parseInt(match.score[1])
+              Number(match.score[0]) > Number(match.score[1])
                 ? "winner-name"
                 : ""
             }>${match.players[0].username}</div>
             <div>vs</div>
             <div class=${
-              parseInt(match.score[1]) > parseInt(match.score[0])
+              Number(match.score[1]) > Number(match.score[0])
                 ? "winner-name"
                 : ""
             }>${match.players[1].username}</div>

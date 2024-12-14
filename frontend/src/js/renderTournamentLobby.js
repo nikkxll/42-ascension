@@ -220,7 +220,7 @@ function loadTournament(tournamentId) {
     const finalWinner = tournament?.winner;
 
     const getWinningPlayerId = (match) => {
-      const [score1, score2] = match.score.map((score) => parseInt(score, 10));
+      const [score1, score2] = match.score.map((score) => Number(score, 10));
       return score1 > score2 ? match.players?.[0]?.id : match.players?.[1]?.id;
     };
 
@@ -320,7 +320,7 @@ function loadTournament(tournamentId) {
   function generateMatchContent(player1, player2, sfCount) {
     const getScore = (matchIndex, scoreIndex) => {
       const match = tournament?.matches?.[matchIndex]?.score;
-      return match ? parseInt(match[scoreIndex]) : "-";
+      return match ? Number(match[scoreIndex]) : "-";
     };
 
     const sfScores = {
@@ -373,8 +373,8 @@ function loadTournament(tournamentId) {
   }
 
   function generateFinalContent(player1, player2) {
-    const leftScore = parseInt(tournament?.matches[2]?.score?.[0] ?? 0);
-    const rightScore = parseInt(tournament?.matches[2]?.score?.[1] ?? 0);
+    const leftScore = Number(tournament?.matches[2]?.score?.[0] ?? 0);
+    const rightScore = Number(tournament?.matches[2]?.score?.[1] ?? 0);
 
     return `
         <div class="tournament-match-players">
@@ -445,11 +445,11 @@ function loadTournament(tournamentId) {
       finalDummy.style.display = "none";
 
       let firstFinalist =
-        parseInt(sf1?.score[0]) > parseInt(sf1?.score[1])
+        Number(sf1?.score[0]) > Number(sf1?.score[1])
           ? sf1.players?.[0]
           : sf1.players?.[1];
       let secondFinalist =
-        parseInt(sf2?.score[0]) > parseInt(sf2?.score[1])
+        Number(sf2?.score[0]) > Number(sf2?.score[1])
           ? sf2.players?.[0]
           : sf2.players?.[1];
 
@@ -492,25 +492,25 @@ function generateTournamentResults(tournament) {
   tournamentStatistics.innerHTML = "";
 
   const totalPoints = tournament.winner
-    ? parseInt(tournament.matches[0].score[0]) +
-      parseInt(tournament.matches[0].score[1]) +
-      parseInt(tournament.matches[1].score[0]) +
-      parseInt(tournament.matches[1].score[1]) +
-      parseInt(tournament.matches[2].score[0]) +
-      parseInt(tournament.matches[2].score[1])
+    ? Number(tournament.matches[0].score[0]) +
+      Number(tournament.matches[0].score[1]) +
+      Number(tournament.matches[1].score[0]) +
+      Number(tournament.matches[1].score[1]) +
+      Number(tournament.matches[2].score[0]) +
+      Number(tournament.matches[2].score[1])
     : 0;
 
   const totalTimeSeconds = tournament.winner
-    ? parseInt(tournament.matches[0].duration) +
-      parseInt(tournament.matches[1].duration) +
-      parseInt(tournament.matches[2].duration)
+    ? Number(tournament.matches[0].duration) +
+      Number(tournament.matches[1].duration) +
+      Number(tournament.matches[2].duration)
     : 0;
 
   const fastestMatchSeconds = tournament.winner
     ? Math.min(
-        parseInt(tournament.matches[0].duration),
-        parseInt(tournament.matches[1].duration),
-        parseInt(tournament.matches[2].duration)
+        Number(tournament.matches[0].duration),
+        Number(tournament.matches[1].duration),
+        Number(tournament.matches[2].duration)
       )
     : 0;
 
