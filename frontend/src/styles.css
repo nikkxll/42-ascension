@@ -1282,6 +1282,7 @@ section {
   padding: 12px 84px 12px;
   margin: 0px auto 32px;
   transition: box-shadow 0.3s, transform 0.3s;
+  z-index: 100;
 }
 .tournament-buttons.generate {
   display: block;
@@ -2028,5 +2029,70 @@ section {
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 1000;
   display: none;
-  pointer-events: none;
+  /* pointer-events: none; */
+}
+
+/* Tournament statistics container */
+
+.tournament-statistics-title {
+  font-family: "Acme";
+  font-size: 44px;
+  color: #bda611;
+  margin: 25px auto 25px;
+}
+
+.tournament-statistics {
+  position: absolute;
+  top: 31.5vh;
+  left: 29.1vw;
+  display: none;
+  flex-direction: column;
+  max-width: 707px;
+  max-height: 342px;
+  border-radius: 45px;
+  background-color: rgba(18, 16, 16, 1);
+  width: 100%;
+  border: 1px solid #a7a7a7;
+  z-index: 1001;
+}
+
+.tournament-statistics-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 0 0 50px;
+}
+
+.tournament-statistics-header-wrapper {
+  display: flex;
+  width: 581px;
+  max-width: 100%;
+  justify-content: space-between;
+}
+
+.tournament-statistics-result {
+  margin: 0 70px 0;
+}
+
+.tournament-statistics-text-format {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  color: #fff;
+  font-family: "Acme", sans-serif;
+  font-size: 30px;
+  margin-top: 8px;
+}
+
+.tournament-statistics-text-format.last {
+  margin-bottom: 34px;
+}
+
+.logo-stats {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+.logo-stats:hover {
+  transform: translateY(-3px);
 }

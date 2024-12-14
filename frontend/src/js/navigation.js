@@ -189,24 +189,14 @@ function goToLoadedTournament(id) {
   updateHistory(goToLoadedTournament);
 }
 
-function goToTournamentStats(id) {
-  lobby.style.display = "none";
-  gameStart.style.display = "none";
-  overlay.style.display = "none";
-  profile.style.display = "none";
-  tournamentSetup.style.display = "none";
-  tournament.style.display = "block";
-  firstSemifinalContent.style.display = "flex";
-  secondSemifinalContent.style.display = "flex";
-  finalContent.style.display = "none";
-  startFirstSemifinalButton.style.display = "none";
-  startSecondSemifinalButton.style.display = "none";
-  startFinalButton.style.display = "none";
-  tournamentResults.style.display = "none";
+function goToTournamentStats() {
+  overlay.style.display = "block";
   tournamentStatistics.style.display = "block";
+}
 
-  loadTournament(id);
-  // updateHistory(goToLoadedTournament);
+function goToTournamentFromStats() {
+  overlay.style.display = "none";
+  tournamentStatistics.style.display = "none";
 }
 
 function goToProfile() {

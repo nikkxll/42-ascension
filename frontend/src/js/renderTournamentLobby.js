@@ -189,6 +189,8 @@ function loadTournament(tournamentId) {
   const finalContent = document.getElementById("finalContent");
   const finalDummy = document.getElementById("final");
 
+  finalDummy.style.display = "flex";
+
   if (!tournament?.matches[0]?.score && !tournament?.matches[1]?.score)
     startFirstSemifinalButton.style.display = "block";
   else if (tournament?.matches[0]?.score && !tournament?.matches[1]?.score)
@@ -198,12 +200,13 @@ function loadTournament(tournamentId) {
     tournament?.matches[1]?.score &&
     !tournament?.winner
   )
-  startFinalButton.style.display = "block";
+    startFinalButton.style.display = "block";
 
   if (tournament?.winner) {
     tournamentResults.style.display = "block";
   }
 
+  generateTournamentResults(tournament);
   const neededPlayers = getNeededPlayers();
   const tournamentPlayers = getTournamentPlayers();
 
@@ -211,36 +214,33 @@ function loadTournament(tournamentId) {
 
   function getNeededPlayers() {
     const players = [];
-    
+
     const semiFinal1 = tournament?.matches?.[0];
     const semiFinal2 = tournament?.matches?.[1];
     const finalWinner = tournament?.winner;
-  
+
     const getWinningPlayerId = (match) => {
       const [score1, score2] = match.score.map((score) => parseInt(score, 10));
       return score1 > score2 ? match.players?.[0]?.id : match.players?.[1]?.id;
     };
-  
+
     if (semiFinal1?.score && semiFinal2?.score && !finalWinner) {
       players.push(getWinningPlayerId(semiFinal1));
       players.push(getWinningPlayerId(semiFinal2));
-    }
-    else if (semiFinal1?.score && !finalWinner) {
+    } else if (semiFinal1?.score && !finalWinner) {
       players.push(
         getWinningPlayerId(semiFinal1),
         ...(semiFinal2?.players?.map((player) => player?.id) || [])
       );
-    }
-    else if (semiFinal1?.score && semiFinal2?.score && finalWinner) {
+    } else if (semiFinal1?.score && semiFinal2?.score && finalWinner) {
       return players;
-    }
-    else {
+    } else {
       players.push(
         ...(semiFinal1?.players?.map((player) => player?.id) || []),
         ...(semiFinal2?.players?.map((player) => player?.id) || [])
       );
     }
-  
+
     return players;
   }
 
@@ -320,7 +320,7 @@ function loadTournament(tournamentId) {
   function generateMatchContent(player1, player2, sfCount) {
     const getScore = (matchIndex, scoreIndex) => {
       const match = tournament?.matches?.[matchIndex]?.score;
-      return match ? parseInt(match[scoreIndex]) : 0;
+      return match ? parseInt(match[scoreIndex]) : "-";
     };
 
     const sfScores = {
@@ -476,4 +476,88 @@ function loadTournament(tournamentId) {
     resetTournament();
     goToLobby();
   });
+}
+
+function generateTournamentResults(tournament) {
+  const tournamentStatistics = document.getElementById("tournamentStatistics");
+  tournamentStatistics.innerHTML = "";
+
+  const totalPoints = tournament.winner
+    ? parseInt(tournament.matches[0].score[0]) +
+      parseInt(tournament.matches[0].score[1]) +
+      parseInt(tournament.matches[1].score[0]) +
+      parseInt(tournament.matches[1].score[1]) +
+      parseInt(tournament.matches[2].score[0]) +
+      parseInt(tournament.matches[2].score[1])
+    : 0;
+
+  const totalTimeSeconds = tournament.winner
+    ? parseInt(tournament.matches[0].duration) +
+      parseInt(tournament.matches[1].duration) +
+      parseInt(tournament.matches[2].duration)
+    : 0;
+
+  const fastestMatchSeconds = tournament.winner
+    ? Math.min(
+        parseInt(tournament.matches[0].duration),
+        parseInt(tournament.matches[1].duration),
+        parseInt(tournament.matches[2].duration)
+      )
+    : 0;
+
+  const totalTime = {
+    minutes: Math.floor(totalTimeSeconds / 60),
+    seconds: totalTimeSeconds % 60,
+  };
+
+  const fastestMatch = {
+    minutes: Math.floor(fastestMatchSeconds / 60),
+    seconds: fastestMatchSeconds % 60,
+  };
+
+  const averageTimePerPointSeconds = tournament.winner
+    ? parseFloat(totalTimeSeconds / totalPoints)
+    : 0;
+
+  const averageTimePerPoint = tournament.winner
+    ? {
+        minutes: Math.floor(averageTimePerPointSeconds / 60),
+        seconds: (averageTimePerPointSeconds % 60).toFixed(2),
+      }
+    : { minutes: 0, seconds: "0.00" };
+
+  tournamentStatistics.innerHTML = `
+    <div class="tournament-statistics-header">
+    <header class="tournament-statistics-header-wrapper">
+      <a class="logo-stats" onclick="goToTournamentFromStats()">
+        <img src="./assets/back_arrow.svg" alt="" />
+      </a>
+      <h1 class="tournament-statistics-title">${tournament.name}</h1>
+    </header>
+  </div>
+  <div class="tournament-statistics-result">
+    <div class="tournament-statistics-text-format">
+      <span>Total points :</span>
+      <span>${totalPoints}</span>
+    </div>
+    <div class="tournament-statistics-text-format">
+      <span>Average time per point :</span>
+      <span>${averageTimePerPoint.minutes > 0 ? "min" : ""} ${
+    averageTimePerPoint.seconds
+  } sec</span>
+    </div>
+    <div class="tournament-statistics-text-format">
+      <span>Fastest match :</span>
+      <span>${fastestMatch.minutes > 0 ? "min" : ""} ${
+        fastestMatch.seconds
+      } sec</span>
+    </div>
+    <div class="tournament-statistics-text-format last">
+      <span>Overall time in game :</span>
+      <span>${totalTime.minutes > 0 ? "min" : ""} ${
+        totalTime.seconds
+      } sec</span>
+    </div>
+  </div>
+  `;
 }
