@@ -221,15 +221,13 @@ document.getElementById("newAvatar").onchange = async (e) => {
 
 function nameUpdate(userId) {
 	const nameElement = document.getElementById("person-name");
+
 	let backupName = nameElement.innerText;
 	const buttonElement = document.querySelector(".person-name-edit-button");
 	buttonElement.removeEventListener("click", handleClick);
 	buttonElement.addEventListener("click", handleClick);
 
 	const inputHandler = () => {
-		if (!nameElement.childNodes[0]) {
-			nameElement.appendChild(document.createTextNode(""));
-		}
 		nameElement.textContent = nameElement.textContent.replace(/[^a-zA-Z0-9\s]/g, "");
 		// Ensure the name element has a text node
 		if (!nameElement.childNodes[0]) {
@@ -285,6 +283,9 @@ function nameUpdate(userId) {
 	};
 	
 	function handleClick() {
+		if (!nameElement.childNodes[0]) {
+			nameElement.appendChild(document.createTextNode(""));
+		}
 		const range = document.createRange();
 		const selection = window.getSelection();
 		// Place the cursor at the end of the content
