@@ -43,7 +43,7 @@ cd $NGINX_DIR
 mkdir $MODSEC_DIR
 cd $MODSEC_DIR
 git clone https://github.com/coreruleset/coreruleset.git
-mv $MODSEC_DIR/coreruleset/crs-setup.conf.example $MODSEC_DIR/coreruleset/crs-setup.conf
+#mv $MODSEC_DIR/coreruleset/crs-setup.conf.example $MODSEC_DIR/coreruleset/crs-setup.conf
 cp /opt/ModSecurity/modsecurity.conf-recommended $MODSEC_DIR/modsecurity.conf
 cp -a /opt/ModSecurity/unicode.mapping $MODSEC_DIR
 

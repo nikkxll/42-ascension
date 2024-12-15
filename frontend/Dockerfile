@@ -20,5 +20,6 @@ RUN chmod 755 /var/www
 COPY libModSecurity.sh ./
 RUN chmod +x ./libModSecurity.sh
 RUN ./libModSecurity.sh
+COPY crs-setup.conf.example /etc/nginx/modsec/coreruleset/crs-setup.conf
 
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
