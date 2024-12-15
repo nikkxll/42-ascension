@@ -1555,6 +1555,9 @@
             }/friends/`,
             {
               method: "POST",
+              headers: {
+                'Content-Type': 'application/json',
+              },
               body: JSON.stringify({ friendUserId: id }),
             }
           );
@@ -1574,6 +1577,9 @@
             }/friends/manage/`,
             {
               method: "POST",
+              headers: {
+                'Content-Type': 'application/json',
+              },
               body: JSON.stringify({ friendUserId: id, action: "approve" }),
             }
           );
