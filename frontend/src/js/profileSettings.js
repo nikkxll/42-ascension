@@ -221,7 +221,7 @@ document.getElementById("newAvatar").onchange = async (e) => {
 
 function nameUpdate(userId) {
 	const nameElement = document.getElementById("person-name");
-	const backupName = nameElement.innerText;
+	let backupName = nameElement.innerText;
 	const buttonElement = document.querySelector(".person-name-edit-button");
 	buttonElement.removeEventListener("click", handleClick);
 	buttonElement.addEventListener("click", handleClick);
@@ -273,6 +273,7 @@ function nameUpdate(userId) {
 		}
 		finally {
 			nameElement.setAttribute("contenteditable", false);
+			backupName = nameElement.innerText;
 		}
 		try {
 			await miniLobbyPlayersRender();
