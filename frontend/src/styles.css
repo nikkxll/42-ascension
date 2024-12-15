@@ -137,8 +137,21 @@ h2 {
 	vertical-align: middle;
 }
 
+/* Center the input field */
+input[type="file"] {
+	color: transparent;
+	width: 100%;
+  }
+  
+  /* Center the file-selector button */
+  input[type="file"]::file-selector-button {
+	display: block;
+	margin: 0 auto; /* Centers the button horizontally */
+  }
+  
 #person-name {
 	margin: unset;
+	word-break: break-all;
 }
 
 .person-name-edit-button {
@@ -151,6 +164,8 @@ h2 {
     width: 40px;
     height: 40px;
 }
+
+.newAvatarForm 
 
 .player-wins-loses {
 	padding-top: 20px;

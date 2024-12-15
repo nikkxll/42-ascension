@@ -27,7 +27,6 @@ const updateToProfile = async (index) => {
       throw new Error("Failed to get user info");
     }
     const {data } = await response.json();
-    console.log(data);
 	const winsLoses = `	<div>Wins: </div>
 						<div>
 						${data.wins || 0}
@@ -37,12 +36,9 @@ const updateToProfile = async (index) => {
 						${data.loses || 0}
 						</div>`
 	const element = document.querySelector(".player-wins-loses");
-	console.log(element);
-	console.log(winsLoses);
 	element.innerHTML = winsLoses;
-	
   } catch (error) {
-    console.error(error.message);
+	console.error(error.message);
   }
 
   try {
@@ -59,7 +55,6 @@ const updateToProfile = async (index) => {
     if (json.data.matches?.length == 0) matches.innerText = "No Matches yet";
     else {
       matches.innerHTML = "";
-      console.log(json.data.matches);
       json.data.matches?.forEach((match) => {
 		const newDiv = document.createElement("ul");
 		newDiv.classList.add("match-results");
@@ -250,6 +245,12 @@ function nameUpdate(userId) {
 		selection.removeAllRanges();
 		selection.addRange(updatedRange);
 	};
+
+	const handleEnter = async (event) => {
+		if (event.key === 'Enter') {
+			await saveName();	
+		}
+	};
 	
 	const saveName = async () => {
 		console.log("saving...", nameElement);
@@ -274,11 +275,12 @@ function nameUpdate(userId) {
 			nameElement.setAttribute("contenteditable", false);
 		}
 		try {
-			
 			await miniLobbyPlayersRender();
 		} catch (error) {
 			console.error(error.message);
 		}
+		nameElement.blur();
+		nameElement.setAttribute("contenteditable", false);
 	};
 	
 	function handleClick() {
@@ -292,16 +294,18 @@ function nameUpdate(userId) {
 		selection.removeAllRanges();
 		selection.addRange(range);
 
-		console.log("clicked", nameElement);
 		nameElement.setAttribute("contenteditable", true);
 		nameElement.focus();
 		
 		// Remove any existing input listener and re-add it
-		nameElement.removeEventListener("input",inputHandler); // Remove previous listener (if exists)
-		nameElement.addEventListener("input",inputHandler);
+		nameElement.removeEventListener("input", inputHandler); // Remove previous listener (if exists)
+		nameElement.addEventListener("input", inputHandler);
 		
 		
-		nameElement.removeEventListener("blur",saveName);
-		nameElement.addEventListener("blur",saveName);
+		nameElement.removeEventListener("blur", saveName);
+		nameElement.addEventListener("blur", saveName);
+
+		nameElement.removeEventListener("keypress", handleEnter);
+		nameElement.addEventListener("keypress", handleEnter);
 	}
 }
