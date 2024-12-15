@@ -143,6 +143,7 @@ function createTournament() {
 
     const tournamentName = getTournamentName();
 
+    window.tournamentState = {};
     window.tournamentState.name = tournamentName;
     tournamentTitle.innerHTML = generateTitle(window.tournamentState.name);
 

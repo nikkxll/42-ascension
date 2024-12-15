@@ -197,7 +197,7 @@ function goToLoadedTournament(id) {
   updateHistory(goToLoadedTournament);
 }
 
-function goToTournamentStats() {
+function goToTournamentStatistics() {
   overlay.style.display = "block";
   tournamentStatistics.style.display = "block";
 }
