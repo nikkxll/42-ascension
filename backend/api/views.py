@@ -458,7 +458,7 @@ def manage_tournaments(request):
     )
 
 
-# Get last 5 tournaments
+# Get last tournaments
 def get_tournaments(request):
     last = int(request.GET.get("last") or 5)
     tournaments = (
@@ -748,13 +748,14 @@ def get_matches(request):
 def get_player_matches(request, id):
     try:
         if request.method == "GET":
+            last = int(request.GET.get("last") or 5)
             player = get_player_by_user_id(id)
             matches = Match.objects.filter(
                 Q(player1=player)
                 | Q(player2=player)
                 | Q(player3=player)
                 | Q(player4=player)
-            ).order_by("-id")
+            ).order_by("-id")[:last]
             return JsonResponse(
                 {
                     "ok": True,

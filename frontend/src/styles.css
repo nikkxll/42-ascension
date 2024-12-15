@@ -127,6 +127,11 @@ h2 {
   margin-bottom: 10%;
 }
 
+.player-wins-loses {
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
 .friend-avatar {
   width: 12vw;
   height: 12vw;
@@ -2096,3 +2101,12 @@ section {
 .logo-stats:hover {
   transform: translateY(-3px);
 }
+
+.no-cursor {
+	cursor: unset;
+}
+
+.match-link.no-hover:hover {
+	transform: unset;
+}
+

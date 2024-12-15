@@ -19,7 +19,34 @@ const updateToProfile = async (index) => {
   }
 
   try {
-    const response = await fetch(`/api/players/${userId}/matches`, {
+    const response = await fetch(`/api/players/${userId}/stats`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to get user info");
+    }
+    const {data } = await response.json();
+    console.log(data);
+	const winsLoses = `	<div>Wins: </div>
+						<div>
+						${data.wins || 0}
+						</div>
+						<div>Loses: </div>
+						<div>
+						${data.loses || 0}
+						</div>`
+	const element = document.querySelector(".player-wins-loses");
+	console.log(element);
+	console.log(winsLoses);
+	element.innerHTML = winsLoses;
+	
+  } catch (error) {
+    console.error(error.message);
+  }
+
+  try {
+    const response = await fetch(`/api/players/${userId}/matches?last=5`, {
       method: "GET",
     });
 
@@ -33,24 +60,57 @@ const updateToProfile = async (index) => {
     else {
       matches.innerHTML = "";
       console.log(json.data.matches);
-      json.data.matches?.slice(0, 5).forEach((match) => {
-        let content = `
-          <div class='profile-games-list'">
-            <div class=${
-              Number(match.score[0]) > Number(match.score[1])
-                ? "winner-name"
-                : ""
-            }>${match.players[0].username}</div>
-            <div>vs</div>
-            <div class=${
-              Number(match.score[1]) > Number(match.score[0])
-                ? "winner-name"
-                : ""
-            }>${match.players[1].username}</div>
-            <div>[${match.score[0]}:${match.score[1]}]</div>
-          </div>
-          `;
-        matches.innerHTML += content;
+      json.data.matches?.forEach((match) => {
+		const newDiv = document.createElement("ul");
+		newDiv.classList.add("match-results");
+		let isWinner1 = undefined;
+		if (match.score !== null) {
+			isWinner1 = Number(match.score[0]) > Number(match.score[1]);
+		}
+		const matchScore = match.score
+			? match.score[0] + ":" + match.score[1]
+			: "0:0";
+
+		let team1Div = `<div class=${isWinner1 === true ? "winner-name" : ""}>
+							${match.players[0]?.displayName ?? match.players[0]?.username}
+						</div>`;
+		let team2Div = `<div class=${isWinner1 === false ? "winner-name" : ""}>
+							${match.players[1]?.displayName ?? match.players[1]?.username}
+						</div>`;
+		if (match.players.length == 4) {
+			team1Div = `<div class=${isWinner1 === true ? "winner-name" : ""}>
+							<div class="player-small-text">
+							${match.players[0]?.displayName ?? match.players[0]?.username}
+							</div>
+							<div class="player-small-text">
+							${match.players[1]?.displayName ?? match.players[1]?.username}
+							</div>
+						</div>`;
+			team2Div = `<div class=${isWinner1 === false ? "winner-name" : ""}>
+							<div class="player-small-text">
+							${match.players[2]?.displayName ?? match.players[2]?.username}
+							</div>
+							<div class="player-small-text">
+							${match.players[3]?.displayName ?? match.players[3]?.username}
+							</div>
+						</div>`;
+		}
+
+		const matchScoreDiv = `<div>
+					${match.score ? "[" + matchScore + "]" : "[0:0]"}
+				</div>`;
+
+		newDiv.innerHTML = `
+			<li class="match-result">
+			<div class="match-link no-cursor no-hover">
+				<div>${isoDateToShortDate(match.createdAt)}</div>
+				${team1Div}
+				<div class="versus-text">vs</div>
+				${team2Div}
+				${matchScoreDiv}
+			</div>
+			</li>`;
+        matches.append(newDiv);
       });
     }
   } catch (error) {
