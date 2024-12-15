@@ -104,6 +104,14 @@ async function gameTypeSelector(){
         // if tournament is created than do the last unfinished match
         if (!window.tournamentState.data){
             let userIds = window.tournamentState.userIds;
+            if (userIds[0] == window.ai_id){
+                userIds[0] = userIds[1];
+                userIds[1] = window.ai_id;
+            }
+            else if (userIds[2] == window.ai_id){
+                userIds[2] = userIds[3];
+                userIds[3] = window.ai_id;
+            }
             let body = {
                 "name": window.tournamentState.name,
                 "userIds": userIds
@@ -115,7 +123,7 @@ async function gameTypeSelector(){
         matchNumber = 0;
         console.log("matches.length=", matches.length);
         while (matchNumber < matches.length){
-            console.log("matchNumber=", matchNumber, "score=", matches[matchNumber].score);
+            //console.log("matchNumber=", matchNumber, "score=", matches[matchNumber].score);
             if (!matches[matchNumber].score){
                 break;
             }
@@ -605,7 +613,7 @@ window.startGame = async () => {
                 console.log("Game of tournament is over");
             }
             else {
-                goToHome();
+                goToLobby();
                 console.log("Game of single game or 2x2 game is over");
             }
             return 0;
