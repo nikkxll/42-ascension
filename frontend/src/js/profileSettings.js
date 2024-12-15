@@ -198,27 +198,110 @@ const updateToProfile = async (index) => {
     console.error(error.message);
   }
   goToProfile();
+	nameUpdate(userId);
 };
 
 // Avatar change
 
 document.getElementById("newAvatar").onchange = async (e) => {
-  try {
-    const response = await fetch(
-      `/api/players/${
-        window.state["loggedInUsers"][window.currentUserID].id
-      }/avatar/`,
-      {
-        method: "POST",
-        body: e.target.files[0],
-      }
-    );
-    if (!response.ok) alert("Failed to upload");
-  } catch (error) {
-    alert(error);
-    return;
-  }
-  alert("Succesful file upload");
-  console.log(window.currentUserID);
-  await updateToProfile(window.currentUserID);
+	try {
+		const response = await fetch(
+			`/api/players/${
+				window.state["loggedInUsers"][window.currentUserID].id
+			}/avatar/`,
+			{
+				method: "POST",
+				body: e.target.files[0],
+			}
+		);
+		if (!response.ok) alert("Failed to upload");
+	} catch (error) {
+		alert(error);
+		return;
+	}
+	alert("Succesful file upload");
+	console.log(window.currentUserID);
+	await updateToProfile(window.currentUserID);
 };
+
+function nameUpdate(userId) {
+	const nameElement = document.getElementById("person-name");
+	const backupName = nameElement.innerText;
+	const buttonElement = document.querySelector(".person-name-edit-button");
+	buttonElement.removeEventListener("click", handleClick);
+	buttonElement.addEventListener("click", handleClick);
+
+	const inputHandler = () => {
+		if (!nameElement.childNodes[0]) {
+			nameElement.appendChild(document.createTextNode(""));
+		}
+		nameElement.textContent = nameElement.textContent.replace(/[^a-zA-Z0-9\s]/g, "");
+		// Ensure the name element has a text node
+		if (!nameElement.childNodes[0]) {
+			nameElement.appendChild(document.createTextNode(""));
+		}
+		// Move the cursor to the end after filtering
+		const updatedRange = document.createRange();
+		const selection = window.getSelection();
+
+		updatedRange.setStart(nameElement.childNodes[0], nameElement.textContent.length || 0);
+		updatedRange.collapse(true);
+		
+		selection.removeAllRanges();
+		selection.addRange(updatedRange);
+	};
+	
+	const saveName = async () => {
+		console.log("saving...", nameElement);
+		console.log("saving...", backupName);
+		try {
+			const response = await fetch(`/api/players/${userId}/`, {
+				method: "PATCH",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ displayName: nameElement.textContent }),
+			})
+			if (!response.ok) {
+				throw new Error("Failed to update name");
+			}
+		}
+		catch (error) {
+			console.error(error.message);
+			nameElement.textContent = backupName;
+		}
+		finally {
+			nameElement.setAttribute("contenteditable", false);
+		}
+		try {
+			
+			await miniLobbyPlayersRender();
+		} catch (error) {
+			console.error(error.message);
+		}
+	};
+	
+	function handleClick() {
+		const range = document.createRange();
+		const selection = window.getSelection();
+		// Place the cursor at the end of the content
+		range.setStart(nameElement.childNodes[0], nameElement.textContent.length || 0);
+		range.collapse(true);
+		
+		// Clear any existing selections and set the new range
+		selection.removeAllRanges();
+		selection.addRange(range);
+
+		console.log("clicked", nameElement);
+		nameElement.setAttribute("contenteditable", true);
+		nameElement.focus();
+		
+		// Remove any existing input listener and re-add it
+		nameElement.removeEventListener("input",inputHandler); // Remove previous listener (if exists)
+		nameElement.addEventListener("input",inputHandler);
+		
+		
+		nameElement.removeEventListener("blur",saveName);
+		nameElement.addEventListener("blur",saveName);
+	}
+}

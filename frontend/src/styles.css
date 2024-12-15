@@ -127,6 +127,31 @@ h2 {
   margin-bottom: 10%;
 }
 
+.person-name-container {
+	margin-top: 50px;
+	margin-bottom: 50px;
+}
+
+#person-name, .edit-icon {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+#person-name {
+	margin: unset;
+}
+
+.person-name-edit-button {
+	background: unset;
+	border: unset;
+}
+
+.person-name-edit-button svg {
+	fill: #989898;
+    width: 40px;
+    height: 40px;
+}
+
 .player-wins-loses {
 	padding-top: 20px;
 	padding-bottom: 20px;

@@ -1,21 +1,25 @@
 // --- Authorization part ---
 
+async function miniLobbyPlayersRender() {
+	const response = await fetch("/api/players/current/", {
+		method: "GET",
+		headers: {
+		  "Content-Type": "application/json",
+		},
+	  });
+	  if (!response.ok) {
+		throw new Error("Failed to get logged in user");
+	  }
+	  const { data } = await response.json();
+	  window.state.loggedInUsers = data?.players;
+	  console.log("state: ", window.state.loggedInUsers);
+	  renderPlayerPanels();
+}
+
 // Getting the list of logged in users to display in the lobby
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    const response = await fetch("/api/players/current/", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (!response.ok) {
-      throw new Error("Failed to get logged in user");
-    }
-    const { data } = await response.json();
-    window.state.loggedInUsers = data?.players;
-    console.log("state: ", window.state.loggedInUsers);
-    renderPlayerPanels();
+	await miniLobbyPlayersRender();
   } catch (error) {
     console.error(error.message);
   }
