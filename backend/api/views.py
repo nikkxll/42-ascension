@@ -14,7 +14,6 @@ from django.core.files.base import ContentFile
 from django.core.files import File
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
-from PIL import Image
 
 import requests
 from django.utils.crypto import get_random_string
@@ -27,8 +26,6 @@ from django.utils import timezone
 from datetime import timedelta
 
 from .constants import AI_ID, PLAYER_KEYS, WINNER_LOSER_KEYS
-
-import re
 
 
 ##################################
@@ -207,8 +204,7 @@ def custom_login(request):
                     },
                     status=200,
                 )
-                # response.set_cookie(session_key, session_value, httponly=True, secure=True) // secure will work with HTTPS only
-                response.set_cookie(session_key, session_value, httponly=True)
+                response.set_cookie(session_key, session_value, httponly=True, secure=True, max_age=3600*24*7)
 
                 return response
             else:

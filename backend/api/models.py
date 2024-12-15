@@ -4,10 +4,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 from .constants import (
-    # TOURNAMENT_STATUS_CHOICES,
-    # ROUND_CHOICES,
-    # MATCH_STATUS_CHOICES,
-    # ACTIVITY_STATUS_CHOICES,
+
     FRIENDSHIP_STATUS_CHOICES,
 )
 
@@ -38,9 +35,6 @@ class Tournament(models.Model):
     name = models.CharField(
         max_length=100, null=False, blank=False, default="Unnamed Tournament"
     )
-    # status = models.CharField(
-    #     max_length=20, choices=TOURNAMENT_STATUS_CHOICES, default="in_progress"
-    # )  # Status of the tournament
     winner = models.ForeignKey(
         Player,
         on_delete=models.SET_NULL,
@@ -151,9 +145,6 @@ class Match(models.Model):
         related_name="loser2_matches",
         default=None,
     )
-    # status = models.CharField(
-    #     max_length=20, choices=MATCH_STATUS_CHOICES, default="scheduled"
-    # )
     duration = models.DurationField(null=True, blank=True, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
