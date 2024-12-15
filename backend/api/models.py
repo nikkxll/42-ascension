@@ -19,6 +19,9 @@ class Player(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     last_active_at = models.DateTimeField(null=True, blank=True)
 
+    class Meta:
+        ordering = ["created_at"]
+
     def __str__(self):
         return self.display_name if self.display_name else self.user.username
 
@@ -152,7 +155,6 @@ class Match(models.Model):
     class Meta:
         ordering = ["created_at"]
 
-    # BUG HERE:
     def __str__(self):
         is_match_of_4 = self.player3 and self.player4
         return f"Match {self.player1.user.username}{' and ' + self.player2.user.username if is_match_of_4 else ''} vs {self.player3.user.username + ' and ' + self.player4.user.username if is_match_of_4 else self.player2.user.username}"
