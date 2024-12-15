@@ -80,11 +80,10 @@ def check_status(player):
         return "Offline"
     return "Online"
 
-
 def get_current_players(request):
     try:
         found_session_ids = find_ids_from_sessions(request)
-        players = players = Player.objects.filter(user__id__in=found_session_ids)
+        players = Player.objects.filter(user__id__in=found_session_ids)
         players_data = [form_player_json(player) for player in players]
         return JsonResponse(
             {
@@ -99,7 +98,6 @@ def get_current_players(request):
         return JsonResponse(
             {"ok": False, "error": str(e), "statusCode": 400}, status=400
         )
-
 
 @session_authenticated_logged_in
 def get_players(request):
@@ -562,15 +560,18 @@ def get_tournament(request, id):
         {"ok": False, "error": "Invalid request method", "statusCode": 405}, status=405
     )
 
-
 def find_ids_from_sessions(request):
-    found_session_ids = [
-        decrypt_session_value(value)["id"]
-        for key, value in request.COOKIES.items()
-        if key.startswith("session_")
-    ]
+    found_session_ids = []
+    for key, value in request.COOKIES.items():
+        try:
+            decrypted_value = decrypt_session_value(value)
+            if decrypted_value and 'id' in decrypted_value:
+                found_session_ids.append(decrypted_value['id'])
+            else:
+                print(f"Invalid decrypted value for cookie {key}")
+        except Exception as e:
+            print(f"Error decrypting cookie {key}: {e}")
     return found_session_ids
-
 
 @csrf_exempt
 def get_current_sessions_tournament(request):
