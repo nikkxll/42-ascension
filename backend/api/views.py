@@ -119,7 +119,6 @@ def create_player(request):
     username = data.get("username")
     password = data.get("password")
     display_name = data.get("displayName")
-
     if not username:
         return JsonResponse(
             {"ok": False, "error": "User name is required", "statusCode": 400},
@@ -133,8 +132,9 @@ def create_player(request):
     # Create the user
     user = User.objects.create_user(username=username, password=password)
     # Create the player with the associated user
+    display_name = display_name if display_name else None
+    print(f"Creating player with username: {username}, display name: {display_name}")
     player = Player.objects.create(user=user, display_name=display_name)
-
     # Return success response
     return JsonResponse(
         {

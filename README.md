@@ -93,6 +93,7 @@ When we refer to `id`, it is always id of the built-in Django User model.
 - **Description**: Fetch the details of the logged in players. Returned ids are user ids.
 
 - **Example Response**:
+
 ```
 {
 	"ok": true,
@@ -357,7 +358,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 
 - **Query Parameters**:
 
-	- `last` **(optional)**: Specifies the number of tournaments to return. Must be a positive integer. If not provided, defaults to 5. Example: `GET /api/tournaments/?last=10`.
+  - `last` **(optional)**: Specifies the number of tournaments to return. Must be a positive integer. If not provided, defaults to 5. Example: `GET /api/tournaments/?last=10`.
 
 - **Example Response**:
 
@@ -627,6 +628,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
   - `id` (integer): The ID of the tournament.
 
 - **Example Response**:
+
 ```
 {
 	"ok": true,
@@ -667,9 +669,9 @@ Several users can be logged in at the same time. Each session is stored in cooki
 
 - **Query Parameters**:
 
-	- `last` **(optional)**: Specifies the number of matches to return. Must be a positive integer. If not provided, defaults to 10. Example: `GET /api/matches/?last=10`.
+  - `last` **(optional)**: Specifies the number of matches to return. Must be a positive integer. If not provided, defaults to 10. Example: `GET /api/matches/?last=10`.
 
-	- `finished` **(optional)**: Specifies to include only finished matches or not finished too. `?finished=false` mean that unfinished matches will be included. If not provided, defaults to true. Example: `GET /api/matches/?finished=false`.
+  - `finished` **(optional)**: Specifies to include only finished matches or not finished too. `?finished=false` mean that unfinished matches will be included. If not provided, defaults to true. Example: `GET /api/matches/?finished=false`.
 
 - **Example Response**:
 
@@ -762,11 +764,15 @@ Several users can be logged in at the same time. Each session is stored in cooki
 
 - **Endpoint**: `GET /api/players/{id}/matches/`
 
-- **Description**: Respond with array of all the player's `matches` in array of objects with a match `id`, `score`, `duration`, `createdAt` and `players` array of objects (which have the same structure as `winner` in `tournament` object). At least one login session required.
+- **Description**: Respond with array of all the player's `matches` in array of objects with a match `id`, `score`, `duration`, `createdAt` and `players` array of objects (which have the same structure as `winner` in `tournament` object). Can be limited to certain amount with `last` query parameter. At least one login session required.
 
 - **URL Parameters**:
 
   - `id` (integer): The ID of the user.
+
+- **Query Parameters**:
+
+  - `last` **(optional)**: Specifies the number of tournaments to return. Must be a positive integer. If not provided, defaults to 5. Example: `GET /api/players/{id}/matches/?last=10`.
 
 - **Example Response**:
 

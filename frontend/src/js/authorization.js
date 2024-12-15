@@ -30,17 +30,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 const requestSignUp = async () => {
   const username = document.getElementById("signUpUsername").value;
   const password = document.getElementById("signUpPassword").value;
+  const displayName = document.getElementById("displayName").value;
+  console.log(displayName, username, password);
   try {
     const response = await fetch("/api/players/", {
       method: "POST",
+	  headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         username,
         password,
-        displayName: document.getElementById("displayName").value,
+		displayName
       }),
     });
     if (!response.ok) {
-      throw new Error("Failed to sign up");
+		data = await response.json();
+      throw new Error(data.error);
     }
     const json = await response.json().then(requestLogin(username, password));
   } catch (error) {
