@@ -1,7 +1,8 @@
 async function renderRecentTournaments() {
   window.state.tournaments = await fetchRecentTournaments();
   const data = window.state.tournaments;
-  const tournamentField = document.querySelector(".tournament-details");
+//   const tournamentField = document.querySelector(".tournament-details");
+  const tournamentField = document.querySelector(".tournament-content");
   tournamentField.innerHTML = "";
   console.log(data);
 
