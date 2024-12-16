@@ -136,6 +136,8 @@ document.addEventListener("DOMContentLoaded", function () {
           player.classList.remove("player-disabled");
           player.classList.add("player-selected");
 
+          window.singleGameState["userIds"] = [];
+
           if (window.singleGameState.userIds) {
             if (index > window.state["loggedInUsers"].length - 1)
               window.singleGameState["userIds"][1] = 1;
@@ -196,6 +198,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function attachLeftPlayerListeners2v2(leftPlayers, rightPlayers) {
+    window.singleGameState["userIds"] = [];
     leftPlayers.forEach((player, index) => {
       player.classList.add("player-selectable");
 
