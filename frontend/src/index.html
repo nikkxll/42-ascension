@@ -216,7 +216,7 @@
               <button
                 type="button"
                 class="submit-button"
-                onclick="requestLoginButton()"
+                onclick="requestLoginButton(); updateHistory('lobby');"
               >
                 Sign in
               </button>
@@ -286,7 +286,7 @@
               <button
                 type="button"
                 class="submit-button"
-                onclick="requestSignUp()"
+                onclick="requestSignUp(); updateHistory('lobby');"
               >
                 Sign up
               </button>
@@ -400,7 +400,7 @@
           <button
             class="single-game-buttons clear-selection"
             tabindex="0"
-            onclick="resetAll()"
+            onclick="resetAll('2v2')"
           >
             Clear selection
           </button>
@@ -412,6 +412,7 @@
             Randomize
           </button>
           <button
+            id="start2v2"
             class="single-game-buttons start"
             tabindex="0"
             onclick="startOff()"
