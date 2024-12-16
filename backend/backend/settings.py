@@ -24,8 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# Debug mode should be set in .env file. DEBUG=0 to turn Debug mode off.
 DEBUG = os.environ.get('DEBUG', '1') == '1'  # Default to '1' if not set
-DEBUG = False
 
 ALLOWED_HOSTS = [
     'localhost',

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Pong</title>
     <link
       href="https://fonts.googleapis.com/css?family=Keania One"
       rel="stylesheet"
@@ -12,14 +12,6 @@
       href="https://fonts.googleapis.com/css2?family=Acme&display=swap"
       rel="stylesheet"
     />
-
-    <!-- Bootstrap parts for profile carousel -->
-    <!-- <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-      crossorigin="anonymous"
-    /> -->
 
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
@@ -57,17 +49,6 @@
         height: 100vh;
         padding: 0;
       }
-      /* #gameWindow {
-        width: 96vw;
-        height: 96vh;
-        position: absolute;
-        top: 2vh;
-        left: 2vw;
-        display: none;
-        background: #ffffff;
-        border: 2px solid white;
-        box-sizing: content-box;
-      } */
     </style>
   </head>
 
@@ -341,78 +322,7 @@
       <!-- Recent matches detailed stats -->
 
       <div class="matchView box half">
-        <div class="match-stats">
-          <div class="match-stats-header">
-            <header class="match-stats-header-wrapper">
-              <p onclick="history.back()" class="animation">
-                <img src="./assets/back_arrow.svg" alt="" />
-              </p>
-              <h1 class="match-stats-title-top">Match statistics</h1>
-            </header>
-          </div>
-          <div class="match-stats-result">
-            <div class="match-stats-text-format">
-              <span>Vladimir</span>
-              <span>11</span>
-            </div>
-            <div class="match-stats-text-format">
-              <span>Max</span>
-              <span>0</span>
-            </div>
-          </div>
-          <div class="match-stats-result match-stats-time-info">
-            <div class="match-stats-text-format">
-              <span>Match time:</span>
-              <span>05m 26sec</span>
-            </div>
-            <div class="match-stats-text-format">
-              <span>Date:</span>
-              <span>10/05/2024</span>
-            </div>
-          </div>
-          <div class="match-stats-header-no-arrow">
-            <h1 class="match-stats-title">H2H</h1>
-          </div>
-          <div class="match-stats-result">
-            <div class="match-stats-text-format">
-              <span>Vladimir</span>
-              <span class="match-stats-match-score">7:4</span>
-              <span>Max</span>
-            </div>
-          </div>
-          <div class="match-stats-header-no-arrow">
-            <h1 class="match-stats-title">H2H matches</h1>
-          </div>
-          <div class="match-stats-scroll-container">
-            <ul class="match-stats-list">
-              <li class="match-stats-text-format">
-                <span>Vladimir</span>
-                <span class="match-stats-match-score">11:2</span>
-                <span>Max</span>
-              </li>
-              <li class="match-stats-text-format">
-                <span>Max</span>
-                <span class="match-stats-match-score">9:11</span>
-                <span>Vladimir</span>
-              </li>
-              <li class="match-stats-text-format">
-                <span>Vladimir</span>
-                <span class="match-stats-match-score">4:11</span>
-                <span>Max</span>
-              </li>
-              <li class="match-stats-text-format">
-                <span>Vladimir</span>
-                <span class="match-stats-match-score">13:11</span>
-                <span>Max</span>
-              </li>
-              <li class="match-stats-text-format">
-                <span>Max</span>
-                <span class="match-stats-match-score">10:12</span>
-                <span>Vladimir</span>
-              </li>
-            </ul>
-          </div>
-        </div>
+        <div class="match-stats"></div>
       </div>
     </section>
 
@@ -527,8 +437,9 @@
             <form id="newAvatarForm">
               <input type="file" accept="jpg png" id="newAvatar" />
             </form>
+			<div class="player-wins-loses"></div>
             <h1>Recent matches</h1>
-            <p id="person-stats">stats go here with history</p>
+            <div id="person-stats">stats go here with history</div>
           </div>
         </div>
         <div class="profileRight">
@@ -581,57 +492,9 @@
           class="tournament-setup-name-input"
           placeholder="Enter the tournament name"
           aria-label="Enter the tournament name"
+          required
         />
       </div>
-      <!-- <div class="tournament-setup-header-container">
-        <h1 class="tournament-setup-header">Add users to the tournament</h1>
-      </div>
-      <div class="tournament-setup-grid">
-        <div class="game-player-card tournament">
-          <article class="game-player-card-inner">
-            <img
-              loading="lazy"
-              src="./assets/default_avatar.png"
-              alt="Player avatar"
-              class="tournament-setup-avatar"
-            />
-            <h3 class="tournament-setup-player-name">TestUserName1</h3>
-          </article>
-        </div>
-        <div class="game-player-card tournament">
-          <article class="game-player-card-inner">
-            <img
-              loading="lazy"
-              src="./assets/default_avatar.png"
-              alt="Player avatar"
-              class="tournament-setup-avatar"
-            />
-            <h3 class="tournament-setup-player-name">TestUserName2</h3>
-          </article>
-        </div>
-        <div class="game-player-card tournament">
-          <article class="game-player-card-inner">
-            <img
-              loading="lazy"
-              src="./assets/default_avatar.png"
-              alt="Player avatar"
-              class="tournament-setup-avatar"
-            />
-            <h3 class="tournament-setup-player-name">TestUserName3</h3>
-          </article>
-        </div>
-        <div class="game-player-card tournament">
-          <article class="game-player-card-inner">
-            <img
-              loading="lazy"
-              src="./assets/default_avatar.png"
-              alt="Player avatar"
-              class="tournament-setup-avatar"
-            />
-            <h3 class="tournament-setup-player-name">TestUserName4</h3>
-          </article>
-        </div>
-      </div> -->
       <div class="tournament-setup-buttons selection">
         <button
           class="tournament-setup-buttons button back"
@@ -643,7 +506,7 @@
         <button
           class="tournament-setup-buttons button continue"
           tabindex="0"
-          onclick="goToTournament(); updateHistory('tournament');"
+          onclick="validateTournamentName(event)"
         >
           Continue
         </button>
@@ -659,22 +522,16 @@
     <div class="tournament-main" id="tournament">
       <div class="tournament-top">
         <div class="tournament-top-left">
-          <div class="tournament-name" id="tournamentTitle">
-            <!-- <h1 class="tournament-name-text">Transcendence Cup 2024</h1> -->
-          </div>
+          <div class="tournament-name" id="tournamentTitle"></div>
           <div class="tournament-grid"></div>
         </div>
         <div class="tournament-top-right">
-          <!-- <h2 class="tournament-round h2" id="firstSemifinal">Semifinal 1</h2> -->
-
           <!-- Tournament SF1 -->
 
           <div
             class="tournament-match-container"
             id="firstSemifinalContent"
           ></div>
-
-          <!-- <h2 class="tournament-round h2" id="secondSemifinal">Semifinal 2</h2> -->
 
           <!-- Tournament SF2 -->
 
@@ -701,14 +558,6 @@
         >
           Back to menu
         </button>
-        <!-- <button
-          class="tournament-buttons button generate"
-          tabindex="0"
-          id="generateSF"
-          onclick="showSemiFinalButton()"
-        >
-          Generate bracket
-        </button> -->
         <button
           class="tournament-buttons button start-sf-1"
           tabindex="0"
@@ -733,883 +582,34 @@
         >
           Start Final
         </button>
+        <button
+          class="tournament-buttons button tournament-results"
+          tabindex="0"
+          id="tournamentResults"
+          onclick="goToTournamentStatistics()"
+        >
+          Results
+        </button>
       </div>
     </div>
-    <script>
-      history.replaceState({ view: "lobby" }, "");
-      /* Collection of all the buttons that transition the views */
-      /* adding history, that is stored in the urlparameters */
-      const views = {
-        signup: goToSignup,
-        signin: goToSignin,
-        lobby: goToLobby,
-        matchView: goToMatchView,
-        home: goToHome,
-        gamestart: goToGameStart,
-        gamestart2v2: goTo2v2GameStart,
-        tournament: goToTournament,
-        profile: goToProfile,
-        homenavigation: goToHomeNavigation,
-        loadedtournament: goToLoadedTournament,
-      };
 
-      window.addEventListener("popstate", (e) => {
-        e.preventDefault();
-        if (e.state) 
-        {
-          if (e.state['index'])
-            views[e.state["view"]](e.state['index']);
-          else
-            views[e.state["view"]]();
-        }
-        window.gameStoped = true;
-      });
+    <!-- Tournament statistics -->
 
-      const updateHistory = (f) => {
-        Object.entries(views).forEach((key) => {
-          if (key[0] == f) {
-            history.pushState({ view: key[0] }, null, "");
-            console.log(key[0]);
-          }
-        });
-      };
+    <div class="tournament-statistics" id="tournamentStatistics"></div>
 
-      /* home screen transitions */
+    <script src="./js/navigation.js"></script>
+    <script src="./js/gameStart.js"></script>
+    <script src="./js/gamePlayersSelector.js"></script>
 
-      const homeLeft = document.getElementsByClassName("homeLeft")[0];
-      const homeRight = document.getElementsByClassName("homeRight")[0];
-
-      const signup = document.getElementsByClassName("signup")[0];
-      const signin = document.getElementsByClassName("signin")[0];
-
-      const matchView = document.getElementsByClassName("matchView")[0];
-
-      /* section transitions */
-      const lobby = document.getElementById("lobby");
-      const gameStart = document.getElementById("gameStart");
-      // const singleGameSettings = document.getElementById("singleGameSettings");
-      const tournament = document.getElementById("tournament");
-      const profile = document.getElementById("profile");
-      const tournamentSetup = document.getElementById("tournamentSetup");
-      const otherGameStart = document.getElementById("gameStart2v2");
-
-      const header = document.getElementById("header");
-
-      /* overlay to protect background buttons from being accidentally clicked */
-      const overlay = document.getElementById("overlay");
-
-      /* tournament transitions */
-      const firstSemifinal = document.getElementById("firstSemifinal");
-      const secondSemifinal = document.getElementById("secondSemifinal");
-      const firstSemifinalContent = document.getElementById(
-        "firstSemifinalContent"
-      );
-      const secondSemifinalContent = document.getElementById(
-        "secondSemifinalContent"
-      );
-      const finalContent = document.getElementById("finalContent");
-      const final = document.getElementById("final");
-      // const generateSFButton = document.getElementById("generateSF");
-      const startFirstSemifinalButton = document.getElementById("startFirstSF");
-      const startSecondSemifinalButton =
-        document.getElementById("startSecondSF");
-      const startFinalButton = document.getElementById("startFinal");
-
-      function goToSignup() {
-        goToHomeNoHistory();
-        homeLeft.style.display = "none";
-        signin.style.display = "none";
-        signup.style.display = "block";
-        matchView.style.display = "none";
-        homeRight.style.display = "grid";
-      }
-
-      function goToSignin() {
-        goToHomeNoHistory();
-        homeLeft.style.display = "none";
-        signin.style.display = "block";
-        signup.style.display = "none";
-        matchView.style.display = "none";
-        homeRight.style.display = "grid";
-      }
-
-      function goToLobby() {
-        goToHomeNoHistory();
-        homeLeft.style.display = "grid";
-        signin.style.display = "none";
-        signup.style.display = "none";
-        matchView.style.display = "none";
-        homeRight.style.display = "grid";
-        gameStart.style.display = "none";
-        otherGameStart.style.display = "none";
-      }
-
-      async function goToMatchView(matchId) {
-        goToHomeNoHistory();
-        homeLeft.style.display = "grid";
-        signin.style.display = "none";
-        signup.style.display = "none";
-        matchView.style.display = "block";
-        homeRight.style.display = "none";
-        updateHistory(goToMatchView);
-        await renderDetailedMatchStats(matchId);
-      }
-
-      function goToHomeRight() {
-        goToHomeNoHistory();
-        homeLeft.style.display = "grid";
-        signin.style.display = "none";
-        signup.style.display = "none";
-        matchView.style.display = "none";
-        homeRight.style.display = "grid";
-      }
-
-      function goToHomeNoHistory() {
-        lobby.style.display = "block";
-        gameStart.style.display = "none";
-        // singleGameSettings.style.display = "none";
-        otherGameStart.style.display = "none";
-        tournament.style.display = "none";
-        profile.style.display = "none";
-        tournamentSetup.style.display = "none";
-        overlay.style.display = "none";
-      }
-
-      function goToHome() {
-        goToHomeNoHistory();
-        //resetAll();
-        updateHistory(goToHome);
-      }
-
-      function runGame() {
-        lobby.style.display = "none";
-        gameStart.style.display = "none";
-        tournament.style.display = "none";
-        profile.style.display = "none";
-        tournamentSetup.style.display = "none";
-        overlay.style.display = "none";
-        updateHistory(runGame);
-      }
-
-      // function goToSingleGameSettings() {
-      //   singleGameSettings.style.display = "block";
-      //   overlay.style.display = "block";
-      //   overlay.style.pointerEvents = "auto";
-      // }
-
-      function goToGameStart() {
-        lobby.style.display = "none";
-        gameStart.style.display = "block";
-        tournament.style.display = "none";
-        // singleGameSettings.style.display = "none";
-        profile.style.display = "none";
-        overlay.style.display = "none";
-        otherGameStart.style.display = "none";
-        renderGameStart();
-      }
-
-      function goToTournament() {
-        lobby.style.display = "none";
-        gameStart.style.display = "none";
-        overlay.style.display = "none";
-        profile.style.display = "none";
-        tournamentSetup.style.display = "none";
-        tournament.style.display = "block";
-        // generateSFButton.style.display = "block";
-        // firstSemifinal.style.display = "flex";
-        // secondSemifinal.style.display = "flex";
-        firstSemifinalContent.style.display = "flex";
-        secondSemifinalContent.style.display = "flex";
-        finalContent.style.display = "none";
-        startFirstSemifinalButton.style.display = "block";
-        startSecondSemifinalButton.style.display = "none";
-        startFinalButton.style.display = "none";
-        createTournament();
-        // const cards = document.querySelectorAll(".game-player-card-inner");
-
-        // cards.forEach((card) => {
-        //   card.classList.remove("selected");
-        //   card.classList.remove("shaded");
-        // });
-      }
-
-      function goToLoadedTournament(id) {
-        lobby.style.display = "none";
-        gameStart.style.display = "none";
-        overlay.style.display = "none";
-        profile.style.display = "none";
-        tournamentSetup.style.display = "none";
-        tournament.style.display = "block";
-        // generateSFButton.style.display = "block";
-        // firstSemifinal.style.display = "flex";
-        // secondSemifinal.style.display = "flex";
-        firstSemifinalContent.style.display = "flex";
-        secondSemifinalContent.style.display = "flex";
-        finalContent.style.display = "none";
-        startFirstSemifinalButton.style.display = "none";
-        startSecondSemifinalButton.style.display = "none";
-        startFinalButton.style.display = "none";
-        loadTournament(id);
-        // const cards = document.querySelectorAll(".game-player-card-inner");
-
-        // cards.forEach((card) => {
-        //   card.classList.remove("selected");
-        //   card.classList.remove("shaded");
-        // });
-        updateHistory(goToLoadedTournament);
-      }
-
-      function goToProfile() {
-        lobby.style.display = "none";
-        gameStart.style.display = "none";
-        tournament.style.display = "none";
-        profile.style.display = "block";
-      }
-
-      function goTo2v2GameStart() {
-        lobby.style.display = "none";
-        gameStart.style.display = "none";
-        tournament.style.display = "none";
-        profile.style.display = "none";
-        otherGameStart.style.display = "block";
-        render2v2GameStart();
-      }
-
-      function goToHomeNavigation() {
-        homeLeft.style.display = "grid";
-        homeRight.style.display = "grid";
-        signin.style.display = "none";
-        signup.style.display = "none";
-        matchView.style.display = "none";
-        updateHistory(goToHomeNavigation);
-      }
-
-      function goToAboutNavigation() {}
-
-      function goToSettingsNavigation() {}
-
-      function openTournamentSetupBox() {
-        tournamentSetup.style.display = "block";
-        overlay.style.display = "block";
-        overlay.style.pointerEvents = "auto";
-      }
-
-      function closeTournamentSetupBox() {
-        tournamentSetup.style.display = "none";
-        overlay.style.display = "none";
-        overlay.style.pointerEvents = "none";
-      }
-
-      // function showSemiFinalButton() {
-      //   firstSemifinal.style.display = "none";
-      //   secondSemifinal.style.display = "none";
-      //   firstSemifinalContent.style.display = "block";
-      //   secondSemifinalContent.style.display = "block";
-      //   generateSFButton.style.display = "none";
-      //   startFirstSemifinalButton.style.display = "block";
-      // }
-
-      window.addEventListener("DOMContentLoaded", () => {
-        const navItems = document.querySelectorAll(".navigation-header-item");
-        navItems[0].classList.add("active");
-      });
-    </script>
-    <script>
-      /* Players selector for tournament pre-setup */
-
-      document.addEventListener("DOMContentLoaded", () => {
-        const cards = document.querySelectorAll(".game-player-card-inner");
-
-        cards.forEach((card) => {
-          card.addEventListener("click", () => {
-            if (card.classList.contains("selected")) {
-              card.classList.remove("selected");
-            } else {
-              card.classList.add("selected");
-            }
-
-            const anySelected = Array.from(cards).some((c) =>
-              c.classList.contains("selected")
-            );
-
-            cards.forEach((c) => {
-              if (anySelected) {
-                if (c.classList.contains("selected")) {
-                  c.classList.remove("shaded");
-                } else {
-                  c.classList.add("shaded");
-                }
-              } else {
-                c.classList.remove("shaded");
-              }
-            });
-          });
-        });
-      });
-    </script>
-    <script>
-      /* Game start */
-
-      let gameWindow = document.getElementById("gameWindow");
-      function startOff() {
-        //const newElement = gameWindow.cloneNode(true); // Clone the element
-        //gameWindow.parentNode.replaceChild(newElement, gameWindow); // Replace it
-        //gameWindow.innerHTML = "";
-        gameWindow.style.display = "block";
-        runGame();
-        // ai = 2 two AIs: AI vs god level AI
-        // ai = 1 one AI vs human
-        // ai = 0 two humans
-        // ai = -2 four humans
-        startGame();
-
-        //document.getElementById("gameStartButton").blur();
-        //document.getElementById("gameStartButton").disabled = true;
-        //gameWindow.style.display = "none"
-      }
-
-      // function resetGameState() {
-      // 	// Add code here to reset game variables, clear game window, etc.
-      // 	 // Example: clearing game content
-      // 	 gameWindow.innerHTML = "";
-      // }
-    </script>
-    <script>
-      /* Single game players pick */
-
-      document.addEventListener("DOMContentLoaded", function () {
-        const leftGrid = document.querySelector(".single-game-grid-left");
-        const rightGrid = document.querySelector(".single-game-grid-right");
-        const leftGrid2v2 = document.querySelector("#double-game-grid-left");
-        const rightGrid2v2 = document.querySelector("#double-game-grid-right");
-        const startButton = document.querySelector(
-          ".single-game-buttons.start"
-        );
-        const startButton2v2 = document.querySelector(
-          ".single-game-buttons.start"
-        );
-        let leftSelectedIndex = null;
-        let leftSelected = [];
-        let leftPlayersSelected = 0;
-        let playersSelected = 0;
-
-        function updateStartButton() {
-          startButton.disabled = playersSelected !== 2;
-          startButton.style.opacity = playersSelected === 2 ? "1" : "0.5";
-          startButton.style.cursor =
-            playersSelected === 2 ? "pointer" : "not-allowed";
-        }
-
-        // Reset all selections
-        function resetAll(leftPlayers, rightPlayers) {
-          playersSelected = 0;
-          leftSelectedIndex = null;
-          leftPlayersSelected = 0;
-          leftSelected = [];
-          leftPlayers.forEach((p) => {
-            p.classList.remove("player-disabled", "player-selected");
-            p.classList.add("player-selectable");
-          });
-          rightPlayers.forEach((p) => {
-            p.classList.remove(
-              "player-disabled",
-              "player-selected",
-              "player-selectable"
-            );
-          });
-          updateStartButton();
-        }
-
-        function randomizeChoice(leftPlayers, rightPlayers) {
-          resetAll(leftPlayers, rightPlayers);
-
-          // Randomly select a left player
-          const randomLeftIndex = Math.floor(
-            Math.random() * leftPlayers.length
-          );
-          leftPlayers[randomLeftIndex].click();
-
-          // Randomly select an available right player
-          const availableRightPlayers = rightPlayers.filter((p) =>
-            p.classList.contains("player-selectable")
-          );
-          if (availableRightPlayers.length > 0) {
-            const randomRightIndex = Math.floor(
-              Math.random() * availableRightPlayers.length
-            );
-            availableRightPlayers[randomRightIndex].click();
-          }
-        }
-
-        // Add event listeners for left players
-        function attachLeftPlayerListeners(leftPlayers, rightPlayers) {
-          leftPlayers.forEach((player, index) => {
-            player.classList.add("player-selectable");
-
-            player.addEventListener("click", () => {
-              if (playersSelected >= 2) return;
-
-              // Disable all left players initially
-              leftPlayers.forEach((p) => {
-                p.classList.add("player-disabled");
-                p.classList.remove("player-selected");
-              });
-
-              // Select the clicked player
-              player.classList.remove("player-disabled");
-              player.classList.add("player-selected");
-              leftSelectedIndex = index;
-              if (playersSelected === 0) playersSelected++;
-
-              // Enable or disable right players based on selection
-              rightPlayers.forEach((rightPlayer, rightIndex) => {
-                rightPlayer.classList.remove(
-                  "player-disabled",
-                  "player-selectable",
-                  "player-selected"
-                );
-
-                // Enable only appropriate right players
-                if (rightIndex !== index) {
-                  rightPlayer.classList.add("player-selectable");
-                } else {
-                  rightPlayer.classList.add("player-disabled");
-                }
-              });
-              if (window.singleGameState.userIds) {
-                if (index > window.state["loggedInUsers"].length - 1)
-                  window.singleGameState["userIds"][0] = 1;
-                else
-                  window.singleGameState["userIds"][0] =
-                    window.state["loggedInUsers"][index].id;
-              } else {
-                if (index > window.state["loggedInUsers"].length - 1)
-                  window.singleGameState["userIds"] = [1, -1];
-                else
-                  window.singleGameState["userIds"] = [
-                    window.state["loggedInUsers"][index].id,
-                    -1,
-                  ];
-              }
-
-              updateStartButton();
-            });
-          });
-        }
-
-        // Add event listeners for right players
-        function attachRightPlayerListeners(rightPlayers) {
-          rightPlayers.forEach((player, index) => {
-            player.addEventListener("click", () => {
-              if (
-                leftSelectedIndex !== null &&
-                player.classList.contains("player-selectable") &&
-                playersSelected < 2
-              ) {
-                playersSelected++;
-                rightPlayers.forEach((p) => {
-                  p.classList.remove("player-selectable");
-                  p.classList.add("player-disabled");
-                });
-
-                player.classList.remove("player-disabled");
-                player.classList.add("player-selected");
-
-                if (window.singleGameState.userIds) {
-                  if (index > window.state["loggedInUsers"].length - 1)
-                    window.singleGameState["userIds"][1] = 1;
-                  else
-                    window.singleGameState["userIds"][1] =
-                      window.state["loggedInUsers"][index].id;
-                } else {
-                  if (index > window.state["loggedInUsers"].length - 1)
-                    window.singleGameState["userIds"] = [-1, 1];
-                  else
-                    window.singleGameState["userIds"] = [
-                      -1,
-                      window.state["loggedInUsers"][index].id,
-                    ];
-                }
-
-                updateStartButton();
-              }
-            });
-          });
-        }
-
-        // Observe for changes in player cards dynamically
-        const observer = new MutationObserver(() => {
-          const leftPlayers = Array.from(
-            leftGrid.querySelectorAll(".game-player-card-inner-single")
-          );
-          const rightPlayers = Array.from(
-            rightGrid.querySelectorAll(".game-player-card-inner-single")
-          );
-
-          if (leftPlayers.length > 0 && rightPlayers.length > 0) {
-            // observer.disconnect();
-            attachLeftPlayerListeners(leftPlayers, rightPlayers);
-            attachRightPlayerListeners(rightPlayers);
-
-            // Allow external reset/randomization to function
-            window.resetAll = () => resetAll(leftPlayers, rightPlayers);
-            window.randomizeChoice = () =>
-              randomizeChoice(leftPlayers, rightPlayers);
-
-            // Initialize the start button state
-            updateStartButton();
-          }
-        });
-
-        function randomizeChoice2v2(leftPlayers, rightPlayers) {
-          resetAll(leftPlayers, rightPlayers);
-
-          // Randomly select a left player
-          const randomLeftIndex = Math.floor(
-            Math.random() * leftPlayers.length
-          );
-          leftPlayers[randomLeftIndex].click();
-
-          const randomLeftOtherIndex = Math.floor(
-            (randomLeftIndex + Math.random() * (leftPlayers.length - 1) + 1) %
-              leftPlayers.length
-          );
-          leftPlayers[randomLeftOtherIndex].click();
-        }
-
-        function attachLeftPlayerListeners2v2(leftPlayers, rightPlayers) {
-          leftPlayers.forEach((player, index) => {
-            player.classList.add("player-selectable");
-
-            player.addEventListener("click", () => {
-              if (leftSelected.includes(index)) {
-              } else if (leftPlayersSelected < 2) {
-                leftSelected.push(index);
-                leftPlayersSelected++;
-                player.classList.add("player-selected");
-                player.classList.remove("player-selectable");
-              }
-              if (leftPlayersSelected == 2) {
-                const allIds = window.state.loggedInUsers.map((p) => p.id);
-                leftSelected.sort();
-                window.singleGameState["userIds"] = [
-                  allIds[leftSelected[0]],
-                  allIds[leftSelected[1]],
-                ];
-                for (let i = 0; i < 4; i++) {
-                  if (!leftSelected.includes(i))
-                    window.singleGameState["userIds"].push(allIds[i]);
-                }
-              }
-
-              // Enable or disable right players based on selection
-              rightPlayers.forEach((rightPlayer, rightIndex) => {
-                rightPlayer.classList.remove(
-                  "player-disabled",
-                  "player-selectable",
-                  "player-selected"
-                );
-
-                // Enable only appropriate right players
-                if (!leftSelected.includes(rightIndex)) {
-                  rightPlayer.classList.add("player-selectable");
-                  if (leftPlayersSelected === 2) {
-                    leftPlayers[rightIndex].classList.add("player-disabled");
-                    rightPlayer.classList.add("player-selected");
-                  }
-                } else {
-                  rightPlayer.classList.add("player-disabled");
-                }
-              });
-              updateStartButton2v2();
-            });
-          });
-        }
-
-        function updateStartButton2v2() {
-          startButton2v2.disabled = leftPlayersSelected !== 2;
-          startButton2v2.style.opacity =
-            leftPlayersSelected === 2 ? "1" : "0.5";
-          startButton2v2.style.cursor =
-            leftPlayersSelected === 2 ? "pointer" : "not-allowed";
-        }
-        // Observe for changes in player cards dynamically
-        const observer2v2 = new MutationObserver(() => {
-          const leftPlayers = Array.from(
-            leftGrid2v2.querySelectorAll(".game-player-card-inner-single")
-          );
-          const rightPlayers = Array.from(
-            rightGrid2v2.querySelectorAll(".game-player-card-inner-single")
-          );
-
-          if (leftPlayers.length > 0 && rightPlayers.length > 0) {
-            // observer.disconnect();
-            attachLeftPlayerListeners2v2(leftPlayers, rightPlayers);
-
-            // Allow external reset/randomization to function
-            window.resetAll = () => resetAll(leftPlayers, rightPlayers);
-            window.randomizeChoice2v2 = () =>
-              randomizeChoice2v2(leftPlayers, rightPlayers);
-
-            // Initialize the start button state
-            updateStartButton();
-          }
-        });
-
-        // Start observing the grids for changes
-        observer.observe(leftGrid, { childList: true, subtree: true });
-        observer.observe(rightGrid, { childList: true, subtree: true });
-        observer2v2.observe(leftGrid2v2, { childList: true, subtree: true });
-        observer2v2.observe(rightGrid2v2, { childList: true, subtree: true });
-      });
-    </script>
+    <!-- Bootstrap parts for profile carousel -->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
 
-    <!-- Bootstrap parts for profile carousel -->
-    <!-- <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-      crossorigin="anonymous"
-    ></script> -->
-    <script>
-      // player profile functions
-      const updateToProfile = async (index) => {
-        const userId = window.state["loggedInUsers"][index].id;
-        window.currentUserID = index;
-        try {
-          const response = await fetch(`/api/players/${userId}/`, {
-            method: "GET",
-          });
-
-          if (!response.ok) {
-            throw new Error("Failed to get user info");
-          }
-          const json = await response.json();
-          console.log(json.data.avatarUrl);
-          document.getElementById("person-avatar").src =
-            json.data.avatarUrl || "./assets/default_avatar.png";
-          document.getElementById("person-name").innerText =
-            json.data.displayName;
-        } catch (error) {
-          console.error(error.message);
-        }
-
-        try {
-          const response = await fetch(`/api/players/${userId}/matches`, {
-            method: "GET",
-          });
-
-          if (!response.ok) {
-            goToHome();
-            throw new Error("Failed to get user matches");
-          }
-          const json = await response.json();
-          const matches = document.getElementById("person-stats");
-          if (json.data.matches?.length == 0)
-            matches.innerText = "No Matches yet";
-          else {
-            matches.innerHTML = "";
-            console.log(json.data.matches);
-            json.data.matches?.slice(0, 5).forEach((match) => {
-              let content = `
-              <div class='profile-games-list'">
-                <div class=${
-                  parseInt(match.score[0]) > parseInt(match.score[1])
-                    ? "winner-name"
-                    : ""
-                }>${match.players[0].username}</div>
-                <div>vs</div>
-                <div class=${
-                  parseInt(match.score[1]) > parseInt(match.score[0])
-                    ? "winner-name"
-                    : ""
-                }>${match.players[1].username}</div>
-                <div>[${match.score[0]}:${match.score[1]}]</div>
-              </div>
-              `;
-              matches.innerHTML += content;
-            });
-          }
-        } catch (error) {
-          console.error(error.message);
-        }
-
-        try {
-          const response = await fetch(`/api/players/`, {
-            method: "GET",
-          });
-
-          if (!response.ok) {
-            goToHome();
-            throw new Error("Failed to get potential friends");
-          }
-
-          const friendsRequest = await fetch(
-            `/api/players/${userId}/friends/`,
-            {
-              method: "GET",
-            }
-          );
-
-          if (!response.ok) {
-            goToHome();
-            throw new Error("Failed to get actual friends");
-          }
-
-          const friends = await friendsRequest.json();
-
-          const json = await response.json();
-          const players = document.getElementById("friends");
-          if (json.data.players.length == 0)
-            matches.innerText = "No one else exists";
-          else {
-            players.innerHTML = "";
-            json.data.players.forEach((player, index) => {
-              let friend_marker = friends.data.friends.find(
-                (friend) => friend.id == player.id
-              );
-              let status = "";
-
-              if (friend_marker) {
-                if (friend_marker.complete) status = friend_marker.status;
-                else if (friend_marker.forMe)
-                  status = `
-                    <button onclick='approveFriendship(${player.id})'>Approve</button>
-                    <button onclick='denyFriendship(${player.id})'>Deny</button>
-                  `;
-                else if (friend_marker.forOther)
-                  status = "Waiting on approval of friendship";
-              } else {
-                status =
-                  "<button onclick='requestFriendship(" +
-                  player.id +
-                  ")'>Request Friendship</button>";
-              }
-
-              console.log(player);
-
-              let content = `
-              <div class="carousel-item ${index == 0 ? "active" : ""}">
-                <img class="friend-avatar" src="${
-                  player.avatarUrl || "./assets/default_avatar.png"
-                }">
-                <h1 class="friend-name">${
-                  player.displayName || player.username
-                }</h1>
-                <div style="display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 0.5vw;">
-                  ${
-                    friend_marker && friend_marker.complete
-                      ? `<img class="friend-login-status" src="./assets/${
-                          friend_marker.status === "Online"
-                            ? "online.png"
-                            : "offline.png"
-                        }">`
-                      : ""
-                  }
-                  <div class="friend-status">
-                    ${status}
-                  </div>
-                </div>
-              </div>
-              `;
-              if (player.id != userId) players.innerHTML += content;
-            });
-          }
-        } catch (error) {
-          console.error(error.message);
-        }
-        goToProfile();
-      };
-
-      document.getElementById("newAvatar").onchange = async (e) => {
-        try {
-          const response = await fetch(
-            `/api/players/${
-              window.state["loggedInUsers"][window.currentUserID].id
-            }/avatar/`,
-            {
-              method: "POST",
-              body: e.target.files[0],
-            }
-          );
-          if (!response.ok) alert("Failed to upload");
-        } catch (error) {
-          alert(error);
-          return;
-        }
-        alert("Succesful file upload");
-        console.log(window.currentUserID);
-        await updateToProfile(window.currentUserID);
-      };
-    </script>
-    <script>
-      const requestFriendship = async (id) => {
-        try {
-          const response = await fetch(
-            `/api/players/${
-              window.state["loggedInUsers"][window.currentUserID].id
-            }/friends/`,
-            {
-              method: "POST",
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ friendUserId: id }),
-            }
-          );
-          if (!response.ok) alert("Failed to send request");
-        } catch (error) {
-          alert(error);
-          return;
-        }
-        await updateToProfile(window.currentUserID);
-      };
-
-      const approveFriendship = async (id) => {
-        try {
-          const response = await fetch(
-            `/api/players/${
-              window.state["loggedInUsers"][window.currentUserID].id
-            }/friends/manage/`,
-            {
-              method: "POST",
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ friendUserId: id, action: "approve" }),
-            }
-          );
-          if (!response.ok) alert("Failed to approve");
-        } catch (error) {
-          alert(error);
-          return;
-        }
-        await updateToProfile(window.currentUserID);
-      };
-
-      const denyFriendship = async (id) => {
-        try {
-          const response = await fetch(
-            `/api/players/${
-              window.state["loggedInUsers"][window.currentUserID].id
-            }/friends/manage/`,
-            {
-              method: "POST",
-              body: JSON.stringify({ friendUserId: id, action: "approve" }),
-            }
-          );
-          if (!response.ok) alert("Failed to deny");
-        } catch (error) {
-          alert(error);
-          return;
-        }
-        await updateToProfile(window.currentUserID);
-      };
-    </script>
+    <script src="./js/profileSettings.js"></script>
+    <script src="./js/profileFriendship.js"></script>
     <script>
       async function open42Auth() {
         // Popup window configuration
@@ -1622,9 +622,9 @@
         const popup = window.open(
           "https://localhost:8443/api/oauth/redirect", // This should match your Django URL pattern
           "42 Authorization"
-        )
-        const timer = setInterval(async () => { 
-          if(popup.closed) {
+        );
+        const timer = setInterval(async () => {
+          if (popup.closed) {
             clearInterval(timer);
             try {
               const response = await fetch("/api/players/current/", {
@@ -1643,9 +643,9 @@
             } catch (error) {
               console.error(error.message);
             }
-            goToLobby()
+            goToLobby();
           }
-          }, 1000);
+        }, 1000);
       }
     </script>
     <script>
@@ -1655,6 +655,22 @@
           return false;
         }
         return true;
+      }
+    </script>
+    <script>
+      function validateTournamentName(event) {
+        const tournamentInput = document.getElementById("tournamentName");
+
+        if (tournamentInput.value.trim() === "") {
+          tournamentInput.setCustomValidity("Tournament name cannot be empty.");
+          tournamentInput.reportValidity();
+          event.preventDefault();
+          return false;
+        }
+
+        tournamentInput.setCustomValidity("");
+        goToTournament();
+        updateHistory("tournament");
       }
     </script>
   </body>

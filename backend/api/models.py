@@ -4,10 +4,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 from .constants import (
-    # TOURNAMENT_STATUS_CHOICES,
-    # ROUND_CHOICES,
-    # MATCH_STATUS_CHOICES,
-    # ACTIVITY_STATUS_CHOICES,
+
     FRIENDSHIP_STATUS_CHOICES,
 )
 
@@ -21,6 +18,9 @@ class Player(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
     last_active_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["created_at"]
 
     def __str__(self):
         return self.display_name if self.display_name else self.user.username
@@ -38,9 +38,6 @@ class Tournament(models.Model):
     name = models.CharField(
         max_length=100, null=False, blank=False, default="Unnamed Tournament"
     )
-    # status = models.CharField(
-    #     max_length=20, choices=TOURNAMENT_STATUS_CHOICES, default="in_progress"
-    # )  # Status of the tournament
     winner = models.ForeignKey(
         Player,
         on_delete=models.SET_NULL,
@@ -151,9 +148,6 @@ class Match(models.Model):
         related_name="loser2_matches",
         default=None,
     )
-    # status = models.CharField(
-    #     max_length=20, choices=MATCH_STATUS_CHOICES, default="scheduled"
-    # )
     duration = models.DurationField(null=True, blank=True, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -161,7 +155,6 @@ class Match(models.Model):
     class Meta:
         ordering = ["created_at"]
 
-    # BUG HERE:
     def __str__(self):
         is_match_of_4 = self.player3 and self.player4
         return f"Match {self.player1.user.username}{' and ' + self.player2.user.username if is_match_of_4 else ''} vs {self.player3.user.username + ' and ' + self.player4.user.username if is_match_of_4 else self.player2.user.username}"
