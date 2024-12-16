@@ -127,6 +127,46 @@ h2 {
   margin-bottom: 10%;
 }
 
+.person-name-container {
+	margin-top: 50px;
+	margin-bottom: 50px;
+}
+
+#person-name, .edit-icon {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+/* Center the input field */
+input[type="file"] {
+	color: transparent;
+	width: 100%;
+  }
+  
+  /* Center the file-selector button */
+  input[type="file"]::file-selector-button {
+	display: block;
+	margin: 0 auto; /* Centers the button horizontally */
+  }
+  
+#person-name {
+	margin: unset;
+	word-break: break-all;
+}
+
+.person-name-edit-button {
+	background: unset;
+	border: unset;
+}
+
+.person-name-edit-button svg {
+	fill: #989898;
+    width: 40px;
+    height: 40px;
+}
+
+.newAvatarForm 
+
 .player-wins-loses {
 	padding-top: 20px;
 	padding-bottom: 20px;

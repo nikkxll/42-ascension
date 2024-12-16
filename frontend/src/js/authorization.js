@@ -1,21 +1,25 @@
 // --- Authorization part ---
 
+async function miniLobbyPlayersRender() {
+	const response = await fetch("/api/players/current/", {
+		method: "GET",
+		headers: {
+		  "Content-Type": "application/json",
+		},
+	  });
+	  if (!response.ok) {
+		throw new Error("Failed to get logged in user");
+	  }
+	  const { data } = await response.json();
+	  window.state.loggedInUsers = data?.players;
+	  console.log("state: ", window.state.loggedInUsers);
+	  renderPlayerPanels();
+}
+
 // Getting the list of logged in users to display in the lobby
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    const response = await fetch("/api/players/current/", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (!response.ok) {
-      throw new Error("Failed to get logged in user");
-    }
-    const { data } = await response.json();
-    window.state.loggedInUsers = data?.players;
-    console.log("state: ", window.state.loggedInUsers);
-    renderPlayerPanels();
+	await miniLobbyPlayersRender();
   } catch (error) {
     console.error(error.message);
   }
@@ -26,17 +30,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 const requestSignUp = async () => {
   const username = document.getElementById("signUpUsername").value;
   const password = document.getElementById("signUpPassword").value;
+  const displayName = document.getElementById("displayName").value;
+  console.log(displayName, username, password);
   try {
     const response = await fetch("/api/players/", {
       method: "POST",
+	  headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         username,
         password,
-        displayName: document.getElementById("displayName").value,
+		displayName
       }),
     });
     if (!response.ok) {
-      throw new Error("Failed to sign up");
+		data = await response.json();
+      throw new Error(data.error);
     }
     const json = await response.json().then(requestLogin(username, password));
   } catch (error) {
