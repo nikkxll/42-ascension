@@ -45,11 +45,15 @@ const requestSignUp = async () => {
       }),
     });
     if (!response.ok) {
-		data = await response.json();
+		const data = await response.json();
+		console.log(data);
       throw new Error(data.error);
     }
     const json = await response.json().then(requestLogin(username, password));
   } catch (error) {
+	if (error.message.trim().includes("User already exists")) {
+		alert(error.message);
+	}
     console.error(error.message);
   }
 };
