@@ -5,12 +5,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const rightGrid = document.querySelector(".single-game-grid-right");
   const leftGrid2v2 = document.querySelector("#double-game-grid-left");
   const rightGrid2v2 = document.querySelector("#double-game-grid-right");
-  const startButton = document.querySelector(
-    ".single-game-buttons.start"
-  );
-  const startButton2v2 = document.querySelector(
-    ".single-game-buttons.start"
-  );
+  const startButton = document.querySelector(".single-game-buttons.start");
+  const startButton2v2 = document.querySelector("#start2v2");
   let leftSelectedIndex = null;
   let leftSelected = [];
   let leftPlayersSelected = 0;
@@ -24,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Reset all selections
-  function resetAll(leftPlayers, rightPlayers) {
+  function resetAll(leftPlayers, rightPlayers, mode) {
     playersSelected = 0;
     leftSelectedIndex = null;
     leftPlayersSelected = 0;
@@ -40,16 +36,18 @@ document.addEventListener("DOMContentLoaded", function () {
         "player-selectable"
       );
     });
+    if (mode === "2v2") {
+      updateStartButton2v2();
+      return;
+    }
     updateStartButton();
   }
 
   function randomizeChoice(leftPlayers, rightPlayers) {
-    resetAll(leftPlayers, rightPlayers);
+    resetAll(leftPlayers, rightPlayers, '1v1');
 
     // Randomly select a left player
-    const randomLeftIndex = Math.floor(
-      Math.random() * leftPlayers.length
-    );
+    const randomLeftIndex = Math.floor(Math.random() * leftPlayers.length);
     leftPlayers[randomLeftIndex].click();
 
     // Randomly select an available right player
@@ -138,6 +136,8 @@ document.addEventListener("DOMContentLoaded", function () {
           player.classList.remove("player-disabled");
           player.classList.add("player-selected");
 
+          window.singleGameState["userIds"] = [];
+
           if (window.singleGameState.userIds) {
             if (index > window.state["loggedInUsers"].length - 1)
               window.singleGameState["userIds"][1] = 1;
@@ -175,9 +175,8 @@ document.addEventListener("DOMContentLoaded", function () {
       attachRightPlayerListeners(rightPlayers);
 
       // Allow external reset/randomization to function
-      window.resetAll = () => resetAll(leftPlayers, rightPlayers);
-      window.randomizeChoice = () =>
-        randomizeChoice(leftPlayers, rightPlayers);
+      window.resetAll = () => resetAll(leftPlayers, rightPlayers, '1v1');
+      window.randomizeChoice = () => randomizeChoice(leftPlayers, rightPlayers);
 
       // Initialize the start button state
       updateStartButton();
@@ -185,12 +184,10 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   function randomizeChoice2v2(leftPlayers, rightPlayers) {
-    resetAll(leftPlayers, rightPlayers);
+    resetAll(leftPlayers, rightPlayers, '2v2');
 
     // Randomly select a left player
-    const randomLeftIndex = Math.floor(
-      Math.random() * leftPlayers.length
-    );
+    const randomLeftIndex = Math.floor(Math.random() * leftPlayers.length);
     leftPlayers[randomLeftIndex].click();
 
     const randomLeftOtherIndex = Math.floor(
@@ -201,6 +198,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function attachLeftPlayerListeners2v2(leftPlayers, rightPlayers) {
+    window.singleGameState["userIds"] = [];
     leftPlayers.forEach((player, index) => {
       player.classList.add("player-selectable");
 
@@ -251,8 +249,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function updateStartButton2v2() {
     startButton2v2.disabled = leftPlayersSelected !== 2;
-    startButton2v2.style.opacity =
-      leftPlayersSelected === 2 ? "1" : "0.5";
+    startButton2v2.style.opacity = leftPlayersSelected === 2 ? "1" : "0.5";
     startButton2v2.style.cursor =
       leftPlayersSelected === 2 ? "pointer" : "not-allowed";
   }
@@ -270,12 +267,12 @@ document.addEventListener("DOMContentLoaded", function () {
       attachLeftPlayerListeners2v2(leftPlayers, rightPlayers);
 
       // Allow external reset/randomization to function
-      window.resetAll = () => resetAll(leftPlayers, rightPlayers);
+      window.resetAll = () => resetAll(leftPlayers, rightPlayers, '2v2');
       window.randomizeChoice2v2 = () =>
         randomizeChoice2v2(leftPlayers, rightPlayers);
 
       // Initialize the start button state
-      updateStartButton();
+      updateStartButton2v2();
     }
   });
 

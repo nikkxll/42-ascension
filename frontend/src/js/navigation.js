@@ -141,6 +141,7 @@ function goToHomeNoHistory() {
 function runGame() {
   lobby.style.display = "none";
   gameStart.style.display = "none";
+  otherGameStart.style.display = "none";
   tournament.style.display = "none";
   profile.style.display = "none";
   tournamentSetup.style.display = "none";
