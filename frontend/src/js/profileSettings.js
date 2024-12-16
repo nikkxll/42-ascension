@@ -170,7 +170,7 @@ const updateToProfile = async (index) => {
             <h1 class="friend-name">${
               player.displayName || player.username
             }</h1>
-            <div style="display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 0.5vw;">
+            <div class="friend-status-container">
               ${
                 friend_marker && friend_marker.complete
                   ? `<img class="friend-login-status" src="./assets/${
