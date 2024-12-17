@@ -276,6 +276,7 @@ function nameUpdate(userId) {
   const saveName = async () => {
     console.log("saving...", nameElement);
     console.log("saving...", backupName);
+	console.log(userId);
     try {
       const response = await fetch(`/api/players/${userId}/`, {
         method: "PATCH",

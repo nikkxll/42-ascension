@@ -41,7 +41,7 @@ const requestSignUp = async () => {
       body: JSON.stringify({
         username,
         password,
-		displayName
+		    displayName
       }),
     });
     if (!response.ok) {
@@ -99,6 +99,7 @@ const requestLogin = async (_username, _password) => {
     clearAuthInputs();
     printLoggedinUsers();
     goToLobby();
+    updateHistory('lobby');
     renderPlayerPanels();
   } catch (error) {
     console.error(error.message);

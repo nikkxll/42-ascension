@@ -160,7 +160,7 @@
 
         <div class="buttonContainer">
           <button
-            onclick="goToGameStart();updateHistory('gamestart');"
+            onclick="goToGameStart(); updateHistory('gamestart');"
             class="create-action"
             tabindex="0"
             aria-label="Create Single Game"
@@ -176,7 +176,7 @@
             CREATE TOURNAMENT
           </button>
           <button
-            onclick="goTo2v2GameStart(); updateHistory('gamestart2v2')"
+            onclick="goTo2v2GameStart()"
             class="create-action"
             tabindex="0"
             aria-label="Create Single Game"
@@ -216,7 +216,7 @@
               <button
                 type="button"
                 class="submit-button"
-                onclick="requestLoginButton(); updateHistory('lobby');"
+                onclick="requestLoginButton()"
               >
                 Sign in
               </button>
@@ -286,7 +286,7 @@
               <button
                 type="button"
                 class="submit-button"
-                onclick="requestSignUp(); updateHistory('lobby');"
+                onclick="requestSignUp()"
               >
                 Sign up
               </button>
