@@ -80,8 +80,10 @@ const renderMatches = async (userId) => {
 	}
 }
 
-const updateToProfile = async (userId) => {
+const updateToProfile = async (index) => {
 	console.log("updateToProfile called");
+	const userId = window.state["loggedInUsers"][index].id;
+	window.currentUserID = index;
 	try {
 		const response = await fetch(`/api/players/${userId}/`, {
 			method: "GET",
@@ -91,6 +93,7 @@ const updateToProfile = async (userId) => {
 			throw new Error("Failed to get user info");
 		}
 		const json = await response.json();
+		console.log("json.data.avatarUrl", json.data.avatarUrl);
 		renderAvatar(json.data.avatarUrl)
 		document.getElementById("person-name").innerText = json.data.displayName;
 		nameUpdate(userId);
