@@ -214,7 +214,7 @@ document.getElementById("newAvatar").onchange = async (e) => {
 		alert(error);
 		return;
 	}
-	alert("Succesful file upload");
+	alert("Successful file upload");
 	console.log(window.currentUserID);
 	await updateToProfile(window.currentUserID);
 };
