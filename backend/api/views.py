@@ -423,7 +423,7 @@ def get_player_stats(request, id):
         if request.method == "GET":
             player = get_player_by_user_id(id)
             wins = Match.objects.filter(Q(winner1=player) | Q(winner2=player)).count()
-            losses = Match.objects.filter(Q(winner1=player) | Q(winner2=player)).count()
+            losses = Match.objects.filter(Q(loser1=player) | Q(loser2=player)).count()
             return JsonResponse(
                 {
                     "ok": True,
