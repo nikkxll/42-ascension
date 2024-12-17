@@ -7,46 +7,7 @@ const renderAvatar = (url) => {
 	url || "./assets/default_avatar.png";
 }
 
-const updateToProfile = async (index) => {
-	console.log("updateToProfile called");
-	const userId = window.state["loggedInUsers"][index].id;
-	window.currentUserID = index;
-	try {
-		const response = await fetch(`/api/players/${userId}/`, {
-			method: "GET",
-		});
-
-		if (!response.ok) {
-			throw new Error("Failed to get user info");
-		}
-		const json = await response.json();
-		renderAvatar(json.data.avatarUrl)
-		document.getElementById("person-name").innerText = json.data.displayName;
-	} catch (error) {
-		console.error(error.message);
-	}
-
-	// Stats
-	try {
-		const response = await fetch(`/api/players/${userId}/stats`, {
-			method: "GET",
-		});
-
-		if (!response.ok) {
-			throw new Error("Failed to get user info");
-		}
-		const { data } = await response.json();
-		const winsLoses = `
-							<div>Wins: </div><div>${data.wins || 0}</div>
-							<div>Loses: </div><div>${data.loses || 0}</div>
-							`;
-		const element = document.querySelector(".player-wins-loses");
-		element.innerHTML = winsLoses;
-	} catch (error) {
-		console.error(error.message);
-	}
-
-	// Matches
+const renderMatches = async (userId) => {
 	try {
 		const response = await fetch(`/api/players/${userId}/matches?last=5`, {
 			method: "GET",
@@ -117,6 +78,47 @@ const updateToProfile = async (index) => {
 	} catch (error) {
 		console.error(error.message);
 	}
+}
+
+const updateToProfile = async (userId) => {
+	console.log("updateToProfile called");
+	try {
+		const response = await fetch(`/api/players/${userId}/`, {
+			method: "GET",
+		});
+
+		if (!response.ok) {
+			throw new Error("Failed to get user info");
+		}
+		const json = await response.json();
+		renderAvatar(json.data.avatarUrl)
+		document.getElementById("person-name").innerText = json.data.displayName;
+	} catch (error) {
+		console.error(error.message);
+	}
+
+	// Stats
+	try {
+		const response = await fetch(`/api/players/${userId}/stats`, {
+			method: "GET",
+		});
+
+		if (!response.ok) {
+			throw new Error("Failed to get user info");
+		}
+		const { data } = await response.json();
+		const winsLoses = `
+							<div>Wins: </div><div>${data.wins || 0}</div>
+							<div>Loses: </div><div>${data.loses || 0}</div>
+							`;
+		const element = document.querySelector(".player-wins-loses");
+		element.innerHTML = winsLoses;
+	} catch (error) {
+		console.error(error.message);
+	}
+
+	// Matches
+	await renderMatches(userId);
 
 	// Friends
 	try {
@@ -252,8 +254,7 @@ let handleEnter;
 let saveName;
 let handleClick;
 
-function nameUpdate(index) {
-	const userId = window.state["loggedInUsers"][index].id;
+function nameUpdate(userId) {
 	const nameElement = document.getElementById("person-name");
 	
 	let prevName = nameElement.innerText;
@@ -321,8 +322,8 @@ function nameUpdate(index) {
 		} catch (error) {
 			console.error(error.message);
 		}
-		nameElement.blur();
 		nameElement.setAttribute("contenteditable", false);
+		await renderMatches(userId);
 	};
 
 	handleClick = () => {

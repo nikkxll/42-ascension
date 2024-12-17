@@ -2,9 +2,10 @@
 
 // Function that renders player panels in the lobby depending on the number of logged in users
 const handleProfileButton = (index) => {
+	const userId = window.state["loggedInUsers"][index].id;
 	goToProfile();
-	updateToProfile(index);
-	nameUpdate(index);
+	updateToProfile(userId);
+	nameUpdate(userId);
 	updateHistory('profile');
 }
 
