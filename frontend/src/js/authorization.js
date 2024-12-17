@@ -1,6 +1,7 @@
 // --- Authorization part ---
 
 async function miniLobbyPlayersRender() {
+	console.log("miniLobbyPlayersRender");
 	const response = await fetch("/api/players/current/", {
 		method: "GET",
 		headers: {
