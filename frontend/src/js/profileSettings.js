@@ -10,10 +10,10 @@ const renderPlayerGames = async (userId, element) => {
     }
     const json = await response.json();
     const matches = document.getElementById(element);
-	console.log(matches);
+    console.log(matches);
     if (json.data.matches?.length == 0) matches.innerText = "No Matches yet";
     else {
-		matches.innerHTML = "";
+      matches.innerHTML = "";
       json.data.matches?.forEach((match) => {
         const newDiv = document.createElement("ul");
         newDiv.classList.add("match-results");
@@ -144,62 +144,69 @@ const updateToProfile = async (index) => {
 
     if (json.data.players.length == 0) matches.innerText = "No one else exists";
     else {
-		players.innerHTML = "";
-		
-		for (const [index, player] of json.data.players.entries()) {
-		  if (player.id === userId) continue; // Skip the current user
-		  
-		  let friend_marker = friends.data.friends.find(
-			(friend) => friend.id == player.id
-		  );
-		  
-		  let status = "";
-		  if (friend_marker) {
-			if (friend_marker.complete) {
-			  status = friend_marker.status;
-			} else if (friend_marker.forMe) {
-			  status = `
+      players.innerHTML = "";
+
+      for (const [index, player] of json.data.players.entries()) {
+        if (player.id === userId) continue; // Skip the current user
+
+        let friend_marker = friends.data.friends.find(
+          (friend) => friend.id == player.id
+        );
+
+        let status = "";
+        if (friend_marker) {
+          if (friend_marker.complete) {
+            status = friend_marker.status;
+          } else if (friend_marker.forMe) {
+            status = `
 				<button onclick='approveFriendship(${player.id})'>Approve</button>
 				<button onclick='denyFriendship(${player.id})'>Deny</button>
 			  `;
-			} else if (friend_marker.forOther) {
-			  status = "Waiting on approval of friendship";
-			}
-		  } else {
-			status = `<button onclick='requestFriendship(${player.id})'>Request Friendship</button>`;
-		  }
-  
-		  // Create the friend container first
-		  const friendContainer = document.createElement('div');
-		  friendContainer.className = `carousel-item ${index == 0 ? "active" : ""}`;
-		  
-		  // Create the stats container with a unique ID
-		  const friendStatsId = `friend-stats-${player.id}`;
-		  
-		  friendContainer.innerHTML = `
-			<img class="friend-avatar" src="${player.avatarUrl || "./assets/default_avatar.png"}">
+          } else if (friend_marker.forOther) {
+            status = "Waiting on approval of friendship";
+          }
+        } else {
+          status = `<button onclick='requestFriendship(${player.id})'>Request Friendship</button>`;
+        }
+
+        // Create the friend container first
+        const friendContainer = document.createElement("div");
+        friendContainer.className = `carousel-item ${
+          index == 0 ? "active" : ""
+        }`;
+
+        // Create the stats container with a unique ID
+        const friendStatsId = `friend-stats-${player.id}`;
+
+        friendContainer.innerHTML = `
+			<img class="friend-avatar" src="${
+        player.avatarUrl || "./assets/default_avatar.png"
+      }">
 			<h1 class="friend-name">${player.displayName || player.username}</h1>
 			<div class="friend-status-container">
-			  ${friend_marker && friend_marker.complete
-				? `<img class="friend-login-status" src="./assets/${
-					friend_marker.status === "Online" ? "online.png" : "offline.png"
-				  }">`
-				: ""
-			  }
+		  	<div class="friend-login-status">
+			  ${
+          friend_marker && friend_marker.complete
+            ? `<img class="friend-login-status-img" src="./assets/${
+                friend_marker.status === "Online" ? "online.png" : "offline.png"
+              }">`
+            : ""
+        }
 			  <div class="friend-status">
 				${status}
 			  </div>
+			</div>
 			  <h1>Recent 5 matches</h1>
 			  <div id="${friendStatsId}" class="friend-stats"></div>
 			</div>
 		  `;
-		  
-		  players.appendChild(friendContainer);
-		  
-		  await renderPlayerGames(player.id, friendStatsId);
-		}
-	  }
-	} catch (error) {
+
+        players.appendChild(friendContainer);
+
+        await renderPlayerGames(player.id, friendStatsId);
+      }
+    }
+  } catch (error) {
     console.error(error.message);
   }
   goToProfile();

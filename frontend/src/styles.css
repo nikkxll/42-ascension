@@ -1875,6 +1875,21 @@ section {
   background-color: rgba(255, 0, 0, 0.25);
 }
 
+.friend-login-status {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
+
+.friend-login-status-img {
+  display: flex;
+  align-self: center;
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+}
+
 /* Profile match statistics container */
 
 .profile-match-statistics {
@@ -2027,12 +2042,6 @@ section {
 	justify-content: center;
 	align-items: center;
 	gap: 0.5vw;
-}
-
-.friend-login-status {
-  display: flex;
-  width: 15px;
-  height: 15px;
 }
 
 .friend-name {
