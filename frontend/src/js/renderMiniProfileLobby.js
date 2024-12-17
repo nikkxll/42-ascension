@@ -2,6 +2,13 @@
 
 // Function that renders player panels in the lobby depending on the number of logged in users
 const handleProfileButton = (index) => {
+	const players = document.getElementById("friends");
+	players.innerHTML = "";
+	const nameElement = document.getElementById("person-name");
+	nameElement.innerHTML = "";
+	const matches = document.getElementById("person-stats");
+	matches.innerHTML = "";
+	document.getElementById("person-avatar").src = "";
 	goToProfile();
 	updateToProfile(index);
 	updateHistory('profile');

@@ -8,6 +8,8 @@ const renderAvatar = (url) => {
 }
 
 const renderMatches = async (userId) => {
+	const matches = document.getElementById("person-stats");
+	matches.innerHTML = "";
 	try {
 		const response = await fetch(`/api/players/${userId}/matches?last=5`, {
 			method: "GET",
@@ -18,7 +20,6 @@ const renderMatches = async (userId) => {
 			throw new Error("Failed to get user matches");
 		}
 		const json = await response.json();
-		const matches = document.getElementById("person-stats");
 		if (json.data.matches?.length == 0) matches.innerText = "No Matches yet";
 		else {
 			matches.innerHTML = "";
@@ -93,7 +94,6 @@ const updateToProfile = async (index) => {
 			throw new Error("Failed to get user info");
 		}
 		const json = await response.json();
-		console.log("json.data.avatarUrl", json.data.avatarUrl);
 		renderAvatar(json.data.avatarUrl)
 		document.getElementById("person-name").innerText = json.data.displayName;
 		nameUpdate(userId);
@@ -125,6 +125,8 @@ const updateToProfile = async (index) => {
 	await renderMatches(userId);
 
 	// Friends
+	const players = document.getElementById("friends");
+	players.innerHTML = "";
 	try {
 		const response = await fetch(`/api/players/`, {
 			method: "GET",
@@ -147,7 +149,6 @@ const updateToProfile = async (index) => {
 		const friends = await friendsRequest.json();
 
 		const json = await response.json();
-		const players = document.getElementById("friends");
 		if (json.data.players.length == 0) matches.innerText = "No one else exists";
 		else {
 			let requestPlayers = "";
