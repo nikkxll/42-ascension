@@ -109,6 +109,7 @@ const requestLogin = async (_username, _password) => {
 
 // Logging out a user
 const logoutPlayer = async (index) => {
+	console.log("Player index: ", index, "Player id: ", window.state.loggedInUsers[index].id), " logout called";
   const userId = window.state.loggedInUsers[index].id;
   try {
     const response = await fetch(`/api/auth/logout/${userId}/`, {

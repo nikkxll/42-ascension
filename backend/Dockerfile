@@ -37,4 +37,4 @@ ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 # CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 
 # Run Gunicorn (instead of Django's runserver) in production
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "backend.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "backend.wsgi:application", "--reload"]
