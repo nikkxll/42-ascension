@@ -1,4 +1,14 @@
+/****************************************************
+ * Render update
+ ****************************************************/
+
+const renderAvatar = (url) => {
+	document.getElementById("person-avatar").src =
+	url || "./assets/default_avatar.png";
+}
+
 const updateToProfile = async (index) => {
+	console.log("updateToProfile called");
 	const userId = window.state["loggedInUsers"][index].id;
 	window.currentUserID = index;
 	try {
@@ -10,13 +20,13 @@ const updateToProfile = async (index) => {
 			throw new Error("Failed to get user info");
 		}
 		const json = await response.json();
-		document.getElementById("person-avatar").src =
-			json.data.avatarUrl || "./assets/default_avatar.png";
+		renderAvatar(json.data.avatarUrl)
 		document.getElementById("person-name").innerText = json.data.displayName;
 	} catch (error) {
 		console.error(error.message);
 	}
 
+	// Stats
 	try {
 		const response = await fetch(`/api/players/${userId}/stats`, {
 			method: "GET",
@@ -36,6 +46,7 @@ const updateToProfile = async (index) => {
 		console.error(error.message);
 	}
 
+	// Matches
 	try {
 		const response = await fetch(`/api/players/${userId}/matches?last=5`, {
 			method: "GET",
@@ -107,6 +118,7 @@ const updateToProfile = async (index) => {
 		console.error(error.message);
 	}
 
+	// Friends
 	try {
 		const response = await fetch(`/api/players/`, {
 			method: "GET",
@@ -126,7 +138,6 @@ const updateToProfile = async (index) => {
 			throw new Error("Failed to get actual friends");
 		}
 
-		// Friends
 		const friends = await friendsRequest.json();
 
 		const json = await response.json();
@@ -198,8 +209,6 @@ const updateToProfile = async (index) => {
 	} catch (error) {
 		console.error(error.message);
 	}
-	goToProfile();
-	nameUpdate(userId);
 };
 
 // Avatar change
@@ -215,24 +224,47 @@ document.getElementById("newAvatar").onchange = async (e) => {
 				body: e.target.files[0],
 			}
 		);
-		if (!response.ok) alert("Failed to upload");
+		if (!response.ok)
+			throw new Error("Failed to upload");
+		// Render new avatar
+		const json = await response.json();
+		console.log("ava json: ", json);
+		renderAvatar(json.data.avatarUrl)
 	} catch (error) {
 		alert(error);
 		return;
 	}
-	alert("Succesful file upload");
-	await updateToProfile(window.currentUserID);
+	// Update the mini lobby
+	try {
+		await miniLobbyPlayersRender();
+	} catch (error) {
+		console.error(error.message);
+	}
 };
 
-function nameUpdate(userId) {
+/****************************************************
+ * Name update
+ ****************************************************/
+
+// Declare in global scope to remove event listeners
+let handleInput;
+let handleEnter;
+let saveName;
+let handleClick;
+
+function nameUpdate(index) {
+	const userId = window.state["loggedInUsers"][index].id;
 	const nameElement = document.getElementById("person-name");
-
-	let backupName = nameElement.innerText;
+	
+	let prevName = nameElement.innerText;
 	const buttonElement = document.querySelector(".person-name-edit-button");
-	buttonElement.removeEventListener("click", handleClick);
-	buttonElement.addEventListener("click", handleClick);
 
-	const inputHandler = () => {
+	nameElement.removeEventListener("input", handleInput);
+	nameElement.removeEventListener("blur", saveName);
+	nameElement.removeEventListener("keypress", handleEnter);
+	buttonElement.removeEventListener("click", handleClick);
+
+	handleInput = () => {
 		nameElement.textContent = nameElement.textContent.replace(
 			/[^a-zA-Z0-9\s]/g,
 			""
@@ -255,13 +287,17 @@ function nameUpdate(userId) {
 		selection.addRange(updatedRange);
 	};
 
-	const handleEnter = async (event) => {
+	handleEnter = async (event) => {
 		if (event.key === "Enter") {
-			await saveName();
+			nameElement.blur();
 		}
 	};
 
-	const saveName = async () => {
+	saveName = async () => {
+		if (nameElement.innerText === prevName) {
+			nameElement.setAttribute("contenteditable", false);
+			return;
+		}
 		try {
 			const response = await fetch(`/api/players/${userId}/`, {
 				method: "PATCH",
@@ -275,10 +311,10 @@ function nameUpdate(userId) {
 			}
 		} catch (error) {
 			console.error(error.message);
-			nameElement.textContent = backupName;
+			nameElement.textContent = prevName;
 		} finally {
 			nameElement.setAttribute("contenteditable", false);
-			backupName = nameElement.innerText;
+			prevName = nameElement.innerText;
 		}
 		try {
 			await miniLobbyPlayersRender();
@@ -289,7 +325,7 @@ function nameUpdate(userId) {
 		nameElement.setAttribute("contenteditable", false);
 	};
 
-	function handleClick() {
+	handleClick = () => {
 		if (!nameElement.childNodes[0]) {
 			nameElement.appendChild(document.createTextNode(""));
 		}
@@ -309,14 +345,10 @@ function nameUpdate(userId) {
 		nameElement.setAttribute("contenteditable", true);
 		nameElement.focus();
 
-		// Remove any existing input listener and re-add it
-		nameElement.removeEventListener("input", inputHandler); // Remove previous listener (if exists)
-		nameElement.addEventListener("input", inputHandler);
-
-		nameElement.removeEventListener("blur", saveName);
+		nameElement.addEventListener("input", handleInput);
 		nameElement.addEventListener("blur", saveName);
-
-		nameElement.removeEventListener("keypress", handleEnter);
 		nameElement.addEventListener("keypress", handleEnter);
-	}
+	};
+
+	buttonElement.addEventListener("click", handleClick);
 }

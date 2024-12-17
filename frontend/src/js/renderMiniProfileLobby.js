@@ -1,6 +1,13 @@
 // --- Rendering player mini profile blocks for home page lobby ---
 
 // Function that renders player panels in the lobby depending on the number of logged in users
+const handleProfileButton = (index) => {
+	goToProfile();
+	updateToProfile(index);
+	nameUpdate(index);
+	updateHistory('profile');
+}
+
 function renderPlayerPanels() {
   const container = document.getElementById("player-panels-container");
   container.innerHTML = "";
@@ -16,7 +23,7 @@ function renderPlayerPanels() {
 				/>
 				</div>
 				<h2 class="username">${user.displayName || user.username}</h2>
-				<button class="profile-button" tabindex="0" onclick="updateToProfile(${index}); updateHistory('profile')">Profile</button>
+				<button class="profile-button" tabindex="0" onclick="handleProfileButton(${index})">Profile</button>
 				<button class="logout-button" tabindex="0" onclick="logoutPlayer(${index})">Log out</button>
 			</div>
 		`;
