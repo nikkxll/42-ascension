@@ -1363,7 +1363,7 @@ section {
   transition: box-shadow 0.3s, transform 0.3s;
 }
 .tournament-buttons.lobby {
-  margin: 3% auto 2%;
+  margin: 1% auto 2%;
 }
 .tournament-buttons.back-to-menu {
   background-color: rgba(255, 0, 0, 0.25);

@@ -491,32 +491,40 @@ function loadTournament(tournamentId) {
   });
 }
 
+const calculateTournamentStats = (tournament) => {
+  if (!tournament.winner) {
+    return { totalPoints: 0, totalTimeSeconds: 0, fastestMatchSeconds: 0 };
+  }
+
+  const matches = tournament.matches;
+
+  const totalPoints = matches
+    .slice(0, 3)
+    .reduce(
+      (sum, match) => sum + Number(match.score[0]) + Number(match.score[1]),
+      0
+    );
+
+  const matchDurations = matches
+    .slice(0, 3)
+    .map((match) => Number(match.duration));
+
+  const totalTimeSeconds = matchDurations.reduce(
+    (sum, duration) => sum + duration,
+    0
+  );
+
+  const fastestMatchSeconds = Math.min(...matchDurations);
+
+  return { totalPoints, totalTimeSeconds, fastestMatchSeconds };
+};
+
 function generateTournamentResults(tournament) {
   const tournamentStatistics = document.getElementById("tournamentStatistics");
   tournamentStatistics.innerHTML = "";
 
-  const totalPoints = tournament.winner
-    ? Number(tournament.matches[0].score[0]) +
-      Number(tournament.matches[0].score[1]) +
-      Number(tournament.matches[1].score[0]) +
-      Number(tournament.matches[1].score[1]) +
-      Number(tournament.matches[2].score[0]) +
-      Number(tournament.matches[2].score[1])
-    : 0;
-
-  const totalTimeSeconds = tournament.winner
-    ? Number(tournament.matches[0].duration) +
-      Number(tournament.matches[1].duration) +
-      Number(tournament.matches[2].duration)
-    : 0;
-
-  const fastestMatchSeconds = tournament.winner
-    ? Math.min(
-        Number(tournament.matches[0].duration),
-        Number(tournament.matches[1].duration),
-        Number(tournament.matches[2].duration)
-      )
-    : 0;
+  const { totalPoints, totalTimeSeconds, fastestMatchSeconds } =
+    calculateTournamentStats(tournament);
 
   const totalTime = {
     minutes: Math.floor(totalTimeSeconds / 60),
@@ -562,14 +570,14 @@ function generateTournamentResults(tournament) {
     <div class="tournament-statistics-text-format">
       <span>Fastest match :</span>
       <span>${fastestMatch.minutes > 0 ? "min" : ""} ${
-        fastestMatch.seconds
-      } sec</span>
+    fastestMatch.seconds
+  } sec</span>
     </div>
     <div class="tournament-statistics-text-format last">
       <span>Overall time in game :</span>
       <span>${totalTime.minutes > 0 ? "min" : ""} ${
-        totalTime.seconds
-      } sec</span>
+    totalTime.seconds
+  } sec</span>
     </div>
   </div>
   `;
