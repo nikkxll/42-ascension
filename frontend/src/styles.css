@@ -115,7 +115,7 @@ h2 {
 
 .carousel-title {
   margin-top: -56px;
-  font-size: 52px;
+  font-size: 58px;
 }
 
 .carousel-inner {
@@ -181,14 +181,25 @@ input[type="file"] {
 .player-wins-loses {
 	padding-top: 20px;
 	padding-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  padding: 5%;
+  gap: 10px;
 }
 
 .friend-avatar {
-  width: 12vw;
-  height: 12vw;
+  width: 8vw;
+  height: 8vw;
   border-radius: 10vw;
   border: 3px solid #a7a7a7;
-  margin-bottom: 10%;
+  margin-bottom: 2%;
+}
+
+.friend-stats {
+  margin-top: -17px;
 }
 
 section {
@@ -682,6 +693,8 @@ section {
   cursor: pointer;
   transition: box-shadow 0.3s, transform 0.3s;
   display: flex;
+  justify-content: center;
+  font: 24px "Acme", sans-serif;
   gap: 10px;
 }
 
@@ -2010,7 +2023,7 @@ section {
 
 .friend-status-container {
 	display: flex;
-	flex-direction: row;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	gap: 0.5vw;
