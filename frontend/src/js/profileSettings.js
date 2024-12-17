@@ -101,6 +101,7 @@ const updateToProfile = async (index) => {
       throw new Error("Failed to get user info");
     }
     const { data } = await response.json();
+    console.log(data);
     const winsLoses = `
 						<div>Wins: </div>
 						<div>
@@ -196,7 +197,7 @@ const updateToProfile = async (index) => {
 				${status}
 			  </div>
 			</div>
-			  <h1>Recent 5 matches</h1>
+			  <h1>Recent matches</h1>
 			  <div id="${friendStatsId}" class="friend-stats"></div>
 			</div>
 		  `;

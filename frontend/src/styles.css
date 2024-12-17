@@ -60,7 +60,6 @@ h2 {
 
 .profileLeft {
   position: absolute;
-  left: 0;
   width: 50%;
   height: 100%;
   display: flex;
@@ -81,17 +80,23 @@ h2 {
 }
 
 .form-container-profile-edit {
-  padding: 20px;
+  padding: 14px 45px 20px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 10px;
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+  margin: 0 auto;
+  gap: 10px;
 }
 
 .profile-left-top {
   margin: 5% 5% 0;
   display: flex;
   flex-direction: row;
+  justify-content: center;
 }
 
 #carouselExampleFade {
@@ -129,7 +134,6 @@ h2 {
   height: 100%;
   border-radius: 45px;
   background-color: rgba(18, 16, 16, 0.25);
-  backdrop-filter: blur(5px);
 }
 
 #person-avatar {
@@ -186,7 +190,7 @@ input[type="file"] {
   align-items: center;
   justify-content: center;
   font-size: 28px;
-  padding: 5%;
+  padding: 3.3% 5% 3.3%;
   gap: 10px;
 }
 
@@ -477,6 +481,7 @@ section {
 .reg-link {
   color: rgba(0, 186, 186, 1);
   text-decoration: none;
+  cursor: pointer;
 }
 .divider {
   justify-content: center;
@@ -611,11 +616,10 @@ section {
 
 .create-action {
   border-radius: 45px;
-  max-width: 789px;
-  max-height: 59px;
+  width: 47.1vw;
+  height: 59px;
   background-color: rgba(18, 16, 16, 0.25);
   backdrop-filter: blur(5px);
-  width: 100%;
   cursor: pointer;
   padding: 6px 70px 6px;
   border: 1px solid #a7a7a7;
@@ -1138,6 +1142,10 @@ section {
   padding: 12px 84px 12px;
   margin: 0px auto 32px;
   transition: box-shadow 0.3s, transform 0.3s;
+}
+
+.single-game-buttons:hover {
+  transform: translateY(-3px);
 }
 
 .single-game-buttons.back {
@@ -1686,6 +1694,10 @@ section {
   margin: 0px auto 32px;
   transition: box-shadow 0.3s, transform 0.3s;
   background-color: rgba(255, 0, 0, 0.25);
+}
+
+.profile-back-button:hover {
+  transform: translateY(-3px);
 }
 
 .profile-games-list {

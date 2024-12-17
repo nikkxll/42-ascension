@@ -49,6 +49,42 @@
         height: 100vh;
         padding: 0;
       }
+
+    .form-container-profile-edit input,
+    .form-container-profile-edit button {
+      padding: 4px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    /* Buttons styling */
+    .form-container-profile-edit button {
+      cursor: pointer;
+      background-color: #ffffff;
+      color: rgb(0, 0, 0, 1);
+      border: none;
+      transition: background-color 0.3s;
+    }
+
+    /* Button hover effect */
+    .form-container-profile-edit button:hover {
+      background-color: #000000;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Flexbox Row for Input and Buttons */
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Input fields take full width in rows */
+    .input-row input {
+      flex: 1;
+    }
+  </style>
     </style>
   </head>
 
@@ -474,12 +510,18 @@
               </div>
             </div>
             <div class="form-container-profile-edit">
-              <input type="text" placeholder="New username" />
-              <input type="password" placeholder="New password" />
-              <button type="submit">Update</button>
+              <div class="input-row">
+                <input type="text" placeholder="New username" id="username" />
+                <button type="button" onclick="updateUsername()">Update</button>
+              </div>
+              <div class="input-row">
+                <input type="password" placeholder="New password" id="password" />
+                <button type="button" onclick="updatePassword()">Update</button>
+                <button type="button" onclick="togglePasswordVisibility()">Show</button>
+              </div>
             </div>
             <div class="player-wins-loses"></div>
-            <h1>Recent 5 matches</h1>
+            <h1>Recent matches</h1>
             <div id="person-stats">stats go here with history</div>
           </div>
         </div>
@@ -712,6 +754,29 @@
         tournamentInput.setCustomValidity("");
         goToTournament();
         updateHistory("tournament");
+      }
+    </script>
+    <script>
+      function updateUsername() {
+        const username = document.getElementById("username").value;
+        alert("Username updated to: " + username);
+      }
+    
+      function updatePassword() {
+        const password = document.getElementById("password").value;
+        alert("Password updated successfully!");
+      }
+    
+      function togglePasswordVisibility() {
+        const passwordInput = document.getElementById("password");
+        const showButton = document.querySelector('button[onclick="togglePasswordVisibility()"]');
+        if (passwordInput.type === "password") {
+          passwordInput.type = "text";
+          showButton.textContent = "Hide";
+        } else {
+          passwordInput.type = "password";
+          showButton.textContent = "Show";
+        }
       }
     </script>
   </body>

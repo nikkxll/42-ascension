@@ -104,7 +104,6 @@ async function goToLobby() {
   homeRight.style.display = "grid";
   gameStart.style.display = "none";
   otherGameStart.style.display = "none";
-  resetAll();
   await renderRecentMatches();
 	await renderRecentTournaments();
 }
