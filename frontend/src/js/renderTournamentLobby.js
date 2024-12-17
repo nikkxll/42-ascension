@@ -10,6 +10,9 @@ function createTournament() {
     "secondSemifinalContent"
   );
   const tournamentTitle = document.getElementById("tournamentTitle");
+  const finalDummy = document.getElementById("final");
+
+  finalDummy.style.display = "flex";
 
   function getPlayers() {
     const players = window.state.loggedInUsers;

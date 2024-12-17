@@ -616,6 +616,7 @@ window.startGame = async () => {
             }
             else {
                 goToLobby();
+                updateHistory('lobby');
                 console.log("Game of single game or 2x2 game is over");
             }
             return 0;
