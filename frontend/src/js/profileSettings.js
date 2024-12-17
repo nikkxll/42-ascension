@@ -93,6 +93,7 @@ const updateToProfile = async (userId) => {
 		const json = await response.json();
 		renderAvatar(json.data.avatarUrl)
 		document.getElementById("person-name").innerText = json.data.displayName;
+		nameUpdate(userId);
 	} catch (error) {
 		console.error(error.message);
 	}
@@ -295,6 +296,7 @@ function nameUpdate(userId) {
 	};
 
 	saveName = async () => {
+		console.log("prevName: ", prevName);
 		if (nameElement.innerText === prevName) {
 			nameElement.setAttribute("contenteditable", false);
 			return;
@@ -308,6 +310,8 @@ function nameUpdate(userId) {
 				body: JSON.stringify({ displayName: nameElement.textContent }),
 			});
 			if (!response.ok) {
+
+		console.log("prevName: ", prevName);
 				throw new Error("Failed to update name");
 			}
 		} catch (error) {

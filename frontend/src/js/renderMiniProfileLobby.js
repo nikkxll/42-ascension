@@ -5,7 +5,6 @@ const handleProfileButton = (index) => {
 	const userId = window.state["loggedInUsers"][index].id;
 	goToProfile();
 	updateToProfile(userId);
-	nameUpdate(userId);
 	updateHistory('profile');
 }
 
