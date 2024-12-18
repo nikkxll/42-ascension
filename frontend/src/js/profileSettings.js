@@ -149,7 +149,7 @@ const updateToProfile = async (index) => {
       method: "GET",
     });
 
-    if (!response.ok) {
+    if (!friendsRequest.ok) {
       goToLobby();
       throw new Error("Failed to get actual friends");
     }
@@ -163,7 +163,7 @@ const updateToProfile = async (index) => {
       let friendPlayers = "";
       let otherPlayers = "";
       const playersArr = json.data.players.filter(
-        (player) => player.username != "ai_player"
+        (player) => (player.username !== "ai_player" && player.id !== userId)
       );
       for (const player of playersArr) {
         let friendMarker = friends.data.friends.find(
@@ -348,7 +348,12 @@ function nameUpdate(userId) {
       console.error(error.message);
     }
     nameElement.setAttribute("contenteditable", false);
-    await renderMatches(userId);
+    await renderMatches(userId, "person-stats");
+    const playersArr = await fetchPotentialFriends(userId);
+    for (const player of playersArr) {
+      const friendStatsId = `friend-stats-${player.id}`;
+      await renderMatches(player.id, friendStatsId);
+    }
   };
 
   handleClick = () => {
@@ -418,5 +423,24 @@ async function updatePassword(userId) {
     console.error(error.message);
     alert("Failed to update password");
     document.getElementById("newPassword").value = "";
+  }
+}
+
+async function fetchPotentialFriends(userId) {
+  const response = await fetch(`/api/players/`, {
+    method: "GET",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to get potential friends");
+  }
+
+  const json = await response.json();
+  if (json.data.players.length == 0) return [];
+  else {
+    const playersArr = json.data.players.filter(
+      (player) => (player.username !== "ai_player" && player.id !== userId)
+    );
+    return playersArr;
   }
 }
