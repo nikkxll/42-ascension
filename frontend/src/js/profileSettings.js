@@ -92,6 +92,10 @@ const updateToProfile = async (index) => {
     console.error(error.message);
   }
 
+  document.getElementById("usernameUpdButton").onclick = () => {
+    updateUsername(userId);
+  };
+
   try {
     const response = await fetch(`/api/players/${userId}/stats`, {
       method: "GET",
@@ -334,5 +338,27 @@ function nameUpdate(userId) {
 
     nameElement.removeEventListener("keypress", handleEnter);
     nameElement.addEventListener("keypress", handleEnter);
+  }
+}
+
+async function updateUsername(userId) {
+  const newUsername = document.getElementById("newUsername").value;
+  try {
+    const response = await fetch(`/api/players/${userId}/`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username: newUsername }),
+    });
+    if (!response.ok) {
+      throw new Error("Failed to update username");
+    }
+    console.log(response.body);
+    alert("Username successfully updated!");
+  } catch (error) {
+    console.error(error.message);
+    alert("Failed to update username");
+    document.getElementById("newUsername").value = "";
   }
 }

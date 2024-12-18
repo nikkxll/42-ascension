@@ -1709,6 +1709,37 @@ section {
   justify-content: center;
 }
 
+.form-container-profile-edit input,
+.form-container-profile-edit button {
+  padding: 4px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.form-container-profile-edit button {
+  cursor: pointer;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0, 1);
+  border: none;
+  transition: background-color 0.3s;
+}
+
+.form-container-profile-edit button:hover {
+  background-color: #000000;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.input-row input {
+  flex: 1;
+}
+
 /* Profile page container. Friends list */
 
 .profile-friend-list {
