@@ -111,12 +111,12 @@ const updateToProfile = async (index) => {
 			throw new Error("Failed to get user info");
 		}
 		const { data } = await response.json();
-		const winsLoses = `
+		const winsLosses = `
 							<div>Wins: </div><div>${data.wins || 0}</div>
-							<div>Loses: </div><div>${data.loses || 0}</div>
+							<div>Losses: </div><div>${data.losses || 0}</div>
 							`;
 		const element = document.querySelector(".player-wins-loses");
-		element.innerHTML = winsLoses;
+		element.innerHTML = winsLosses;
 	} catch (error) {
 		console.error(error.message);
 	}
