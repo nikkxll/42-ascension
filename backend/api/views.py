@@ -225,30 +225,43 @@ def custom_login(request):
 @session_authenticated_id
 def custom_logout(request, id):
     if request.method == "POST":
-        session_key = f"session_{id}"
-
-        # Check if the session exists for the given user
-        if session_key in request.COOKIES:
-            # Create a response object
-            response = JsonResponse(
-                {
-                    "ok": True,
-                    "data": {"id": id},
-                    "message": f"Logged out id:{id}",
-                    "statusCode": 200,
-                }
-            )
-            # Delete the session cookie by setting it to an empty value and an expired date
-            response.delete_cookie(session_key)
-            return response
-        else:
+        try:
+            session_key = f"session_{id}"
+            # Check if the session exists for the given user
+            if session_key in request.COOKIES:
+                session_data = decrypt_session_value(request.COOKIES.get(session_key))
+                if session_data["id"] == id:
+                    user = User.objects.get(id=id)
+                    player = Player.objects.get(user=user)
+                    if player:
+                        player.last_active_at = timezone.now() - timedelta(minutes=6)
+                        player.save()
+                    else:
+                        raise ValueError("Player object not found for the given user.")
+                    # Create a response object
+                    response = JsonResponse(
+                        {
+                            "ok": True,
+                            "data": {"id": id},
+                            "message": f"Logged out id:{id}",
+                            "statusCode": 200,
+                        }
+                    )
+                    # Delete the session cookie by setting it to an empty value and an expired date
+                    response.delete_cookie(session_key)
+                    return response
+            else:
+                return JsonResponse(
+                    {
+                        "ok": False,
+                        "error": f"No active session for id:{id}",
+                        "statusCode": 404,
+                    },
+                    status=404,
+                )
+        except Exception as e:
             return JsonResponse(
-                {
-                    "ok": False,
-                    "error": f"No active session for id:{id}",
-                    "statusCode": 404,
-                },
-                status=404,
+                {"ok": False, "error": str(e), "statusCode": 400}, status=400
             )
     return JsonResponse(
         {"ok": False, "error": "Method not allowed", "statusCode": 405}, status=405
@@ -410,7 +423,7 @@ def get_player_stats(request, id):
         if request.method == "GET":
             player = get_player_by_user_id(id)
             wins = Match.objects.filter(Q(winner1=player) | Q(winner2=player)).count()
-            losses = Match.objects.filter(Q(winner1=player) | Q(winner2=player)).count()
+            losses = Match.objects.filter(Q(loser1=player) | Q(loser2=player)).count()
             return JsonResponse(
                 {
                     "ok": True,

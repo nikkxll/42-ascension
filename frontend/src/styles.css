@@ -139,6 +139,8 @@ h2 {
 #person-avatar {
   width: 8vw;
   height: 8vw;
+  display: block;
+  margin: 0 auto;
   border-radius: 10vw;
   border: 3px solid #a7a7a7;
   margin-bottom: 3%;
@@ -1919,18 +1921,11 @@ section {
 }
 
 .friend-login-status {
+  width: 15px;
+  height: 15px;
   display: flex;
   flex-direction: row;
   justify-content: center;
-  width: 100%;
-}
-
-.friend-login-status-img {
-  display: flex;
-  align-self: center;
-  width: 15px;
-  height: 15px;
-  margin-right: 5px;
 }
 
 /* Profile match statistics container */
