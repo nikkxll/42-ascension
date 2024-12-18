@@ -12,6 +12,7 @@ async function renderGameStart() {
     );
     alert("At least one user must be logged in to start the game.");
     goToLobby();
+    updateHistory('lobby');
     return;
   }
 

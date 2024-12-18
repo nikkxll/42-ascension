@@ -24,6 +24,7 @@ async function createTournament() {
         "Error: At least three users must be logged in to start the tournament."
       );
       goToLobby();
+      updateHistory('lobby');
       return [];
     }
     return players;
@@ -156,6 +157,7 @@ async function createTournament() {
     tournamentTitle.innerHTML = generateTitle(window.tournamentState.name);
 
     generateSemifinals(filledPlayers);
+    updateHistory("tournament");
   }
 
   // Reset tournament state on "Back to menu"
@@ -172,6 +174,7 @@ async function createTournament() {
   backToMenuButton.addEventListener("click", function () {
     resetTournament();
     goToLobby();
+    updateHistory('lobby');
   });
 }
 
@@ -274,6 +277,7 @@ async function loadTournament(tournamentId) {
       );
       alert("Error: Not enough players are logged in to finish the tournament");
       goToLobby();
+      updateHistory('lobby');
     }
   }
 

@@ -210,7 +210,7 @@ const updateToProfile = async (index) => {
 						</div>
 						</div>
 			  				<h1>Recent matches</h1>
-			  				<div id="${friendStatsId}" class="friend-stats"></div>
+			  				<div id="${friendStatsId}"></div>
 						</div>
 					</div>
 				</div>

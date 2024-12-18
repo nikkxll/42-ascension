@@ -693,6 +693,7 @@
               console.error(error.message);
             }
             goToLobby();
+            updateHistory('lobby');
           }
         }, 1000);
       }
@@ -719,7 +720,6 @@
 
         tournamentInput.setCustomValidity("");
         goToTournament();
-        updateHistory("tournament");
       }
     </script>
     <script>
