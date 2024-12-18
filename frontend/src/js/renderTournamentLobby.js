@@ -1,7 +1,7 @@
 // --- Creating tournament lobby ---
 
 // Function that renders the tournament lobby section with player cards
-function createTournament() {
+async function createTournament() {
   const tournamentGrid = document.querySelector(".tournament-grid");
   const firstSemifinalContent = document.getElementById(
     "firstSemifinalContent"
@@ -34,7 +34,7 @@ function createTournament() {
     return tournamentNameInput.value.trim();
   }
 
-  function generatePlayerCards(players) {
+  async function generatePlayerCards(players) {
     tournamentGrid.innerHTML = "";
 
     const filledPlayers = [...players];
@@ -42,12 +42,19 @@ function createTournament() {
       filledPlayers.push({
         id: 1,
         username: `AI`,
-        winRate: "75%",
+        displayName: `AI Player`,
         avatar: "./assets/ai_profile.png",
       });
     }
 
-    filledPlayers.forEach((player, index) => {
+    for (const [index, player] of filledPlayers.entries()) {
+      const winRate =
+        player.username === "AI"
+          ? 99
+          : (await getPlayersStatsSingleGame(player.id)).winRate;
+
+      console.log(winRate);
+
       const playerCard = document.createElement("div");
       playerCard.className = "game-player-card";
       playerCard.innerHTML = `
@@ -59,17 +66,15 @@ function createTournament() {
               alt="Player avatar"
               class="game-player-avatar"
             />
-            <h3 class="game-player-name">${player.username}</h3>
+            <h3 class="game-player-name">${player.displayName}</h3>
             <div class="game-player-win-rate-container">
               <p class="game-player-statistics-param">Win rate</p>
-              <p class="game-player-statistics-param-number last">${
-                player.winRate ?? 0
-              }</p>
+              <p class="game-player-statistics-param-number last">${winRate}%</p>
             </div>
           </article>
         `;
       tournamentGrid.appendChild(playerCard);
-    });
+    }
     return filledPlayers;
   }
 
@@ -141,7 +146,7 @@ function createTournament() {
   const players = getPlayers();
 
   if (players.length > 0) {
-    const filledPlayers = generatePlayerCards(players);
+    const filledPlayers = await generatePlayerCards(players);
     addLabelsToPlayers(filledPlayers);
 
     const tournamentName = getTournamentName();
@@ -170,7 +175,7 @@ function createTournament() {
   });
 }
 
-function loadTournament(tournamentId) {
+async function loadTournament(tournamentId) {
   const tournaments = window.state.tournaments.tournaments;
   const tournament = tournaments.find((t) => t.id === tournamentId);
   window.tournamentState.data = tournament;
@@ -278,40 +283,37 @@ function loadTournament(tournamentId) {
     return arr2.every((element) => set1.has(element));
   }
 
-  function generatePlayerCards(tournamentPlayers) {
+  async function generatePlayerCards(players) {
     tournamentGrid.innerHTML = "";
 
-    const filledPlayers = [...tournamentPlayers];
+    const filledPlayers = [...players];
 
-    filledPlayers.forEach((player, index) => {
-      const isWinner = player.id === tournament?.winner?.id;
+    for (const [index, player] of filledPlayers.entries()) {
+      const winRate =
+        player.username === "AI"
+          ? 99
+          : (await getPlayersStatsSingleGame(player.id)).winRate;
+
       const playerCard = document.createElement("div");
       playerCard.className = "game-player-card";
-
       playerCard.innerHTML = `
-        <article class="tournament-game-player-card-inner ${
-          isWinner ? "winner" : "normal"
-        }">
-          <h2 class="game-player-number">${
-            isWinner ? "Winner" : `Player ${index + 1}`
-          }</h2>
-          <img
-            loading="lazy"
-            src="${player.avatar || "./assets/default_avatar.png"}"
-            alt="Player avatar"
-            class="game-player-avatar"
-          />
-          <h3 class="game-player-name">${player.username}</h3>
-          <div class="game-player-win-rate-container">
-            <p class="game-player-statistics-param">Win rate</p>
-            <p class="game-player-statistics-param-number last">${
-              player.winRate ?? 0
-            }</p>
-          </div>
-        </article>
-      `;
+          <article class="tournament-game-player-card-inner normal">
+            <h2 class="game-player-number">Player ${index + 1}</h2>
+            <img
+              loading="lazy"
+              src="${player.avatar || "./assets/default_avatar.png"}"
+              alt="Player avatar"
+              class="game-player-avatar"
+            />
+            <h3 class="game-player-name">${player.displayName}</h3>
+            <div class="game-player-win-rate-container">
+              <p class="game-player-statistics-param">Win rate</p>
+              <p class="game-player-statistics-param-number last">${winRate}%</p>
+            </div>
+          </article>
+        `;
       tournamentGrid.appendChild(playerCard);
-    });
+    }
     return filledPlayers;
   }
 
@@ -469,7 +471,7 @@ function loadTournament(tournamentId) {
     }
   }
 
-  const filledPlayers = generatePlayerCards(tournamentPlayers);
+  const filledPlayers = await generatePlayerCards(tournamentPlayers);
   addLabelsToPlayers(filledPlayers);
   tournamentTitle.innerHTML = generateTitle(tournament?.name);
 

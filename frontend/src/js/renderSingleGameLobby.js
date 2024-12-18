@@ -1,7 +1,7 @@
 // --- Rendering single game lobby ---
 
 // Function that renders the game lobby section with player cards
-function renderGameStart() {
+async function renderGameStart() {
   const players = window.state.loggedInUsers;
 
   const filledPlayers = [...players];
@@ -21,7 +21,7 @@ function renderGameStart() {
       displayName: "AI Player",
       avatar: "./assets/ai_profile.png",
       gamesPlayed: 999,
-      winRate: 75,
+      winRate: 99,
     });
   }
 
@@ -32,7 +32,7 @@ function renderGameStart() {
   leftGrid.innerHTML = "";
   rightGrid.innerHTML = "";
 
-  function createPlayerCard(player, playerIndex) {
+  function createPlayerCard(player, playerIndex, gamesPlayed, winRate) {
     return `
               <div class="game-player-card">
                   <article class="game-player-card-inner-single">
@@ -51,13 +51,13 @@ function renderGameStart() {
                       <div class="game-player-stats-container">
                           <p class="game-player-statistics-param">Games played</p>
                           <p class="game-player-statistics-param-number">${
-                            player.gamesPlayed ?? 0
+                            gamesPlayed ?? 0
                           }</p>
                       </div>
                       <div class="game-player-win-rate-container">
                           <p class="game-player-statistics-param">Win rate</p>
                           <p class="game-player-statistics-param-number last">${
-                            player.winRate ?? 0
+                            winRate ?? 0
                           }%</p>
                       </div>
                   </article>
@@ -65,11 +65,53 @@ function renderGameStart() {
           `;
   }
 
-  filledPlayers.forEach((player, index) => {
-    const cardHTML = createPlayerCard(player, index);
+  const playerCards = await Promise.all(
+    filledPlayers.map(async (player, index) => {
+      const playerStats =
+        player.username === "AI"
+          ? { gamesPlayed: player.gamesPlayed, winRate: player.winRate }
+          : await getPlayersStatsSingleGame(player.id);
+
+      const { gamesPlayed, winRate } = playerStats;
+
+      return createPlayerCard(player, index, gamesPlayed, winRate);
+    })
+  );
+
+  playerCards.forEach((cardHTML) => {
     leftGrid.innerHTML += cardHTML;
     rightGrid.innerHTML += cardHTML;
   });
 
   gameStartSection.style.display = "block";
+}
+
+async function getPlayersStatsSingleGame(id) {
+  try {
+    const response = await fetch(`/api/players/${id}/matches/?last=1000`, {
+      method: "GET",
+    });
+    if (!response.ok) {
+      throw new Error("Failed to fetch matches");
+    }
+    const json = await response.json();
+    console.log(json.data.matches);
+    return calculateStats(json.data.matches, id);
+  } catch (error) {
+    console.error(error.message);
+    return { gamesPlayed: 0, winRate: 0 };
+  }
+}
+
+function calculateStats(data, playerId) {
+  const gamesPlayed = data.length;
+  const wins = data.filter(
+    (match) =>
+      (Number(match.score?.[0]) > Number(match.score?.[1]) &&
+        match.players[0].id === playerId) ||
+      (Number(match.score?.[1]) > Number(match.score?.[0]) &&
+        match.players[1].id === playerId)
+  ).length;
+  const winRate = gamesPlayed === 0 ? 0 : ((wins / gamesPlayed) * 100).toFixed(0);
+  return { gamesPlayed, winRate };
 }
