@@ -96,6 +96,10 @@ const updateToProfile = async (index) => {
     updateUsername(userId);
   };
 
+  document.getElementById("passwordUpdButton").onclick = () => {
+    updatePassword(userId);
+  };
+
   try {
     const response = await fetch(`/api/players/${userId}/stats`, {
       method: "GET",
@@ -354,11 +358,31 @@ async function updateUsername(userId) {
     if (!response.ok) {
       throw new Error("Failed to update username");
     }
-    console.log(response.body);
     alert("Username successfully updated!");
   } catch (error) {
     console.error(error.message);
     alert("Failed to update username");
     document.getElementById("newUsername").value = "";
+  }
+}
+
+async function updatePassword(userId) {
+  const newPassword = document.getElementById("newPassword").value;
+  try {
+    const response = await fetch(`/api/players/${userId}/`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ password: newPassword }),
+    });
+    if (!response.ok) {
+      throw new Error("Failed to update password");
+    }
+    alert("Password successfully updated!");
+  } catch (error) {
+    console.error(error.message);
+    alert("Failed to update password");
+    document.getElementById("newPassword").value = "";
   }
 }

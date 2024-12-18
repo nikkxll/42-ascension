@@ -484,7 +484,7 @@
                   placeholder="New password"
                   id="newPassword"
                 />
-                <button type="button" onclick="updatePassword()">Update</button>
+                <button type="button" onclick="updatePassword()" id="passwordUpdButton">Update</button>
                 <button type="button" onclick="togglePasswordVisibility()">
                   Show
                 </button>
@@ -727,14 +727,8 @@
       }
     </script>
     <script>
-
-      function updatePassword() {
-        const password = document.getElementById("newPassword").value;
-        alert("Password updated successfully!");
-      }
-
       function togglePasswordVisibility() {
-        const passwordInput = document.getElementById("password");
+        const passwordInput = document.getElementById("newPassword");
         const showButton = document.querySelector(
           'button[onclick="togglePasswordVisibility()"]'
         );
