@@ -398,6 +398,7 @@ async function updateUsername(userId) {
     await rerenderProfile(userId);
     await miniLobbyPlayersRender();
     updateUsernameDiv(userId);
+    document.getElementById("newUsername").value = "";
   } catch (error) {
     console.error(error.message);
     alert("Failed to update username");
