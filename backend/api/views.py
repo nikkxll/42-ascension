@@ -1279,6 +1279,7 @@ def oauth_callback(request):
             # Get user if already exists
             user = User.objects.filter(username=user_data["login"])[0]
         # Create a unique session key, only if the registered user doesn't have a password set, otherwise only return the response that closes the popup
+        response = HttpResponse("<html><script>window.close()</script></html>")
         if user.has_usable_password() == False:
             session_key = f"session_{user.id}"
             # Encrypt user session data
@@ -1290,9 +1291,8 @@ def oauth_callback(request):
                 }
             )
             fetch_avatar_from_42(user, user_data)
+            response.set_cookie(session_key, session_value, httponly=True)
         #close popup
-        response = HttpResponse("<html><script>window.close()</script></html>")
-        response.set_cookie(session_key, session_value, httponly=True)
         return response
 
 def fetch_avatar_from_42(user, user_data):
