@@ -1,6 +1,7 @@
 // --- Authorization part ---
 
 async function miniLobbyPlayersRender() {
+	console.log("miniLobbyPlayersRender");
 	const response = await fetch("/api/players/current/", {
 		method: "GET",
 		headers: {
@@ -45,11 +46,15 @@ const requestSignUp = async () => {
       }),
     });
     if (!response.ok) {
-		data = await response.json();
+		const data = await response.json();
+		console.log(data);
       throw new Error(data.error);
     }
     const json = await response.json().then(requestLogin(username, password));
   } catch (error) {
+	if (error.message.trim().includes("User already exists")) {
+		alert(error.message);
+	}
     console.error(error.message);
   }
 };
@@ -105,6 +110,7 @@ const requestLogin = async (_username, _password) => {
 
 // Logging out a user
 const logoutPlayer = async (index) => {
+	console.log("Player index: ", index, "Player id: ", window.state.loggedInUsers[index].id), " logout called";
   const userId = window.state.loggedInUsers[index].id;
   try {
     const response = await fetch(`/api/auth/logout/${userId}/`, {
