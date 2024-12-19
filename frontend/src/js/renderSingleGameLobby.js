@@ -85,7 +85,6 @@ async function renderGameStart() {
   });
 
   gameStartSection.style.display = "block";
-  updateHistory('gamestart');
 }
 
 async function getPlayersStatsSingleGame(id) {

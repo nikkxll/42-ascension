@@ -10,7 +10,7 @@ window.doubleGame = {
   randomize: () => {}
 };
 
-function resetGameSelections(mode = "1v1") {
+function resetGameSelections(mode) {
   const leftGrid = document.querySelector(".single-game-grid-left");
   const rightGrid = document.querySelector(".single-game-grid-right");
   const leftGrid2v2 = document.querySelector("#double-game-grid-left");
