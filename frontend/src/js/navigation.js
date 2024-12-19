@@ -104,6 +104,7 @@ async function goToLobby() {
   homeRight.style.display = "grid";
   gameStart.style.display = "none";
   otherGameStart.style.display = "none";
+  window.gameInit.cleanup();
   await renderRecentMatches();
 	await renderRecentTournaments();
 }
@@ -157,6 +158,7 @@ function goToGameStart() {
   overlay.style.display = "none";
   otherGameStart.style.display = "none";
   renderGameStart();
+  window.gameInit.initialize();
 }
 
 async function goToTournament() {
@@ -222,6 +224,7 @@ function goTo2v2GameStart() {
   profile.style.display = "none";
   otherGameStart.style.display = "block";
   render2v2GameStart();
+  window.gameInit.initialize();
 }
 
 function goToHomeNavigation() {

@@ -352,14 +352,14 @@
           <button
             class="single-game-buttons clear-selection"
             tabindex="0"
-            onclick="resetAll()"
+            onclick="window.singleGame.reset()"
           >
             Clear selection
           </button>
           <button
             class="single-game-buttons randomize"
             tabindex="0"
-            onclick="randomizeChoice()"
+            onclick="window.singleGame.randomize()"
           >
             Randomize
           </button>
@@ -400,14 +400,14 @@
           <button
             class="single-game-buttons clear-selection"
             tabindex="0"
-            onclick="resetAll('2v2')"
+            onclick="window.doubleGame.reset()"
           >
             Clear selection
           </button>
           <button
             class="single-game-buttons randomize"
             tabindex="0"
-            onclick="randomizeChoice2v2()"
+            onclick="window.doubleGame.randomize()"
           >
             Randomize
           </button>
