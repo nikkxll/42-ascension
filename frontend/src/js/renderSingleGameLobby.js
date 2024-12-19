@@ -48,7 +48,7 @@ async function renderGameStart() {
                           alt="Player avatar"
                           class="game-player-avatar"
                       />
-                      <h3 class="game-player-name">${player.displayName}</h3>
+                      <h3 class="game-player-name">${player.displayName || player.username}</h3>
                       <div class="game-player-stats-container">
                           <p class="game-player-statistics-param">Games played</p>
                           <p class="game-player-statistics-param-number">${

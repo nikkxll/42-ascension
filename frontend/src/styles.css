@@ -192,7 +192,7 @@ input[type="file"] {
   align-items: center;
   justify-content: center;
   font-size: 28px;
-  padding: 3.3% 5% 2.3%;
+  padding: 1% 5% 1%;
   gap: 10px;
 }
 
@@ -2070,6 +2070,19 @@ section {
   font-size: 24px;
 }
 
+.friend-status-request {
+  background-color: #ffffff;
+  color: rgb(0, 0, 0, 1);
+  border: none;
+  transition: background-color 0.3s;
+  border-radius: 5px;
+}
+
+.friend-status-request:hover {
+  background-color: #000000;
+  color: rgba(255, 255, 255, 0.5);
+}
+
 .friend-status-container {
 	display: flex;
 	flex-direction: column;
@@ -2225,3 +2238,10 @@ section {
 	transform: unset;
 }
 
+.friend-status-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5vw;
+}

@@ -120,14 +120,16 @@ const updateToProfile = async (index) => {
     }
     const { data } = await response.json();
     const winsLosses = `
-							<div>Wins: </div><div>${data.wins || 0}</div>
-							<div>Losses: </div><div>${data.losses || 0}</div>
+							<div style="color: #00ff37;">Wins: </div><div>${data.wins || 0}</div>
+							<div style="color: #ff0000;">Losses: </div><div>${data.losses || 0}</div>
 							`;
     const element = document.querySelector(".player-wins-loses");
     element.innerHTML = winsLosses;
   } catch (error) {
     console.error(error.message);
   }
+
+  updateUsernameDiv(userId);
 
   // Matches
   await renderMatches(userId, "person-stats");
@@ -177,14 +179,14 @@ const updateToProfile = async (index) => {
           if (friendMarker.complete) status = friendMarker.status;
           else if (friendMarker.forMe)
             status = `
-								<button onclick='approveFriendship(${player.id})'>Approve</button>
-								<button onclick='denyFriendship(${player.id})'>Deny</button>
+								<button class='friend-status-request' onclick='approveFriendship(${player.id})'>Approve</button>
+								<button class='friend-status-request' onclick='denyFriendship(${player.id})'>Deny</button>
 						`;
           else if (friendMarker.forOther)
             status = "Waiting on approval of friendship";
         } else {
           status =
-            "<button onclick='requestFriendship(" +
+            "<button class='friend-status-request' onclick='requestFriendship(" +
             player.id +
             ")'>Request Friendship</button>";
         }
@@ -195,7 +197,7 @@ const updateToProfile = async (index) => {
             player.avatarUrl || "./assets/default_avatar.png"
           }">
 					<h1 class="friend-name">${player.displayName || player.username}</h1>
-					<div style="display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 0.5vw;">
+					<div class="friend-status-wrapper">
 						${
               friendMarker && friendMarker.complete
                 ? `<img class="friend-login-status" src="./assets/${
@@ -348,12 +350,7 @@ function nameUpdate(userId) {
       console.error(error.message);
     }
     nameElement.setAttribute("contenteditable", false);
-    await renderMatches(userId, "person-stats");
-    const playersArr = await fetchPotentialFriends(userId);
-    for (const player of playersArr) {
-      const friendStatsId = `friend-stats-${player.id}`;
-      await renderMatches(player.id, friendStatsId);
-    }
+    await rerenderProfile(userId);
   };
 
   handleClick = () => {
@@ -398,6 +395,9 @@ async function updateUsername(userId) {
       throw new Error("Failed to update username");
     }
     alert("Username successfully updated!");
+    await rerenderProfile(userId);
+    await miniLobbyPlayersRender();
+    updateUsernameDiv(userId);
   } catch (error) {
     console.error(error.message);
     alert("Failed to update username");
@@ -443,4 +443,20 @@ async function fetchPotentialFriends(userId) {
     );
     return playersArr;
   }
+}
+
+async function rerenderProfile(userId) {
+  await renderMatches(userId, "person-stats");
+  const playersArr = await fetchPotentialFriends(userId);
+  for (const player of playersArr) {
+    const friendStatsId = `friend-stats-${player.id}`;
+    await renderMatches(player.id, friendStatsId);
+  }
+}
+
+async function updateUsernameDiv(userId) {
+  const loggedInUsers = window.state["loggedInUsers"];
+  const user = loggedInUsers.find(user => user.id === userId);
+  const usernameBox = document.getElementById("usernameBox");
+  usernameBox.innerHTML = `<h3>Username: ${user.username}</h3>`;
 }
