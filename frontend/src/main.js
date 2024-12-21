@@ -662,7 +662,7 @@ window.startGame = async () => {
     // settging for the AI
     let timeIntervalAi = 1;  // must to be 1 according to the subject
     let clockAi = new THREE.Clock();
-    let deltaTimeAi = 0;
+    let deltaTimeAi = 1.01;
     let r0 = {x: ball1.position.x, y: ball1.position.y};
     let r1 = {x: player1.position.x, y: player1.position.y};
     //let r2 = {x: player2.position.x, y: player2.position.y};
