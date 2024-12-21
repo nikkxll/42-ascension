@@ -1,7 +1,10 @@
+/* 2v2 game players pick */
+
 function initializeGameSelectorDoubles() {
   const leftGrid2v2 = document.querySelector("#double-game-grid-left");
   const rightGrid2v2 = document.querySelector("#double-game-grid-right");
   const startButton2v2 = document.querySelector("#start2v2");
+  let isInitialized = false;
 
   let state = {
     playersSelected: 0,
@@ -18,25 +21,20 @@ function initializeGameSelectorDoubles() {
       state.leftPlayersSelected === 2 ? "pointer" : "not-allowed";
   }
 
-  function randomizeChoice2v2(leftPlayers, rightPlayers) {
-    state = resetGameSelections();
+  function randomizeChoice2v2(leftPlayers) {
 
-    // Select two random unique players from left side
     const availableIndices = Array.from(
       { length: leftPlayers.length },
       (_, i) => i
     );
 
-    // First random selection
     const firstIndex = Math.floor(Math.random() * availableIndices.length);
     const firstPlayer = availableIndices[firstIndex];
     availableIndices.splice(firstIndex, 1);
 
-    // Second random selection
     const secondIndex = Math.floor(Math.random() * availableIndices.length);
     const secondPlayer = availableIndices[secondIndex];
 
-    // Click the selected players
     if (leftPlayers[firstPlayer]) leftPlayers[firstPlayer].click();
     if (leftPlayers[secondPlayer]) leftPlayers[secondPlayer].click();
   }
@@ -50,13 +48,11 @@ function initializeGameSelectorDoubles() {
     leftPlayers.forEach((player, index) => {
       player.classList.add("player-selectable");
 
-      player.addEventListener("click", () => {
-        // If already selected, do nothing
+      const clickHandler = () => {
         if (state.leftSelected.includes(index)) {
           return;
         }
 
-        // Select up to 2 players on left side
         if (state.leftPlayersSelected < 2) {
           state.leftSelected.push(index);
           state.leftPlayersSelected++;
@@ -65,18 +61,15 @@ function initializeGameSelectorDoubles() {
           player.classList.remove("player-disabled");
         }
 
-        // When 2 players are selected, set up the userIds
         if (state.leftPlayersSelected === 2) {
           const allIds = window.state?.loggedInUsers?.map((p) => p.id) || [];
           state.leftSelected.sort();
 
-          // Set the first two players (team 1)
           window.singleGameState.userIds = [
             allIds[state.leftSelected[0]] || -1,
             allIds[state.leftSelected[1]] || -1,
           ];
 
-          // Add remaining players (team 2)
           for (let i = 0; i < 4; i++) {
             if (!state.leftSelected.includes(i)) {
               window.singleGameState.userIds.push(allIds[i] || -1);
@@ -84,7 +77,6 @@ function initializeGameSelectorDoubles() {
           }
         }
 
-        // Update right side display
         rightPlayers.forEach((rightPlayer, rightIndex) => {
           rightPlayer.classList.remove(
             "player-disabled",
@@ -95,8 +87,6 @@ function initializeGameSelectorDoubles() {
           if (!state.leftSelected.includes(rightIndex)) {
             rightPlayer.classList.add("player-selectable");
             if (state.leftPlayersSelected === 2) {
-                console.log("rightIndex", rightIndex);
-              // Disable unselected players on left
               if (leftPlayers[rightIndex]) {
                 leftPlayers[rightIndex].classList.add("player-disabled");
               }
@@ -108,7 +98,8 @@ function initializeGameSelectorDoubles() {
         });
 
         updateStartButton2v2();
-      });
+      };
+      addTrackedEventListener(player, 'click', clickHandler, playerEventListeners.doubles);
     });
   }
 
@@ -120,23 +111,26 @@ function initializeGameSelectorDoubles() {
       rightGrid2v2.querySelectorAll(".game-player-card-inner-single")
     );
 
-    if (leftPlayers.length > 0 && rightPlayers.length > 0) {
+    removeAllEventListeners(playerEventListeners.doubles);
+
+    if (!isInitialized) {
       attachLeftPlayerListeners2v2(leftPlayers, rightPlayers);
-
+      isInitialized = true;
+  
       window.doubleGame = {
-        reset: () => (state = resetGameSelections()),
-        randomize: () => randomizeChoice2v2(leftPlayers, rightPlayers),
+        reset: () => {
+          isInitialized = false;
+          return (state = resetGameSelections());
+        },
+        randomize: () => randomizeChoice2v2(leftPlayers),
       };
-
+  
       updateStartButton2v2();
     }
   });
 
   observer2v2.observe(leftGrid2v2, { childList: true, subtree: true });
   observer2v2.observe(rightGrid2v2, { childList: true, subtree: true });
-
-  return { observer2v2 };
 }
 
-// Initialize when DOM is loaded
 document.addEventListener("DOMContentLoaded", initializeGameSelectorDoubles);

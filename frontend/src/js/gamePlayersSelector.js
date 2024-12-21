@@ -1,4 +1,40 @@
-/* Single and 2v2 game players pick */
+/* Single 1v1 game players pick */
+
+playerEventListeners = {
+  single: new Map(),
+  doubles: new Map()
+};
+
+function removeAllEventListeners(listenerMap) {
+  const grids = [
+    document.querySelector(".single-game-grid-left"),
+    document.querySelector(".single-game-grid-right"),
+    document.querySelector("#double-game-grid-left"),
+    document.querySelector("#double-game-grid-right"),
+  ];
+  grids.forEach((grid) => {
+    const elements = Array.from(
+      grid.querySelectorAll(".game-player-card-inner-single")
+    );
+    elements.forEach((element) => {
+      if (listenerMap.has(element)) {
+        const listeners = listenerMap.get(element);
+        listeners.forEach(({eventType, handler}) => {
+          element.removeEventListener(eventType, handler);
+        });
+        listenerMap.delete(element);
+      }
+    });
+  });
+}
+
+function addTrackedEventListener(element, eventType, handler, listenerMap) {
+  if (!listenerMap.has(element)) {
+    listenerMap.set(element, []);
+  }
+  listenerMap.get(element).push({eventType, handler});
+  element.addEventListener(eventType, handler);
+}
 
 function resetGameSelections() {
   const grids = [
@@ -50,6 +86,7 @@ function initializeGameSelector() {
   const leftGrid = document.querySelector(".single-game-grid-left");
   const rightGrid = document.querySelector(".single-game-grid-right");
   const startButton = document.querySelector(".single-game-buttons.start");
+  let isInitialized = false;
 
   let state = {
     playersSelected: 0,
@@ -66,7 +103,6 @@ function initializeGameSelector() {
   }
 
   function randomizeChoice(leftPlayers, rightPlayers) {
-    state = resetGameSelections();
 
     const randomLeftIndex = Math.floor(Math.random() * leftPlayers.length);
     leftPlayers[randomLeftIndex].click();
@@ -86,7 +122,7 @@ function initializeGameSelector() {
     leftPlayers.forEach((player, index) => {
       player.classList.add("player-selectable");
 
-      player.addEventListener("click", () => {
+      const clickHandler = () => {
         if (state.playersSelected >= 2) return;
 
         leftPlayers.forEach((p) => {
@@ -130,15 +166,15 @@ function initializeGameSelector() {
               -1,
             ];
         }
-
         updateStartButton();
-      });
+      };
+      addTrackedEventListener(player, 'click', clickHandler, playerEventListeners.single);
     });
   }
 
   function attachRightPlayerListeners(rightPlayers) {
     rightPlayers.forEach((player, index) => {
-      player.addEventListener("click", () => {
+      const clickHandler = () => {
         if (
           state.leftSelectedIndex !== null &&
           player.classList.contains("player-selectable") &&
@@ -171,7 +207,8 @@ function initializeGameSelector() {
 
           updateStartButton();
         }
-      });
+      };
+      addTrackedEventListener(player, 'click', clickHandler, playerEventListeners.single);
     });
   }
 
@@ -183,12 +220,18 @@ function initializeGameSelector() {
       rightGrid.querySelectorAll(".game-player-card-inner-single")
     );
 
-    if (leftPlayers.length > 0 && rightPlayers.length > 0) {
+    removeAllEventListeners(playerEventListeners.single);
+
+    if (!isInitialized) {
       attachLeftPlayerListeners(leftPlayers, rightPlayers);
       attachRightPlayerListeners(rightPlayers);
+      isInitialized = true;
 
       window.singleGame = {
-        reset: () => (state = resetGameSelections()),
+        reset: () => {
+          isInitialized = false;
+          return (state = resetGameSelections());
+        },
         randomize: () => randomizeChoice(leftPlayers, rightPlayers),
       };
 
@@ -198,6 +241,4 @@ function initializeGameSelector() {
 
   observer.observe(leftGrid, { childList: true, subtree: true });
   observer.observe(rightGrid, { childList: true, subtree: true });
-
-  return { observer };
 }

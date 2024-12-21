@@ -105,6 +105,8 @@ async function goToLobby() {
   gameStart.style.display = "none";
   otherGameStart.style.display = "none";
   resetGameSelections();
+  removeAllEventListeners(playerEventListeners.single);
+  removeAllEventListeners(playerEventListeners.doubles);
   await renderRecentMatches();
 	await renderRecentTournaments();
 }
