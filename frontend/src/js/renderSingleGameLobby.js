@@ -20,7 +20,7 @@ async function renderGameStart() {
     filledPlayers.push({
       username: "AI",
       displayName: "AI Player",
-      avatar: "./assets/ai_profile.png",
+      avatarUrl: "./assets/ai_profile.png",
       gamesPlayed: 999,
       winRate: 99,
     });
@@ -43,10 +43,10 @@ async function renderGameStart() {
                       <img
                           loading="lazy"
                           src="${
-                            player.avatar || "./assets/default_avatar.png"
+                            player.avatarUrl || "./assets/default_avatar.png"
                           }"
                           alt="Player avatar"
-                          class="game-player-avatar"
+                          class="common-lobby-avatar"
                       />
                       <h3 class="game-player-name">${player.displayName || player.username}</h3>
                       <div class="game-player-stats-container">

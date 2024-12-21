@@ -65,7 +65,7 @@ async function createTournament() {
               loading="lazy"
               src="${player.avatarUrl || "./assets/default_avatar.png"}"
               alt="Player avatar"
-              class="tournament-lobby-avatar"
+              class="common-lobby-avatar"
             />
             <h3 class="game-player-name">${player.displayName || player.username}</h3>
             <div class="game-player-win-rate-container">
@@ -98,7 +98,7 @@ async function createTournament() {
           <div class="tournament-match-player-info-left">
             <img loading="lazy" src="${
               player1.avatarUrl || "./assets/default_avatar.png"
-            }" alt="Player avatar" class="tournament-lobby-avatar" />
+            }" alt="Player avatar" class="common-lobby-avatar" />
             <h3 class="game-player-name tournament">${player1.label}</h3>
           </div>
           <h2 class="tournament-match-left-score">-</h2>
@@ -107,7 +107,7 @@ async function createTournament() {
           <div class="tournament-match-player-info-right">
             <img loading="lazy" src="${
               player2.avatarUrl || "./assets/default_avatar.png"
-            }" alt="Player avatar" class="tournament-lobby-avatar" />
+            }" alt="Player avatar" class="common-lobby-avatar" />
             <h3 class="game-player-name tournament">${player2.label}</h3>
           </div>
         </div>
@@ -308,7 +308,7 @@ async function loadTournament(tournamentId) {
               loading="lazy"
               src="${player.avatarUrl || "./assets/default_avatar.png"}"
               alt="Player avatar"
-              class="tournament-lobby-avatar"
+              class="common-lobby-avatar"
             />
             <h3 class="game-player-name">${player.displayName || player.username}</h3>
             <div class="game-player-win-rate-container">
@@ -355,7 +355,7 @@ async function loadTournament(tournamentId) {
         <div class="tournament-match-player-info-left">
           <img loading="lazy" src="${playerAvatar(
             player1
-          )}" alt="Player avatar" class="tournament-lobby-avatar" />
+          )}" alt="Player avatar" class="common-lobby-avatar" />
           <h3 class="game-player-name tournament">${playerLabel(player1)}</h3>
         </div>
         <h2 class="tournament-match-left-score ${
@@ -376,7 +376,7 @@ async function loadTournament(tournamentId) {
         <div class="tournament-match-player-info-right">
           <img loading="lazy" src="${playerAvatar(
             player2
-          )}" alt="Player avatar" class="tournament-lobby-avatar" />
+          )}" alt="Player avatar" class="common-lobby-avatar" />
           <h3 class="game-player-name tournament">${playerLabel(player2)}</h3>
         </div>
       </div>
@@ -392,7 +392,7 @@ async function loadTournament(tournamentId) {
           <div class="tournament-match-player-info-left">
             <img loading="lazy" src="${
               player1?.avatarUrl || "./assets/default_avatar.png"
-            }" alt="Player avatar" class="tournament-lobby-avatar" />
+            }" alt="Player avatar" class="common-lobby-avatar" />
             <h3 class="game-player-name tournament">${player1?.label}</h3>
           </div>
           <h2 class="tournament-match-left-score ${
@@ -413,7 +413,7 @@ async function loadTournament(tournamentId) {
           <div class="tournament-match-player-info-right">
             <img loading="lazy" src="${
               player2?.avatarUrl || "./assets/default_avatar.png"
-            }" alt="Player avatar" class="tournament-lobby-avatar" />
+            }" alt="Player avatar" class="common-lobby-avatar" />
             <h3 class="game-player-name tournament">${player2?.label}</h3>
           </div>
         </div>

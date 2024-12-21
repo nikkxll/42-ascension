@@ -27,10 +27,10 @@ function render2v2GameStart() {
               <img
                   loading="lazy"
                   src="${
-                    player.avatar || "./assets/default_avatar.png"
+                    player.avatarUrl || "./assets/default_avatar.png"
                   }"
                   alt="Player avatar"
-                  class="game-player-avatar"
+                  class="common-lobby-avatar"
               />
               <h3 class="game-player-name">${player.username}</h3>
               <div class="game-player-stats-container">
