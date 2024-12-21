@@ -71,7 +71,7 @@ async function renderGameStart() {
       const playerStats =
         player.username === "AI"
           ? { gamesPlayed: player.gamesPlayed, winRate: player.winRate }
-          : await getPlayersStatsSingleGame(player.id);
+          : await getPlayersStatsGame(player.id);
 
       const { gamesPlayed, winRate } = playerStats;
 
@@ -87,7 +87,7 @@ async function renderGameStart() {
   gameStartSection.style.display = "block";
 }
 
-async function getPlayersStatsSingleGame(id) {
+async function getPlayersStatsGame(id) {
   try {
     const response = await fetch(`/api/players/${id}/matches/?last=1000`, {
       method: "GET",
@@ -105,14 +105,30 @@ async function getPlayersStatsSingleGame(id) {
 }
 
 function calculateStats(data, playerId) {
-  const gamesPlayed = data.length;
-  const wins = data.filter(
-    (match) =>
-      (Number(match.score?.[0]) > Number(match.score?.[1]) &&
-        match.players[0].id === playerId) ||
-      (Number(match.score?.[1]) > Number(match.score?.[0]) &&
-        match.players[1].id === playerId)
-  ).length;
+  let gamesPlayed = data.length;
+
+  const wins = data.filter((match) => {
+    const isTwoPlayerGame = match.players.length === 2;
+    const [score1, score2] = match.score || [0, 0];
+
+    gamesPlayed = match.score ? gamesPlayed : gamesPlayed - 1;
+
+    if (isTwoPlayerGame) {
+      return (
+        (Number(score1) > Number(score2) && match.players[0].id === playerId) ||
+        (Number(score2) > Number(score1) && match.players[1].id === playerId)
+      );
+    } else {
+      return (
+        (Number(score1) > Number(score2) &&
+          (match.players[0].id === playerId || match.players[1].id === playerId)) ||
+        (Number(score2) > Number(score1) &&
+          (match.players[2].id === playerId || match.players[3].id === playerId))
+      );
+    }
+  }).length;
+
   const winRate = gamesPlayed === 0 ? 0 : ((wins / gamesPlayed) * 100).toFixed(0);
+
   return { gamesPlayed, winRate };
 }

@@ -83,7 +83,7 @@ const renderMatches = async (userId, elementId) => {
 
 const updateToProfile = async (index) => {
   console.log("updateToProfile called");
-  const userId = window.state["loggedInUsers"][index].id;
+  const userId = window.state.loggedInUsers[index].id;
   window.currentUserID = index;
   try {
     const response = await fetch(`/api/players/${userId}/`, {
@@ -245,7 +245,7 @@ document.getElementById("newAvatar").onchange = async (e) => {
   try {
     const response = await fetch(
       `/api/players/${
-        window.state["loggedInUsers"][window.currentUserID].id
+        window.state.loggedInUsers[window.currentUserID].id
       }/avatar/`,
       {
         method: "POST",
@@ -456,7 +456,7 @@ async function rerenderProfile(userId) {
 }
 
 async function updateUsernameDiv(userId) {
-  const loggedInUsers = window.state["loggedInUsers"];
+  const loggedInUsers = window.state.loggedInUsers;
   const user = loggedInUsers.find(user => user.id === userId);
   const usernameBox = document.getElementById("usernameBox");
   usernameBox.innerHTML = `<h3>Username: ${user.username}</h3>`;

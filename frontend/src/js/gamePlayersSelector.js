@@ -152,17 +152,17 @@ function initializeGameSelector() {
         });
 
         if (window.singleGameState.userIds) {
-          if (index > window.state["loggedInUsers"].length - 1)
+          if (index > window.state.loggedInUsers.length - 1)
             window.singleGameState["userIds"][0] = 1;
           else
             window.singleGameState["userIds"][0] =
-              window.state["loggedInUsers"][index].id;
+              window.state.loggedInUsers[index].id;
         } else {
-          if (index > window.state["loggedInUsers"].length - 1)
+          if (index > window.state.loggedInUsers.length - 1)
             window.singleGameState["userIds"] = [1, -1];
           else
             window.singleGameState["userIds"] = [
-              window.state["loggedInUsers"][index].id,
+              window.state.loggedInUsers[index].id,
               -1,
             ];
         }
@@ -190,18 +190,18 @@ function initializeGameSelector() {
           player.classList.add("player-selected");
 
           if (window.singleGameState.userIds) {
-            if (index > window.state["loggedInUsers"].length - 1)
+            if (index > window.state.loggedInUsers.length - 1)
               window.singleGameState["userIds"][1] = 1;
             else
               window.singleGameState["userIds"][1] =
-                window.state["loggedInUsers"][index].id;
+                window.state.loggedInUsers[index].id;
           } else {
-            if (index > window.state["loggedInUsers"].length - 1)
+            if (index > window.state.loggedInUsers.length - 1)
               window.singleGameState["userIds"] = [-1, 1];
             else
               window.singleGameState["userIds"] = [
                 -1,
-                window.state["loggedInUsers"][index].id,
+                window.state.loggedInUsers[index].id,
               ];
           }
 
