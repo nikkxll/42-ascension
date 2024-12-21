@@ -335,7 +335,7 @@
           <div class="single-game-vs-logo">
             <img
               class="single-game-vs-logo-props"
-              src="./assets/vs_logo.png"
+              src="./assets/app_logo.png"
               alt="Versus logo"
             />
           </div>
@@ -352,14 +352,14 @@
           <button
             class="single-game-buttons clear-selection"
             tabindex="0"
-            onclick="resetAll()"
+            onclick="window.singleGame.reset()"
           >
             Clear selection
           </button>
           <button
             class="single-game-buttons randomize"
             tabindex="0"
-            onclick="randomizeChoice()"
+            onclick="window.singleGame.randomize()"
           >
             Randomize
           </button>
@@ -383,7 +383,7 @@
           <div class="single-game-vs-logo">
             <img
               class="single-game-vs-logo-props"
-              src="./assets/vs_logo.png"
+              src="./assets/app_logo.png"
               alt="Versus logo"
             />
           </div>
@@ -400,14 +400,14 @@
           <button
             class="single-game-buttons clear-selection"
             tabindex="0"
-            onclick="resetAll('2v2')"
+            onclick="window.doubleGame.reset()"
           >
             Clear selection
           </button>
           <button
             class="single-game-buttons randomize"
             tabindex="0"
-            onclick="randomizeChoice2v2()"
+            onclick="window.doubleGame.randomize()"
           >
             Randomize
           </button>
@@ -650,6 +650,7 @@
     <script src="./js/navigation.js"></script>
     <script src="./js/gameStart.js"></script>
     <script src="./js/gamePlayersSelector.js"></script>
+    <script src="./js/gamePlayersSelectorDoubles.js"></script>
 
     <!-- Bootstrap parts for profile carousel -->
     <script

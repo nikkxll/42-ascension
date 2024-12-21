@@ -104,6 +104,9 @@ async function goToLobby() {
   homeRight.style.display = "grid";
   gameStart.style.display = "none";
   otherGameStart.style.display = "none";
+  resetGameSelections();
+  removeAllEventListeners(playerEventListeners.single);
+  removeAllEventListeners(playerEventListeners.doubles);
   await renderRecentMatches();
 	await renderRecentTournaments();
 }
@@ -157,6 +160,7 @@ function goToGameStart() {
   overlay.style.display = "none";
   otherGameStart.style.display = "none";
   renderGameStart();
+  initializeGameSelector();
 }
 
 async function goToTournament() {
@@ -222,6 +226,7 @@ function goTo2v2GameStart() {
   profile.style.display = "none";
   otherGameStart.style.display = "block";
   render2v2GameStart();
+  initializeGameSelectorDoubles();
 }
 
 function goToHomeNavigation() {

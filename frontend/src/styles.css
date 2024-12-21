@@ -1112,8 +1112,9 @@ section {
 }
 
 .single-game-vs-logo-props {
-  width: 150px;
-  height: 150px;
+  width: 100px;
+  height: 100px;
+  margin: 50px;
 }
 
 .single-game-grid-left {
@@ -1483,8 +1484,8 @@ section {
 }
 
 .tournament-match-vs-logo {
-  width: 100px;
-  height: 100px;
+  width: 50px;
+  height: 50px;
 }
 
 .tournament-match-player-info-left {

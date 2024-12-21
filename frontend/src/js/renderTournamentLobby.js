@@ -52,7 +52,7 @@ async function createTournament() {
       const winRate =
         player.username === "AI"
           ? 99
-          : (await getPlayersStatsSingleGame(player.id)).winRate;
+          : (await getPlayersStatsGame(player.id)).winRate;
 
       console.log(winRate);
 
@@ -102,7 +102,7 @@ async function createTournament() {
             <h3 class="game-player-name tournament">${player1.label}</h3>
           </div>
           <h2 class="tournament-match-left-score">-</h2>
-          <img class="tournament-match-vs-logo" src="./assets/vs_logo.png" alt="Versus logo" />
+          <img class="tournament-match-vs-logo" src="./assets/app_logo.png" alt="Versus logo" />
           <h2 class="tournament-match-right-score">-</h2>
           <div class="tournament-match-player-info-right">
             <img loading="lazy" src="${
@@ -296,7 +296,7 @@ async function loadTournament(tournamentId) {
       const winRate =
         player.username === "AI"
           ? 99
-          : (await getPlayersStatsSingleGame(player.id)).winRate;
+          : (await getPlayersStatsGame(player.id)).winRate;
 
       const playerCard = document.createElement("div");
       playerCard.className = "game-player-card";
@@ -364,7 +364,7 @@ async function loadTournament(tournamentId) {
             ? "match-loser-text"
             : ""
         }">${leftScore}</h2>
-        <img class="tournament-match-vs-logo" src="./assets/vs_logo.png" alt="Versus logo" />
+        <img class="tournament-match-vs-logo" src="./assets/app_logo.png" alt="Versus logo" />
         <h2 class="tournament-match-right-score ${
           rightScore > leftScore
             ? "match-winner-text"
@@ -401,7 +401,7 @@ async function loadTournament(tournamentId) {
               ? "match-loser-text"
               : ""
           }">${leftScore ?? 0}</h2>
-          <img class="tournament-match-vs-logo" src="./assets/vs_logo.png" alt="Versus logo" />
+          <img class="tournament-match-vs-logo" src="./assets/app_logo.png" alt="Versus logo" />
           <h2 class="tournament-match-right-score ${
             rightScore > leftScore
               ? "match-winner-text"
