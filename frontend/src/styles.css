@@ -2253,3 +2253,80 @@ section {
   align-items: center;
   gap: 0.5vw;
 }
+
+/* Game customization */
+
+.game-settings-container {
+    display: none;
+    position: absolute;
+    top: 23vh;
+    left: 10vw;
+    background: rgba(18, 16, 16, 0.25);
+    border-radius: 45px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 600px;
+    backdrop-filter: blur(12px);
+    border: 1px solid #a7a7a7;
+}
+
+.settings-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.settings-title {
+    color: #ffffff;
+    font-family: 'Keania One';
+    text-transform: uppercase;
+    margin: 0;
+    font-size: 2.5rem;
+    text-align: center;
+    flex-grow: 1;
+}
+
+.settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.setting-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.setting-label {
+    color: #ffffff;
+    font-size: 1.5rem;
+    font-family: 'Keania One';
+    margin-bottom: 0.25rem;
+}
+
+.setting-select {
+    padding: 0.75rem;
+    border-radius: 6px;
+    font-size: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+    font-family: 'Acme', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.setting-select:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.setting-select:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.setting-select option {
+    background: #1a1a1a;
+    color: #ffffff;
+}

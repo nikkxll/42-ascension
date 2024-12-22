@@ -4,8 +4,6 @@ import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 //import * as statejs from "./state.js";
 
-
-
 const ballAccelerationCoef = 1.0  // 1.5
 const ballSpeedLimit = 1000;
 // initial speed of the ball
@@ -337,7 +335,6 @@ window.startGame = async () => {
     //     console.log("player0=", player00, "player1=", player01);
     // }
     let isPaused = false;
-    const maxScore = 5;
     const playerSpeed = 17;  // 17 12
     const hight = 20;
     const width = 40;
@@ -379,7 +376,8 @@ window.startGame = async () => {
 
     // players geometry and material is shared so we create it once
     const playergeometry = new THREE.BoxGeometry(0.5, 4, 1);
-    const playermaterial = new THREE.MeshBasicMaterial({ color: 0x00400E }); 
+    console.log(window.customs.padelColor);
+    const playermaterial = new THREE.MeshBasicMaterial({ color: window.customs.padelColor }); 
     //#00400E =  rgba(0, 255, 55, 0.25) with black backround
     // creates the player box
     const player1Mesh = new THREE.Mesh(playergeometry, playermaterial);
@@ -543,7 +541,7 @@ window.startGame = async () => {
         // use the same geometry for all outer boxes
         const outerboxgeometry = new THREE.BoxGeometry(0.95, 0.95, 1);
         const outerboxmaterial = new THREE.MeshBasicMaterial({
-            color: 0x4c0000, // Red color   with 0.3 opacity   background: rgba(255, 0, 0, 0.3);
+            color: window.customs.borderColor, // Red color   with 0.3 opacity   background: rgba(255, 0, 0, 0.3);
         });
         // loop over all the rows that share the height of the outer boxes
         outerboxes.forEach((element, row) => {
@@ -603,7 +601,7 @@ window.startGame = async () => {
         }
         if (!pressedKeys.has(code))
             pressedKeys.add(code);
-        if (isPressed(27) && (isPaused || Math.max(...game.count) >= maxScore)){ // 27 = escape
+        if (isPressed(27) && (isPaused || Math.max(...game.count) >= window.customs.winCondition)){ // 27 = escape
             console.log("Esc is pressed, game to be terminated.");
             removeGameWindow(game);
             console.log("game terminated, singleGameState=", window.singleGameState);
@@ -619,7 +617,7 @@ window.startGame = async () => {
             }
             return 0;
         }
-        else if (code == 32 && Math.max(...game.count) < maxScore){ // space
+        else if (code == 32 && Math.max(...game.count) < window.customs.winCondition){ // space
             if (!isPaused){
                 pause3dObj.position.z = -5
                 render();
@@ -789,7 +787,7 @@ window.startGame = async () => {
         if (delta > interval){
             if (isPaused)
                 return;
-            if (Math.max(...game.count) >= maxScore){
+            if (Math.max(...game.count) >= window.customs.winCondition){
                 isPaused = true;
                 updateScore("Score: " + game.count[0] + " : " + game.count[1] + ". Game ended!");
                 score3dObj.position.set(-7, 7, -2); 
