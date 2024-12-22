@@ -63,7 +63,7 @@ async function createTournament() {
             <h2 class="game-player-number">Player ${index + 1}</h2>
             <img
               loading="lazy"
-              src="${player.avatarUrl || "./assets/default_avatar.png"}"
+              src="${player.avatarUrl}"
               alt="Player avatar"
               class="common-lobby-avatar"
             />
@@ -97,7 +97,7 @@ async function createTournament() {
         <div class="tournament-match-players">
           <div class="tournament-match-player-info-left">
             <img loading="lazy" src="${
-              player1.avatarUrl || "./assets/default_avatar.png"
+              player1.avatarUrl
             }" alt="Player avatar" class="common-lobby-avatar" />
             <h3 class="game-player-name tournament">${player1.label}</h3>
           </div>
@@ -106,7 +106,7 @@ async function createTournament() {
           <h2 class="tournament-match-right-score">-</h2>
           <div class="tournament-match-player-info-right">
             <img loading="lazy" src="${
-              player2.avatarUrl || "./assets/default_avatar.png"
+              player2.avatarUrl
             }" alt="Player avatar" class="common-lobby-avatar" />
             <h3 class="game-player-name tournament">${player2.label}</h3>
           </div>
@@ -306,7 +306,7 @@ async function loadTournament(tournamentId) {
             <h2 class="game-player-number">Player ${index + 1}</h2>
             <img
               loading="lazy"
-              src="${player.avatarUrl || "./assets/default_avatar.png"}"
+              src="${player.avatarUrl}"
               alt="Player avatar"
               class="common-lobby-avatar"
             />
@@ -347,7 +347,7 @@ async function loadTournament(tournamentId) {
       sfCount === 1 ? sfScores.sfOneScoreTwo : sfScores.sfTwoScoreTwo;
 
     const playerAvatar = (player) =>
-      player?.avatarUrl || "./assets/default_avatar.png";
+      player?.avatarUrl;
     const playerLabel = (player) => player?.label || "Unknown Player";
 
     return `
@@ -391,7 +391,7 @@ async function loadTournament(tournamentId) {
         <div class="tournament-match-players">
           <div class="tournament-match-player-info-left">
             <img loading="lazy" src="${
-              player1?.avatarUrl || "./assets/default_avatar.png"
+              player1?.avatarUrl
             }" alt="Player avatar" class="common-lobby-avatar" />
             <h3 class="game-player-name tournament">${player1?.label}</h3>
           </div>
@@ -412,7 +412,7 @@ async function loadTournament(tournamentId) {
           }">${rightScore ?? 0}</h2>
           <div class="tournament-match-player-info-right">
             <img loading="lazy" src="${
-              player2?.avatarUrl || "./assets/default_avatar.png"
+              player2?.avatarUrl
             }" alt="Player avatar" class="common-lobby-avatar" />
             <h3 class="game-player-name tournament">${player2?.label}</h3>
           </div>

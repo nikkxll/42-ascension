@@ -43,7 +43,7 @@ async function renderGameStart() {
                       <img
                           loading="lazy"
                           src="${
-                            player.avatarUrl || "./assets/default_avatar.png"
+                            player.avatarUrl
                           }"
                           alt="Player avatar"
                           class="common-lobby-avatar"
