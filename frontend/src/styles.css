@@ -560,14 +560,24 @@ section {
 }
 
 .profile-avatar {
-    display: block;
-    width: 80px;
-	height: 80px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    border-radius: 50%;
-    overflow: hidden;
-	align-self: center;
+  display: block;
+  width: 80px;
+  height: 80px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-radius: 50%;
+  overflow: hidden;
+  align-self: center;
+}
+
+.common-lobby-avatar {
+  display: block;
+  width: 70px;
+  height: 70px;
+  margin: 10px;
+  border-radius: 50%;
+  overflow: hidden;
+  align-self: center;
 }
 
 .profile-avatar img {

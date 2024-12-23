@@ -42,19 +42,19 @@ async function createTournament() {
     if (filledPlayers.length < 4) {
       filledPlayers.push({
         id: 1,
-        username: `AI`,
+        username: `ai_player`,
         displayName: `AI Player`,
-        avatar: "./assets/ai_profile.png",
+        avatarUrl: "./media/avatars/ai_profile.jpg",
       });
     }
 
     for (const [index, player] of filledPlayers.entries()) {
       const winRate =
-        player.username === "AI"
+        player.username === "ai_player"
           ? 99
           : (await getPlayersStatsGame(player.id)).winRate;
 
-      console.log(winRate);
+      console.log(player);
 
       const playerCard = document.createElement("div");
       playerCard.className = "game-player-card";
@@ -63,9 +63,9 @@ async function createTournament() {
             <h2 class="game-player-number">Player ${index + 1}</h2>
             <img
               loading="lazy"
-              src="${player.avatar || "./assets/default_avatar.png"}"
+              src="${player.avatarUrl}"
               alt="Player avatar"
-              class="game-player-avatar"
+              class="common-lobby-avatar"
             />
             <h3 class="game-player-name">${player.displayName || player.username}</h3>
             <div class="game-player-win-rate-container">
@@ -97,8 +97,8 @@ async function createTournament() {
         <div class="tournament-match-players">
           <div class="tournament-match-player-info-left">
             <img loading="lazy" src="${
-              player1.avatar || "./assets/default_avatar.png"
-            }" alt="Player avatar" class="tournament-match-avatar" />
+              player1.avatarUrl
+            }" alt="Player avatar" class="common-lobby-avatar" />
             <h3 class="game-player-name tournament">${player1.label}</h3>
           </div>
           <h2 class="tournament-match-left-score">-</h2>
@@ -106,8 +106,8 @@ async function createTournament() {
           <h2 class="tournament-match-right-score">-</h2>
           <div class="tournament-match-player-info-right">
             <img loading="lazy" src="${
-              player2.avatar || "./assets/default_avatar.png"
-            }" alt="Player avatar" class="tournament-match-avatar" />
+              player2.avatarUrl
+            }" alt="Player avatar" class="common-lobby-avatar" />
             <h3 class="game-player-name tournament">${player2.label}</h3>
           </div>
         </div>
@@ -151,6 +151,7 @@ async function createTournament() {
     addLabelsToPlayers(filledPlayers);
 
     const tournamentName = getTournamentName();
+    document.getElementById("tournamentName").value = "";
 
     window.tournamentState = {};
     window.tournamentState.name = tournamentName;
@@ -294,7 +295,7 @@ async function loadTournament(tournamentId) {
 
     for (const [index, player] of filledPlayers.entries()) {
       const winRate =
-        player.username === "AI"
+        player.username === "ai_player" 
           ? 99
           : (await getPlayersStatsGame(player.id)).winRate;
 
@@ -305,9 +306,9 @@ async function loadTournament(tournamentId) {
             <h2 class="game-player-number">Player ${index + 1}</h2>
             <img
               loading="lazy"
-              src="${player.avatar || "./assets/default_avatar.png"}"
+              src="${player.avatarUrl}"
               alt="Player avatar"
-              class="game-player-avatar"
+              class="common-lobby-avatar"
             />
             <h3 class="game-player-name">${player.displayName || player.username}</h3>
             <div class="game-player-win-rate-container">
@@ -346,7 +347,7 @@ async function loadTournament(tournamentId) {
       sfCount === 1 ? sfScores.sfOneScoreTwo : sfScores.sfTwoScoreTwo;
 
     const playerAvatar = (player) =>
-      player?.avatar || "./assets/default_avatar.png";
+      player?.avatarUrl;
     const playerLabel = (player) => player?.label || "Unknown Player";
 
     return `
@@ -354,7 +355,7 @@ async function loadTournament(tournamentId) {
         <div class="tournament-match-player-info-left">
           <img loading="lazy" src="${playerAvatar(
             player1
-          )}" alt="Player avatar" class="tournament-match-avatar" />
+          )}" alt="Player avatar" class="common-lobby-avatar" />
           <h3 class="game-player-name tournament">${playerLabel(player1)}</h3>
         </div>
         <h2 class="tournament-match-left-score ${
@@ -375,7 +376,7 @@ async function loadTournament(tournamentId) {
         <div class="tournament-match-player-info-right">
           <img loading="lazy" src="${playerAvatar(
             player2
-          )}" alt="Player avatar" class="tournament-match-avatar" />
+          )}" alt="Player avatar" class="common-lobby-avatar" />
           <h3 class="game-player-name tournament">${playerLabel(player2)}</h3>
         </div>
       </div>
@@ -390,8 +391,8 @@ async function loadTournament(tournamentId) {
         <div class="tournament-match-players">
           <div class="tournament-match-player-info-left">
             <img loading="lazy" src="${
-              player1?.avatar || "./assets/default_avatar.png"
-            }" alt="Player avatar" class="tournament-match-avatar" />
+              player1?.avatarUrl
+            }" alt="Player avatar" class="common-lobby-avatar" />
             <h3 class="game-player-name tournament">${player1?.label}</h3>
           </div>
           <h2 class="tournament-match-left-score ${
@@ -411,8 +412,8 @@ async function loadTournament(tournamentId) {
           }">${rightScore ?? 0}</h2>
           <div class="tournament-match-player-info-right">
             <img loading="lazy" src="${
-              player2?.avatar || "./assets/default_avatar.png"
-            }" alt="Player avatar" class="tournament-match-avatar" />
+              player2?.avatarUrl
+            }" alt="Player avatar" class="common-lobby-avatar" />
             <h3 class="game-player-name tournament">${player2?.label}</h3>
           </div>
         </div>

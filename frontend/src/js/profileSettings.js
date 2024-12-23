@@ -4,7 +4,7 @@
 
 const renderAvatar = (url) => {
   document.getElementById("person-avatar").src =
-    url || "./assets/default_avatar.png";
+    url ;
 };
 
 const renderMatches = async (userId, elementId) => {
@@ -194,7 +194,7 @@ const updateToProfile = async (index) => {
         let content = `
 				<div class="carousel-item">
 					<img class="friend-avatar" src="${
-            player.avatarUrl || "./assets/default_avatar.png"
+            player.avatarUrl
           }">
 					<h1 class="friend-name">${player.displayName || player.username}</h1>
 					<div class="friend-status-wrapper">
