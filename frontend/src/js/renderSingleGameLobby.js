@@ -18,9 +18,9 @@ async function renderGameStart() {
 
   if (filledPlayers.length < 4) {
     filledPlayers.push({
-      username: "AI",
+      username: "ai_player",
       displayName: "AI Player",
-      avatarUrl: "./assets/ai_profile.png",
+      avatarUrl: "./media/avatars/ai_profile.jpg",
       gamesPlayed: 999,
       winRate: 99,
     });
@@ -69,7 +69,7 @@ async function renderGameStart() {
   const playerCards = await Promise.all(
     filledPlayers.map(async (player, index) => {
       const playerStats =
-        player.username === "AI"
+        player.username === "ai_player"
           ? { gamesPlayed: player.gamesPlayed, winRate: player.winRate }
           : await getPlayersStatsSingleGame(player.id);
 

@@ -44,7 +44,7 @@ async function createTournament() {
         id: 1,
         username: `ai_player`,
         displayName: `AI Player`,
-        avatarUrl: "./assets/ai_profile.png",
+        avatarUrl: "./media/avatars/ai_profile.jpg",
       });
     }
 
