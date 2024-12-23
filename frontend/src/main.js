@@ -376,8 +376,7 @@ window.startGame = async () => {
 
     // players geometry and material is shared so we create it once
     const playergeometry = new THREE.BoxGeometry(0.5, 4, 1);
-    console.log(window.customs.padelColor);
-    const playermaterial = new THREE.MeshBasicMaterial({ color: window.customs.padelColor }); 
+    const playermaterial = new THREE.MeshBasicMaterial({ color: window.customs.padelColorFirst }); 
     //#00400E =  rgba(0, 255, 55, 0.25) with black backround
     // creates the player box
     const player1Mesh = new THREE.Mesh(playergeometry, playermaterial);
@@ -399,6 +398,8 @@ window.startGame = async () => {
     scene.add(player1);
     scene.add(player2);
 
+    console.log(window.customs.padelColorSecond);
+    console.log(window.customs.padelColorFirst);
     
     // create separate material and geometry for the ball1 and register it
     const ball1material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
@@ -418,7 +419,7 @@ window.startGame = async () => {
 
     // for case of  4 players we create the other two
     // create separate material and geometry for the ball2 and register it
-    const playermaterial2 = new THREE.MeshBasicMaterial({ color: 0x32495E }); //rgba(50, 73, 94, 1) corresponds to #32495E in hex.
+    const playermaterial2 = new THREE.MeshBasicMaterial({ color: window.customs.padelColorSecond }); //rgba(50, 73, 94, 1) corresponds to #32495E in hex.
     const player3mesh = new THREE.Mesh(playergeometry, playermaterial2);
     const player4mesh = new THREE.Mesh(playergeometry, playermaterial2);
     const player3outline = new THREE.LineSegments(edge, new THREE.LineBasicMaterial({color: 0x000000}));

@@ -78,6 +78,7 @@ const startFinalButton = document.getElementById("startFinal");
 const tournamentResults = document.getElementById("tournamentResults");
 const tournamentStatistics = document.getElementById("tournamentStatistics");
 const gameSettings = document.getElementById("gameSettings");
+const keysSettings = document.getElementById("keysSettings");
 
 function goToSignup() {
   goToHomeNoHistory();
@@ -238,6 +239,7 @@ function goToHomeNavigation() {
   signup.style.display = "none";
   matchView.style.display = "none";
   gameSettings.style.display = "none";
+  keysSettings.style.display = "none";
   changeUnderline(0);
   updateHistory(goToHomeNavigation);
 }
@@ -266,6 +268,7 @@ function goToSettings() {
   tournament.style.display = "none";
   profile.style.display = "none";
   gameSettings.style.display = "block";
+  keysSettings.style.display = "block";
   changeUnderline(2);
   updateHistory(goToSettings);
 }

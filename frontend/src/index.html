@@ -667,8 +667,22 @@
 
       <form class="settings-form" id="settingsForm">
         <div class="setting-group">
-          <label class="setting-label" for="padelColor">Padel Color</label>
-          <select class="setting-select" id="padelColor" onchange="updatePadelColor(this.value)">
+          <label class="setting-label" for="padelColorFirst">Padel Color For Players 1 And 2</label>
+          <select class="setting-select" id="padelColorFirst" onchange="updatePadelColorFirst(this.value)">
+            <option value="0x4c0000" selected>Red</option>
+            <option value="0x004c00">Green</option>
+            <option value="0x00004c">Blue</option>
+            <option value="0x4c4c00">Yellow</option>
+            <option value="0xcc8400">Orange</option>
+            <option value="0x20004c">Violet</option>
+            <option value="0x004c4c">Cyan</option>
+            <option value="0x4c004c">Magenta</option>
+          </select>
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label" for="padelColorSecond">Padel Color For Players 3 And 4</label>
+          <select class="setting-select" id="padelColorSecond" onchange="updatePadelColorSecond(this.value)">
             <option value="0x4c0000" selected>Red</option>
             <option value="0x004c00">Green</option>
             <option value="0x00004c">Blue</option>
@@ -714,6 +728,60 @@
         </div>
 
       </form>
+    </div>
+
+    <div class="keys-settings-container" id="keysSettings">
+      <div class="settings-header">
+        <h1 class="settings-title">Keys Settings</h1>
+      </div>
+      <div class="keys-container">
+        <div class="keys-setting-group">
+          <label class="keys-setting-label" for="player1Keys">Player 1 keys</label>
+          <div class="key-setting-group">
+            <h2 style="margin: 1%;"><span style="color: brown;">W</span> - move up</h2>
+            <h2 style="margin: 1%;"><span style="color: brown;">S</span> - move down</h2>
+          </div>
+        </div>
+        <div class="keys-setting-group">
+          <label class="keys-setting-label" for="player1Keys">Player 2 keys</label>
+          <div class="key-setting-group">
+            <h2 style="margin: 1%;"><span style="color: brown;">arrowUp</span> - move up</h2>
+            <h2 style="margin: 1%;"><span style="color: brown;">arrowDown</span> - move down</h2>
+          </div>
+        </div>
+        <div class="keys-setting-group">
+          <label class="keys-setting-label" for="player1Keys">Player 3 keys</label>
+          <div class="key-setting-group">
+            <h2 style="margin: 1%;"><span style="color: brown;">R</span> - move up</h2>
+            <h2 style="margin: 1%;"><span style="color: brown;">F</span> - move down</h2>
+          </div>
+        </div>
+        <div class="keys-setting-group">
+          <label class="keys-setting-label" for="player1Keys">Player 4 keys</label>
+          <div class="key-setting-group">
+            <h2 style="margin: 1%;"><span style="color: brown;">O</span> - move up</h2>
+            <h2 style="margin: 1%;"><span style="color: brown;">L</span> - move down</h2>
+          </div>
+        </div>
+        <div class="keys-setting-group">
+          <label class="keys-setting-label" for="player1Keys">Show in 3D mode</label>
+          <div class="key-setting-group">
+            <h2 style="margin: 1%;"><span style="color: brown;">C</span></h2>
+          </div>
+        </div>
+        <div class="keys-setting-group">
+          <label class="keys-setting-label" for="player1Keys">Exit game</label>
+          <div class="key-setting-group">
+            <h2 style="margin: 1%;"><span style="color: brown;">ESC</span></h2>
+          </div>
+        </div>
+        <div class="keys-setting-group">
+          <label class="keys-setting-label" for="player1Keys">Pause game</label>
+          <div class="key-setting-group">
+            <h2 style="margin: 1%;"><span style="color: brown;">SPACE</span></h2>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Tournament statistics -->
@@ -813,8 +881,12 @@
       }
     </script>
     <script>
-      function updatePadelColor(value) {
-        window.customs.padelColor = parseInt(value);
+      function updatePadelColorFirst(value) {
+        window.customs.padelColorFirst = parseInt(value);
+      }
+
+      function updatePadelColorSecond(value) {
+        window.customs.padelColorSecond = parseInt(value);
       }
 
       function updateBorderColor(value) {

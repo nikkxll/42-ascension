@@ -34,7 +34,8 @@ window.tournamentState = {
 window.ai_id = 1
 window.singleGameState = {}  //for tournament
 window.customs = {
-    padelColor: 0x4c0000,
+    padelColorFirst: 0x4c0000,
+    padelColorSecond: 0x4c0000,
     borderColor: 0x004c00,
     difficulty: 1,
     winCondition: 11
