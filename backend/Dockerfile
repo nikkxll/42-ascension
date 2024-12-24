@@ -34,4 +34,7 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 # Run the Django development server by default
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+# Run Gunicorn (instead of Django's runserver) in production
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "backend.wsgi:application", "--reload"]

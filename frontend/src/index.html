@@ -88,9 +88,8 @@
               ABOUT
             </a>
             <a
-              href="/admin"
               class="navigation-header-item"
-              onclick="return confirmRedirect(event, 'You will be redirected to the Django Admin page. Are you sure?')"
+              onclick="goToSettings(); updateHistory('settings');"
             >
               SETTINGS
             </a>
@@ -124,9 +123,9 @@
         <div class="tournament-container">
           <article class="tournament-card">
             <h2 class="tournament-title">Tournaments</h2>
-            <div class="carousel" id="tournament-carousel">
+            <div class="carousel slide carousel-fade" id="tournament-carousel">
               <div class="tournament-content carousel-inner">
-                <div class="tournament-details"></div>
+                <!-- <div class="tournament-details"></div> -->
               </div>
               <button
                 class="carousel-control-prev"
@@ -160,7 +159,7 @@
 
         <div class="buttonContainer">
           <button
-            onclick="goToGameStart();updateHistory('gamestart');"
+            onclick="goToGameStart(); updateHistory('gamestart');"
             class="create-action"
             tabindex="0"
             aria-label="Create Single Game"
@@ -176,7 +175,7 @@
             CREATE TOURNAMENT
           </button>
           <button
-            onclick="goTo2v2GameStart(); updateHistory('gamestart2v2')"
+            onclick="goTo2v2GameStart()"
             class="create-action"
             tabindex="0"
             aria-label="Create Single Game"
@@ -335,7 +334,7 @@
           <div class="single-game-vs-logo">
             <img
               class="single-game-vs-logo-props"
-              src="./assets/vs_logo.png"
+              src="./assets/app_logo.png"
               alt="Versus logo"
             />
           </div>
@@ -352,14 +351,14 @@
           <button
             class="single-game-buttons clear-selection"
             tabindex="0"
-            onclick="resetAll()"
+            onclick="window.singleGame.reset()"
           >
             Clear selection
           </button>
           <button
             class="single-game-buttons randomize"
             tabindex="0"
-            onclick="randomizeChoice()"
+            onclick="window.singleGame.randomize()"
           >
             Randomize
           </button>
@@ -383,7 +382,7 @@
           <div class="single-game-vs-logo">
             <img
               class="single-game-vs-logo-props"
-              src="./assets/vs_logo.png"
+              src="./assets/app_logo.png"
               alt="Versus logo"
             />
           </div>
@@ -400,18 +399,19 @@
           <button
             class="single-game-buttons clear-selection"
             tabindex="0"
-            onclick="resetAll()"
+            onclick="window.doubleGame.reset()"
           >
             Clear selection
           </button>
           <button
             class="single-game-buttons randomize"
             tabindex="0"
-            onclick="randomizeChoice2v2()"
+            onclick="window.doubleGame.randomize()"
           >
             Randomize
           </button>
           <button
+            id="start2v2"
             class="single-game-buttons start"
             tabindex="0"
             onclick="startOff()"
@@ -428,27 +428,93 @@
       <div class="profile-box box">
         <div class="profileLeft">
           <div id="person">
-            <h1 id="person-name" style="font-size: 52px">Blake</h1>
-            <img
-              id="person-avatar"
-              alt="avatar"
-              src="https://neweralive.na/wp-content/uploads/2024/06/lloyd-sikeba.jpg"
-            />
-            <form id="newAvatarForm">
-              <input type="file" accept="jpg png" id="newAvatar" />
-            </form>
+            <div class="profile-left-top">
+              <div style="width: 30%">
+                <img
+                  id="person-avatar"
+                  alt="avatar"
+                  src="https://neweralive.na/wp-content/uploads/2024/06/lloyd-sikeba.jpg"
+                />
+                <form id="newAvatarForm">
+                  <input type="file" accept="jpg png" id="newAvatar" />
+                </form>
+              </div>
+              <div class="person-name-container">
+                <h1
+                  id="person-name"
+                  style="font-size: 52px; margin-right: 10px"
+                >
+                  Blake
+                </h1>
+                <button class="person-name-edit-button">
+                  <svg
+                    version="1.1"
+                    id="Layer_1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                    x="0px"
+                    y="0px"
+                    viewBox="0 0 490.584 490.584"
+                    style="enable-background: new 0 0 490.584 490.584"
+                    xml:space="preserve"
+                  >
+                    <g>
+                      <g>
+                        <path
+                          d="M100.911,419.404l123.8-51c3.1-2.1,6.2-4.2,8.3-6.2l203.9-248.6c6.2-9.4,5.2-21.8-3.1-29.1l-96.8-80.1 c-8-5.9-20.3-6.8-28.1,3.1l-204.9,248.5c-2.1,3.1-3.1,6.2-4.2,9.4l-26,132.1C72.511,420.104,90.611,424.004,100.911,419.404z M326.611,49.004l65.5,54.1l-177.7,217.1l-64.9-53.7L326.611,49.004z M133.411,306.904l44.4,36.8l-57.2,23.6L133.411,306.904z"
+                        />
+                        <path
+                          d="M469.111,448.504h-349.5c0,0-72.5,3.4-75.2-15.2c0-1-1.8-5.6,7.6-17c7.3-9.4,6.2-21.8-2.1-29.1 c-9.4-7.3-21.8-6.2-29.1,2.1c-19.8,23.9-25,44.7-15.6,63.5c25.5,47.5,111.3,36.3,115.4,37.3h348.5c11.4,0,20.8-9.4,20.8-20.8 C490.011,457.804,480.611,448.504,469.111,448.504z"
+                        />
+                      </g>
+                    </g>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="username-box" id="usernameBox"></div>
+            <div class="form-container-profile-edit">
+              <div class="input-row">
+                <input
+                  type="text"
+                  placeholder="New username"
+                  id="newUsername"
+                />
+                <button
+                  type="button"
+                  onclick="updateUsername()"
+                  id="usernameUpdButton"
+                >
+                  Update
+                </button>
+              </div>
+              <div class="input-row">
+                <input
+                  type="password"
+                  placeholder="New password"
+                  id="newPassword"
+                />
+                <button
+                  type="button"
+                  onclick="updatePassword()"
+                  id="passwordUpdButton"
+                >
+                  Update
+                </button>
+                <button type="button" onclick="togglePasswordVisibility()">
+                  Show
+                </button>
+              </div>
+            </div>
+            <div class="player-wins-loses"></div>
             <h1>Recent matches</h1>
-            <p id="person-stats">stats go here with history</p>
+            <div id="person-stats">stats go here with history</div>
           </div>
         </div>
         <div class="profileRight">
           <div id="carouselExampleFade" class="carousel slide carousel-fade">
             <h1 class="carousel-title">Friends</h1>
-            <div class="carousel-inner" id="friends">
-              <div class="carousel-item friend active">a</div>
-              <div class="carousel-item friend">b</div>
-              <div class="carousel-item friend">c</div>
-            </div>
+            <div class="carousel-inner" id="friends"></div>
             <button
               class="carousel-control-prev"
               type="button"
@@ -592,6 +658,132 @@
       </div>
     </div>
 
+    <!-- Game customization -->
+
+    <div class="game-settings-container" id="gameSettings">
+      <div class="settings-header">
+        <h1 class="settings-title">Game Settings</h1>
+      </div>
+
+      <form class="settings-form" id="settingsForm">
+        <div class="setting-group">
+          <label class="setting-label" for="padelColorFirst">Padel Color For Players 1 And 2</label>
+          <select class="setting-select" id="padelColorFirst" onchange="updatePadelColorFirst(this.value)">
+            <option value="0x4c0000" selected>Red</option>
+            <option value="0x004c00">Green</option>
+            <option value="0x00004c">Blue</option>
+            <option value="0x4c4c00">Yellow</option>
+            <option value="0xcc8400">Orange</option>
+            <option value="0x20004c">Violet</option>
+            <option value="0x004c4c">Cyan</option>
+            <option value="0x4c004c">Magenta</option>
+          </select>
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label" for="padelColorSecond">Padel Color For Players 3 And 4</label>
+          <select class="setting-select" id="padelColorSecond" onchange="updatePadelColorSecond(this.value)">
+            <option value="0x4c0000" selected>Red</option>
+            <option value="0x004c00">Green</option>
+            <option value="0x00004c">Blue</option>
+            <option value="0x4c4c00">Yellow</option>
+            <option value="0xcc8400">Orange</option>
+            <option value="0x20004c">Violet</option>
+            <option value="0x004c4c">Cyan</option>
+            <option value="0x4c004c">Magenta</option>
+          </select>
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label" for="borderColor">3D-Border Color</label>
+          <select class="setting-select" id="borderColor" onchange="updateBorderColor(this.value)">
+            <option value="0x4c0000">Red</option>
+            <option value="0x004c00" selected>Green</option>
+            <option value="0x00004c">Blue</option>
+            <option value="0x4c4c00">Yellow</option>
+            <option value="0xcc8400">Orange</option>
+            <option value="0x20004c">Violet</option>
+            <option value="0x004c4c">Cyan</option>
+            <option value="0x4c004c">Magenta</option>
+          </select>
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label" for="difficulty">AI Difficulty</label>
+          <select class="setting-select" id="difficulty" onchange="updateDifficulty(this.value)">
+            <option value="2">Easy</option>
+            <option value="1.5" selected>Normal</option>
+            <option value="1">Hard</option>
+            <option value="0.75">Impossible</option>
+          </select>
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label" for="winCondition">Win Condition</label>
+          <select class="setting-select" id="winCondition" onchange="updateWinCondition(this.value)">
+            <option value="5">Up to 5</option>
+            <option value="11" selected>Up to 11</option>
+            <option value="21">Up to 21</option>
+          </select>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="keys-settings-container" id="keysSettings">
+      <div class="settings-header">
+        <h1 class="settings-title">Keys Settings</h1>
+      </div>
+      <div class="keys-container">
+        <div class="keys-setting-group">
+          <label class="keys-setting-label" for="player1Keys">Player 1 keys</label>
+          <div class="key-setting-group">
+            <h2 style="margin: 1%;"><span style="color: brown;">W</span> - move up</h2>
+            <h2 style="margin: 1%;"><span style="color: brown;">S</span> - move down</h2>
+          </div>
+        </div>
+        <div class="keys-setting-group">
+          <label class="keys-setting-label" for="player1Keys">Player 2 keys</label>
+          <div class="key-setting-group">
+            <h2 style="margin: 1%;"><span style="color: brown;">arrowUp</span> - move up</h2>
+            <h2 style="margin: 1%;"><span style="color: brown;">arrowDown</span> - move down</h2>
+          </div>
+        </div>
+        <div class="keys-setting-group">
+          <label class="keys-setting-label" for="player1Keys">Player 3 keys</label>
+          <div class="key-setting-group">
+            <h2 style="margin: 1%;"><span style="color: brown;">R</span> - move up</h2>
+            <h2 style="margin: 1%;"><span style="color: brown;">F</span> - move down</h2>
+          </div>
+        </div>
+        <div class="keys-setting-group">
+          <label class="keys-setting-label" for="player1Keys">Player 4 keys</label>
+          <div class="key-setting-group">
+            <h2 style="margin: 1%;"><span style="color: brown;">O</span> - move up</h2>
+            <h2 style="margin: 1%;"><span style="color: brown;">L</span> - move down</h2>
+          </div>
+        </div>
+        <div class="keys-setting-group">
+          <label class="keys-setting-label" for="player1Keys">Show in 3D mode</label>
+          <div class="key-setting-group">
+            <h2 style="margin: 1%;"><span style="color: brown;">C</span></h2>
+          </div>
+        </div>
+        <div class="keys-setting-group">
+          <label class="keys-setting-label" for="player1Keys">Exit game</label>
+          <div class="key-setting-group">
+            <h2 style="margin: 1%;"><span style="color: brown;">ESC</span></h2>
+          </div>
+        </div>
+        <div class="keys-setting-group">
+          <label class="keys-setting-label" for="player1Keys">Pause game</label>
+          <div class="key-setting-group">
+            <h2 style="margin: 1%;"><span style="color: brown;">SPACE</span></h2>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Tournament statistics -->
 
     <div class="tournament-statistics" id="tournamentStatistics"></div>
@@ -599,6 +791,7 @@
     <script src="./js/navigation.js"></script>
     <script src="./js/gameStart.js"></script>
     <script src="./js/gamePlayersSelector.js"></script>
+    <script src="./js/gamePlayersSelectorDoubles.js"></script>
 
     <!-- Bootstrap parts for profile carousel -->
     <script
@@ -643,6 +836,7 @@
               console.error(error.message);
             }
             goToLobby();
+            updateHistory("lobby");
           }
         }, 1000);
       }
@@ -669,7 +863,42 @@
 
         tournamentInput.setCustomValidity("");
         goToTournament();
-        updateHistory("tournament");
+      }
+    </script>
+    <script>
+      function togglePasswordVisibility() {
+        const passwordInput = document.getElementById("newPassword");
+        const showButton = document.querySelector(
+          'button[onclick="togglePasswordVisibility()"]'
+        );
+        if (passwordInput.type === "password") {
+          passwordInput.type = "text";
+          showButton.textContent = "Hide";
+        } else {
+          passwordInput.type = "password";
+          showButton.textContent = "Show";
+        }
+      }
+    </script>
+    <script>
+      function updatePadelColorFirst(value) {
+        window.customs.padelColorFirst = parseInt(value);
+      }
+
+      function updatePadelColorSecond(value) {
+        window.customs.padelColorSecond = parseInt(value);
+      }
+
+      function updateBorderColor(value) {
+        window.customs.borderColor = parseInt(value);
+      }
+
+      function updateDifficulty(value) {
+          window.customs.difficulty = parseInt(value);
+      }
+
+      function updateWinCondition(value) {
+          window.customs.winCondition = parseInt(value);
       }
     </script>
   </body>

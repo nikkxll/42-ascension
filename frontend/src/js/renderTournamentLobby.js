@@ -1,7 +1,7 @@
 // --- Creating tournament lobby ---
 
 // Function that renders the tournament lobby section with player cards
-function createTournament() {
+async function createTournament() {
   const tournamentGrid = document.querySelector(".tournament-grid");
   const firstSemifinalContent = document.getElementById(
     "firstSemifinalContent"
@@ -10,6 +10,9 @@ function createTournament() {
     "secondSemifinalContent"
   );
   const tournamentTitle = document.getElementById("tournamentTitle");
+  const finalDummy = document.getElementById("final");
+
+  finalDummy.style.display = "flex";
 
   function getPlayers() {
     const players = window.state.loggedInUsers;
@@ -21,6 +24,7 @@ function createTournament() {
         "Error: At least three users must be logged in to start the tournament."
       );
       goToLobby();
+      updateHistory('lobby');
       return [];
     }
     return players;
@@ -31,20 +35,27 @@ function createTournament() {
     return tournamentNameInput.value.trim();
   }
 
-  function generatePlayerCards(players) {
+  async function generatePlayerCards(players) {
     tournamentGrid.innerHTML = "";
 
     const filledPlayers = [...players];
     if (filledPlayers.length < 4) {
       filledPlayers.push({
         id: 1,
-        username: `AI`,
-        winRate: "75%",
-        avatar: "./assets/ai_profile.png",
+        username: `ai_player`,
+        displayName: `AI Player`,
+        avatarUrl: "./media/avatars/ai_profile.jpg",
       });
     }
 
-    filledPlayers.forEach((player, index) => {
+    for (const [index, player] of filledPlayers.entries()) {
+      const winRate =
+        player.username === "ai_player"
+          ? 99
+          : (await getPlayersStatsGame(player.id)).winRate;
+
+      console.log(player);
+
       const playerCard = document.createElement("div");
       playerCard.className = "game-player-card";
       playerCard.innerHTML = `
@@ -52,21 +63,19 @@ function createTournament() {
             <h2 class="game-player-number">Player ${index + 1}</h2>
             <img
               loading="lazy"
-              src="${player.avatar || "./assets/default_avatar.png"}"
+              src="${player.avatarUrl}"
               alt="Player avatar"
-              class="game-player-avatar"
+              class="common-lobby-avatar"
             />
-            <h3 class="game-player-name">${player.username}</h3>
+            <h3 class="game-player-name">${player.displayName || player.username}</h3>
             <div class="game-player-win-rate-container">
               <p class="game-player-statistics-param">Win rate</p>
-              <p class="game-player-statistics-param-number last">${
-                player.winRate ?? 0
-              }</p>
+              <p class="game-player-statistics-param-number last">${winRate}%</p>
             </div>
           </article>
         `;
       tournamentGrid.appendChild(playerCard);
-    });
+    }
     return filledPlayers;
   }
 
@@ -88,17 +97,17 @@ function createTournament() {
         <div class="tournament-match-players">
           <div class="tournament-match-player-info-left">
             <img loading="lazy" src="${
-              player1.avatar || "./assets/default_avatar.png"
-            }" alt="Player avatar" class="tournament-match-avatar" />
+              player1.avatarUrl
+            }" alt="Player avatar" class="common-lobby-avatar" />
             <h3 class="game-player-name tournament">${player1.label}</h3>
           </div>
           <h2 class="tournament-match-left-score">-</h2>
-          <img class="tournament-match-vs-logo" src="./assets/vs_logo.png" alt="Versus logo" />
+          <img class="tournament-match-vs-logo" src="./assets/app_logo.png" alt="Versus logo" />
           <h2 class="tournament-match-right-score">-</h2>
           <div class="tournament-match-player-info-right">
             <img loading="lazy" src="${
-              player2.avatar || "./assets/default_avatar.png"
-            }" alt="Player avatar" class="tournament-match-avatar" />
+              player2.avatarUrl
+            }" alt="Player avatar" class="common-lobby-avatar" />
             <h3 class="game-player-name tournament">${player2.label}</h3>
           </div>
         </div>
@@ -138,16 +147,18 @@ function createTournament() {
   const players = getPlayers();
 
   if (players.length > 0) {
-    const filledPlayers = generatePlayerCards(players);
+    const filledPlayers = await generatePlayerCards(players);
     addLabelsToPlayers(filledPlayers);
 
     const tournamentName = getTournamentName();
+    document.getElementById("tournamentName").value = "";
 
     window.tournamentState = {};
     window.tournamentState.name = tournamentName;
     tournamentTitle.innerHTML = generateTitle(window.tournamentState.name);
 
     generateSemifinals(filledPlayers);
+    updateHistory("tournament");
   }
 
   // Reset tournament state on "Back to menu"
@@ -164,10 +175,11 @@ function createTournament() {
   backToMenuButton.addEventListener("click", function () {
     resetTournament();
     goToLobby();
+    updateHistory('lobby');
   });
 }
 
-function loadTournament(tournamentId) {
+async function loadTournament(tournamentId) {
   const tournaments = window.state.tournaments.tournaments;
   const tournament = tournaments.find((t) => t.id === tournamentId);
   window.tournamentState.data = tournament;
@@ -266,6 +278,7 @@ function loadTournament(tournamentId) {
       );
       alert("Error: Not enough players are logged in to finish the tournament");
       goToLobby();
+      updateHistory('lobby');
     }
   }
 
@@ -275,40 +288,37 @@ function loadTournament(tournamentId) {
     return arr2.every((element) => set1.has(element));
   }
 
-  function generatePlayerCards(tournamentPlayers) {
+  async function generatePlayerCards(players) {
     tournamentGrid.innerHTML = "";
 
-    const filledPlayers = [...tournamentPlayers];
+    const filledPlayers = [...players];
 
-    filledPlayers.forEach((player, index) => {
-      const isWinner = player.id === tournament?.winner?.id;
+    for (const [index, player] of filledPlayers.entries()) {
+      const winRate =
+        player.username === "ai_player" 
+          ? 99
+          : (await getPlayersStatsGame(player.id)).winRate;
+
       const playerCard = document.createElement("div");
       playerCard.className = "game-player-card";
-
       playerCard.innerHTML = `
-        <article class="tournament-game-player-card-inner ${
-          isWinner ? "winner" : "normal"
-        }">
-          <h2 class="game-player-number">${
-            isWinner ? "Winner" : `Player ${index + 1}`
-          }</h2>
-          <img
-            loading="lazy"
-            src="${player.avatar || "./assets/default_avatar.png"}"
-            alt="Player avatar"
-            class="game-player-avatar"
-          />
-          <h3 class="game-player-name">${player.username}</h3>
-          <div class="game-player-win-rate-container">
-            <p class="game-player-statistics-param">Win rate</p>
-            <p class="game-player-statistics-param-number last">${
-              player.winRate ?? 0
-            }</p>
-          </div>
-        </article>
-      `;
+          <article class="tournament-game-player-card-inner normal">
+            <h2 class="game-player-number">Player ${index + 1}</h2>
+            <img
+              loading="lazy"
+              src="${player.avatarUrl}"
+              alt="Player avatar"
+              class="common-lobby-avatar"
+            />
+            <h3 class="game-player-name">${player.displayName || player.username}</h3>
+            <div class="game-player-win-rate-container">
+              <p class="game-player-statistics-param">Win rate</p>
+              <p class="game-player-statistics-param-number last">${winRate}%</p>
+            </div>
+          </article>
+        `;
       tournamentGrid.appendChild(playerCard);
-    });
+    }
     return filledPlayers;
   }
 
@@ -337,7 +347,7 @@ function loadTournament(tournamentId) {
       sfCount === 1 ? sfScores.sfOneScoreTwo : sfScores.sfTwoScoreTwo;
 
     const playerAvatar = (player) =>
-      player?.avatar || "./assets/default_avatar.png";
+      player?.avatarUrl;
     const playerLabel = (player) => player?.label || "Unknown Player";
 
     return `
@@ -345,7 +355,7 @@ function loadTournament(tournamentId) {
         <div class="tournament-match-player-info-left">
           <img loading="lazy" src="${playerAvatar(
             player1
-          )}" alt="Player avatar" class="tournament-match-avatar" />
+          )}" alt="Player avatar" class="common-lobby-avatar" />
           <h3 class="game-player-name tournament">${playerLabel(player1)}</h3>
         </div>
         <h2 class="tournament-match-left-score ${
@@ -355,7 +365,7 @@ function loadTournament(tournamentId) {
             ? "match-loser-text"
             : ""
         }">${leftScore}</h2>
-        <img class="tournament-match-vs-logo" src="./assets/vs_logo.png" alt="Versus logo" />
+        <img class="tournament-match-vs-logo" src="./assets/app_logo.png" alt="Versus logo" />
         <h2 class="tournament-match-right-score ${
           rightScore > leftScore
             ? "match-winner-text"
@@ -366,7 +376,7 @@ function loadTournament(tournamentId) {
         <div class="tournament-match-player-info-right">
           <img loading="lazy" src="${playerAvatar(
             player2
-          )}" alt="Player avatar" class="tournament-match-avatar" />
+          )}" alt="Player avatar" class="common-lobby-avatar" />
           <h3 class="game-player-name tournament">${playerLabel(player2)}</h3>
         </div>
       </div>
@@ -381,8 +391,8 @@ function loadTournament(tournamentId) {
         <div class="tournament-match-players">
           <div class="tournament-match-player-info-left">
             <img loading="lazy" src="${
-              player1?.avatar || "./assets/default_avatar.png"
-            }" alt="Player avatar" class="tournament-match-avatar" />
+              player1?.avatarUrl
+            }" alt="Player avatar" class="common-lobby-avatar" />
             <h3 class="game-player-name tournament">${player1?.label}</h3>
           </div>
           <h2 class="tournament-match-left-score ${
@@ -392,7 +402,7 @@ function loadTournament(tournamentId) {
               ? "match-loser-text"
               : ""
           }">${leftScore ?? 0}</h2>
-          <img class="tournament-match-vs-logo" src="./assets/vs_logo.png" alt="Versus logo" />
+          <img class="tournament-match-vs-logo" src="./assets/app_logo.png" alt="Versus logo" />
           <h2 class="tournament-match-right-score ${
             rightScore > leftScore
               ? "match-winner-text"
@@ -402,8 +412,8 @@ function loadTournament(tournamentId) {
           }">${rightScore ?? 0}</h2>
           <div class="tournament-match-player-info-right">
             <img loading="lazy" src="${
-              player2?.avatar || "./assets/default_avatar.png"
-            }" alt="Player avatar" class="tournament-match-avatar" />
+              player2?.avatarUrl
+            }" alt="Player avatar" class="common-lobby-avatar" />
             <h3 class="game-player-name tournament">${player2?.label}</h3>
           </div>
         </div>
@@ -466,7 +476,7 @@ function loadTournament(tournamentId) {
     }
   }
 
-  const filledPlayers = generatePlayerCards(tournamentPlayers);
+  const filledPlayers = await generatePlayerCards(tournamentPlayers);
   addLabelsToPlayers(filledPlayers);
   tournamentTitle.innerHTML = generateTitle(tournament?.name);
 
@@ -488,32 +498,40 @@ function loadTournament(tournamentId) {
   });
 }
 
+const calculateTournamentStats = (tournament) => {
+  if (!tournament.winner) {
+    return { totalPoints: 0, totalTimeSeconds: 0, fastestMatchSeconds: 0 };
+  }
+
+  const matches = tournament.matches;
+
+  const totalPoints = matches
+    .slice(0, 3)
+    .reduce(
+      (sum, match) => sum + Number(match.score[0]) + Number(match.score[1]),
+      0
+    );
+
+  const matchDurations = matches
+    .slice(0, 3)
+    .map((match) => Number(match.duration));
+
+  const totalTimeSeconds = matchDurations.reduce(
+    (sum, duration) => sum + duration,
+    0
+  );
+
+  const fastestMatchSeconds = Math.min(...matchDurations);
+
+  return { totalPoints, totalTimeSeconds, fastestMatchSeconds };
+};
+
 function generateTournamentResults(tournament) {
   const tournamentStatistics = document.getElementById("tournamentStatistics");
   tournamentStatistics.innerHTML = "";
 
-  const totalPoints = tournament.winner
-    ? Number(tournament.matches[0].score[0]) +
-      Number(tournament.matches[0].score[1]) +
-      Number(tournament.matches[1].score[0]) +
-      Number(tournament.matches[1].score[1]) +
-      Number(tournament.matches[2].score[0]) +
-      Number(tournament.matches[2].score[1])
-    : 0;
-
-  const totalTimeSeconds = tournament.winner
-    ? Number(tournament.matches[0].duration) +
-      Number(tournament.matches[1].duration) +
-      Number(tournament.matches[2].duration)
-    : 0;
-
-  const fastestMatchSeconds = tournament.winner
-    ? Math.min(
-        Number(tournament.matches[0].duration),
-        Number(tournament.matches[1].duration),
-        Number(tournament.matches[2].duration)
-      )
-    : 0;
+  const { totalPoints, totalTimeSeconds, fastestMatchSeconds } =
+    calculateTournamentStats(tournament);
 
   const totalTime = {
     minutes: Math.floor(totalTimeSeconds / 60),
@@ -559,14 +577,14 @@ function generateTournamentResults(tournament) {
     <div class="tournament-statistics-text-format">
       <span>Fastest match :</span>
       <span>${fastestMatch.minutes > 0 ? "min" : ""} ${
-        fastestMatch.seconds
-      } sec</span>
+    fastestMatch.seconds
+  } sec</span>
     </div>
     <div class="tournament-statistics-text-format last">
       <span>Overall time in game :</span>
       <span>${totalTime.minutes > 0 ? "min" : ""} ${
-        totalTime.seconds
-      } sec</span>
+    totalTime.seconds
+  } sec</span>
     </div>
   </div>
   `;

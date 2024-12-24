@@ -60,9 +60,8 @@ h2 {
 
 .profileLeft {
   position: absolute;
-  left: 0;
   width: 50%;
-  height: 90%;
+  height: 100%;
   display: flex;
   /* display: none; */
   align-items: center;
@@ -79,6 +78,27 @@ h2 {
   align-items: center;
   justify-content: space-around;
 }
+
+.form-container-profile-edit {
+  padding: 14px 45px 20px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 10px;
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+  margin: 0 auto;
+  gap: 10px;
+}
+
+.profile-left-top {
+  margin: 5% 5% 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
 #carouselExampleFade {
   text-align: center;
   display: inline-block;
@@ -100,7 +120,7 @@ h2 {
 
 .carousel-title {
   margin-top: -56px;
-  font-size: 52px;
+  font-size: 58px;
 }
 
 .carousel-inner {
@@ -110,29 +130,85 @@ h2 {
 #person {
   text-align: center;
   display: inline-block;
-  width: 50%;
-  height: 85%;
+  width: 100%;
+  height: 100%;
   border-radius: 45px;
   background-color: rgba(18, 16, 16, 0.25);
-  backdrop-filter: blur(5px);
-  padding: 22px 52px 22px;
-  border: 1px solid #a7a7a7;
 }
 
 #person-avatar {
-  width: 10vw;
-  height: 10vw;
+  width: 8vw;
+  height: 8vw;
+  display: block;
+  margin: 0 auto;
   border-radius: 10vw;
   border: 3px solid #a7a7a7;
-  margin-bottom: 10%;
+  margin-bottom: 3%;
+}
+
+.person-name-container {
+	margin-top: 50px;
+	margin-bottom: 50px;
+}
+
+#person-name, .edit-icon {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+input[type="file"] {
+	color: transparent;
+	width: 100%;
+}
+  
+input[type="file"]::file-selector-button {
+	display: block;
+	margin: 0 auto;
+	border-radius: 5px;
+	border: unset;
+	cursor: pointer;
+	transition: background-color 0.3s;
+}
+
+input[type="file"]::file-selector-button:hover {
+	background-color: #000000;
+	color: rgba(255, 255, 255, 0.5);
+}
+  
+#person-name {
+	margin: unset;
+	word-break: break-all;
+}
+
+.person-name-edit-button {
+	background: unset;
+	border: unset;
+}
+
+.person-name-edit-button svg {
+	fill: #989898;
+    width: 30px;
+    height: 30px;
+}
+
+.player-wins-loses {
+	padding-top: 20px;
+	padding-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  padding: 1% 5% 1%;
+  gap: 10px;
 }
 
 .friend-avatar {
-  width: 12vw;
-  height: 12vw;
+  width: 8vw;
+  height: 8vw;
   border-radius: 10vw;
   border: 3px solid #a7a7a7;
-  margin-bottom: 10%;
+  margin-bottom: 2%;
 }
 
 section {
@@ -410,6 +486,7 @@ section {
 .reg-link {
   color: rgba(0, 186, 186, 1);
   text-decoration: none;
+  cursor: pointer;
 }
 .divider {
   justify-content: center;
@@ -483,14 +560,24 @@ section {
 }
 
 .profile-avatar {
-    display: block;
-    width: 80px;
-	height: 80px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    border-radius: 50%;
-    overflow: hidden;
-	align-self: center;
+  display: block;
+  width: 80px;
+  height: 80px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-radius: 50%;
+  overflow: hidden;
+  align-self: center;
+}
+
+.common-lobby-avatar {
+  display: block;
+  width: 70px;
+  height: 70px;
+  margin: 10px;
+  border-radius: 50%;
+  overflow: hidden;
+  align-self: center;
 }
 
 .profile-avatar img {
@@ -544,11 +631,10 @@ section {
 
 .create-action {
   border-radius: 45px;
-  max-width: 789px;
-  max-height: 59px;
+  width: 47.1vw;
+  height: 59px;
   background-color: rgba(18, 16, 16, 0.25);
   backdrop-filter: blur(5px);
-  width: 100%;
   cursor: pointer;
   padding: 6px 70px 6px;
   border: 1px solid #a7a7a7;
@@ -626,6 +712,8 @@ section {
   cursor: pointer;
   transition: box-shadow 0.3s, transform 0.3s;
   display: flex;
+  justify-content: center;
+  font: 24px "Acme", sans-serif;
   gap: 10px;
 }
 
@@ -685,11 +773,11 @@ section {
 }
 
 .tournament-content {
-  display: flex;
+  /* display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 16px; */
   font: 24px/52px "Acme", sans-serif;
-  margin: 0px 8px 16px 8px;
+  /* margin: 0px 8px 16px 8px; */
 }
 
 .tournament-icon {
@@ -725,14 +813,14 @@ section {
 }
 
 .tournament-block {
-  width: 70%;
-  margin: 0 20%;
+  /* width: 70%; */
+  padding: 0 20%;
   cursor: pointer;
-  transition: box-shadow 0.3s, transform 0.3s;
+  transition: box-shadow 0.3s, transform 0.3s !important;
 }
 
 .tournament-block:hover {
-  transform: translateY(-3px);
+	transform: translateY(-3px);
 }
 
 /* Match statistics container */
@@ -1034,8 +1122,9 @@ section {
 }
 
 .single-game-vs-logo-props {
-  width: 150px;
-  height: 150px;
+  width: 100px;
+  height: 100px;
+  margin: 50px;
 }
 
 .single-game-grid-left {
@@ -1069,6 +1158,10 @@ section {
   padding: 12px 84px 12px;
   margin: 0px auto 32px;
   transition: box-shadow 0.3s, transform 0.3s;
+}
+
+.single-game-buttons:hover {
+  transform: translateY(-3px);
 }
 
 .single-game-buttons.back {
@@ -1294,7 +1387,7 @@ section {
   transition: box-shadow 0.3s, transform 0.3s;
 }
 .tournament-buttons.lobby {
-  margin: 3% auto 2%;
+  margin: 1% auto 2%;
 }
 .tournament-buttons.back-to-menu {
   background-color: rgba(255, 0, 0, 0.25);
@@ -1401,8 +1494,8 @@ section {
 }
 
 .tournament-match-vs-logo {
-  width: 100px;
-  height: 100px;
+  width: 50px;
+  height: 50px;
 }
 
 .tournament-match-player-info-left {
@@ -1619,6 +1712,10 @@ section {
   background-color: rgba(255, 0, 0, 0.25);
 }
 
+.profile-back-button:hover {
+  transform: translateY(-3px);
+}
+
 .profile-games-list {
   margin-top: 5%;
   font: 400 24px Acme, sans-serif;
@@ -1626,6 +1723,37 @@ section {
   flex-direction: row;
   gap: 3%;
   justify-content: center;
+}
+
+.form-container-profile-edit input,
+.form-container-profile-edit button {
+  padding: 4px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.form-container-profile-edit button {
+  cursor: pointer;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0, 1);
+  border: none;
+  transition: background-color 0.3s;
+}
+
+.form-container-profile-edit button:hover {
+  background-color: #000000;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.input-row input {
+  flex: 1;
 }
 
 /* Profile page container. Friends list */
@@ -1806,6 +1934,14 @@ section {
   background-color: rgba(255, 0, 0, 0.25);
 }
 
+.friend-login-status {
+  width: 15px;
+  height: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
 /* Profile match statistics container */
 
 .profile-match-statistics {
@@ -1952,10 +2088,25 @@ section {
   font-size: 24px;
 }
 
-.friend-login-status {
-  display: flex;
-  width: 15px;
-  height: 15px;
+.friend-status-request {
+  background-color: #ffffff;
+  color: rgb(0, 0, 0, 1);
+  border: none;
+  transition: background-color 0.3s;
+  border-radius: 5px;
+}
+
+.friend-status-request:hover {
+  background-color: #000000;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.friend-status-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 0.5vw;
 }
 
 .friend-name {
@@ -2095,4 +2246,140 @@ section {
 }
 .logo-stats:hover {
   transform: translateY(-3px);
+}
+
+.no-cursor {
+	cursor: unset;
+}
+
+.match-link.no-hover:hover {
+	transform: unset;
+}
+
+.friend-status-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5vw;
+}
+
+/* Game customization */
+
+.game-settings-container {
+  display: none;
+  position: absolute;
+  top: 18vh;
+  left: 10vw;
+  background: rgba(18, 16, 16, 0.25);
+  border-radius: 45px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 600px;
+  backdrop-filter: blur(12px);
+  border: 1px solid #a7a7a7;
+}
+
+.keys-settings-container {
+  display: none;
+  position: absolute;
+  top: 18vh;
+  left: 54.5vw;
+  background: rgba(18, 16, 16, 0.25);
+  border-radius: 45px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 600px;
+  max-height: 700px;
+  backdrop-filter: blur(12px);
+  border: 1px solid #a7a7a7;
+}
+
+.settings-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.settings-title {
+  color: #ffffff;
+  font-family: 'Keania One';
+  text-transform: uppercase;
+  margin: 0;
+  font-size: 2.5rem;
+  text-align: center;
+  flex-grow: 1;
+}
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.setting-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.key-setting-group {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+}
+
+.keys-setting-group {
+  display: flex;
+  flex-direction: row;
+  gap: 5rem;
+}
+
+.setting-label {
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-family: 'Keania One';
+  margin-bottom: 0.25rem;
+}
+
+.keys-setting-label {
+  display: flex;
+  align-items: center;
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-family: 'Keania One';
+  margin-bottom: 0.25rem;
+  width: 200px;
+}
+
+.setting-select {
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-size: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  font-family: 'Acme', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.setting-select:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.setting-select:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.setting-select option {
+  background: #1a1a1a;
+  color: #ffffff;
+}
+
+.keys-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
 }

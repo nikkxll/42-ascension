@@ -2,7 +2,7 @@ const requestFriendship = async (id) => {
   try {
     const response = await fetch(
       `/api/players/${
-        window.state["loggedInUsers"][window.currentUserID].id
+        window.state.loggedInUsers[window.currentUserID].id
       }/friends/`,
       {
         method: "POST",
@@ -21,7 +21,7 @@ const approveFriendship = async (id) => {
   try {
     const response = await fetch(
       `/api/players/${
-        window.state["loggedInUsers"][window.currentUserID].id
+        window.state.loggedInUsers[window.currentUserID].id
       }/friends/manage/`,
       {
         method: "POST",
@@ -40,7 +40,7 @@ const denyFriendship = async (id) => {
   try {
     const response = await fetch(
       `/api/players/${
-        window.state["loggedInUsers"][window.currentUserID].id
+        window.state.loggedInUsers[window.currentUserID].id
       }/friends/manage/`,
       {
         method: "POST",

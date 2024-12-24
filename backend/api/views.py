@@ -119,7 +119,6 @@ def create_player(request):
     username = data.get("username")
     password = data.get("password")
     display_name = data.get("displayName")
-
     if not username:
         return JsonResponse(
             {"ok": False, "error": "User name is required", "statusCode": 400},
@@ -133,8 +132,9 @@ def create_player(request):
     # Create the user
     user = User.objects.create_user(username=username, password=password)
     # Create the player with the associated user
+    display_name = display_name if display_name else None
+    print(f"Creating player with username: {username}, display name: {display_name}")
     player = Player.objects.create(user=user, display_name=display_name)
-
     # Return success response
     return JsonResponse(
         {
@@ -225,30 +225,43 @@ def custom_login(request):
 @session_authenticated_id
 def custom_logout(request, id):
     if request.method == "POST":
-        session_key = f"session_{id}"
-
-        # Check if the session exists for the given user
-        if session_key in request.COOKIES:
-            # Create a response object
-            response = JsonResponse(
-                {
-                    "ok": True,
-                    "data": {"id": id},
-                    "message": f"Logged out id:{id}",
-                    "statusCode": 200,
-                }
-            )
-            # Delete the session cookie by setting it to an empty value and an expired date
-            response.delete_cookie(session_key)
-            return response
-        else:
+        try:
+            session_key = f"session_{id}"
+            # Check if the session exists for the given user
+            if session_key in request.COOKIES:
+                session_data = decrypt_session_value(request.COOKIES.get(session_key))
+                if session_data["id"] == id:
+                    user = User.objects.get(id=id)
+                    player = Player.objects.get(user=user)
+                    if player:
+                        player.last_active_at = timezone.now() - timedelta(minutes=6)
+                        player.save()
+                    else:
+                        raise ValueError("Player object not found for the given user.")
+                    # Create a response object
+                    response = JsonResponse(
+                        {
+                            "ok": True,
+                            "data": {"id": id},
+                            "message": f"Logged out id:{id}",
+                            "statusCode": 200,
+                        }
+                    )
+                    # Delete the session cookie by setting it to an empty value and an expired date
+                    response.delete_cookie(session_key)
+                    return response
+            else:
+                return JsonResponse(
+                    {
+                        "ok": False,
+                        "error": f"No active session for id:{id}",
+                        "statusCode": 404,
+                    },
+                    status=404,
+                )
+        except Exception as e:
             return JsonResponse(
-                {
-                    "ok": False,
-                    "error": f"No active session for id:{id}",
-                    "statusCode": 404,
-                },
-                status=404,
+                {"ok": False, "error": str(e), "statusCode": 400}, status=400
             )
     return JsonResponse(
         {"ok": False, "error": "Method not allowed", "statusCode": 405}, status=405
@@ -410,7 +423,7 @@ def get_player_stats(request, id):
         if request.method == "GET":
             player = get_player_by_user_id(id)
             wins = Match.objects.filter(Q(winner1=player) | Q(winner2=player)).count()
-            losses = Match.objects.filter(Q(winner1=player) | Q(winner2=player)).count()
+            losses = Match.objects.filter(Q(loser1=player) | Q(loser2=player)).count()
             return JsonResponse(
                 {
                     "ok": True,
@@ -458,7 +471,7 @@ def manage_tournaments(request):
     )
 
 
-# Get last 5 tournaments
+# Get last tournaments
 def get_tournaments(request):
     last = int(request.GET.get("last") or 5)
     tournaments = (
@@ -559,6 +572,8 @@ def get_tournament(request, id):
 def find_ids_from_sessions(request):
     found_session_ids = []
     for key, value in request.COOKIES.items():
+        if not key.startswith("session_"):
+            continue
         try:
             decrypted_value = decrypt_session_value(value)
             if decrypted_value and 'id' in decrypted_value:
@@ -748,13 +763,14 @@ def get_matches(request):
 def get_player_matches(request, id):
     try:
         if request.method == "GET":
+            last = int(request.GET.get("last") or 5)
             player = get_player_by_user_id(id)
             matches = Match.objects.filter(
                 Q(player1=player)
                 | Q(player2=player)
                 | Q(player3=player)
                 | Q(player4=player)
-            ).order_by("-id")
+            ).order_by("-id")[:last]
             return JsonResponse(
                 {
                     "ok": True,

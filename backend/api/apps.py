@@ -23,7 +23,8 @@ def create_default_player(sender, **kwargs):
             )
             player = Player.objects.create(
                 user=user,
-                display_name='AI Player'
+                display_name='AI Player',
+                avatar='/avatars/ai_profile.jpg'
             )
             print("AI player created!")
     except IntegrityError:

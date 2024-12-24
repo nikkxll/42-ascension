@@ -8,7 +8,8 @@ async function renderRecentMatches() {
 		return;
 	}
 	data?.matches?.map((match) => {
-		const newDiv = document.createElement("div");
+		const newLi = document.createElement("li");
+		newLi.classList.add("match-result")
 		let isWinner1 = undefined;
 		if (match.score !== null) {
 			isWinner1 = Number(match.score[0]) > Number(match.score[1]);
@@ -46,16 +47,14 @@ async function renderRecentMatches() {
 					${match.score ? "[" + matchScore + "]" : "[0:0]"}
 				</div>`;
 
-		newDiv.innerHTML = `
-			<li class="match-result">
+		newLi.innerHTML = `
 			<div onclick="goToMatchView(${match.id})" class="match-link">
 				${team1Div}
 				<div class="versus-text">vs</div>
 				${team2Div}
 				${matchScoreDiv}
-			</div>
-			</li>`;
-		matchList.appendChild(newDiv);
+			</div>`;
+		matchList.appendChild(newLi);
 	});
 }
 
@@ -82,6 +81,13 @@ async function fetchRecentMatches() {
 	}
 }
 
+function isoDateToShortDate(isoDate) {
+	const date = new Date(isoDate);
+	return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+}
+
+window.isoDateToShortDate = isoDateToShortDate;
+
 async function renderDetailedMatchStats(matchId) {
 	function secondsToHms(d) {
 		d = Number(d);
@@ -93,11 +99,6 @@ async function renderDetailedMatchStats(matchId) {
 		const mDisplay = m > 0 ? m + " m " : "";
 		const sDisplay = s > 0 ? s + " s" : "";
 		return hDisplay + mDisplay + sDisplay;
-	}
-
-	function isoDateToShortDate(isoDate) {
-		const date = new Date(isoDate);
-		return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 	}
 
 	try {

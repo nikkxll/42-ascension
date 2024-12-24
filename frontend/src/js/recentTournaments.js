@@ -1,7 +1,8 @@
 async function renderRecentTournaments() {
   window.state.tournaments = await fetchRecentTournaments();
   const data = window.state.tournaments;
-  const tournamentField = document.querySelector(".tournament-details");
+  //   const tournamentField = document.querySelector(".tournament-details");
+  const tournamentField = document.querySelector(".tournament-content");
   tournamentField.innerHTML = "";
   console.log(data);
 
@@ -18,7 +19,11 @@ async function renderRecentTournaments() {
 
     tournamentContainer.addEventListener("click", () => {
       goToLoadedTournament(tournament.id);
-      history.pushState({ view: "loadedtournament", index: tournament.id}, null, "");
+      history.pushState(
+        { view: "loadedtournament", index: tournament.id },
+        null,
+        ""
+      );
     });
 
     const title = document.createTextNode(
@@ -40,7 +45,11 @@ async function renderRecentTournaments() {
 
     tournamentContainer.appendChild(
       document.createTextNode(
-        `Winner: ${tournament?.winner?.displayName || "N/A"}`
+        `Winner: ${
+          tournament?.winner?.displayName ||
+          tournament?.winner?.username ||
+          "N/A"
+        }`
       )
     );
 
@@ -50,8 +59,10 @@ async function renderRecentTournaments() {
       ? "N/A"
       : Number(tournament.matches[2]?.score?.[0]) >
         Number(tournament.matches[2]?.score?.[1])
-      ? tournament.matches[2]?.players[1]?.displayName
-      : tournament.matches[2]?.players[0]?.displayName;
+      ? tournament.matches[2]?.players[1]?.displayName ||
+        tournament.matches[2]?.players[1]?.username
+      : tournament.matches[2]?.players[0]?.displayName ||
+        tournament.matches[2]?.players[0]?.username;
     tournamentContainer.appendChild(
       document.createTextNode(`Runner-up: ${runnerUp}`)
     );
