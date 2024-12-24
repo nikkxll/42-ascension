@@ -13,6 +13,7 @@ const views = {
   tournament: goToTournament,
   profile: goToProfile,
   homenavigation: goToHomeNavigation,
+  settingsnavigation: goToSettings,
   loadedtournament: goToLoadedTournament,
 };
 
@@ -76,6 +77,8 @@ const startSecondSemifinalButton = document.getElementById("startSecondSF");
 const startFinalButton = document.getElementById("startFinal");
 const tournamentResults = document.getElementById("tournamentResults");
 const tournamentStatistics = document.getElementById("tournamentStatistics");
+const gameSettings = document.getElementById("gameSettings");
+const keysSettings = document.getElementById("keysSettings");
 
 function goToSignup() {
   goToHomeNoHistory();
@@ -235,6 +238,9 @@ function goToHomeNavigation() {
   signin.style.display = "none";
   signup.style.display = "none";
   matchView.style.display = "none";
+  gameSettings.style.display = "none";
+  keysSettings.style.display = "none";
+  changeUnderline(0);
   updateHistory(goToHomeNavigation);
 }
 
@@ -250,7 +256,27 @@ function closeTournamentSetupBox() {
   overlay.style.pointerEvents = "none";
 }
 
-window.addEventListener("DOMContentLoaded", () => {
+function goToSettings() {
+  goToHomeNoHistory();
+  homeLeft.style.display = "none";
+  signin.style.display = "none";
+  signup.style.display = "none";
+  matchView.style.display = "none";
+  homeRight.style.display = "none";
+  gameStart.style.display = "none";
+  otherGameStart.style.display = "none";
+  tournament.style.display = "none";
+  profile.style.display = "none";
+  gameSettings.style.display = "block";
+  keysSettings.style.display = "block";
+  changeUnderline(2);
+  updateHistory(goToSettings);
+}
+
+function changeUnderline(item) {
   const navItems = document.querySelectorAll(".navigation-header-item");
-  navItems[0].classList.add("active");
-});
+  navItems.forEach(item => {
+    item.classList.remove("active");
+  });
+  navItems[item].classList.add("active");
+};
