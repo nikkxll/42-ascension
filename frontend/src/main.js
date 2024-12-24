@@ -798,7 +798,7 @@ window.startGame = async () => {
             }
             keyEventHandler() // check for key presses
             // move the players with deltatime
-            player1.position.y += player1Velocity * delta
+            player1.position.y += player1Velocity * delta * (ai == 1 ? window.customs.difficulty : 1);
             player2.position.y += player2Velocity * delta
             if (GameType.Quatro == gameType){
                 player3.position.y += player3Velocity * delta
