@@ -96,7 +96,6 @@ async function getPlayersStatsGame(id) {
       throw new Error("Failed to fetch matches");
     }
     const json = await response.json();
-    console.log(json.data.matches);
     return calculateStats(json.data.matches, id);
   } catch (error) {
     console.error(error.message);

@@ -107,6 +107,9 @@ async function goToLobby() {
   homeRight.style.display = "grid";
   gameStart.style.display = "none";
   otherGameStart.style.display = "none";
+  gameSettings.style.display = "none";
+  keysSettings.style.display = "none";
+  changeUnderline(0);
   resetGameSelections();
   removeAllEventListeners(playerEventListeners.single);
   removeAllEventListeners(playerEventListeners.doubles);
