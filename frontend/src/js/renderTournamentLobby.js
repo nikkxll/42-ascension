@@ -14,6 +14,8 @@ async function createTournament() {
 
   finalDummy.style.display = "flex";
 
+  window.singleGameState = {};
+
   function getPlayers() {
     const players = window.state.loggedInUsers;
     if (players.length < 3) {
@@ -24,7 +26,7 @@ async function createTournament() {
         "Error: At least three users must be logged in to start the tournament."
       );
       goToLobby();
-      updateHistory('lobby');
+      updateHistory("lobby");
       return [];
     }
     return players;
@@ -54,8 +56,6 @@ async function createTournament() {
           ? 99
           : (await getPlayersStatsGame(player.id)).winRate;
 
-      console.log(player);
-
       const playerCard = document.createElement("div");
       playerCard.className = "game-player-card";
       playerCard.innerHTML = `
@@ -67,7 +67,9 @@ async function createTournament() {
               alt="Player avatar"
               class="common-lobby-avatar"
             />
-            <h3 class="game-player-name">${player.displayName || player.username}</h3>
+            <h3 class="game-player-name">${
+              player.displayName || player.username
+            }</h3>
             <div class="game-player-win-rate-container">
               <p class="game-player-statistics-param">Win rate</p>
               <p class="game-player-statistics-param-number last">${winRate}%</p>
@@ -96,18 +98,14 @@ async function createTournament() {
     return `
         <div class="tournament-match-players">
           <div class="tournament-match-player-info-left">
-            <img loading="lazy" src="${
-              player1.avatarUrl
-            }" alt="Player avatar" class="common-lobby-avatar" />
+            <img loading="lazy" src="${player1.avatarUrl}" alt="Player avatar" class="common-lobby-avatar" />
             <h3 class="game-player-name tournament">${player1.label}</h3>
           </div>
           <h2 class="tournament-match-left-score">-</h2>
           <img class="tournament-match-vs-logo" src="./assets/app_logo.png" alt="Versus logo" />
           <h2 class="tournament-match-right-score">-</h2>
           <div class="tournament-match-player-info-right">
-            <img loading="lazy" src="${
-              player2.avatarUrl
-            }" alt="Player avatar" class="common-lobby-avatar" />
+            <img loading="lazy" src="${player2.avatarUrl}" alt="Player avatar" class="common-lobby-avatar" />
             <h3 class="game-player-name tournament">${player2.label}</h3>
           </div>
         </div>
@@ -175,7 +173,7 @@ async function createTournament() {
   backToMenuButton.addEventListener("click", function () {
     resetTournament();
     goToLobby();
-    updateHistory('lobby');
+    updateHistory("lobby");
   });
 }
 
@@ -203,6 +201,8 @@ async function loadTournament(tournamentId) {
   const finalDummy = document.getElementById("final");
 
   finalDummy.style.display = "flex";
+
+  window.singleGameState = {};
 
   if (!tournament?.matches[0]?.score && !tournament?.matches[1]?.score)
     startFirstSemifinalButton.style.display = "block";
@@ -278,7 +278,7 @@ async function loadTournament(tournamentId) {
       );
       alert("Error: Not enough players are logged in to finish the tournament");
       goToLobby();
-      updateHistory('lobby');
+      updateHistory("lobby");
     }
   }
 
@@ -295,22 +295,30 @@ async function loadTournament(tournamentId) {
 
     for (const [index, player] of filledPlayers.entries()) {
       const winRate =
-        player.username === "ai_player" 
+        player.username === "ai_player"
           ? 99
           : (await getPlayersStatsGame(player.id)).winRate;
 
       const playerCard = document.createElement("div");
       playerCard.className = "game-player-card";
       playerCard.innerHTML = `
-          <article class="tournament-game-player-card-inner normal">
-            <h2 class="game-player-number">Player ${index + 1}</h2>
+          <article class="tournament-game-player-card-inner ${
+            player.username == tournament.winner?.username ? "winner" : "normal"
+          }">
+            <h2 class="game-player-number">${
+              player.username == tournament.winner?.username
+                ? "Winner"
+                : `Player ${index + 1}`
+            }</h2>
             <img
               loading="lazy"
               src="${player.avatarUrl}"
               alt="Player avatar"
               class="common-lobby-avatar"
             />
-            <h3 class="game-player-name">${player.displayName || player.username}</h3>
+            <h3 class="game-player-name">${
+              player.displayName || player.username
+            }</h3>
             <div class="game-player-win-rate-container">
               <p class="game-player-statistics-param">Win rate</p>
               <p class="game-player-statistics-param-number last">${winRate}%</p>
@@ -346,8 +354,7 @@ async function loadTournament(tournamentId) {
     const rightScore =
       sfCount === 1 ? sfScores.sfOneScoreTwo : sfScores.sfTwoScoreTwo;
 
-    const playerAvatar = (player) =>
-      player?.avatarUrl;
+    const playerAvatar = (player) => player?.avatarUrl;
     const playerLabel = (player) => player?.label || "Unknown Player";
 
     return `

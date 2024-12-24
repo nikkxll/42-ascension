@@ -38,7 +38,7 @@ window.customs = {
     padelColorSecond: 0x4c0000,
     borderColor: 0x004c00,
     difficulty: 1,
-    winCondition: 11
+    winCondition: 5
 }  //for custom game
 
 // window.singleGameState = {   // for 4 player game  // this is working example
