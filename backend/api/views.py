@@ -27,6 +27,8 @@ from datetime import timedelta
 
 from .constants import AI_ID, PLAYER_KEYS, WINNER_LOSER_KEYS
 
+from django.utils.html import escape
+
 
 ##################################
 # CSRF
@@ -116,9 +118,9 @@ def create_player(request):
         raise BadRequest("No data provided")
     data = json.loads(request.body)
     # Extract required fields from the request body
-    username = data.get("username")
+    username = escape(data.get("username"))
     password = data.get("password")
-    display_name = data.get("displayName")
+    display_name = escape(data.get("displayName"))
     if not username:
         return JsonResponse(
             {"ok": False, "error": "User name is required", "statusCode": 400},
@@ -163,7 +165,7 @@ def custom_login(request):
             if not request.body:
                 raise BadRequest("No data provided")
             data = json.loads(request.body)
-            username = data.get("username")
+            username = escape(data.get("username"))
             password = data.get("password")
 
             for cookie_key, session in request.COOKIES.items():
@@ -317,9 +319,9 @@ def update_player(request, id):
         if not request.body:
             raise BadRequest("No data provided")
         data = json.loads(request.body)
-        new_username = data.get("username")
+        new_username = escape(data.get("username"))
         new_password = data.get("password")
-        new_display_name = data.get("displayName")
+        new_display_name = escape(data.get("displayName"))
         if not new_username and not new_password and not new_display_name:
             return JsonResponse(
                 {
@@ -644,7 +646,7 @@ def create_tournament(request):
     if not request.body:
         raise BadRequest("No data provided")
     data = json.loads(request.body)
-    name = data.get("name")
+    name = escape(data.get("name"))
     if not name:
         return JsonResponse(
             {"ok": False, "error": "Tournament must have a name", "statusCode": 400},
@@ -752,10 +754,7 @@ def get_matches(request):
     finished = request.GET.get("finished", "true")
     finished = finished.lower() == "true"
     last = int(request.GET.get("last") or 20)
-    if finished:
-        matches = Match.objects.exclude(score__isnull=True).order_by("-id")[:last]
-    else:
-        matches = Match.objects.all().order_by("-id")[:last]
+    matches = Match.objects.exclude(score__isnull=finished).order_by("-id")[:last]
     return [form_match_json(match) for match in matches]
 
 
@@ -764,13 +763,15 @@ def get_player_matches(request, id):
     try:
         if request.method == "GET":
             last = int(request.GET.get("last") or 5)
+            finished = request.GET.get("finished", "true")
+            finished = finished.lower() == "true"
             player = get_player_by_user_id(id)
             matches = Match.objects.filter(
                 Q(player1=player)
                 | Q(player2=player)
                 | Q(player3=player)
                 | Q(player4=player)
-            ).order_by("-id")[:last]
+            ).exclude(score__isnull=finished).order_by("-id")[:last]
             return JsonResponse(
                 {
                     "ok": True,

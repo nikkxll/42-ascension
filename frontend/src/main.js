@@ -4,10 +4,10 @@ import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 //import * as statejs from "./state.js";
 
-const ballAccelerationCoef = 1.0  // 1.5
+const ballAccelerationCoef = 1.1  // 1.5
 const ballSpeedLimit = 1000;
 // initial speed of the ball
-const ballStartSpeed = 20; // 6
+const ballStartSpeed = 10; // 6
 
 function getRandom(min, max) {
     return Math.random() * (max - min) + min;

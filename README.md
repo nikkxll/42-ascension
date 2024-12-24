@@ -764,7 +764,7 @@ Several users can be logged in at the same time. Each session is stored in cooki
 
 - **Endpoint**: `GET /api/players/{id}/matches/`
 
-- **Description**: Respond with array of all the player's `matches` in array of objects with a match `id`, `score`, `duration`, `createdAt` and `players` array of objects (which have the same structure as `winner` in `tournament` object). Can be limited to certain amount with `last` query parameter. At least one login session required.
+- **Description**: Respond with array of all the player's `matches` in array of objects with a match `id`, `score`, `duration`, `createdAt` and `players` array of objects (which have the same structure as `winner` in `tournament` object). Can be limited to certain amount with `last` query parameter. `finished` query parameter can be used to get finished and unfinished matches. At least one login session required.
 
 - **URL Parameters**:
 
@@ -773,6 +773,8 @@ Several users can be logged in at the same time. Each session is stored in cooki
 - **Query Parameters**:
 
   - `last` **(optional)**: Specifies the number of tournaments to return. Must be a positive integer. If not provided, defaults to 5. Example: `GET /api/players/{id}/matches/?last=10`.
+
+  - `finished` **(optional)**: Specifies to include only finished matches or not finished too. `?finished=false` mean that unfinished matches will be included. If not provided, defaults to true. Example: `GET /api/matches/?finished=false`. Default value: `true`.
 
 - **Example Response**:
 
