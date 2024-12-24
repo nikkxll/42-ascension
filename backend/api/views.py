@@ -752,10 +752,7 @@ def get_matches(request):
     finished = request.GET.get("finished", "true")
     finished = finished.lower() == "true"
     last = int(request.GET.get("last") or 20)
-    if finished:
-        matches = Match.objects.exclude(score__isnull=True).order_by("-id")[:last]
-    else:
-        matches = Match.objects.all().order_by("-id")[:last]
+    matches = Match.objects.exclude(score__isnull=finished).order_by("-id")[:last]
     return [form_match_json(match) for match in matches]
 
 
@@ -764,13 +761,15 @@ def get_player_matches(request, id):
     try:
         if request.method == "GET":
             last = int(request.GET.get("last") or 5)
+            finished = request.GET.get("finished", "true")
+            finished = finished.lower() == "true"
             player = get_player_by_user_id(id)
             matches = Match.objects.filter(
                 Q(player1=player)
                 | Q(player2=player)
                 | Q(player3=player)
                 | Q(player4=player)
-            ).order_by("-id")[:last]
+            ).exclude(score__isnull=finished).order_by("-id")[:last]
             return JsonResponse(
                 {
                     "ok": True,
