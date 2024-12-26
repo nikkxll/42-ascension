@@ -347,7 +347,7 @@ window.startGame = async () => {
     //setCameraAside(camera)
 
     game.renderer = new THREE.WebGLRenderer();
-    game.renderer.setSize(window.innerWidth * 0.96, window.innerHeight * 0.96);
+    game.renderer.setSize(window.innerWidth, window.innerHeight);
 
     // needs to be a game screen that we overlay and make visible
     //document.getElementById("gameWindow").innerHTML = "";
