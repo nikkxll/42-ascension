@@ -76,8 +76,8 @@ function checkRacketHitTorus(ball, player){
         Math.abs(ball.position.y - player.position.y) <= player.size.y / 2 + ball.size.y / 2 ))
         return
     ball.hitRacketFlag = 1;
-    console.log("Torus Knot hit the racket");
-    player.speed = playerSpeed / 20;
+    //console.log("Torus Knot hit the racket");
+    player.speed = playerSpeed / 2;
 }
 
 function setCameraTop(camera) {
@@ -846,7 +846,7 @@ window.startGame = async () => {
             }
             keyEventHandler() // check for key presses
             // move the players with deltatime
-            console.log("player1Velocity=", player1Velocity, "player2Velocity=", player2Velocity, "player2.speed=", player2.speed);  
+            //console.log("player1Velocity=", player1Velocity, "player2Velocity=", player2Velocity, "player2.speed=", player2.speed);  
             player1.position.y += player1Velocity * delta * difficultyAI;
             player2.position.y += player2Velocity * delta
             if (GameType.Quatro == gameType){
