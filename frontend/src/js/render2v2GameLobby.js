@@ -1,8 +1,9 @@
-function render2v2GameStart() {
-  console.log("here");
-  const players = window.state["loggedInUsers"];
+async function render2v2GameStart() {
+  const players = window.state.loggedInUsers;
 
-  if (players.length < 4) {
+  const filledPlayers = [...players];
+
+  if (filledPlayers.length < 4) {
     console.error("Error: 4 people needed for this mode");
     alert("Error: 4 people needed for this mode");
     goToLobby();
@@ -17,7 +18,7 @@ function render2v2GameStart() {
   leftGrid.innerHTML = "";
   rightGrid.innerHTML = "";
 
-  function createPlayerCard(player, playerIndex) {
+  function createPlayerCard(player, playerIndex, gamesPlayed, winRate) {
     return `
       <div class="game-player-card">
           <article class="game-player-card-inner-single">
@@ -27,22 +28,22 @@ function render2v2GameStart() {
               <img
                   loading="lazy"
                   src="${
-                    player.avatar || "./assets/default_avatar.png"
+                    player.avatarUrl
                   }"
                   alt="Player avatar"
-                  class="game-player-avatar"
+                  class="common-lobby-avatar"
               />
-              <h3 class="game-player-name">${player.username}</h3>
+              <h3 class="game-player-name">${player.displayName || player.username}</h3>
               <div class="game-player-stats-container">
                   <p class="game-player-statistics-param">Games played</p>
                   <p class="game-player-statistics-param-number">${
-                    player.gamesPlayed ?? 0
+                    gamesPlayed ?? 0
                   }</p>
               </div>
               <div class="game-player-win-rate-container">
                   <p class="game-player-statistics-param">Win rate</p>
                   <p class="game-player-statistics-param-number last">${
-                    player.winRate ?? 0
+                    winRate ?? 0
                   }%</p>
               </div>
           </article>
@@ -50,8 +51,20 @@ function render2v2GameStart() {
   `;
   }
 
-  players.forEach((player, index) => {
-    const cardHTML = createPlayerCard(player, index);
+  const playerCards = await Promise.all(
+    filledPlayers.map(async (player, index) => {
+      const playerStats =
+        player.username === "AI"
+          ? { gamesPlayed: player.gamesPlayed, winRate: player.winRate }
+          : await getPlayersStatsGame(player.id);
+
+      const { gamesPlayed, winRate } = playerStats;
+
+      return createPlayerCard(player, index, gamesPlayed, winRate);
+    })
+  );
+
+  playerCards.forEach((cardHTML) => {
     leftGrid.innerHTML += cardHTML;
     rightGrid.innerHTML += cardHTML;
   });

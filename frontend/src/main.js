@@ -4,12 +4,10 @@ import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 //import * as statejs from "./state.js";
 
-
-
-const ballAccelerationCoef = 1.0  // 1.5
+const ballAccelerationCoef = 1.1  // 1.5
 const ballSpeedLimit = 1000;
 // initial speed of the ball
-const ballStartSpeed = 20; // 6
+const ballStartSpeed = 10; // 6
 
 function getRandom(min, max) {
     return Math.random() * (max - min) + min;
@@ -339,7 +337,6 @@ window.startGame = async () => {
     //     console.log("player0=", player00, "player1=", player01);
     // }
     let isPaused = false;
-    const maxScore = 5;
     const playerSpeed = 17;  // 17 12
     const hight = 20;
     const width = 40;
@@ -381,7 +378,7 @@ window.startGame = async () => {
 
     // players geometry and material is shared so we create it once
     const playergeometry = new THREE.BoxGeometry(0.5, 4, 1);
-    const playermaterial = new THREE.MeshBasicMaterial({ color: 0x00400E }); 
+    const playermaterial = new THREE.MeshBasicMaterial({ color: window.customs.padelColorFirst }); 
     //#00400E =  rgba(0, 255, 55, 0.25) with black backround
     // creates the player box
     const player1Mesh = new THREE.Mesh(playergeometry, playermaterial);
@@ -403,6 +400,8 @@ window.startGame = async () => {
     scene.add(player1);
     scene.add(player2);
 
+    console.log(window.customs.padelColorSecond);
+    console.log(window.customs.padelColorFirst);
     
     // create separate material and geometry for the ball1 and register it
     const ball1material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
@@ -422,7 +421,7 @@ window.startGame = async () => {
 
     // for case of  4 players we create the other two
     // create separate material and geometry for the ball2 and register it
-    const playermaterial2 = new THREE.MeshBasicMaterial({ color: 0x32495E }); //rgba(50, 73, 94, 1) corresponds to #32495E in hex.
+    const playermaterial2 = new THREE.MeshBasicMaterial({ color: window.customs.padelColorSecond }); //rgba(50, 73, 94, 1) corresponds to #32495E in hex.
     const player3mesh = new THREE.Mesh(playergeometry, playermaterial2);
     const player4mesh = new THREE.Mesh(playergeometry, playermaterial2);
     const player3outline = new THREE.LineSegments(edge, new THREE.LineBasicMaterial({color: 0x000000}));
@@ -545,7 +544,7 @@ window.startGame = async () => {
         // use the same geometry for all outer boxes
         const outerboxgeometry = new THREE.BoxGeometry(0.95, 0.95, 1);
         const outerboxmaterial = new THREE.MeshBasicMaterial({
-            color: 0x4c0000, // Red color   with 0.3 opacity   background: rgba(255, 0, 0, 0.3);
+            color: window.customs.borderColor, // Red color   with 0.3 opacity   background: rgba(255, 0, 0, 0.3);
         });
         // loop over all the rows that share the height of the outer boxes
         outerboxes.forEach((element, row) => {
@@ -605,7 +604,7 @@ window.startGame = async () => {
         }
         if (!pressedKeys.has(code))
             pressedKeys.add(code);
-        if (isPressed(27) && (isPaused || Math.max(...game.count) >= maxScore)){ // 27 = escape
+        if (isPressed(27) && (isPaused || Math.max(...game.count) >= window.customs.winCondition)){ // 27 = escape
             console.log("Esc is pressed, game to be terminated.");
             removeGameWindow(game);
             console.log("game terminated, singleGameState=", window.singleGameState);
@@ -621,7 +620,7 @@ window.startGame = async () => {
             }
             return 0;
         }
-        else if (code == 32 && Math.max(...game.count) < maxScore){ // space
+        else if (code == 32 && Math.max(...game.count) < window.customs.winCondition){ // space
             if (!isPaused){
                 pause3dObj.position.z = -5
                 render();
@@ -665,7 +664,7 @@ window.startGame = async () => {
     // settging for the AI
     let timeIntervalAi = 1;  // must to be 1 according to the subject
     let clockAi = new THREE.Clock();
-    let deltaTimeAi = 0;
+    let deltaTimeAi = 1.01;
     let r0 = {x: ball1.position.x, y: ball1.position.y};
     let r1 = {x: player1.position.x, y: player1.position.y};
     //let r2 = {x: player2.position.x, y: player2.position.y};
@@ -791,7 +790,7 @@ window.startGame = async () => {
         if (delta > interval){
             if (isPaused)
                 return;
-            if (Math.max(...game.count) >= maxScore){
+            if (Math.max(...game.count) >= window.customs.winCondition){
                 isPaused = true;
                 updateScore("Score: " + game.count[0] + " : " + game.count[1] + ". Game ended!");
                 score3dObj.position.set(-7, 7, -2); 
@@ -801,7 +800,7 @@ window.startGame = async () => {
             }
             keyEventHandler() // check for key presses
             // move the players with deltatime
-            player1.position.y += player1Velocity * delta
+            player1.position.y += player1Velocity * delta * (ai == 1 ? window.customs.difficulty : 1);
             player2.position.y += player2Velocity * delta
             if (GameType.Quatro == gameType){
                 player3.position.y += player3Velocity * delta

@@ -33,6 +33,13 @@ window.tournamentState = {
 
 window.ai_id = 1
 window.singleGameState = {}  //for tournament
+window.customs = {
+    padelColorFirst: 0x4c0000,
+    padelColorSecond: 0x4c0000,
+    borderColor: 0x004c00,
+    difficulty: 1,
+    winCondition: 5
+}  //for custom game
 
 // window.singleGameState = {   // for 4 player game  // this is working example
 //     "userIds": [3, 4, 5, 6],     //  [left, left, right, right]

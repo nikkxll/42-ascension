@@ -88,9 +88,8 @@
               ABOUT
             </a>
             <a
-              href="/admin"
               class="navigation-header-item"
-              onclick="return confirmRedirect(event, 'You will be redirected to the Django Admin page. Are you sure?')"
+              onclick="goToSettings(); updateHistory('settings');"
             >
               SETTINGS
             </a>
@@ -335,7 +334,7 @@
           <div class="single-game-vs-logo">
             <img
               class="single-game-vs-logo-props"
-              src="./assets/vs_logo.png"
+              src="./assets/app_logo.png"
               alt="Versus logo"
             />
           </div>
@@ -352,14 +351,14 @@
           <button
             class="single-game-buttons clear-selection"
             tabindex="0"
-            onclick="resetAll()"
+            onclick="window.singleGame.reset()"
           >
             Clear selection
           </button>
           <button
             class="single-game-buttons randomize"
             tabindex="0"
-            onclick="randomizeChoice()"
+            onclick="window.singleGame.randomize()"
           >
             Randomize
           </button>
@@ -383,7 +382,7 @@
           <div class="single-game-vs-logo">
             <img
               class="single-game-vs-logo-props"
-              src="./assets/vs_logo.png"
+              src="./assets/app_logo.png"
               alt="Versus logo"
             />
           </div>
@@ -400,14 +399,14 @@
           <button
             class="single-game-buttons clear-selection"
             tabindex="0"
-            onclick="resetAll('2v2')"
+            onclick="window.doubleGame.reset()"
           >
             Clear selection
           </button>
           <button
             class="single-game-buttons randomize"
             tabindex="0"
-            onclick="randomizeChoice2v2()"
+            onclick="window.doubleGame.randomize()"
           >
             Randomize
           </button>
@@ -476,8 +475,18 @@
             <div class="username-box" id="usernameBox"></div>
             <div class="form-container-profile-edit">
               <div class="input-row">
-                <input type="text" placeholder="New username" id="newUsername" />
-                <button type="button" onclick="updateUsername()" id="usernameUpdButton">Update</button>
+                <input
+                  type="text"
+                  placeholder="New username"
+                  id="newUsername"
+                />
+                <button
+                  type="button"
+                  onclick="updateUsername()"
+                  id="usernameUpdButton"
+                >
+                  Update
+                </button>
               </div>
               <div class="input-row">
                 <input
@@ -485,7 +494,13 @@
                   placeholder="New password"
                   id="newPassword"
                 />
-                <button type="button" onclick="updatePassword()" id="passwordUpdButton">Update</button>
+                <button
+                  type="button"
+                  onclick="updatePassword()"
+                  id="passwordUpdButton"
+                >
+                  Update
+                </button>
                 <button type="button" onclick="togglePasswordVisibility()">
                   Show
                 </button>
@@ -643,6 +658,132 @@
       </div>
     </div>
 
+    <!-- Game customization -->
+
+    <div class="game-settings-container" id="gameSettings">
+      <div class="settings-header">
+        <h1 class="settings-title">Game Settings</h1>
+      </div>
+
+      <form class="settings-form" id="settingsForm">
+        <div class="setting-group">
+          <label class="setting-label" for="padelColorFirst">Padel Color For Players (1v1)</label>
+          <select class="setting-select" id="padelColorFirst" onchange="updatePadelColorFirst(this.value)">
+            <option value="0x4c0000" selected>Red</option>
+            <option value="0x004c00">Green</option>
+            <option value="0x00004c">Blue</option>
+            <option value="0x4c4c00">Yellow</option>
+            <option value="0xcc8400">Orange</option>
+            <option value="0x20004c">Violet</option>
+            <option value="0x004c4c">Cyan</option>
+            <option value="0x4c004c">Magenta</option>
+          </select>
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label" for="padelColorSecond">Padel Color For Extra Players (2v2 mode)</label>
+          <select class="setting-select" id="padelColorSecond" onchange="updatePadelColorSecond(this.value)">
+            <option value="0x4c0000" selected>Red</option>
+            <option value="0x004c00">Green</option>
+            <option value="0x00004c">Blue</option>
+            <option value="0x4c4c00">Yellow</option>
+            <option value="0xcc8400">Orange</option>
+            <option value="0x20004c">Violet</option>
+            <option value="0x004c4c">Cyan</option>
+            <option value="0x4c004c">Magenta</option>
+          </select>
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label" for="borderColor">3D-Border Color</label>
+          <select class="setting-select" id="borderColor" onchange="updateBorderColor(this.value)">
+            <option value="0x4c0000">Red</option>
+            <option value="0x004c00" selected>Green</option>
+            <option value="0x00004c">Blue</option>
+            <option value="0x4c4c00">Yellow</option>
+            <option value="0xcc8400">Orange</option>
+            <option value="0x20004c">Violet</option>
+            <option value="0x004c4c">Cyan</option>
+            <option value="0x4c004c">Magenta</option>
+          </select>
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label" for="difficulty">AI Difficulty</label>
+          <select class="setting-select" id="difficulty" onchange="updateDifficulty(this.value)">
+            <option value="0.25">Easy</option>
+            <option value="0.5" selected>Normal</option>
+            <option value="0.75">Hard</option>
+            <option value="1">Impossible</option>
+          </select>
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label" for="winCondition">Win Condition</label>
+          <select class="setting-select" id="winCondition" onchange="updateWinCondition(this.value)">
+            <option value="5">Up to 5</option>
+            <option value="11" selected>Up to 11</option>
+            <option value="21">Up to 21</option>
+          </select>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="keys-settings-container" id="keysSettings">
+      <div class="settings-header">
+        <h1 class="settings-title">Keys Settings</h1>
+      </div>
+      <div class="keys-container">
+        <div class="keys-setting-group">
+          <label class="keys-setting-label" for="player1Keys">Player 1 keys</label>
+          <div class="key-setting-group">
+            <h2 style="margin: 1%;"><span style="color: brown;">W</span> - move up</h2>
+            <h2 style="margin: 1%;"><span style="color: brown;">S</span> - move down</h2>
+          </div>
+        </div>
+        <div class="keys-setting-group">
+          <label class="keys-setting-label" for="player1Keys">Player 2 keys</label>
+          <div class="key-setting-group">
+            <h2 style="margin: 1%;"><span style="color: brown;">arrowUp</span> - move up</h2>
+            <h2 style="margin: 1%;"><span style="color: brown;">arrowDown</span> - move down</h2>
+          </div>
+        </div>
+        <div class="keys-setting-group">
+          <label class="keys-setting-label" for="player1Keys">Player 3 keys</label>
+          <div class="key-setting-group">
+            <h2 style="margin: 1%;"><span style="color: brown;">R</span> - move up</h2>
+            <h2 style="margin: 1%;"><span style="color: brown;">F</span> - move down</h2>
+          </div>
+        </div>
+        <div class="keys-setting-group">
+          <label class="keys-setting-label" for="player1Keys">Player 4 keys</label>
+          <div class="key-setting-group">
+            <h2 style="margin: 1%;"><span style="color: brown;">O</span> - move up</h2>
+            <h2 style="margin: 1%;"><span style="color: brown;">L</span> - move down</h2>
+          </div>
+        </div>
+        <div class="keys-setting-group">
+          <label class="keys-setting-label" for="player1Keys">Show in 3D mode</label>
+          <div class="key-setting-group">
+            <h2 style="margin: 1%;"><span style="color: brown;">C</span></h2>
+          </div>
+        </div>
+        <div class="keys-setting-group">
+          <label class="keys-setting-label" for="player1Keys">Exit game</label>
+          <div class="key-setting-group">
+            <h2 style="margin: 1%;"><span style="color: brown;">ESC</span></h2>
+          </div>
+        </div>
+        <div class="keys-setting-group">
+          <label class="keys-setting-label" for="player1Keys">Pause game</label>
+          <div class="key-setting-group">
+            <h2 style="margin: 1%;"><span style="color: brown;">SPACE</span></h2>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Tournament statistics -->
 
     <div class="tournament-statistics" id="tournamentStatistics"></div>
@@ -650,6 +791,7 @@
     <script src="./js/navigation.js"></script>
     <script src="./js/gameStart.js"></script>
     <script src="./js/gamePlayersSelector.js"></script>
+    <script src="./js/gamePlayersSelectorDoubles.js"></script>
 
     <!-- Bootstrap parts for profile carousel -->
     <script
@@ -694,7 +836,7 @@
               console.error(error.message);
             }
             goToLobby();
-            updateHistory('lobby');
+            updateHistory("lobby");
           }
         }, 1000);
       }
@@ -736,6 +878,27 @@
           passwordInput.type = "password";
           showButton.textContent = "Show";
         }
+      }
+    </script>
+    <script>
+      function updatePadelColorFirst(value) {
+        window.customs.padelColorFirst = parseInt(value);
+      }
+
+      function updatePadelColorSecond(value) {
+        window.customs.padelColorSecond = parseInt(value);
+      }
+
+      function updateBorderColor(value) {
+        window.customs.borderColor = parseInt(value);
+      }
+
+      function updateDifficulty(value) {
+          window.customs.difficulty = parseFloat(value);
+      }
+
+      function updateWinCondition(value) {
+          window.customs.winCondition = parseInt(value);
       }
     </script>
   </body>

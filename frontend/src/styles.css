@@ -560,14 +560,24 @@ section {
 }
 
 .profile-avatar {
-    display: block;
-    width: 80px;
-	height: 80px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    border-radius: 50%;
-    overflow: hidden;
-	align-self: center;
+  display: block;
+  width: 80px;
+  height: 80px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-radius: 50%;
+  overflow: hidden;
+  align-self: center;
+}
+
+.common-lobby-avatar {
+  display: block;
+  width: 70px;
+  height: 70px;
+  margin: 10px;
+  border-radius: 50%;
+  overflow: hidden;
+  align-self: center;
 }
 
 .profile-avatar img {
@@ -1112,8 +1122,9 @@ section {
 }
 
 .single-game-vs-logo-props {
-  width: 150px;
-  height: 150px;
+  width: 100px;
+  height: 100px;
+  margin: 50px;
 }
 
 .single-game-grid-left {
@@ -1483,8 +1494,8 @@ section {
 }
 
 .tournament-match-vs-logo {
-  width: 100px;
-  height: 100px;
+  width: 50px;
+  height: 50px;
 }
 
 .tournament-match-player-info-left {
@@ -2251,4 +2262,124 @@ section {
   justify-content: center;
   align-items: center;
   gap: 0.5vw;
+}
+
+/* Game customization */
+
+.game-settings-container {
+  display: none;
+  position: absolute;
+  top: 18vh;
+  left: 10vw;
+  background: rgba(18, 16, 16, 0.25);
+  border-radius: 45px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 600px;
+  backdrop-filter: blur(12px);
+  border: 1px solid #a7a7a7;
+}
+
+.keys-settings-container {
+  display: none;
+  position: absolute;
+  top: 18vh;
+  left: 54.5vw;
+  background: rgba(18, 16, 16, 0.25);
+  border-radius: 45px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 600px;
+  max-height: 700px;
+  backdrop-filter: blur(12px);
+  border: 1px solid #a7a7a7;
+}
+
+.settings-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.settings-title {
+  color: #ffffff;
+  font-family: 'Keania One';
+  text-transform: uppercase;
+  margin: 0;
+  font-size: 2.5rem;
+  text-align: center;
+  flex-grow: 1;
+}
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.setting-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.key-setting-group {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+}
+
+.keys-setting-group {
+  display: flex;
+  flex-direction: row;
+  gap: 5rem;
+}
+
+.setting-label {
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-family: 'Keania One';
+  margin-bottom: 0.25rem;
+}
+
+.keys-setting-label {
+  display: flex;
+  align-items: center;
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-family: 'Keania One';
+  margin-bottom: 0.25rem;
+  width: 200px;
+}
+
+.setting-select {
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-size: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  font-family: 'Acme', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.setting-select:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.setting-select:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.setting-select option {
+  background: #1a1a1a;
+  color: #ffffff;
+}
+
+.keys-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
 }
