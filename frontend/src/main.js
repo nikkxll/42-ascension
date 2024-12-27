@@ -10,9 +10,10 @@ const ballSpeedLimit = 1000;
 const ballStartSpeed = 10; // 6
 const playerSpeed = 17;  // 17 12
 
-const mode = true; // mode for extra features like racket slow down // under development
+const mode = true; // mode for extra features like racket slow down
 const torusKnotSpeed = 10;
 const playerSlowDown = 0.25;
+const inntervalTorus = 2;
 
 function getRandom(min, max) {
     return Math.random() * (max - min) + min;
@@ -487,7 +488,7 @@ window.startGame = async () => {
         torusKnot.position.x = 0;
         torusKnot.position.y = 0;
         torusKnot.position.z = 100;
-        torusKnot.speed = 10;
+        torusKnot.speed = torusKnotSpeed;
         torusKnot.xDirection = Math.random() < 0.5 ? 1 : -1;
         torusKnot.angle = getRandom(-0.5, 0.5);
         torusKnot.velocity = {x:  torusKnot.xDirection * Math.cos(torusKnot.angle) * torusKnot.speed, y: Math.sin(torusKnot.angle) * torusKnot.speed};
@@ -819,7 +820,6 @@ window.startGame = async () => {
 
     let clockTorus = new THREE.Clock();
     let deltaTorus = 0;
-    const inntervalTorus = 2;
 
    
 
