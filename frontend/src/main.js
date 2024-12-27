@@ -8,6 +8,10 @@ const ballAccelerationCoef = 1.1  // 1.5
 const ballSpeedLimit = 1000;
 // initial speed of the ball
 const ballStartSpeed = 10; // 6
+const playerSpeed = 17;  // 17 12
+
+const mode = true; // mode for extra features like racket slow down // under development
+const torusKnotSpeed = 10;
 
 function getRandom(min, max) {
     return Math.random() * (max - min) + min;
@@ -63,8 +67,21 @@ function checkRacketHitBall(ball, player){
     }
 }
 
+function checkRacketHitTorus(ball, player){
+    if (!mode)
+        return;
+    if (ball.hitRacketFlag == 1)
+        return
+    if (!(Math.abs(ball.position.x - player.position.x) <= player.size.x / 2 + ball.size.x / 2 &&
+        Math.abs(ball.position.y - player.position.y) <= player.size.y / 2 + ball.size.y / 2 ))
+        return
+    ball.hitRacketFlag = 1;
+    console.log("Torus Knot hit the racket");
+    player.speed = playerSpeed / 20;
+}
+
 function setCameraTop(camera) {
-    camera.position.z = 22
+    camera.position.z = 22 //22
     camera.position.y = 0
     camera.rotation.x = 0
 }
@@ -335,7 +352,7 @@ window.startGame = async () => {
     //     console.log("player0=", player00, "player1=", player01);
     // }
     let isPaused = false;
-    const playerSpeed = 17;  // 17 12
+   
     const hight = 20;
     const width = 40;
     
@@ -390,6 +407,8 @@ window.startGame = async () => {
     const player2 = new THREE.Group();
     player1.size = {x: 0.5, y: 4, z: 1};
     player2.size = {x: 0.5, y: 4, z: 1};
+    player1.speed = playerSpeed;
+    player2.speed = playerSpeed;
     player1.add(player1Mesh);
     player2.add(player2Mesh);
     player1.add(player1outline);
@@ -429,6 +448,8 @@ window.startGame = async () => {
     const player4 = new THREE.Group();
     player3.size = {x: 0.5, y: 4, z: 1};
     player4.size = {x: 0.5, y: 4, z: 1};
+    player3.speed = playerSpeed;
+    player4.speed = playerSpeed;
     player3.add(player3mesh);
     player4.add(player4mesh);
     player3.add(player3outline);
@@ -450,6 +471,28 @@ window.startGame = async () => {
     ball2.add(ball2Edges);
     ball2.hitRacketFlag = 0;
     ball2.speed = ballStartSpeed;
+
+    const knotGeometry = new THREE.TorusKnotGeometry(0.5, 0.1, 25, 4 ); 
+    const knotMaterial = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); 
+    const knotMesh = new THREE.Mesh(knotGeometry, knotMaterial);
+    const knotEdgesGeometry = new THREE.EdgesGeometry(knotGeometry);
+    const knotEdgeMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: false });
+    const knotEdges = new THREE.LineSegments(knotEdgesGeometry, knotEdgeMaterial);
+    const torusKnot = new THREE.Group();
+    //torusKnot.add(knotEdges);
+    torusKnot.add(knotMesh);
+    if (mode){
+        scene.add(torusKnot);
+        torusKnot.position.x = 0;
+        torusKnot.position.y = 0;
+        torusKnot.position.z = 100;
+        torusKnot.speed = 10;
+        torusKnot.xDirection = Math.random() < 0.5 ? 1 : -1;
+        torusKnot.angle = getRandom(-0.5, 0.5);
+        torusKnot.velocity = {x:  torusKnot.xDirection * Math.cos(torusKnot.angle) * torusKnot.speed, y: Math.sin(torusKnot.angle) * torusKnot.speed};
+        torusKnot.size = {x: 0.5, y: 1, z: 4};
+        torusKnot.hitRacketFlag = 0;
+    }
 
     // we add the players 3 and 5 and ball2 to the scene only if it is a 4 player game
     if (GameType.Quatro == gameType){
@@ -647,10 +690,10 @@ window.startGame = async () => {
         pressedKeys.delete(event.which);
     }
     function keyEventHandler() {
-        player1Velocity = (isPressed(38) - isPressed(40)) * playerSpeed; // 40 = `ArrowDown`, 38 = `ArrowUp`
-        player2Velocity = (isPressedByChar('W') - isPressedByChar('S')) * playerSpeed; // 87 = `W`, 83 = `S`
-        player3Velocity = (isPressedByChar('R') - isPressedByChar('F')) * playerSpeed; // 82 = `R`, 70 = `F`
-        player4Velocity = (isPressedByChar('O') - isPressedByChar('L')) * playerSpeed; // 79 = `O`, 76 = `L`
+        player1Velocity = (isPressed(38) - isPressed(40)) * player1.speed; // 40 = `ArrowDown`, 38 = `ArrowUp`
+        player2Velocity = (isPressedByChar('W') - isPressedByChar('S')) * player2.speed; // 87 = `W`, 83 = `S`
+        player3Velocity = (isPressedByChar('R') - isPressedByChar('F')) * player3.speed; // 82 = `R`, 70 = `F`
+        player4Velocity = (isPressedByChar('O') - isPressedByChar('L')) * player4.speed; // 79 = `O`, 76 = `L`
     }
     
     // util function
@@ -770,8 +813,13 @@ window.startGame = async () => {
     let delta = 0;
     // 75 max fps
     let interval = 1 / 75;
-
     let playerMaxY = hight / 2 - 1.5;
+    let difficultyAI = (ai == 1 ? window.customs.difficulty : 1);
+
+    let clockTorus = new THREE.Clock();
+    let deltaTorus = 0;
+    const inntervalTorus = 2;
+
    
 
     //console.log("player1 scale=", player1.scale.y, "ball scale=", ball1.scale.y)
@@ -798,7 +846,8 @@ window.startGame = async () => {
             }
             keyEventHandler() // check for key presses
             // move the players with deltatime
-            player1.position.y += player1Velocity * delta * (ai == 1 ? window.customs.difficulty : 1);
+            console.log("player1Velocity=", player1Velocity, "player2Velocity=", player2Velocity, "player2.speed=", player2.speed);  
+            player1.position.y += player1Velocity * delta * difficultyAI;
             player2.position.y += player2Velocity * delta
             if (GameType.Quatro == gameType){
                 player3.position.y += player3Velocity * delta
@@ -816,11 +865,16 @@ window.startGame = async () => {
             }
 
             ball1.hitRacketFlag = 0
-            checkRacketHitBall(ball1, player1)
-            checkRacketHitBall(ball1, player2)
+            torusKnot.hitRacketFlag = 0
+            checkRacketHitBall(ball1, player1);
+            checkRacketHitBall(ball1, player2);
+            checkRacketHitTorus(torusKnot, player1);
+            checkRacketHitTorus(torusKnot, player2);
             if (GameType.Quatro == gameType){
                 checkRacketHitBall(ball1, player3)
                 checkRacketHitBall(ball1, player4)
+                checkRacketHitTorus(torusKnot, player3);
+                checkRacketHitTorus(torusKnot, player4);
                 ball2.hitRacketFlag = 0
                 checkRacketHitBall(ball2, player1)
                 checkRacketHitBall(ball2, player2)
@@ -831,6 +885,29 @@ window.startGame = async () => {
             // move the balls to new position
             ball1.position.x += ball1.velocity.x * delta
             ball1.position.y += ball1.velocity.y * delta
+            if (mode && deltaTorus > inntervalTorus){
+                torusKnot.position.x += torusKnot.velocity.x * delta;
+                torusKnot.position.y += torusKnot.velocity.y * delta;
+                torusKnot.position.z = 0;
+                torusKnot.rotation.y += 0.2 * delta;
+                if (torusKnot.position.x > width / 2 || torusKnot.position.x < -width / 2){
+                    torusKnot.position.x = 0;
+                    torusKnot.position.y = 0;
+                    torusKnot.position.z = 100;
+                    torusKnot.xDirection *= -1;
+                    torusKnot.angle = getRandom(-0.5, 0.5);
+                    torusKnot.velocity = {x:  torusKnot.xDirection * Math.cos(torusKnot.angle) * torusKnot.speed, y: Math.sin(torusKnot.angle) * torusKnot.speed};
+                    deltaTorus = 0;
+                }
+                if (torusKnot.position.x > width / 2 - 1){
+                    player2.speed = playerSpeed;
+                    player4.speed = playerSpeed;
+                }
+                if (torusKnot.position.x < -width / 2 + 1){
+                    player1.speed = playerSpeed;
+                    player3.speed = playerSpeed;
+                }
+            }
             countGameScore(ball1, game.count)
             if (GameType.Quatro == gameType){
                 ball2.position.x += ball2.velocity.x * delta
@@ -844,6 +921,7 @@ window.startGame = async () => {
         }
         // keep track of time since last loop call
         delta += clock.getDelta();
+        deltaTorus += clockTorus.getDelta(); 
     }
 
     // allows keydown and keyup to move player
