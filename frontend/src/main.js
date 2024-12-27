@@ -12,6 +12,7 @@ const playerSpeed = 17;  // 17 12
 
 const mode = true; // mode for extra features like racket slow down // under development
 const torusKnotSpeed = 10;
+const playerSlowDown = 0.25;
 
 function getRandom(min, max) {
     return Math.random() * (max - min) + min;
@@ -77,7 +78,7 @@ function checkRacketHitTorus(ball, player){
         return
     ball.hitRacketFlag = 1;
     //console.log("Torus Knot hit the racket");
-    player.speed = playerSpeed / 2;
+    player.speed = playerSpeed * playerSlowDown;
 }
 
 function setCameraTop(camera) {
