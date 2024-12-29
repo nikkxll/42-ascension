@@ -171,7 +171,7 @@ def custom_login(request):
             for cookie_key, session in request.COOKIES.items():
                 if cookie_key.startswith("session_"):
                     session_data = decrypt_session_value(session)
-                    if session_data.get("username") == username:
+                    if session_data and session_data.get("username") == username:
                         return JsonResponse(
                             {
                                 "ok": False,
@@ -232,7 +232,7 @@ def custom_logout(request, id):
             # Check if the session exists for the given user
             if session_key in request.COOKIES:
                 session_data = decrypt_session_value(request.COOKIES.get(session_key))
-                if session_data["id"] == id:
+                if session_data and session_data["id"] == id:
                     user = User.objects.get(id=id)
                     player = Player.objects.get(user=user)
                     if player:
@@ -893,7 +893,7 @@ def create_match(request, id=None):
                 get_player_by_user_id(user_id),
             )
 
-    if tournament_id and score:
+    if tournament and tournament_id and score:
         tournament.winner = match.winner1
         tournament.save()
     match.save()
@@ -1282,6 +1282,7 @@ def oauth_callback(request):
             # Get user if already exists
             user = User.objects.filter(username=user_data["login"])[0]
         # Create a unique session key, only if the registered user doesn't have a password set, otherwise only return the response that closes the popup
+        response = HttpResponse("<html><script>window.close()</script></html>")
         if user.has_usable_password() == False:
             session_key = f"session_{user.id}"
             # Encrypt user session data
@@ -1293,9 +1294,8 @@ def oauth_callback(request):
                 }
             )
             fetch_avatar_from_42(user, user_data)
+            response.set_cookie(session_key, session_value, httponly=True)
         #close popup
-        response = HttpResponse("<html><script>window.close()</script></html>")
-        response.set_cookie(session_key, session_value, httponly=True)
         return response
 
 def fetch_avatar_from_42(user, user_data):
@@ -1309,6 +1309,8 @@ def fetch_avatar_from_42(user, user_data):
 
 def fetch_42_user_data(access_token):
     api_url = os.environ.get("OAUTH_API_URL")
+    if api_url == None:
+        return {"error": "OAUTH_API_URL not found"}
     headers = {"Authorization": f"Bearer {access_token}"}
     try:
         response = requests.get(api_url, headers=headers)
@@ -1320,6 +1322,8 @@ def fetch_42_user_data(access_token):
 
 def exchange_code_for_token(code):
     token_url = os.environ.get("OAUTH_TOKEN_URL")
+    if token_url == None:
+        return {"error": "OAUTH_TOKEN_URL not found"}
     data = {
         "grant_type": "authorization_code",
         "client_id": os.environ.get("OAUTH_CLIENT_ID"),
