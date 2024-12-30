@@ -809,11 +809,15 @@ def check_sessions(request, ids):
         raise BadRequest(f"Expected at least 2 or 4 ids and got {len(ids)}")
     found_sessions_keys = ["session_" + str(id) for id in ids if id != AI_ID]
     # Get corresponding values from cookies
-    sessions_values_ids = [
-        decrypt_session_value(value)["id"]
-        for key, value in request.COOKIES.items()
-        if key in found_sessions_keys
-    ]
+    sessions_values_ids = []
+    for key, value in request.COOKIES.items():
+        if key in found_sessions_keys and value is not None:
+            try:
+                decrypted = decrypt_session_value(value)
+                if decrypted is not None and "id" in decrypted:
+                    sessions_values_ids.append(decrypted["id"])
+            except:
+                continue
     if AI_ID in ids:
         sessions_values_ids.append(AI_ID)
 
