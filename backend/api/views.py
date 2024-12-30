@@ -120,7 +120,7 @@ def create_player(request):
     # Extract required fields from the request body
     username = escape(data.get("username"))
     password = data.get("password")
-    display_name = escape(data.get("displayName"))
+    display_name = data.get("displayName")
     if not username:
         return JsonResponse(
             {"ok": False, "error": "User name is required", "statusCode": 400},
@@ -134,7 +134,7 @@ def create_player(request):
     # Create the user
     user = User.objects.create_user(username=username, password=password)
     # Create the player with the associated user
-    display_name = display_name if display_name else None
+    display_name = escape(display_name) if display_name else None
     print(f"Creating player with username: {username}, display name: {display_name}")
     player = Player.objects.create(user=user, display_name=display_name)
     # Return success response
@@ -165,7 +165,7 @@ def custom_login(request):
             if not request.body:
                 raise BadRequest("No data provided")
             data = json.loads(request.body)
-            username = escape(data.get("username"))
+            username = data.get("username")
             password = data.get("password")
 
             for cookie_key, session in request.COOKIES.items():
@@ -319,9 +319,9 @@ def update_player(request, id):
         if not request.body:
             raise BadRequest("No data provided")
         data = json.loads(request.body)
-        new_username = escape(data.get("username"))
+        new_username = data.get("username")
         new_password = data.get("password")
-        new_display_name = escape(data.get("displayName"))
+        new_display_name = data.get("displayName")
         if not new_username and not new_password and not new_display_name:
             return JsonResponse(
                 {
@@ -335,11 +335,11 @@ def update_player(request, id):
         user = User.objects.get(id=id)
         player = Player.objects.get(user=user)
         if new_username:
-            user.username = new_username
+            user.username = escape(new_username)
         if new_password:
             user.password = make_password(new_password)
         if new_display_name:
-            player.display_name = new_display_name
+            player.display_name = escape(new_display_name)
         message += ", ".join(
             [
                 f"{key}: {value}"
@@ -646,7 +646,7 @@ def create_tournament(request):
     if not request.body:
         raise BadRequest("No data provided")
     data = json.loads(request.body)
-    name = escape(data.get("name"))
+    name = data.get("name")
     if not name:
         return JsonResponse(
             {"ok": False, "error": "Tournament must have a name", "statusCode": 400},
@@ -668,7 +668,7 @@ def create_tournament(request):
         )
 
     # Create a new tournament
-    tournament = Tournament.objects.create(name=name)
+    tournament = Tournament.objects.create(name=escape(name))
     for index, user_id in enumerate(user_ids):
         if not user_id:
             return JsonResponse(
