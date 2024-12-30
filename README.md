@@ -9,11 +9,11 @@ Our journey to transend at Hive
 
 ## How to run
 
-https://localhost/ - this is the lobby view, where most of the interactions, login and user dashboards will happen. its equivalent to https://localhost/index.html
+https://localhost:8443/ - this is the lobby view, where most of the interactions, login and user dashboards will happen. its equivalent to https://localhost:8443/index.html
 
 ### Game
 
-https://localhost/game.html - game with 2 ai with Threejs, will expand a bit this week
+https://localhost:8443/game.html - game with 2 ai with Threejs, will expand a bit this week
 
 ## Backend endpoints
 
