@@ -171,7 +171,7 @@ def custom_login(request):
             for cookie_key, session in request.COOKIES.items():
                 if cookie_key.startswith("session_"):
                     session_data = decrypt_session_value(session)
-                    if session_data.get("username") == username:
+                    if session_data and session_data.get("username") == username:
                         return JsonResponse(
                             {
                                 "ok": False,
@@ -232,7 +232,7 @@ def custom_logout(request, id):
             # Check if the session exists for the given user
             if session_key in request.COOKIES:
                 session_data = decrypt_session_value(request.COOKIES.get(session_key))
-                if session_data["id"] == id:
+                if session_data and session_data["id"] == id:
                     user = User.objects.get(id=id)
                     player = Player.objects.get(user=user)
                     if player:
@@ -809,11 +809,15 @@ def check_sessions(request, ids):
         raise BadRequest(f"Expected at least 2 or 4 ids and got {len(ids)}")
     found_sessions_keys = ["session_" + str(id) for id in ids if id != AI_ID]
     # Get corresponding values from cookies
-    sessions_values_ids = [
-        decrypt_session_value(value)["id"]
-        for key, value in request.COOKIES.items()
-        if key in found_sessions_keys
-    ]
+    sessions_values_ids = []
+    for key, value in request.COOKIES.items():
+        if key in found_sessions_keys and value is not None:
+            try:
+                decrypted = decrypt_session_value(value)
+                if decrypted is not None and "id" in decrypted:
+                    sessions_values_ids.append(decrypted["id"])
+            except:
+                continue
     if AI_ID in ids:
         sessions_values_ids.append(AI_ID)
 
@@ -893,7 +897,7 @@ def create_match(request, id=None):
                 get_player_by_user_id(user_id),
             )
 
-    if tournament_id and score:
+    if tournament and tournament_id and score:
         tournament.winner = match.winner1
         tournament.save()
     match.save()
@@ -1309,6 +1313,8 @@ def fetch_avatar_from_42(user, user_data):
 
 def fetch_42_user_data(access_token):
     api_url = os.environ.get("OAUTH_API_URL")
+    if api_url == None:
+        return {"error": "OAUTH_API_URL not found"}
     headers = {"Authorization": f"Bearer {access_token}"}
     try:
         response = requests.get(api_url, headers=headers)
@@ -1320,6 +1326,8 @@ def fetch_42_user_data(access_token):
 
 def exchange_code_for_token(code):
     token_url = os.environ.get("OAUTH_TOKEN_URL")
+    if token_url == None:
+        return {"error": "OAUTH_TOKEN_URL not found"}
     data = {
         "grant_type": "authorization_code",
         "client_id": os.environ.get("OAUTH_CLIENT_ID"),
