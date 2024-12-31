@@ -11,10 +11,6 @@ Our journey to transend at Hive
 
 https://localhost:8443/ - this is the lobby view, where most of the interactions, login and user dashboards will happen. its equivalent to https://localhost:8443/index.html
 
-### Game
-
-https://localhost:8443/game.html - game with 2 ai with Threejs, will expand a bit this week
-
 ## Backend endpoints
 
 When we refer to `id`, it is always id of the built-in Django User model.
