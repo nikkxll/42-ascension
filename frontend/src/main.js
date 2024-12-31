@@ -11,9 +11,10 @@ const ballStartSpeed = 10; // 6
 const playerSpeed = 17;  // 17 12
 
 const mode = true; // mode for extra features like racket slow down
-const torusKnotSpeed = 10;
+//const mode = window.customs.mode;
+const torusKnotSpeed = 6; // 10
 const playerSlowDown = 0.25;
-const inntervalTorus = 2;
+const inntervalTorus = 4;
 
 function getRandom(min, max) {
     return Math.random() * (max - min) + min;
@@ -69,7 +70,8 @@ function checkRacketHitBall(ball, player){
     }
 }
 
-function checkRacketHitTorus(ball, player){
+function checkRacketHitTorus(ball, player, game){
+    let players = game.players;
     if (!mode)
         return;
     if (ball.hitRacketFlag == 1)
@@ -78,8 +80,23 @@ function checkRacketHitTorus(ball, player){
         Math.abs(ball.position.y - player.position.y) <= player.size.y / 2 + ball.size.y / 2 ))
         return
     ball.hitRacketFlag = 1;
-    //console.log("Torus Knot hit the racket");
-    player.speed = playerSpeed * playerSlowDown;
+    // console.log("Torus Knot hit the racket");
+    // console.log("ai=", game.ai);
+    if (game.ai != -2){
+        if (players[0] == player)
+            players[1].speed = playerSpeed * playerSlowDown;
+        else if (players[1] == player)
+            players[0].speed = playerSpeed * playerSlowDown;
+        return;
+    }
+    if (player == players[0] || player == players[2]){
+        players[1].speed = playerSpeed * playerSlowDown;
+        players[2].speed = playerSpeed * playerSlowDown;
+    }
+    else {
+        players[0].speed = playerSpeed * playerSlowDown;
+        players[3].speed = playerSpeed * playerSlowDown;
+    }
 }
 
 function setCameraTop(camera) {
@@ -343,7 +360,9 @@ window.startGame = async () => {
         renderer: null, 
         animationId: null,
         startTime: new Date(), 
-        count: [0, 0]
+        count: [0, 0],
+        players: [],
+        ai : ai
         //,ids:[0, 0]
     } //, gameCount , ai, gameType, matchNumber};
     // if (GameType.Cup == gameType){
@@ -525,6 +544,7 @@ window.startGame = async () => {
     let player2Velocity = 0
     let player3Velocity = 0
     let player4Velocity = 0
+    game.players = [player1, player2, player3, player4];
 
     // Function to create text geometry
     let score3dObj, font
@@ -869,13 +889,13 @@ window.startGame = async () => {
             torusKnot.hitRacketFlag = 0
             checkRacketHitBall(ball1, player1);
             checkRacketHitBall(ball1, player2);
-            checkRacketHitTorus(torusKnot, player1);
-            checkRacketHitTorus(torusKnot, player2);
+            checkRacketHitTorus(torusKnot, player1, game);
+            checkRacketHitTorus(torusKnot, player2, game);
             if (GameType.Quatro == gameType){
                 checkRacketHitBall(ball1, player3)
                 checkRacketHitBall(ball1, player4)
-                checkRacketHitTorus(torusKnot, player3);
-                checkRacketHitTorus(torusKnot, player4);
+                checkRacketHitTorus(torusKnot, player3, game);
+                checkRacketHitTorus(torusKnot, player4, game);
                 ball2.hitRacketFlag = 0
                 checkRacketHitBall(ball2, player1)
                 checkRacketHitBall(ball2, player2)
@@ -900,14 +920,16 @@ window.startGame = async () => {
                     torusKnot.velocity = {x:  torusKnot.xDirection * Math.cos(torusKnot.angle) * torusKnot.speed, y: Math.sin(torusKnot.angle) * torusKnot.speed};
                     deltaTorus = 0;
                 }
-                if (torusKnot.position.x > width / 2 - 1){
+                if (torusKnot.position.x > width / 2 - width / 3 || torusKnot.position.x < -width / 2 + width / 3){
+                    player1.speed = playerSpeed;
+                    player3.speed = playerSpeed;
                     player2.speed = playerSpeed;
                     player4.speed = playerSpeed;
                 }
-                if (torusKnot.position.x < -width / 2 + 1){
-                    player1.speed = playerSpeed;
-                    player3.speed = playerSpeed;
-                }
+                // if (torusKnot.position.x < -width / 2 + 1){
+                //     player1.speed = playerSpeed;
+                //     player3.speed = playerSpeed;
+                // }
             }
             countGameScore(ball1, game.count)
             if (GameType.Quatro == gameType){
