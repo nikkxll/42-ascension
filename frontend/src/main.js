@@ -10,8 +10,6 @@ const ballSpeedLimit = 1000;
 const ballStartSpeed = 10; // 6
 const playerSpeed = 17;  // 17 12
 
-const mode = true; // mode for extra features like racket slow down
-//const mode = window.customs.mode;
 const torusKnotSpeed = 6; // 10
 const playerSlowDown = 0.25;
 const inntervalTorus = 4;
@@ -86,7 +84,7 @@ function checkRacketHitBall(ball, player){
 
 function checkRacketHitTorus(ball, player, game){
     let players = game.players;
-    if (!mode)
+    if (!window.customs.gameMode)
         return;
     if (ball.hitRacketFlag == 1)
         return
@@ -516,7 +514,7 @@ window.startGame = async () => {
     const torusKnot = new THREE.Group();
     //torusKnot.add(knotEdges);
     torusKnot.add(knotMesh);
-    if (mode){
+    if (window.customs.gameMode){
         scene.add(torusKnot);
         torusKnot.position.x = 0;
         torusKnot.position.y = 0;
@@ -920,7 +918,7 @@ window.startGame = async () => {
             // move the balls to new position
             ball1.position.x += ball1.velocity.x * delta
             ball1.position.y += ball1.velocity.y * delta
-            if (mode && deltaTorus > inntervalTorus){
+            if (window.customs.gameMode && deltaTorus > inntervalTorus){
                 torusKnot.position.x += torusKnot.velocity.x * delta;
                 torusKnot.position.y += torusKnot.velocity.y * delta;
                 torusKnot.position.z = 0;
