@@ -319,6 +319,7 @@ def update_player(request, id):
         if not request.body:
             raise BadRequest("No data provided")
         data = json.loads(request.body)
+        old_password = data.get("old_password")
         new_username = data.get("username")
         new_password = data.get("password")
         new_display_name = data.get("displayName")
@@ -332,7 +333,17 @@ def update_player(request, id):
                 status=400,
             )
 
-        user = User.objects.get(id=id)
+        old_user = User.objects.get(id=id)
+        user = authenticate(request, username=old_user.username, password=old_password)
+        if user is None or user.has_usable_password == False and (new_password or new_username):
+            return JsonResponse(
+                {
+                    "ok": False,
+                    "error": "User not authenticated",
+                    "statusCode": 400,
+                },
+                status=400,
+            )
         player = Player.objects.get(user=user)
         if new_username:
             user.username = escape(new_username)
