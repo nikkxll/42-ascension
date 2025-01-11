@@ -355,7 +355,7 @@ def update_player(request, id):
             [
                 f"{key}: {value}"
                 for key, value in data.items()
-                if value and key != "password"
+                if value and key != "password" and key != "old_password"
             ]
         )
         player.save()
