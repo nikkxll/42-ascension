@@ -32,6 +32,9 @@ cd $OPT_DIR
 wget http://nginx.org/download/nginx-$NGINX_VER_NO.tar.gz || { echo "Can't download nginx archive; Exiting setup." ; exit 1; }
 tar -xvf nginx-$NGINX_VER_NO.tar.gz || { echo "Archive extracted with errors, check the source; Exiting setup." ; exit 1; }
 git clone https://github.com/SpiderLabs/ModSecurity-nginx
+cd ModSecurity-nginx
+git checkout ef64996aedd4bb5fa1831631361244813d48b82f
+cd ..
 cd $OPT_DIR/nginx-$NGINX_VER_NO
 ./configure --with-compat --add-dynamic-module=/opt/ModSecurity-nginx
 make modules
