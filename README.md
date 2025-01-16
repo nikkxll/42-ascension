@@ -1073,13 +1073,3 @@ All error responses will inlcude the following structure.
 	"statusCode": 401
 }
 ```
-
-## PLEASE EXPAND THESE WITH YOUR MODULES
-
-### Modules done
-
-graphics, browsers, frontend toolkit
-
-### Modules in work
-
-language support, multiple players, fixing the ai, game customisation with colors and speeds
