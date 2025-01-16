@@ -5,15 +5,16 @@ Our journey to transend at Hive
 ## Implemented modules
 
 1. Use a Framework as backend (major)
-1. Use a front-end framework or toolkit (major)
-1. Use a database for the backend (minor)
+1. Use a front-end framework or toolkit (minor)
+	Use a database for the backend (minor)
 1. Standard user management, authentication, users across tournaments (major)
 1. Implementing a remote authentication (major)
 1. Multiplayers (more than 2 in the same game) (major)
-1. Game Customization Options (minor)
 1. Introduce an AI Opponent (major)
 1. Implement WAF/ModSecurity with Hardened Configuration and HashiCorp Vault for Secrets Management (major)
+## bonus:
 1. Use of advanced 3D techniques (major)
+1. Game Customization Options (minor)
 1. Expanding Browser Compatibility (minor)
 
 ## Install
