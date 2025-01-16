@@ -120,7 +120,7 @@ def create_player(request):
     # Extract required fields from the request body
     username = escape(data.get("username"))
     password = data.get("password")
-    display_name = escape(data.get("displayName"))
+    display_name = data.get("displayName")
     if not username:
         return JsonResponse(
             {"ok": False, "error": "User name is required", "statusCode": 400},
@@ -134,7 +134,7 @@ def create_player(request):
     # Create the user
     user = User.objects.create_user(username=username, password=password)
     # Create the player with the associated user
-    display_name = display_name if display_name else None
+    display_name = escape(display_name) if display_name else None
     print(f"Creating player with username: {username}, display name: {display_name}")
     player = Player.objects.create(user=user, display_name=display_name)
     # Return success response
@@ -165,13 +165,13 @@ def custom_login(request):
             if not request.body:
                 raise BadRequest("No data provided")
             data = json.loads(request.body)
-            username = escape(data.get("username"))
+            username = data.get("username")
             password = data.get("password")
 
             for cookie_key, session in request.COOKIES.items():
                 if cookie_key.startswith("session_"):
                     session_data = decrypt_session_value(session)
-                    if session_data.get("username") == username:
+                    if session_data and session_data.get("username") == username:
                         return JsonResponse(
                             {
                                 "ok": False,
@@ -232,7 +232,7 @@ def custom_logout(request, id):
             # Check if the session exists for the given user
             if session_key in request.COOKIES:
                 session_data = decrypt_session_value(request.COOKIES.get(session_key))
-                if session_data["id"] == id:
+                if session_data and session_data["id"] == id:
                     user = User.objects.get(id=id)
                     player = Player.objects.get(user=user)
                     if player:
@@ -319,9 +319,10 @@ def update_player(request, id):
         if not request.body:
             raise BadRequest("No data provided")
         data = json.loads(request.body)
-        new_username = escape(data.get("username"))
+        old_password = data.get("old_password")
+        new_username = data.get("username")
         new_password = data.get("password")
-        new_display_name = escape(data.get("displayName"))
+        new_display_name = data.get("displayName")
         if not new_username and not new_password and not new_display_name:
             return JsonResponse(
                 {
@@ -331,23 +332,39 @@ def update_player(request, id):
                 },
                 status=400,
             )
-
-        user = User.objects.get(id=id)
-        player = Player.objects.get(user=user)
+        old_user = User.objects.get(id=id)
+        if new_display_name:
+            player = Player.objects.get(user=old_user)
+            player.display_name = escape(new_display_name)
+            player.save()
+            return JsonResponse(
+            {
+                "ok": True,
+                "message": message,
+                "statusCode": 200,
+            }
+            )
+        user = authenticate(request, username=old_user.username, password=old_password)
+        if (user is None or user.has_usable_password == False) and (new_password or new_username):
+            return JsonResponse(
+                {
+                    "ok": False,
+                    "error": "User not authenticated",
+                    "statusCode": 400,
+                },
+                status=400,
+            )
         if new_username:
-            user.username = new_username
+            user.username = escape(new_username)
         if new_password:
             user.password = make_password(new_password)
-        if new_display_name:
-            player.display_name = new_display_name
         message += ", ".join(
             [
                 f"{key}: {value}"
                 for key, value in data.items()
-                if value and key != "password"
+                if value and key != "password" and key != "old_password"
             ]
         )
-        player.save()
         user.save()
         return JsonResponse(
             {
@@ -646,7 +663,7 @@ def create_tournament(request):
     if not request.body:
         raise BadRequest("No data provided")
     data = json.loads(request.body)
-    name = escape(data.get("name"))
+    name = data.get("name")
     if not name:
         return JsonResponse(
             {"ok": False, "error": "Tournament must have a name", "statusCode": 400},
@@ -668,7 +685,7 @@ def create_tournament(request):
         )
 
     # Create a new tournament
-    tournament = Tournament.objects.create(name=name)
+    tournament = Tournament.objects.create(name=escape(name))
     for index, user_id in enumerate(user_ids):
         if not user_id:
             return JsonResponse(
@@ -809,11 +826,15 @@ def check_sessions(request, ids):
         raise BadRequest(f"Expected at least 2 or 4 ids and got {len(ids)}")
     found_sessions_keys = ["session_" + str(id) for id in ids if id != AI_ID]
     # Get corresponding values from cookies
-    sessions_values_ids = [
-        decrypt_session_value(value)["id"]
-        for key, value in request.COOKIES.items()
-        if key in found_sessions_keys
-    ]
+    sessions_values_ids = []
+    for key, value in request.COOKIES.items():
+        if key in found_sessions_keys and value is not None:
+            try:
+                decrypted = decrypt_session_value(value)
+                if decrypted is not None and "id" in decrypted:
+                    sessions_values_ids.append(decrypted["id"])
+            except:
+                continue
     if AI_ID in ids:
         sessions_values_ids.append(AI_ID)
 
@@ -893,7 +914,7 @@ def create_match(request, id=None):
                 get_player_by_user_id(user_id),
             )
 
-    if tournament_id and score:
+    if tournament and tournament_id and score:
         tournament.winner = match.winner1
         tournament.save()
     match.save()
@@ -1282,6 +1303,7 @@ def oauth_callback(request):
             # Get user if already exists
             user = User.objects.filter(username=user_data["login"])[0]
         # Create a unique session key, only if the registered user doesn't have a password set, otherwise only return the response that closes the popup
+        response = HttpResponse("<html><script>window.close()</script></html>")
         if user.has_usable_password() == False:
             session_key = f"session_{user.id}"
             # Encrypt user session data
@@ -1293,9 +1315,8 @@ def oauth_callback(request):
                 }
             )
             fetch_avatar_from_42(user, user_data)
+            response.set_cookie(session_key, session_value, httponly=True, secure=True, max_age=3600*24*7)
         #close popup
-        response = HttpResponse("<html><script>window.close()</script></html>")
-        response.set_cookie(session_key, session_value, httponly=True)
         return response
 
 def fetch_avatar_from_42(user, user_data):
@@ -1309,6 +1330,8 @@ def fetch_avatar_from_42(user, user_data):
 
 def fetch_42_user_data(access_token):
     api_url = os.environ.get("OAUTH_API_URL")
+    if api_url == None:
+        return {"error": "OAUTH_API_URL not found"}
     headers = {"Authorization": f"Bearer {access_token}"}
     try:
         response = requests.get(api_url, headers=headers)
@@ -1320,6 +1343,8 @@ def fetch_42_user_data(access_token):
 
 def exchange_code_for_token(code):
     token_url = os.environ.get("OAUTH_TOKEN_URL")
+    if token_url == None:
+        return {"error": "OAUTH_TOKEN_URL not found"}
     data = {
         "grant_type": "authorization_code",
         "client_id": os.environ.get("OAUTH_CLIENT_ID"),

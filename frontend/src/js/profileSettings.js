@@ -382,6 +382,7 @@ function nameUpdate(userId) {
 }
 
 async function updateUsername(userId) {
+  const oldPassword = document.getElementById("oldPassword").value;
   const newUsername = document.getElementById("newUsername").value;
   try {
     const response = await fetch(`/api/players/${userId}/`, {
@@ -389,7 +390,7 @@ async function updateUsername(userId) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ username: newUsername }),
+      body: JSON.stringify({ username: newUsername, old_password: oldPassword }),
     });
     if (!response.ok) {
       throw new Error("Failed to update username");
@@ -404,9 +405,11 @@ async function updateUsername(userId) {
     alert("Failed to update username");
     document.getElementById("newUsername").value = "";
   }
+  document.getElementById("oldPassword").value = "";
 }
 
 async function updatePassword(userId) {
+  const oldPassword = document.getElementById("oldPassword").value;
   const newPassword = document.getElementById("newPassword").value;
   try {
     const response = await fetch(`/api/players/${userId}/`, {
@@ -414,7 +417,7 @@ async function updatePassword(userId) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ password: newPassword }),
+      body: JSON.stringify({ password: newPassword, old_password: oldPassword }),
     });
     if (!response.ok) {
       throw new Error("Failed to update password");
@@ -423,8 +426,9 @@ async function updatePassword(userId) {
   } catch (error) {
     console.error(error.message);
     alert("Failed to update password");
-    document.getElementById("newPassword").value = "";
   }
+  document.getElementById("newPassword").value = "";
+  document.getElementById("oldPassword").value = "";
 }
 
 async function fetchPotentialFriends(userId) {
