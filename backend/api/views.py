@@ -332,10 +332,20 @@ def update_player(request, id):
                 },
                 status=400,
             )
-
         old_user = User.objects.get(id=id)
+        if new_display_name:
+            player = Player.objects.get(user=old_user)
+            player.display_name = escape(new_display_name)
+            player.save()
+            return JsonResponse(
+            {
+                "ok": True,
+                "message": message,
+                "statusCode": 200,
+            }
+            )
         user = authenticate(request, username=old_user.username, password=old_password)
-        if user is None or user.has_usable_password == False and (new_password or new_username):
+        if (user is None or user.has_usable_password == False) and (new_password or new_username):
             return JsonResponse(
                 {
                     "ok": False,
@@ -344,13 +354,10 @@ def update_player(request, id):
                 },
                 status=400,
             )
-        player = Player.objects.get(user=user)
         if new_username:
             user.username = escape(new_username)
         if new_password:
             user.password = make_password(new_password)
-        if new_display_name:
-            player.display_name = escape(new_display_name)
         message += ", ".join(
             [
                 f"{key}: {value}"
@@ -358,7 +365,6 @@ def update_player(request, id):
                 if value and key != "password" and key != "old_password"
             ]
         )
-        player.save()
         user.save()
         return JsonResponse(
             {
