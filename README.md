@@ -2,6 +2,16 @@
 
 Recreation of a PONG game developed by [@DaveeHorvath](https://github.com/DaveeHorvath), [@madfcat](https://github.com/madfcat), [@nikkxll](https://github.com/nikkxll), [@dnapi](https://github.com/dnapi) and [@taoramo](https://github.com/taoramo)
 
+## Table of Contents
+- [Implemented modules](#implemented-modules)
+  - [Mandatory part](#mandatory-part)
+  - [Bonus part](#bonus-part)
+- [Technical stack](#technical-stack)
+- [Environment](#environment)
+  - [Setting Up Environment Variables](#setting-up-environment-variables)
+- [Install and run](#install-and-run)
+- [Game](#game)
+
 ## Implemented modules
 
 ### Mandatory part
