@@ -21,6 +21,52 @@ Recreation of a PONG game developed by [@DaveeHorvath](https://github.com/DaveeH
 
 [![Stack](https://skillicons.dev/icons?i=django,nginx,postgresql,javascript,css,html,bootstrap,threejs,ai,docker,figma)](https://skillicons.dev)
 
+## Environment
+
+The application requires the following environment variables to be configured. These variables control the app's behavior and connect it to external services. Ensure these variables are set before running the application.
+
+| Variable Name               | Description                                                             | Example Value                         |
+|-----------------------------|-------------------------------------------------------------------------|---------------------------------------|
+| `DEBUG`                     | Set to `True` for development and `False` for production.              | `True` or `False`                     |
+| `HCP_CLIENT_ID`             | The client ID for the HCP service.                                     | `your-client-id`                      |
+| `HCP_CLIENT_SECRET`         | The client secret for the HCP service.                                 | `your-client-secret`                  |
+| `OAUTH_REDIRECT`            | The OAuth redirect URI used during authentication.                     | `http://localhost:8000/callback`      |
+| `OAUTH_AUTHORIZE_URL`       | The URL to the OAuth authorization endpoint.                           | `https://auth.example.com/authorize`  |
+| `OAUTH_TOKEN_URL`           | The URL to the OAuth token endpoint.                                   | `https://auth.example.com/token`      |
+| `OAUTH_API_URL`             | The base URL for the OAuth API.                                        | `https://api.example.com`             |
+| `POSTGRES_USER`             | The username for connecting to the PostgreSQL database.                | `postgres`                            |
+| `POSTGRES_HOST`             | The host for the PostgreSQL database.                                  | `localhost`                           |
+| `POSTGRES_DB`               | The name of the PostgreSQL database.                                   | `my_database`                         |
+| `POSTGRES_PASSWORD`         | The password for the PostgreSQL user.                                  | `yourpassword`                        |
+| `DJANGO_HOST`               | The hostname or IP address for the Django server.                      | `127.0.0.1` or `0.0.0.0`              |
+| `DJANGO_SUPERUSER_USERNAME` | The username for the default Django superuser.                         | `admin`                               |
+| `DJANGO_SUPERUSER_EMAIL`    | The email for the default Django superuser.                            | `admin@example.com`                   |
+
+### Setting Up Environment Variables
+
+Follow these steps to configure the required environment variables:
+
+Create a `.env` file
+
+Place a file named `.env` in the root of your project directory with the following content (presented values are used just as an example, you should put your own instead):
+
+```env
+DEBUG=True
+HCP_CLIENT_ID=your-client-id
+HCP_CLIENT_SECRET=your-client-secret
+OAUTH_REDIRECT=http://localhost:8000/callback
+OAUTH_AUTHORIZE_URL=https://auth.example.com/authorize
+OAUTH_TOKEN_URL=https://auth.example.com/token
+OAUTH_API_URL=https://api.example.com
+POSTGRES_USER=postgres
+POSTGRES_HOST=localhost
+POSTGRES_DB=my_database
+POSTGRES_PASSWORD=yourpassword
+DJANGO_HOST=127.0.0.1
+DJANGO_SUPERUSER_USERNAME=admin
+DJANGO_SUPERUSER_EMAIL=admin@example.com
+```
+
 ## Install and run
 
 Clone the project repository
