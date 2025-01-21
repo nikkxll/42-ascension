@@ -33,7 +33,6 @@ const updateHistory = (f) => {
   Object.entries(views).forEach((key) => {
     if (key[0] == f) {
       history.pushState({ view: key[0] }, null, "");
-      console.log(key[0]);
     }
   });
 };

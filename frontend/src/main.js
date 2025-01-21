@@ -2,7 +2,6 @@
 import * as THREE from 'three';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
-//import * as statejs from "./state.js";
 
 const ballAccelerationCoef = 1.1  // 1.5
 const ballSpeedLimit = 1000;
@@ -25,8 +24,6 @@ const inntervalTorus = 4;
 // players orger is player1, player2
 // 1 - right, 2 - left
 // but for userIds the order is [left, right]
-
-
 
 function getRandom(min, max) {
     return Math.random() * (max - min) + min;
@@ -92,8 +89,6 @@ function checkRacketHitTorus(ball, player, game) {
         Math.abs(ball.position.y - player.position.y) <= player.size.y / 2 + ball.size.y / 2))
         return
     ball.hitRacketFlag = 1;
-    // console.log("Torus Knot hit the racket");
-    // console.log("ai=", game.ai);
     if (game.ai != -2) {
         if (players[0] == player)
             players[1].speed = playerSpeed * playerSlowDown;
@@ -167,9 +162,7 @@ async function gameTypeSelector() {
         }
         let matches = window.tournamentState.data.matches;
         matchNumber = 0;
-        console.log("matches.length=", matches.length);
         while (matchNumber < matches.length) {
-            //console.log("matchNumber=", matchNumber, "score=", matches[matchNumber].score);
             if (!matches[matchNumber].score) {
                 break;
             }
@@ -177,7 +170,6 @@ async function gameTypeSelector() {
         }
         let player00 = window.tournamentState.userIds[0];
         let player01 = window.tournamentState.userIds[1];
-        console.log("matchNumber=", matchNumber, "player00=", player00, "player01=", player01);
         if (matchNumber < 2) {
             let match = window.tournamentState.data.matches[matchNumber];
             player00 = match.players[0].id;
@@ -229,7 +221,6 @@ const requestAddMatch = async (data) => {
             throw new Error(`HTTP error, status = ${response.status}`);
         }
         const json = await response.json();
-        console.log("Server Response Data:", json);
         return json;
     } catch (error) {
         console.error("Request failed:", error.message);
@@ -238,7 +229,6 @@ const requestAddMatch = async (data) => {
 };
 
 async function updateStateFetch(startTime, gameCount, gameTypeSelectorValue) {
-    console.log("updateStateFetch: Game ended", gameCount);
     const { gameType, ai, matchNumber } = gameTypeSelectorValue;
     let duration = Math.trunc((Date.now() - startTime) / 1000);
     if (GameType.Cup != gameType) {
@@ -248,7 +238,6 @@ async function updateStateFetch(startTime, gameCount, gameTypeSelectorValue) {
             duration: duration,
             userIds: window.singleGameState.userIds
         };
-        console.log("Create Match body=", body);
         await requestAddMatch(body);
         window.singleGameState = {};
     }
@@ -261,11 +250,9 @@ async function updateStateFetch(startTime, gameCount, gameTypeSelectorValue) {
             duration: duration,
             userIds: window.tournamentState.matchPlayerIds
         };
-        console.log("Patch Match body=", body);
         await requestPatchMatch(window.tournamentState.data.matches[matchNumber].id, body);
     }
     else {
-        console.log("TODO: fetch the last match creation.");
         let cup_id = window.tournamentState.data.id;
         let body = {
             score: gameCount,
@@ -291,14 +278,11 @@ const requestAddCup = async (data) => {
             headers: { 'Content-Type': 'application/json', },
             body: JSON.stringify(data)
         })
-        console.log("response=", response);
         if (!response.ok)
             throw new Error("HTTP error, status = " + response.status);
         const json = await response.json().then(
             data => {
-                console.log(data);
                 window.tournamentState.data = data.data;
-                console.log("tournamentState=", window.tournamentState);
                 return data;
             }
         );
@@ -315,14 +299,10 @@ const requestPatchMatch = async (id, data) => {
             headers: { 'Content-Type': 'application/json', },
             body: JSON.stringify(data)
         })
-        console.log("response=", response);
         if (!response.ok)
             throw new Error("HTTP error, status = " + response.status);
         const json = await response.json().then(
             data => {
-                console.log(data);
-                //        window.tournamentState.data = data.data;
-                console.log("tournamentState=", window.tournamentState);
                 return data;
             }
         );
@@ -343,7 +323,6 @@ const requestCupFinalMatch = async (id, data) => {
             throw new Error(`HTTP error, status = ${response.status}`);
         }
         const json = await response.json();
-        console.log("Server Response Data:", json);
         return json;
     } catch (error) {
         console.error("Request failed:", error.message);
@@ -363,10 +342,7 @@ const removeGameWindow = (game) => {
 
 // window.state.tournaments = await fetchRecentTournaments();
 window.startGame = async () => {
-    console.log("Starting game with SingleGameState=", window.singleGameState);
-    console.log("Starting game with  tournamentState=", window.tournamentState);
     const { gameType, ai, matchNumber } = await gameTypeSelector();
-    console.log("gameType=", gameType, "ai=", ai, "matchNumber=", matchNumber);
     window.gameStoped = false;
     let game = {  // this is the game object that will be used to accumulate all the game data.
         keyDownAction: null,
@@ -451,9 +427,6 @@ window.startGame = async () => {
     // registers to be rendered
     scene.add(player1);
     scene.add(player2);
-
-    console.log(window.customs.padelColorSecond);
-    console.log(window.customs.padelColorFirst);
 
     // create separate material and geometry for the ball1 and register it
     const ball1material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
@@ -682,18 +655,14 @@ window.startGame = async () => {
         if (!pressedKeys.has(code))
             pressedKeys.add(code);
         if (isPressed(27) && (isPaused || Math.max(...game.count) >= window.customs.winCondition)) { // 27 = escape
-            console.log("Esc is pressed, game to be terminated.");
             removeGameWindow(game);
-            console.log("game terminated, singleGameState=", window.singleGameState);
             if (GameType.Cup == gameType) {
                 //goToTournament();
                 goToLoadedTournament(window.tournamentState.data.id);
-                console.log("Game of tournament is over");
             }
             else {
                 goToLobby();
                 updateHistory('lobby');
-                console.log("Game of single game or 2x2 game is over");
             }
             return 0;
         }
@@ -702,12 +671,10 @@ window.startGame = async () => {
                 pause3dObj.position.z = -5
                 render();
                 isPaused = true;
-                console.log("Space is pressed, game is paused.");
             }
             else {
                 pause3dObj.position.z = 100
                 isPaused = false;
-                console.log("Space is pressed again, game is resumed.", isPaused);
                 clock = new THREE.Clock();
                 loop();
             }
@@ -853,14 +820,12 @@ window.startGame = async () => {
     let clockTorus = new THREE.Clock();
     let deltaTorus = 0;
 
-    //console.log("player1 scale=", player1.scale.y, "ball scale=", ball1.scale.y)
     function loop() {
         if (ai >= 1 && !isPaused && !window.gameStoped)
             runAi()
         game.animationId = requestAnimationFrame(loop);
         // if its time to draw a new frame
         if (window.gameStoped) {
-            console.log("Game Terminatated by pressing Back buttom.");
             removeGameWindow(game);
             return;
         }
@@ -877,7 +842,6 @@ window.startGame = async () => {
             }
             keyEventHandler() // check for key presses
             // move the players with deltatime
-            //console.log("player1Velocity=", player1Velocity, "player2Velocity=", player2Velocity, "player2.speed=", player2.speed);  
             player1.position.y += player1Velocity * delta * difficultyAI;
             player2.position.y += player2Velocity * delta
             if (GameType.Quatro == gameType) {

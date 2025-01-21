@@ -31,14 +31,14 @@
 
     <script type="module" src="./base.js"></script>
     <script type="module" src="./main.js"></script>
-    <script src="./js/initialFetch.js"></script>
-    <script src="./js/renderMiniProfileLobby.js"></script>
-    <script src="./js/renderSingleGameLobby.js"></script>
-    <script src="./js/render2v2GameLobby.js"></script>
-    <script src="./js/renderTournamentLobby.js"></script>
-    <script src="./js/recentMatches.js"></script>
-    <script src="./js/recentTournaments.js"></script>
-    <script src="./js/authorization.js"></script>
+    <script src="./js/init/initialFetch.js"></script>
+    <script src="./js/render/renderMiniProfileLobby.js"></script>
+    <script src="./js/render/renderSingleGameLobby.js"></script>
+    <script src="./js/render/render2v2GameLobby.js"></script>
+    <script src="./js/render/renderTournamentLobby.js"></script>
+    <script src="./js/recentEvents/recentMatches.js"></script>
+    <script src="./js/recentEvents/recentTournaments.js"></script>
+    <script src="./js/auth/authorization.js"></script>
     <script src="state.js"></script>
     <style>
       #enviroment {
@@ -803,10 +803,10 @@
 
     <div class="tournament-statistics" id="tournamentStatistics"></div>
 
-    <script src="./js/navigation.js"></script>
-    <script src="./js/gameStart.js"></script>
-    <script src="./js/gamePlayersSelector.js"></script>
-    <script src="./js/gamePlayersSelectorDoubles.js"></script>
+    <script src="./js/viewManagement/navigation.js"></script>
+    <script src="./js/viewManagement/gameStart.js"></script>
+    <script src="./js/selectors/gamePlayersSelector.js"></script>
+    <script src="./js/selectors/gamePlayersSelectorDoubles.js"></script>
 
     <!-- Bootstrap parts for profile carousel -->
     <script
@@ -815,8 +815,8 @@
       crossorigin="anonymous"
     ></script>
 
-    <script src="./js/profileSettings.js"></script>
-    <script src="./js/profileFriendship.js"></script>
+    <script src="./js/profile/profileSettings.js"></script>
+    <script src="./js/profile/profileFriendship.js"></script>
     <script>
       async function open42Auth() {
         // Popup window configuration
@@ -845,7 +845,6 @@
               }
               const { data } = await response.json();
               window.state.loggedInUsers = data?.players;
-              console.log("state: ", window.state.loggedInUsers);
               renderPlayerPanels();
             } catch (error) {
               console.error(error.message);

@@ -4,7 +4,6 @@ async function renderRecentTournaments() {
   //   const tournamentField = document.querySelector(".tournament-details");
   const tournamentField = document.querySelector(".tournament-content");
   tournamentField.innerHTML = "";
-  console.log(data);
 
   if (!data || !tournamentField) {
     return;

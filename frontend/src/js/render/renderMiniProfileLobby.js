@@ -17,7 +17,6 @@ const handleProfileButton = (index) => {
 function renderPlayerPanels() {
   const container = document.getElementById("player-panels-container");
   container.innerHTML = "";
-  console.log(window.state.loggedInUsers);
   const users = window.state.loggedInUsers.map((user, index) => {
     let panelContent = `
 			<div class="player-brief-info-panel">

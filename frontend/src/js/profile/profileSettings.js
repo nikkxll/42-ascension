@@ -10,7 +10,6 @@ const renderAvatar = (url) => {
 const renderMatches = async (userId, elementId) => {
   const matches = document.getElementById(elementId);
   matches.innerHTML = "";
-  console.log("here:", matches);
   try {
     const response = await fetch(`/api/players/${userId}/matches?last=5`, {
       method: "GET",
@@ -82,7 +81,6 @@ const renderMatches = async (userId, elementId) => {
 };
 
 const updateToProfile = async (index) => {
-  console.log("updateToProfile called");
   const userId = window.state.loggedInUsers[index].id;
   window.currentUserID = index;
   try {
@@ -255,7 +253,6 @@ document.getElementById("newAvatar").onchange = async (e) => {
     if (!response.ok) throw new Error("Failed to upload");
     // Render new avatar
     const json = await response.json();
-    console.log("ava json: ", json);
     renderAvatar(json.data.avatarUrl);
   } catch (error) {
     alert(error);
@@ -320,7 +317,6 @@ function nameUpdate(userId) {
   };
 
   saveName = async () => {
-    console.log("prevName: ", prevName);
     if (nameElement.innerText === prevName) {
       nameElement.setAttribute("contenteditable", false);
       return;
@@ -334,7 +330,6 @@ function nameUpdate(userId) {
         body: JSON.stringify({ displayName: nameElement.textContent }),
       });
       if (!response.ok) {
-        console.log("prevName: ", prevName);
         throw new Error("Failed to update name");
       }
     } catch (error) {
