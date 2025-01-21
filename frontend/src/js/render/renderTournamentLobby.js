@@ -182,9 +182,6 @@ async function loadTournament(tournamentId) {
   const tournament = tournaments.find((t) => t.id === tournamentId);
   window.tournamentState.data = tournament;
 
-  console.log(tournaments);
-  console.log(tournament);
-
   const tournamentGrid = document.querySelector(".tournament-grid");
   const firstSemifinalContent = document.getElementById(
     "firstSemifinalContent"
@@ -284,7 +281,6 @@ async function loadTournament(tournamentId) {
 
   function arraysChecker(arr1, arr2) {
     const set1 = new Set(arr1);
-    console.log(arr1, arr2);
     return arr2.every((element) => set1.has(element));
   }
 

@@ -1,7 +1,6 @@
 // --- Authorization part ---
 
 async function miniLobbyPlayersRender() {
-	console.log("miniLobbyPlayersRender");
 	const response = await fetch("/api/players/current/", {
 		method: "GET",
 		headers: {
@@ -13,7 +12,6 @@ async function miniLobbyPlayersRender() {
 	  }
 	  const { data } = await response.json();
 	  window.state.loggedInUsers = data?.players;
-	  console.log("state: ", window.state.loggedInUsers);
 	  renderPlayerPanels();
 }
 
@@ -32,7 +30,6 @@ const requestSignUp = async () => {
   const username = document.getElementById("signUpUsername").value;
   const password = document.getElementById("signUpPassword").value;
   const displayName = document.getElementById("displayName").value;
-  console.log(displayName, username, password);
   try {
     const response = await fetch("/api/players/", {
       method: "POST",
@@ -47,7 +44,6 @@ const requestSignUp = async () => {
     });
     if (!response.ok) {
 		const data = await response.json();
-		console.log(data);
       throw new Error(data.error);
     }
     const json = await response.json().then(requestLogin(username, password));
@@ -111,7 +107,6 @@ const requestLogin = async (_username, _password) => {
 
 // Logging out a user
 const logoutPlayer = async (index) => {
-	console.log("Player index: ", index, "Player id: ", window.state.loggedInUsers[index].id), " logout called";
   const userId = window.state.loggedInUsers[index].id;
   try {
     const response = await fetch(`/api/auth/logout/${userId}/`, {
