@@ -1,4 +1,4 @@
-# Ascension
+# Transcendence
 
 Recreation of a PONG game developed by [@DaveeHorvath](https://github.com/DaveeHorvath), [@madfcat](https://github.com/madfcat), [@nikkxll](https://github.com/nikkxll), [@dnapi](https://github.com/dnapi) and [@taoramo](https://github.com/taoramo)
 
