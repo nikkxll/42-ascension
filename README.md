@@ -63,3 +63,6 @@ User interface of the game and menus presented below
 <img width="1680" alt="5" src="https://github.com/user-attachments/assets/a885d26c-f601-4003-a086-c7aa3ed23d4a" />
 
 ***Game View (3D Mode)***
+
+##
+dnikifor@student.hive.fi | LinkedIn: [dnikifor](https://www.linkedin.com/in/dmitriinikiforov/) | Tableau: [dmitriinikiforov](https://public.tableau.com/app/profile/nikiforov.dmitrii/vizzes)
